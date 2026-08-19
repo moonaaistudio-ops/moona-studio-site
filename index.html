@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Moona — Cinematic ads, born without a camera</title>
+<meta name="description" content="Moona is an AI-native studio for film and motion ads. Story, craft and taste first.">
+<meta name="theme-color" content="#05070c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%23100D07'/%3E%3Ccircle cx='16' cy='16' r='6.5' fill='none' stroke='%23D9C69C' stroke-width='2.2'/%3E%3C/svg%3E">
+<style>
+/* ————————————————————— tokens ————————————————————— */
+:root{
+  --void:#05070c;          /* deep space */
+  --void-2:#080b13;
+  --ice:#a8c6e8;           /* pale ice blue */
+  --ice-hot:#dcecff;       /* brightest text */
+  --ice-dim:rgba(168,198,232,.66);
+  --ice-faint:rgba(168,198,232,.22);
+  --line:rgba(168,198,232,.14);
+  --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Inter Tight",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --serif:"Instrument Serif",Georgia,serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:auto}
+html,body{background:var(--void)}
+body{
+  color:var(--ice-hot);font-family:var(--sans);font-size:15px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  cursor:none;
+}
+@media(pointer:coarse){body{cursor:auto}}
+a{color:inherit}
+img,video{max-width:100%;display:block}
+button{font:inherit;color:inherit;background:none;border:0;cursor:none}
+@media(pointer:coarse){button{cursor:auto}}
+::selection{background:var(--ice);color:var(--void)}
+
+/* ————————————————————— grain ————————————————————— */
+#dust{position:fixed;inset:0;z-index:88;pointer-events:none}
+.grain{position:fixed;inset:-100%;z-index:90;pointer-events:none;opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+  animation:grain 640ms steps(6) infinite}
+@keyframes grain{
+  0%{transform:translate(0,0)}17%{transform:translate(-3%,2%)}34%{transform:translate(2%,-3%)}
+  51%{transform:translate(-2%,-2%)}68%{transform:translate(3%,1%)}85%{transform:translate(1%,3%)}100%{transform:translate(0,0)}
+}
+
+/* ————————————————————— request flow ————————————————————— */
+.bigcta{position:relative;font-family:var(--serif);font-size:clamp(30px,5vw,58px);
+  font-weight:400;letter-spacing:.005em;color:var(--ice-hot);
+  display:inline-flex;align-items:center;gap:.5em;padding:.1em 0;
+  border-bottom:1px solid rgba(217,198,156,.4);transition:border-color .5s var(--ease)}
+.bigcta i{width:.42em;height:.42em;border-right:1.5px solid #d9c69c;border-top:1.5px solid #d9c69c;
+  transform:rotate(45deg);transition:transform .5s var(--ease)}
+.bigcta:hover{border-color:#d9c69c}
+.bigcta:hover i{transform:rotate(45deg) translate(3px,-3px)}
+.contact .cta-sub{margin-top:18px;font-size:15px;color:var(--ice-dim);letter-spacing:.01em}
+.contact .mail{margin-top:9vh}
+
+#ask{position:fixed;inset:0;z-index:92;background:rgba(4,6,11,.94);
+  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  opacity:0;visibility:hidden;transition:opacity .55s var(--ease),visibility .55s}
+#ask.open{opacity:1;visibility:visible}
+#ask .ask-top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;
+  justify-content:space-between;padding:26px clamp(24px,4vw,52px)}
+#ask .ask-step{font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--ice-dim)}
+#ask .ask-step b{color:var(--ice-hot);font-weight:400}
+#ask .ask-close{font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--ice-dim);padding:14px 10px;transition:color .3s}
+#ask .ask-close:hover{color:var(--ice-hot)}
+#ask .ask-rail{position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line)}
+#ask .ask-rail i{display:block;height:100%;width:0;background:#d9c69c;opacity:.75;
+  transition:width .6s var(--ease)}
+
+.qwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  padding:12vh clamp(24px,7vw,90px)}
+.q{position:absolute;width:min(760px,100%);opacity:0;visibility:hidden;
+  transform:translateY(18px);transition:opacity .5s var(--ease),transform .6s var(--ease),visibility .5s}
+.q.active{opacity:1;visibility:visible;transform:none}
+.q .qlab{font-family:var(--mono);font-size:10px;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--ice-dim);margin-bottom:20px}
+.q .qtitle{font-family:var(--serif);font-size:clamp(30px,5.4vw,62px);font-weight:400;
+  line-height:1.1;letter-spacing:.005em;color:var(--ice-hot);margin-bottom:34px;text-wrap:balance}
+.q input[type=text],.q input[type=email],.q input[type=url]{
+  width:100%;background:none;border:0;border-bottom:1px solid var(--ice-faint);
+  font-family:var(--sans);font-size:clamp(19px,2.6vw,28px);font-weight:400;
+  color:var(--ice-hot);padding:12px 2px;caret-color:#d9c69c;
+  transition:border-color .4s var(--ease)}
+.q input:focus{outline:none;border-color:#d9c69c}
+.q input::placeholder{color:rgba(168,198,232,.3)}
+.q .qhint{margin-top:16px;font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;
+  color:var(--ice-dim);min-height:15px}
+.q .qhint.err{color:#e8a09a}
+
+.qnav{display:flex;align-items:center;gap:22px;margin-top:40px}
+.qnext{display:inline-flex;align-items:center;gap:14px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.3em;text-transform:uppercase;color:var(--ice-hot);padding:12px 0;
+  transition:opacity .3s}
+.qnext span.ring{width:44px;height:44px;border:1px solid rgba(217,198,156,.5);border-radius:50%;
+  display:grid;place-items:center;transition:background .4s var(--ease),border-color .4s var(--ease)}
+.qnext span.ring i{width:8px;height:8px;border-right:1.5px solid #d9c69c;border-top:1.5px solid #d9c69c;
+  transform:rotate(45deg);margin-left:-3px;transition:transform .4s var(--ease)}
+.qnext:hover span.ring{background:rgba(217,198,156,.12);border-color:#d9c69c}
+.qnext:hover span.ring i{transform:rotate(45deg) translate(2px,-2px)}
+.qback{font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--ice-dim);padding:12px 4px;transition:color .3s}
+.qback:hover{color:var(--ice-hot)}
+.qskip{margin-inline-start:auto;font-family:var(--mono);font-size:10px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--ice-dim);padding:12px 4px;transition:color .3s}
+.qskip:hover{color:var(--ice-hot)}
+
+.drop{border:1px dashed var(--ice-faint);border-radius:4px;padding:34px 26px;text-align:center;
+  transition:border-color .4s var(--ease),background .4s var(--ease);cursor:none}
+@media(pointer:coarse){.drop{cursor:auto}}
+.drop.over{border-color:#d9c69c;background:rgba(217,198,156,.06)}
+.drop p{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--ice-dim)}
+.drop input{display:none}
+.filelist{margin-top:16px;display:flex;flex-direction:column;gap:7px}
+.filelist div{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--ice);
+  display:flex;gap:10px;align-items:center}
+.filelist div b{color:var(--ice-dim);font-weight:400}
+
+.qdone{text-align:center}
+.qdone .iris-done{width:74px;height:74px;margin:0 auto 30px;
+  filter:drop-shadow(0 0 26px rgba(217,198,156,.4))}
+@media(max-width:700px){
+  #ask .ask-top{padding:16px 16px}
+  .qwrap{padding:14vh 20px 8vh;align-items:flex-start}
+  .qnav{gap:14px;margin-top:32px}
+  .qnext span.ring{width:48px;height:48px}
+  .qback,.qskip,.qnext{padding:15px 6px}
+}
+
+/* ————————————————————— cursor ————————————————————— */
+.cur{position:fixed;z-index:99;pointer-events:none;top:0;left:0;
+  width:8px;height:8px;border-radius:50%;background:var(--ice-hot);
+  transform:translate(-50%,-50%);transition:width .28s var(--ease),height .28s var(--ease),opacity .28s}
+.cur.ring{width:34px;height:34px;background:transparent;border:1px solid var(--ice);
+  transition:transform .12s linear,width .28s var(--ease),height .28s var(--ease)}
+.cur.hide{opacity:0}
+@media(pointer:coarse){.cur{display:none}}
+body.cur-link .cur.dot{width:4px;height:4px}
+body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
+
+/* ————————————————————— loader ————————————————————— */
+#loader{position:fixed;inset:0;z-index:80;background:var(--void);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;
+  transition:opacity .9s var(--ease),visibility .9s}
+#loader.done{opacity:0;visibility:hidden}
+#loader .morse{font-family:var(--mono);font-size:11px;letter-spacing:.5em;color:var(--ice-dim);
+  min-height:14px;text-align:center}
+#loader .word{font-size:12px;letter-spacing:.62em;text-transform:uppercase;color:var(--ice-hot);
+  padding-left:.62em}
+#loader .bar{width:min(280px,60vw);height:1px;background:var(--ice-faint);position:relative;overflow:hidden}
+#loader .bar i{position:absolute;inset:0;background:var(--ice-hot);transform-origin:0 50%;transform:scaleX(0);
+  transition:transform .3s linear}
+#loader .pct{font-family:var(--mono);font-size:10px;color:var(--ice-dim);letter-spacing:.2em}
+
+/* ————————————————————— hero ————————————————————— */
+#hero-track{height:420vh;position:relative}
+#hero-stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+#sky{position:absolute;inset:0;width:100%;height:100%}
+#moon{position:absolute;inset:0;width:100%;height:100%}
+#hero-stick .vig{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 50%,transparent 55%,rgba(3,4,8,.75) 100%)}
+.htxt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;pointer-events:none;padding:0 6vw 12vh;opacity:0}
+#hdr{position:fixed;top:0;left:0;right:0;z-index:65;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:26px clamp(28px,4vw,52px) 12px;
+  background:linear-gradient(rgba(5,7,12,.72),rgba(5,7,12,0));pointer-events:none}
+#hdr>*{pointer-events:auto}
+.lockup{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;
+  letter-spacing:.34em;color:var(--ice-hot);text-decoration:none;text-transform:uppercase}
+.lockup-iris{width:28px;height:28px;flex:none;border-radius:50%;
+  filter:drop-shadow(0 0 12px rgba(217,198,156,.35))}
+#hdr nav{display:flex;align-items:center;gap:clamp(14px,2.6vw,30px)}
+#hdr nav button,#hdr nav .cta{font-family:var(--mono);font-size:10px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--ice-dim);text-decoration:none;
+  padding:9px 2px;border-bottom:1px solid transparent;
+  transition:color .3s,border-color .3s}
+#hdr nav button:hover,#hdr nav .cta:hover{color:var(--ice-hot);border-color:var(--ice)}
+#hdr nav .cta{color:#d9c69c}
+#hdr nav .cta:hover{color:#efe3c8;border-color:#d9c69c}
+@media(max-width:700px){
+  #hdr{padding:18px 18px 10px}
+  .lockup{gap:7px;font-size:10px;letter-spacing:.22em}
+  .lockup-iris{width:24px;height:24px}
+  #hdr nav{gap:6px}
+  /* keep the type small but give every target a 44px hit area (Apple HIG) */
+  #hdr nav button,#hdr nav .cta{font-size:9px;letter-spacing:.18em;padding:16px 8px}
+}
+.htxt h1.statement{font-family:var(--serif);font-size:clamp(34px,6vw,82px);font-weight:400;
+  letter-spacing:.005em;line-height:1.08;color:var(--ice-hot);max-width:17ch;text-wrap:balance;
+  text-shadow:0 0 60px rgba(168,198,232,.25)}
+.htxt h1.statement em{font-style:italic}
+.htxt .statement-sub{margin-top:20px;font-size:clamp(16px,1.9vw,21px);font-weight:400;
+  color:rgba(190,212,238,.72);letter-spacing:.01em;line-height:1.55}
+.htxt .statement-sub span{display:block;text-wrap:balance;max-width:38ch;margin:0 auto}
+.htxt .statement-sub span+span{margin-top:4px}
+.htxt.small h2{font-family:var(--serif);font-size:clamp(30px,5.2vw,62px);font-weight:400;
+  letter-spacing:.005em;line-height:1.12;max-width:20ch;margin:0 auto;color:var(--ice-hot)}
+.scrollcue{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none;
+  transition:opacity .6s}
+.scrollcue span{font-family:var(--mono);font-size:9px;letter-spacing:.4em;color:var(--ice-dim);text-transform:uppercase;padding-left:.4em}
+.scrollcue i{width:1px;height:44px;background:linear-gradient(var(--ice),transparent);display:block;
+  animation:cue 2.2s var(--ease) infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}
+  55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.hud{position:absolute;z-index:5;font-family:var(--mono);font-size:9px;letter-spacing:.3em;
+  color:var(--ice-dim);text-transform:uppercase;pointer-events:none;transition:opacity .6s}
+.hud.tl{top:22px;left:16px}.hud.tr{top:26px;right:28px;text-align:right}
+.hud.bl{bottom:30px;left:28px}.hud.br{bottom:58px;right:28px;text-align:right}
+
+/* ————————————————————— sections ————————————————————— */
+main{position:relative;z-index:2;background:var(--void)}
+.work{padding:15vh 0 8vh;position:relative}
+.work-head{max-width:1200px;margin:0 auto 10vh;padding:0 clamp(22px,5vw,72px)}
+.work-head .idx{font-family:var(--mono);font-size:10px;letter-spacing:.4em;color:var(--ice-dim);
+  text-transform:uppercase;display:block;margin-bottom:14px}
+.piece{max-width:1200px;margin:0 auto 18vh;padding:0 clamp(22px,5vw,72px)}
+.piece .frame{position:relative;overflow:hidden;border-radius:6px;background:var(--void-2);
+  box-shadow:0 40px 120px -40px rgba(0,0,0,.8);
+  clip-path:circle(18% at 50% 50%);transition:clip-path 1.05s var(--ease)}  /* the aperture */
+.piece.seen .frame{clip-path:circle(75% at 50% 50%)}
+.piece video{width:100%;height:auto;opacity:0;transform:scale(1.05);
+  transition:opacity .75s var(--ease),transform 1.4s var(--ease)}
+.piece.seen video{opacity:1;transform:none}
+/* a video should look like a video even on its first frame */
+.vbadge{position:absolute;left:14px;bottom:14px;z-index:3;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--ice-hot);
+  padding:5px 9px;border-radius:2px;background:rgba(5,7,12,.55);
+  backdrop-filter:blur(6px);opacity:0;transition:opacity .7s var(--ease) .5s}
+.piece.seen .vbadge{opacity:.82}
+.vprog{position:absolute;left:0;bottom:0;height:1.5px;width:0;z-index:3;
+  background:var(--ice);opacity:.55;transition:width .12s linear}
+@media(prefers-reduced-motion:reduce){.piece .frame{clip-path:none;transition:none}}
+.piece.vert{display:grid;grid-template-columns:minmax(0,420px) 1fr;gap:clamp(24px,4vw,64px);align-items:end}
+.piece.vert .frame{aspect-ratio:9/16}
+.piece.vert video{height:100%;object-fit:cover}
+@media(max-width:760px){.piece.vert{grid-template-columns:1fr}}
+.meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px 26px;margin-top:22px}
+.meta .brand{font-size:13px;font-weight:600;letter-spacing:.34em;text-transform:uppercase;color:var(--ice-hot)}
+.meta .num{font-family:var(--mono);font-size:10px;color:var(--ice-dim);letter-spacing:.2em}
+.meta .concept{flex-basis:100%;font-size:clamp(19px,2.6vw,28px);font-weight:500;letter-spacing:-.01em;
+  color:var(--ice);max-width:30ch;line-height:1.3}
+.meta .tag{flex-basis:100%;font-family:var(--mono);font-size:11px;color:var(--ice-dim);letter-spacing:.12em}
+.breakdown{display:none}
+
+/* studio sentence */
+.sentence{min-height:70vh;display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:10vh clamp(22px,6vw,80px)}
+.sentence p{font-family:var(--serif);font-size:clamp(28px,4.6vw,52px);font-weight:400;
+  letter-spacing:.005em;line-height:1.22;max-width:24ch;color:var(--ice-hot)}
+.sentence p em{font-style:normal;color:var(--ice-dim)}
+
+/* contact */
+.contact{padding:14vh clamp(22px,6vw,80px) 12vh;text-align:center;border-top:1px solid var(--line)}
+.contact .mail{display:inline-block;font-size:clamp(16px,2vw,22px);font-weight:400;letter-spacing:.01em;
+  text-decoration:none;position:relative;padding-bottom:6px}
+.contact .mail::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--ice);
+  transform:scaleX(.25);transform-origin:0 50%;transition:transform .5s var(--ease)}
+.contact .mail:hover::after{transform:scaleX(1)}
+.contact .disc{margin-top:7vh;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;
+  color:var(--ice-dim);max-width:52ch;margin-left:auto;margin-right:auto;line-height:1.9}
+
+/* reveal on scroll */
+.rv{opacity:0;transform:translateY(34px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.rv.seen{opacity:1;transform:none}
+
+
+@media(prefers-reduced-motion:reduce){
+  .grain{animation:none}
+  #hero-track{height:auto}
+  #hero-stick{position:relative;height:100svh}
+  .rv,.piece video{opacity:1 !important;transform:none !important;transition:none}
+}
+</style>
+</head>
+<body>
+
+<!-- Netlify form detection: static twin of the flow below -->
+<form name="sample-request" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input type="text" name="name"><input type="url" name="website"><input type="text" name="company">
+  <input type="email" name="email"><input type="file" name="attachments" multiple><input name="bot-field">
+</form>
+
+<!-- ═══════════ REQUEST FLOW ═══════════ -->
+<div id="ask" role="dialog" aria-modal="true" aria-label="Get an ad for your brand">
+  <div class="ask-top">
+    <span class="ask-step"><b id="askNum">01</b> / 05</span>
+    <button class="ask-close" id="askClose" data-hover>Close</button>
+  </div>
+
+  <form class="qwrap" id="askForm" autocomplete="on">
+    <div class="q" data-step="0">
+      <p class="qlab">01 — Who we're speaking with</p>
+      <h2 class="qtitle">What's your name?</h2>
+      <input type="text" name="name" id="f-name" placeholder="Jane Cohen" autocomplete="name" data-hover>
+      <p class="qhint">Press Enter to continue</p>
+      <div class="qnav"><button type="button" class="qnext" data-next data-hover>Next<span class="ring"><i></i></span></button></div>
+    </div>
+
+    <div class="q" data-step="1">
+      <p class="qlab">02 — The product</p>
+      <h2 class="qtitle">Where can we see it?</h2>
+      <input type="url" name="website" id="f-site" placeholder="yourbrand.com" inputmode="url" data-hover>
+      <p class="qhint">A site or a product page. We pull the rest ourselves.</p>
+      <div class="qnav"><button type="button" class="qback" data-back data-hover>Back</button><button type="button" class="qnext" data-next data-hover>Next<span class="ring"><i></i></span></button></div>
+    </div>
+
+    <div class="q" data-step="2">
+      <p class="qlab">03 — The brand</p>
+      <h2 class="qtitle">What's the company called?</h2>
+      <input type="text" name="company" id="f-co" placeholder="Brand name" autocomplete="organization" data-hover>
+      <p class="qhint">Press Enter to continue</p>
+      <div class="qnav"><button type="button" class="qback" data-back data-hover>Back</button><button type="button" class="qnext" data-next data-hover>Next<span class="ring"><i></i></span></button></div>
+    </div>
+
+    <div class="q" data-step="3">
+      <p class="qlab">04 — Where it lands</p>
+      <h2 class="qtitle">Where should we send the film?</h2>
+      <input type="email" name="email" id="f-mail" placeholder="you@yourbrand.com" autocomplete="email" inputmode="email" data-hover>
+      <p class="qhint">Used for the film and nothing else.</p>
+      <div class="qnav"><button type="button" class="qback" data-back data-hover>Back</button><button type="button" class="qnext" data-next data-hover>Next<span class="ring"><i></i></span></button></div>
+    </div>
+
+    <div class="q" data-step="4">
+      <p class="qlab">05 — Optional</p>
+      <h2 class="qtitle">Anything we should work from?</h2>
+      <label class="drop" id="drop" data-hover>
+        <input type="file" name="attachments" id="f-files" multiple accept="image/*,video/*,.pdf,.ai,.psd,.zip">
+        <p>Drop product shots, logos or brand guidelines — or click to browse</p>
+      </label>
+      <div class="filelist" id="filelist"></div>
+      <p class="qhint">Skip this and we'll source everything from your site.</p>
+      <div class="qnav">
+        <button type="button" class="qback" data-back data-hover>Back</button>
+        <button type="submit" class="qnext" id="askSubmit" data-hover>Send<span class="ring"><i></i></span></button>
+      </div>
+    </div>
+
+    <div class="q qdone" data-step="5">
+      <svg class="iris-done" viewBox="0 0 100 100" id="doneIris" aria-hidden="true"></svg>
+      <h2 class="qtitle">We're on it.</h2>
+      <p class="qhint" id="doneMsg">Your film lands in your inbox within a few days.</p>
+      <div class="qnav" style="justify-content:center"><button type="button" class="qback" id="askDone" data-hover>Close</button></div>
+    </div>
+
+    <input type="hidden" name="form-name" value="sample-request">
+    <input name="bot-field" tabindex="-1" style="position:absolute;left:-9999px" aria-hidden="true">
+  </form>
+  <div class="ask-rail"><i id="askRail"></i></div>
+</div>
+
+<canvas id="dust" aria-hidden="true"></canvas>
+<div class="grain"></div>
+<div class="cur ring"></div>
+<div class="cur dot"></div>
+
+<!-- ═══════════ LOADER ═══════════ -->
+<div id="loader" role="status" aria-label="Loading">
+  <div class="morse" aria-hidden="true">— — · — —</div>
+  <div class="word">Moona</div>
+  <div class="bar"><i></i></div>
+  <div class="pct">00</div>
+</div>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header id="hdr">
+  <a class="lockup" href="#" id="homeLink"><svg class="lockup-iris" viewBox="0 0 100 100" id="markSvg" aria-hidden="true"></svg><span data-scramble>MOONA</span></a>
+  <nav aria-label="Sections">
+    <button data-goto="work">Work</button>
+    <button data-goto="studio">Studio</button>
+    <button class="cta" data-ask>Get an ad</button>
+  </nav>
+</header>
+
+<!-- ═══════════ HERO ═══════════ -->
+<div id="hero-track">
+  <div id="hero-stick">
+    <canvas id="sky" aria-hidden="true"></canvas>
+    <canvas id="moon" aria-hidden="true"></canvas>
+    <div class="vig"></div>
+
+    <div class="hud bl" id="hud-chapter">CH·01</div>
+    <div class="hud br" id="hud-progress">000</div>
+
+    <div class="htxt" id="t1">
+      <h1 class="statement">Cinematic ads, born without a camera</h1>
+      <p class="statement-sub"><span>An AI-native studio for film and motion ads.</span><span>Story, craft and taste first.</span></p>
+    </div>
+    <div class="htxt small" id="t2">
+      <h2>We bring a brand's own world <span style="color:var(--ice-dim)">to life around an idea.</span></h2>
+    </div>
+    <div class="htxt small" id="t3">
+      <h2>The idea leads. <span style="color:var(--ice-dim)">Motion is the house style.</span></h2>
+    </div>
+
+    <div class="scrollcue" id="cue"><span>Scroll</span><i></i></div>
+  </div>
+</div>
+
+<!-- ═══════════ WORK ═══════════ -->
+<main>
+  <section class="work" id="work">
+    <div class="work-head rv">
+      <span class="idx">Selected work</span>
+    </div>
+
+    <article class="piece rv" data-piece>
+      <div class="frame"><video src="v/mcdonalds.mp4" poster="p/mcdonalds.jpg" muted loop playsinline preload="none"></video><span class="vbadge">00:08</span><i class="vprog"></i></div>
+      <div class="meta">
+        <span class="num">01</span><span class="brand">McDonald's</span>
+        <p class="concept">You already know the taste. Now watch it move.</p>
+        <p class="tag">image-to-video · 8s · appetite pacing · single continuous move</p>
+      </div>
+      <div class="breakdown"></div>
+    </article>
+
+    <article class="piece rv" data-piece>
+      <div class="frame"><video src="v/strava.mp4" poster="p/strava.jpg" muted loop playsinline preload="none"></video><span class="vbadge">00:14</span><i class="vprog"></i></div>
+      <div class="meta">
+        <span class="num">02</span><span class="brand">Strava</span>
+        <p class="concept">Every run already has a soundtrack. We cut to it.</p>
+        <p class="tag">kinetic type · 14s · beat-matched cut · product-locked colour</p>
+      </div>
+      <div class="breakdown"><!-- breakdown slot — content later --></div>
+    </article>
+
+    <article class="piece rv" data-piece>
+      <div class="frame"><video src="v/bull-padel.mp4" poster="p/bull-padel.jpg" muted loop playsinline preload="none"></video><span class="vbadge">00:15</span><i class="vprog"></i></div>
+      <div class="meta">
+        <span class="num">03</span><span class="brand">Bull Padel</span>
+        <p class="concept">The court hits back.</p>
+        <p class="tag">image-to-video · 15s · 3-beat cut · frame-accurate brand colour</p>
+      </div>
+      <div class="breakdown"></div>
+    </article>
+
+    <article class="piece vert rv" data-piece>
+      <div class="frame"><video src="v/koda.mp4" poster="p/koda.jpg" muted loop playsinline preload="none"></video><span class="vbadge">00:10</span><i class="vprog"></i></div>
+      <div class="meta">
+        <span class="num">04</span><span class="brand">Koda</span>
+        <p class="concept">Built for the feed it lives in.</p>
+        <p class="tag">vertical master · 10s · loop-safe edit · legibility at 0.4s</p>
+      </div>
+      <div class="breakdown"></div>
+    </article>
+  </section>
+
+  <section class="sentence" id="studio">
+    <p class="rv">Moona is an AI-native studio making cinematic motion for brands. <em>The camera was optional.</em></p>
+  </section>
+
+  <section class="contact">
+    <button class="bigcta rv" data-ask data-hover>Get an ad for your brand<i></i></button>
+    <p class="cta-sub rv">We build one finished film with your actual product and send it over.<br>No cost, no call, no commitment.</p>
+    <a class="mail rv" href="mailto:moona.ai.studio@gmail.com" data-hover>Email the studio</a>
+    <p class="disc rv">All work self-initiated. Brands are shown for demonstration only and are not clients. No client relationship implied.</p>
+  </section>
+</main>
+
+
+<script>
+/* ═══════════════════ config ═══════════════════ */
+const CHAPTERS = ['a','b','c'];
+const HUD_NAMES = {a:'CH·01', b:'CH·02', c:'CH·03'};
+const isMobile = matchMedia('(max-width:760px)').matches;
+const reduced  = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+/* ═══════════════════ cursor ═══════════════════ */
+const dot = document.querySelector('.cur.dot'), ring = document.querySelector('.cur.ring');
+let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY;
+  dot.style.transform=`translate(${mx-4}px,${my-4}px)`});
+(function ringLoop(){rx+=(mx-rx)*.14;ry+=(my-ry)*.14;
+  ring.style.transform=`translate(${rx-17}px,${ry-17}px)`;requestAnimationFrame(ringLoop)})();
+document.querySelectorAll('a,button,[data-hover]').forEach(el=>{
+  el.addEventListener('pointerenter',()=>document.body.classList.add('cur-link'));
+  el.addEventListener('pointerleave',()=>document.body.classList.remove('cur-link'));
+});
+
+/* ═══════════════════ the iris mark (ported from moona-film) ═══════════════════ */
+function blades(d){
+  const N=9,R=200,out=[];
+  for(let i=0;i<N;i++){
+    const a=(i/N)*Math.PI*2;
+    const off=(1-d)*52+2;
+    const c=Math.cos(a),s=Math.sin(a);
+    const px=50+c*off, py=50+s*off;
+    const tx=-s,ty=c;
+    out.push(`M ${px+tx*R} ${py+ty*R} L ${px-tx*R} ${py-ty*R} L ${px-tx*R+c*R} ${py-ty*R+s*R} L ${px+tx*R+c*R} ${py+ty*R+s*R} Z`);
+  }
+  return out;
+}
+function shade(i,base){
+  const a=(i/9)*Math.PI*2, l=.58+.42*Math.cos(a+2.36);
+  const c=v=>Math.round(v*l);
+  return `rgb(${c(base>>16&255)},${c(base>>8&255)},${c(base&255)})`;
+}
+function irisSVG(d,uid,fill,rim){
+  const off=(1-d)*52+2, rs=Math.min(50,off/Math.cos(Math.PI/9)+1.4), B=blades(d);
+  return `<defs>
+      <clipPath id="rim${uid}"><circle cx="50" cy="50" r="${rim}"/></clipPath>
+    </defs>
+    <g clip-path="url(#rim${uid})">
+      ${B.map((p,i)=>`<path d="${p}" fill="${fill?shade(i,0xD9C69C):'#141109'}"/>`).join('')}
+      ${(()=>{
+        const st=fill?'#100D07':'rgba(217,198,156,.30)', N=9, k=Math.PI/N, rv=off/Math.cos(k);
+        const V=i=>[50+Math.cos((i/N)*2*Math.PI+k)*rv, 50+Math.sin((i/N)*2*Math.PI+k)*rv];
+        const poly=Array.from({length:N},(_,i)=>V(i).map(n=>n.toFixed(2)).join(',')).join(' ');
+        const spokes=Array.from({length:N},(_,i)=>{
+          const a=(i/N)*2*Math.PI, [vx,vy]=V(i);
+          return `<line x1="${vx.toFixed(2)}" y1="${vy.toFixed(2)}" x2="${(vx-Math.sin(a)*120).toFixed(2)}" y2="${(vy+Math.cos(a)*120).toFixed(2)}" stroke="${st}" stroke-width=".8"/>`;}).join('');
+        return `<polygon points="${poly}" fill="none" stroke="${st}" stroke-width="1"/>${spokes}`;
+      })()}
+    </g>`;
+}
+document.getElementById('markSvg').innerHTML =
+  '<circle cx="50" cy="50" r="48" fill="#100D07"/>' + irisSVG(.34,'m',true,48);
+
+/* ═══════════════════ preload (starfield only, quick) ═══════════════════ */
+const store = {ready:false};
+async function preload(onProgress){
+  await new Promise(r=>setTimeout(r,500));
+  onProgress(.5);
+  await new Promise(r=>setTimeout(r,400));
+  onProgress(1);
+  store.ready=true;
+}
+
+/* ═══════════════════ canvas ═══════════════════ */
+const cv = document.getElementById('moon'), cx = cv.getContext('2d');
+const skyCv = document.getElementById('sky');
+const dustCv = document.getElementById('dust'), dcx = dustCv.getContext('2d');
+let W,H,DPR;
+function resize(){DPR=Math.min(devicePixelRatio||1, isMobile?1.5:2);
+  W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;
+  cv.style.width=W+'px';cv.style.height=H+'px';cx.setTransform(DPR,0,0,DPR,0,0);
+  dustCv.width=W*DPR;dustCv.height=H*DPR;
+  dustCv.style.width=W+'px';dustCv.style.height=H+'px';dcx.setTransform(DPR,0,0,DPR,0,0);
+  const SR=isMobile?.55:.7;                                 /* aurora is soft; render cheap */
+  skyCv.width=W*SR; skyCv.height=H*SR;
+  skyCv.style.width=W+'px'; skyCv.style.height=H+'px';}
+resize(); addEventListener('resize',resize);
+
+/* ═══════════════════ aurora shader (AURORA recipe: iso-contour curtains) ═══════════════════ */
+const gl = skyCv.getContext('webgl',{alpha:false,antialias:false});
+let skyProg=null, skyU={};
+if(gl){
+  const vs=`attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
+  const fs=`precision mediump float;
+uniform vec2 uRes;uniform float uT;uniform float uP;uniform vec2 uM;
+float h21(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+34.345);return fract(p.x*p.y);}
+float vn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+ float a=h21(i),b=h21(i+vec2(1.,0.)),c=h21(i+vec2(0.,1.)),d=h21(i+vec2(1.,1.));
+ return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);}
+float fbm(vec2 p){float s=0.,a=.5;for(int i=0;i<4;i++){s+=a*vn(p);p*=2.03;a*=.5;}return s;}
+vec3 ramp(float t){
+ vec3 a=vec3(.07,.26,.42), b=vec3(.22,.58,.68), c=vec3(.45,.44,.72);
+ return t<.5? mix(a,b,t*2.): mix(b,c,(t-.5)*2.);}
+void main(){
+ vec2 uv=gl_FragCoord.xy/uRes;
+ float t=uT*.018;
+ vec3 acc=vec3(0.);
+ for(int i=0;i<14;i++){
+   float layer=float(i)/13.;
+   vec2 q=vec2(uv.x*2.6 + t*.25 + layer*.55 + uM.x*.05, mix(1.,7.,layer*layer)*.8);
+   vec2 warp=vec2(fbm(q*1.7+t), fbm(q*1.7-t));
+   float n=fbm(q+(warp-.5)*.8);
+   float arc=.62+.16*sin(uv.x*2.1+t*1.6+layer*1.4);
+   n+=.22*exp(-pow((uv.y-arc)*5.5,2.));
+   float d=abs(n-.60);
+   float curtain=exp(-d*d*150.)+.22*exp(-d*d*55.);
+   float band=smoothstep(.18,.55,uv.y)*smoothstep(1.12,.62,uv.y);
+   acc+=ramp(layer)*curtain*exp(-layer*2.)*band;
+ }
+ acc*= .16*(1.-uP*.55)*(1.+1.5*exp(-pow((uP-.80)*5.5,2.)));   /* the sky storms at the handoff */
+ vec3 col=vec3(.020,.027,.047)+acc;
+ col+=(h21(gl_FragCoord.xy+uT)-.5)/255.;
+ gl_FragColor=vec4(col,1.);}`;
+  function sh(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);
+    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.warn(gl.getShaderInfoLog(s));return null}return s}
+  const v=sh(gl.VERTEX_SHADER,vs), f=sh(gl.FRAGMENT_SHADER,fs);
+  if(v&&f){
+    skyProg=gl.createProgram();gl.attachShader(skyProg,v);gl.attachShader(skyProg,f);gl.linkProgram(skyProg);
+    gl.useProgram(skyProg);
+    const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+    const loc=gl.getAttribLocation(skyProg,'p');
+    gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+    for(const n of ['uRes','uT','uP','uM']) skyU[n]=gl.getUniformLocation(skyProg,n);
+  }
+}
+function drawSky(t,p){
+  if(!gl||!skyProg) return;
+  gl.viewport(0,0,skyCv.width,skyCv.height);
+  gl.uniform2f(skyU.uRes,skyCv.width,skyCv.height);
+  gl.uniform1f(skyU.uT,t*.001);
+  gl.uniform1f(skyU.uP,p);
+  gl.uniform2f(skyU.uM,pxs,pys);
+  gl.drawArrays(gl.TRIANGLES,0,3);
+}
+
+/* ═══════════════════ shooting stars: rare, thin, with a soft glowing head ═══════════════════ */
+const meteors=[]; let meteorNext=3500+Math.random()*5000;
+function spawnMeteor(){
+  const a=Math.PI*(.70+Math.random()*.24);           /* mostly down-left diagonals */
+  const sp=(.5+Math.random()*.45)*W/900;
+  meteors.push({
+    x:W*(.1+Math.random()*.8), y:H*(.04+Math.random()*.3),
+    vx:Math.cos(a)*sp, vy:Math.sin(a)*sp*.55,
+    life:0, dur:1100+Math.random()*800});
+}
+/* ═══════════════════ stardust trail ═══════════════════
+   Cursor (desktop) and finger (mobile) leave a slow-settling wake of
+   zero-gravity dust. Scroll velocity feeds it too, so a phone with no
+   pointer still trails light while the page moves. */
+function glowSprite(rgb){
+  const S=48, c=document.createElement('canvas'); c.width=c.height=S;
+  const g=c.getContext('2d');
+  const rad=g.createRadialGradient(S/2,S/2,0,S/2,S/2,S/2);
+  rad.addColorStop(0,   `rgba(${rgb},1)`);
+  rad.addColorStop(.28, `rgba(${rgb},.45)`);
+  rad.addColorStop(1,   `rgba(${rgb},0)`);
+  g.fillStyle=rad; g.fillRect(0,0,S,S);
+  return c;
+}
+const SPRITE_ICE  = glowSprite('214,234,255');
+const SPRITE_GOLD = glowSprite('217,198,156');   /* the mark's gold, rarely */
+const dust=[]; const DUST_MAX=isMobile?90:150;
+let lastEmitX=null,lastEmitY=null,lastEmitT=0;
+
+function emitDust(x,y,vx,vy,n){
+  for(let i=0;i<n;i++){
+    if(dust.length>=DUST_MAX) dust.shift();
+    const a=Math.random()*Math.PI*2, sp=Math.random()*.22;
+    dust.push({
+      x:x+(Math.random()-.5)*7, y:y+(Math.random()-.5)*7,
+      vx:vx*.055+Math.cos(a)*sp, vy:vy*.055+Math.sin(a)*sp-.035,  /* faint lift */
+      life:0, dur:1000+Math.random()*1100,
+      r:2.5+Math.random()*7,
+      gold:Math.random()<.07});
+  }
+}
+function trailFromPointer(e){
+  if(reduced) return;
+  const x=e.clientX, y=e.clientY, now=performance.now();
+  if(lastEmitX===null){lastEmitX=x;lastEmitY=y;lastEmitT=now;return}
+  const dx=x-lastEmitX, dy=y-lastEmitY;
+  const d=Math.hypot(dx,dy);
+  if(d<7) return;
+  const dt=Math.max(8,now-lastEmitT);
+  const vx=dx/dt*16.7, vy=dy/dt*16.7;
+  const steps=Math.min(4,Math.floor(d/9)||1);
+  for(let i=1;i<=steps;i++)
+    emitDust(lastEmitX+dx*(i/steps), lastEmitY+dy*(i/steps), vx, vy, 1);
+  lastEmitX=x;lastEmitY=y;lastEmitT=now;
+}
+addEventListener('pointermove',trailFromPointer,{passive:true});
+addEventListener('touchmove',e=>{if(e.touches[0])trailFromPointer(e.touches[0])},{passive:true});
+addEventListener('pointerdown',e=>{lastEmitX=e.clientX;lastEmitY=e.clientY;
+  lastEmitT=performance.now(); emitDust(e.clientX,e.clientY,0,0,4)},{passive:true});
+
+/* mobile has no hover — the page's own motion throws dust up through the frame.
+   Tracked off real scrollY so it keeps working past the hero. */
+let scrollDustAcc=0, lastScrollY=scrollY, pageVel=0;
+function scrollDust(){
+  if(reduced||!isMobile) return;
+  const dy=Math.abs(scrollY-lastScrollY); lastScrollY=scrollY;
+  pageVel+=(dy-pageVel)*.25;
+  scrollDustAcc += Math.min(pageVel,60)*.055;
+  while(scrollDustAcc>1){
+    scrollDustAcc-=1;
+    emitDust(Math.random()*W, H*(.12+Math.random()*.8), 0, -1.6-Math.random()*1.4, 1);
+  }
+}
+
+function drawDust(dt){
+  dcx.clearRect(0,0,W,H);
+  if(!dust.length) return;
+  dcx.save(); dcx.globalCompositeOperation='lighter';
+  for(let i=dust.length-1;i>=0;i--){
+    const p=dust[i];
+    p.life+=dt*16.7;
+    const k=p.life/p.dur;
+    if(k>=1){dust.splice(i,1);continue}
+    p.x+=p.vx*dt; p.y+=p.vy*dt;
+    p.vx*=.972; p.vy*=.972;                      /* drag, so it settles */
+    const fade=Math.pow(1-k,1.7);
+    const r=p.r*(.55+.45*(1-k));
+    dcx.globalAlpha=fade*.85;
+    const spr=p.gold?SPRITE_GOLD:SPRITE_ICE;
+    dcx.drawImage(spr,p.x-r,p.y-r,r*2,r*2);
+  }
+  dcx.restore();
+}
+
+function drawMeteors(t,dt){
+  meteorNext-=dt*16.7;
+  if(meteorNext<=0 && meteors.length<2){
+    spawnMeteor();
+    meteorNext=4500+Math.random()*8000;
+  }
+  cx.save();cx.globalCompositeOperation='lighter';
+  for(let i=meteors.length-1;i>=0;i--){
+    const m=meteors[i];
+    m.life+=dt*16.7;
+    const k=m.life/m.dur;
+    if(k>=1){meteors.splice(i,1);continue}
+    const env=Math.sin(k*Math.PI);
+    m.x+=m.vx*dt*3; m.y+=m.vy*dt*3;
+    const tail=130*env;
+    /* the tail: long, thin, fading */
+    const g=cx.createLinearGradient(m.x,m.y,m.x-m.vx*tail,m.y-m.vy*tail);
+    g.addColorStop(0,`rgba(224,238,255,${.7*env})`);
+    g.addColorStop(.3,`rgba(190,214,244,${.32*env})`);
+    g.addColorStop(1,'rgba(190,214,244,0)');
+    cx.strokeStyle=g;cx.lineWidth=1.1;cx.lineCap='round';
+    cx.beginPath();cx.moveTo(m.x,m.y);
+    cx.lineTo(m.x-m.vx*tail,m.y-m.vy*tail);cx.stroke();
+    /* the head: a small soft glow */
+    const hg=cx.createRadialGradient(m.x,m.y,0,m.x,m.y,7);
+    hg.addColorStop(0,`rgba(240,248,255,${.85*env})`);
+    hg.addColorStop(1,'rgba(240,248,255,0)');
+    cx.fillStyle=hg;cx.beginPath();cx.arc(m.x,m.y,7,0,7);cx.fill();
+  }
+  cx.restore();
+}
+
+/* stars for fallback + loader ambience */
+const stars = Array.from({length:220},()=>({x:Math.random(),y:Math.random(),
+  r:Math.random()*1.2+.2, tw:Math.random()*Math.PI*2, sp:.4+Math.random()*1.2,
+  z:.3+Math.random()*.7}));
+
+
+/* pointer parallax — the scene shifts against the cursor (igloo grammar) */
+let px=0,py=0,pxs=0,pys=0;                 /* target / smoothed, -1..1 */
+let mouseDelta=0;
+addEventListener('pointermove',e=>{
+  const nx=(e.clientX/innerWidth)*2-1, ny=(e.clientY/innerHeight)*2-1;
+  mouseDelta+=Math.abs(nx-px)+Math.abs(ny-py);
+  px=nx; py=ny;
+});
+
+function drawCover(img, zoom=1, ox=0, oy=0){
+  const iw=img.videoWidth||img.naturalWidth||img.width, ih=img.videoHeight||img.naturalHeight||img.height;
+  if(!iw||!ih) return;
+  const s=Math.max(W/iw,H/ih)*zoom;
+  const w=iw*s,h=ih*s;
+  cx.drawImage(img,(W-w)/2+ox,(H-h)/2+oy,w,h);
+}
+function drawStars(t,alpha){
+  const breathe=Math.sin(t*.0006)*4;
+  const drift=shown*40;                                    /* stars rise slowly as you scroll */
+  const wander=t*.0018;                                    /* eternal slow diagonal drift */
+  cx.save();cx.globalAlpha=alpha;
+  for(const s of stars){
+    const a=.3+.7*Math.abs(Math.sin(t*.001*s.sp+s.tw));
+    const sx=(((s.x*W + wander*10*s.z) - pxs*26*s.z)%(W+40)+W+40)%(W+40)-20;
+    const sy=((s.y*H + wander*4*s.z - pys*18*s.z - drift*s.z + breathe*s.z)%(H+40)+H+40)%(H+40)-20;
+    cx.globalAlpha=alpha*a;cx.fillStyle='#cfe2f7';
+    cx.beginPath();cx.arc(sx,sy,s.r,0,7);cx.fill();
+  }
+  cx.restore();
+}
+
+/* living sky: aurora shader below, stars + rare meteors above */
+function drawScrub(p, t){
+  cx.clearRect(0,0,W,H);                     /* 2D layer is transparent over the shader */
+  drawSky(t,p);
+  drawStars(t, .55 + p*.35);
+  drawMeteors(t, mistDt);
+}
+
+/* ═══════════════════ scroll scrub ═══════════════════ */
+const track=document.getElementById('hero-track');
+const hudCh=document.getElementById('hud-chapter'), hudPr=document.getElementById('hud-progress');
+const t1=document.getElementById('t1'),t2=document.getElementById('t2'),t3=document.getElementById('t3');
+const cue=document.getElementById('cue');
+let target=0, shown=0;
+
+function textWindow(el,p,s,e){
+  const m=(s+e)/2, half=(e-s)/2;
+  const d=Math.abs(p-m)/half;
+  const o=Math.max(0,1-Math.pow(d,1.6));
+  el.style.opacity=o;
+  el.style.transform=`translate(${pxs*-14}px,${(p-m)*-60 + pys*-10}px)`;  /* text floats against scene */
+}
+function onScroll(){
+  const r=track.getBoundingClientRect();
+  const total=track.offsetHeight-innerHeight;
+  target = total>0 ? Math.min(1,Math.max(0,-r.top/total)) : 0;
+  if(!isFinite(target)) target=0;
+}
+addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+let rafT=0, lastT=0, mistDt=1, vel=0;
+const huds=[...document.querySelectorAll('.hud')];
+const fogEl=document.querySelector('#hero-stick .vig');
+function loop(t){
+  mistDt=Math.min(3,(t-lastT)/16.7||1); lastT=t; rafT=t;
+  if(!isFinite(shown)) shown=0;
+  const prev=shown;
+  shown+=(target-shown)*(reduced?1:.06);         /* viscous — igloo weight */
+  vel+=(Math.abs(shown-prev)-vel)*.2;            /* smoothed scroll velocity */
+  pxs+=(px-pxs)*.05; pys+=(py-pys)*.05;          /* pointer lerp — heavy, floaty */
+  drawScrub(shown,t);
+
+  /* HUD: gentle fade with velocity + counter-parallax to cursor */
+  const v=Math.min(1,vel*180);
+  scrollDust();                              /* phones trail light while the page moves */
+  drawDust(mistDt);                             /* the wake lives above every section */
+  const hudOp=Math.max(.25,1-v*1.2);
+  for(const h of huds){h.style.opacity=hudOp; h.style.transform=`translate(${pxs*8}px,${pys*6}px)`}
+
+  textWindow(t1,shown,-.28,.30);
+  textWindow(t2,shown,.34,.64);
+  textWindow(t3,shown,.68,1.02);
+  const ch = shown<.34?'a':shown<.67?'b':'c';
+  hudCh.textContent=HUD_NAMES[ch];
+  hudPr.textContent=String(Math.round(shown*100)).padStart(3,'0');
+  cue.style.opacity = (shown<.02 && v<.06)?1:0;     /* cue only at true rest */
+  requestAnimationFrame(loop);
+}
+
+/* ═══════════════════ scramble ═══════════════════ */
+const GLYPHS='!<>-_\\/[]{}—=+*^?#·';
+function scramble(el){
+  if(el.dataset.busy) return;
+  el.dataset.busy='1';
+  const final=el.dataset.final || (el.dataset.final=el.textContent);
+  let f=0;
+  const iv=setInterval(()=>{
+    f++;
+    el.textContent=final.split('').map((c,i)=>
+      c===' '?' ':(i < f/2 ? c : GLYPHS[Math.floor(Math.random()*GLYPHS.length)])).join('');
+    if(f/2>=final.length){el.textContent=final;clearInterval(iv);delete el.dataset.busy}
+  },40);
+}
+
+/* ═══════════════════ loader ═══════════════════ */
+const loader=document.getElementById('loader');
+const barI=loader.querySelector('.bar i'), pct=loader.querySelector('.pct');
+const morse=loader.querySelector('.morse');
+const morseFrames=['— — · — —','· — — · —','— · — — ·','· · — — —','— — — · ·'];
+let mi=0; const morseIv=setInterval(()=>{morse.textContent=morseFrames[mi++%morseFrames.length]},380);
+
+preload(p=>{
+  barI.style.transform=`scaleX(${p})`;
+  pct.textContent=String(Math.round(p*100)).padStart(2,'0');
+}).then(()=>{
+  clearInterval(morseIv);
+  setTimeout(()=>{
+    loader.classList.add('done');
+    scramble(document.querySelector('[data-scramble]'));
+  },420);
+});
+requestAnimationFrame(loop);
+
+/* ═══════════════════ work videos ═══════════════════ */
+function typeTag(el){
+  if(el.dataset.typed) return; el.dataset.typed='1';
+  const full=el.textContent; el.textContent='';
+  el.style.minHeight='1.2em';
+  let i=0;
+  const iv=setInterval(()=>{
+    i++; el.textContent=full.slice(0,i);
+    if(i>=full.length) clearInterval(iv);
+  },16);
+}
+/* ── fetch early: a full viewport ahead, so nothing starts on an empty buffer ── */
+const ioLoad=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting) return;
+  const v=e.target.querySelector('video');
+  if(v && v.preload!=='auto'){v.preload='auto'; v.load()}
+  ioLoad.unobserve(e.target);
+}),{rootMargin:'100% 0px'});
+
+/* ── play once it can actually run, and reveal only then ── */
+function startPiece(piece){
+  const v=piece.querySelector('video');
+  const tag=piece.querySelector('.tag');
+  const reveal=()=>{
+    if(piece.classList.contains('seen')) return;
+    piece.classList.add('seen');
+    if(tag) setTimeout(()=>typeTag(tag),600);
+  };
+  if(!v){reveal();return}
+  const go=()=>{v.play().then(reveal).catch(reveal)};
+  if(v.readyState>=3) go();                       /* HAVE_FUTURE_DATA — safe to start */
+  else{
+    v.preload='auto';
+    v.addEventListener('canplay',go,{once:true});
+    v.addEventListener('loadeddata',()=>{if(v.readyState>=2)go()},{once:true});
+    setTimeout(reveal,1800);                      /* poster still lands if the net is slow */
+    v.load();
+  }
+}
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  const v=e.target.querySelector('video');
+  if(e.isIntersecting) startPiece(e.target);
+  else if(v && !v.paused) v.pause();
+}),{threshold:.12, rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('[data-piece]').forEach(p=>{io.observe(p);ioLoad.observe(p)});
+
+/* ── the progress line: proof of playback at a glance ── */
+document.querySelectorAll('[data-piece]').forEach(piece=>{
+  const v=piece.querySelector('video'), bar=piece.querySelector('.vprog');
+  if(!v||!bar) return;
+  v.addEventListener('timeupdate',()=>{
+    if(v.duration) bar.style.width=(v.currentTime/v.duration*100).toFixed(2)+'%';
+  });
+  v.addEventListener('waiting',()=>bar.style.opacity='.2');
+  v.addEventListener('playing',()=>bar.style.opacity='.55');
+});
+
+const io2=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('seen');io2.unobserve(e.target)}}),{threshold:.2});
+document.querySelectorAll('.rv').forEach(el=>io2.observe(el));
+
+/* ═══════════════════ request flow ═══════════════════
+   One question per screen. Enter or the arrow advances; nothing
+   commits until the last step. Posts to Netlify Forms with files. */
+const ask=document.getElementById('ask'), askForm=document.getElementById('askForm');
+const qs=[...askForm.querySelectorAll('.q')];
+const askNum=document.getElementById('askNum'), askRail=document.getElementById('askRail');
+const LAST=4, DONE=5;
+let step=0, lastFocus=null;
+
+document.getElementById('doneIris').innerHTML =
+  '<circle cx="50" cy="50" r="48" fill="#100D07"/>' + irisSVG(.34,'d',true,48);
+
+function showStep(n){
+  step=n;
+  qs.forEach(q=>q.classList.toggle('active',+q.dataset.step===n));
+  const shown=Math.min(n+1,DONE);
+  askNum.textContent=String(shown).padStart(2,'0');
+  askRail.style.width=(n/ (LAST+1) *100)+'%';
+  document.querySelector('.ask-step').style.opacity = n===DONE?0:1;
+  const inp=qs[n].querySelector('input:not([type=file]):not([type=hidden])');
+  if(inp) setTimeout(()=>inp.focus({preventScroll:true}),340);
+}
+function openAsk(){
+  lastFocus=document.activeElement;
+  ask.classList.add('open');
+  document.body.style.overflow='hidden';
+  showStep(0);
+}
+function closeAsk(){
+  ask.classList.remove('open');
+  document.body.style.overflow='';
+  if(lastFocus) lastFocus.focus({preventScroll:true});
+}
+document.querySelectorAll('[data-ask]').forEach(b=>b.addEventListener('click',openAsk));
+document.getElementById('askClose').addEventListener('click',closeAsk);
+document.getElementById('askDone').addEventListener('click',closeAsk);
+addEventListener('keydown',e=>{if(e.key==='Escape'&&ask.classList.contains('open'))closeAsk()});
+
+/* ── validation: only what the step actually needs ── */
+function hint(q,msg,isErr){
+  const h=q.querySelector('.qhint');
+  if(!h) return;
+  if(!h.dataset.base) h.dataset.base=h.textContent;
+  h.textContent = msg || h.dataset.base;
+  h.classList.toggle('err',!!isErr);
+}
+function valid(n){
+  const q=qs[n], inp=q.querySelector('input:not([type=file]):not([type=hidden])');
+  if(!inp) return true;
+  const v=inp.value.trim();
+  if(!v){hint(q,'This one we need.',true);inp.focus();return false}
+  if(inp.type==='email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){
+    hint(q,'That address looks off.',true);return false}
+  if(inp.type==='url'){
+    const u=/^https?:\/\//i.test(v)?v:'https://'+v;
+    if(!/^https?:\/\/[^\s.]+\.[^\s]{2,}$/i.test(u)){hint(q,'A link we can open, please.',true);return false}
+    inp.value=u;
+  }
+  hint(q,null,false);
+  return true;
+}
+function next(){ if(step<LAST){ if(valid(step)) showStep(step+1) } else submitAsk() }
+function back(){ if(step>0) showStep(step-1) }
+askForm.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click',next));
+askForm.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',back));
+askForm.addEventListener('keydown',e=>{
+  if(e.key==='Enter' && e.target.tagName==='INPUT' && e.target.type!=='file'){
+    e.preventDefault(); next();
+  }
+});
+
+/* ── files ── */
+const drop=document.getElementById('drop'), fileInput=document.getElementById('f-files'),
+      fileList=document.getElementById('filelist');
+const fmt=b=>b>1048576?(b/1048576).toFixed(1)+' MB':Math.round(b/1024)+' KB';
+function renderFiles(){
+  fileList.innerHTML=[...fileInput.files].map(f=>
+    `<div>${f.name} <b>${fmt(f.size)}</b></div>`).join('');
+}
+fileInput.addEventListener('change',renderFiles);
+['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{
+  e.preventDefault();drop.classList.add('over')}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{
+  e.preventDefault();drop.classList.remove('over')}));
+drop.addEventListener('drop',e=>{
+  if(e.dataTransfer.files.length){fileInput.files=e.dataTransfer.files;renderFiles()}
+});
+
+/* ── submit ── */
+async function submitAsk(){
+  for(let i=0;i<=3;i++) if(!valid(i)){showStep(i);return}
+  const btn=document.getElementById('askSubmit');
+  btn.style.opacity='.45'; btn.disabled=true;
+  const fd=new FormData(askForm);
+  try{
+    const r=await fetch('/',{method:'POST',body:fd});
+    if(!r.ok) throw new Error(r.status);
+    showStep(DONE);
+  }catch(err){
+    /* the studio still gets it — hand the details to mail rather than lose them */
+    const q=qs[LAST];
+    hint(q,"Couldn't send from here — opening your mail instead.",true);
+    const g=n=>encodeURIComponent((askForm.elements[n]||{}).value||'');
+    location.href='mailto:moona.ai.studio@gmail.com?subject='+encodeURIComponent('Test request — '+(askForm.elements.company.value||''))
+      +'&body='+g('name')+'%0A'+g('company')+'%0A'+g('website')+'%0A'+g('email');
+  }finally{
+    btn.style.opacity=''; btn.disabled=false;
+  }
+}
+askForm.addEventListener('submit',e=>{e.preventDefault();submitAsk()});
+
+/* ═══════════════════ header nav ═══════════════════ */
+document.querySelectorAll('#hdr [data-goto]').forEach(b=>b.addEventListener('click',()=>{
+  document.getElementById(b.dataset.goto).scrollIntoView({behavior:'smooth'});
+}));
+document.getElementById('homeLink').addEventListener('click',e=>{
+  e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'});
+});
+
+</script>
+</body>
+</html>
