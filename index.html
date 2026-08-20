@@ -142,7 +142,8 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
   transition:width .6s var(--ease)}
 
 .qwrap{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;
-  padding:12vh clamp(24px,7vw,90px);pointer-events:none}
+  /* 12vh is nothing on a phone held sideways, and the step ran into the top bar */
+  padding:max(12vh,118px) clamp(24px,7vw,90px) max(8vh,40px);pointer-events:none}
 .qwrap .q.active{pointer-events:auto}
 .q{position:absolute;width:min(760px,100%);opacity:0;visibility:hidden;
   transform:translateY(18px);transition:opacity .5s var(--ease),transform .6s var(--ease),visibility .5s}
@@ -195,7 +196,7 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
   filter:drop-shadow(0 0 26px rgba(217,198,156,.4))}
 @media(max-width:700px){
   #ask .ask-top{padding:16px 16px}
-  .qwrap{padding:14vh 20px 8vh;align-items:flex-start}
+  .qwrap{padding:max(14vh,104px) 20px max(8vh,32px);align-items:flex-start}
   /* the step is absolutely positioned, so it is centred past the wrap's padding
      once it is as wide as the wrap; carry the inset on the step itself */
   .q{padding-inline:20px}
@@ -209,6 +210,21 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
   background:var(--void-2);color:var(--ice-hot);border:1px solid #d9c69c;border-radius:var(--r-pill);
   text-decoration:none;transition:top .25s var(--ease)}
 .skip:focus{top:16px;outline:2px solid #d9c69c;outline-offset:2px}
+
+/* a phone held sideways gives the form ~380px of height: the top bar, the
+   question and the controls do not all fit at full size. Shrink, and let it
+   scroll if a long question still runs past the bottom. */
+@media(max-height:540px){
+  #ask .ask-top{padding:12px clamp(16px,3vw,28px)}
+  .qwrap{padding:72px clamp(20px,5vw,48px) 24px;align-items:flex-start;overflow-y:auto}
+  .q .qlab{margin-bottom:10px}
+  .q .qtitle{font-size:clamp(21px,3.4vw,30px);margin-bottom:18px}
+  .q input[type=text],.q input[type=email],.q input[type=url]{font-size:18px;padding:9px 2px}
+  .q .qhint{margin-top:10px}
+  .qnav{margin-top:20px}
+  .drop{padding:20px 18px}
+  .qdone .iris-done{width:52px;height:52px;margin-bottom:18px}
+}
 
 /* ————————————————————— cursor ————————————————————— */
 .cur{position:fixed;z-index:99;pointer-events:none;top:0;left:0;
@@ -386,7 +402,7 @@ main{position:relative;z-index:2;background:var(--void)}
 .mq-track{display:flex;align-items:center;gap:var(--gap);flex:0 0 auto;min-width:100%;
   animation:mq var(--dur,42s) linear infinite;will-change:transform}
 .mq.rev .mq-track{animation-direction:reverse;--dur:52s}   /* two speeds, so they never lock together */
-.mq:hover .mq-track{animation-play-state:paused}
+.mq:hover .mq-track,.mq.hold .mq-track{animation-play-state:paused}
 @keyframes mq{from{transform:translateX(0)}to{transform:translateX(calc(-100% - var(--gap)))}}
 
 .mq-item{position:relative;flex:0 0 auto;width:clamp(158px,15.5vw,232px);aspect-ratio:1/1;cursor:none;
@@ -1638,9 +1654,13 @@ askForm.addEventListener('submit',e=>{e.preventDefault();submitAsk()});
       stage.appendChild(i);
     }
     lb.hidden=false;
-    requestAnimationFrame(()=>lb.classList.add('open'));
     document.body.style.overflow='hidden';
-    closeBtn.focus({preventScroll:true});
+    /* the panel is visibility:hidden until .open, and the style has to land
+       before it can take focus — hence the second frame */
+    requestAnimationFrame(()=>{
+      lb.classList.add('open');
+      requestAnimationFrame(()=>closeBtn.focus({preventScroll:true}));
+    });
   }
   function close(){
     lb.classList.remove('open');
@@ -1674,9 +1694,23 @@ askForm.addEventListener('submit',e=>{e.preventDefault();submitAsk()});
       if(e.key==='Enter'||e.key===' '){e.preventDefault(); open(f)}
     });
   });
+  /* no hover on a phone: the row would slide out from under the finger */
+  document.querySelectorAll('.mq').forEach(row=>{
+    let release;
+    row.addEventListener('touchstart',()=>{clearTimeout(release);row.classList.add('hold')},{passive:true});
+    const letGo=()=>{clearTimeout(release);release=setTimeout(()=>row.classList.remove('hold'),1400)};
+    row.addEventListener('touchend',letGo,{passive:true});
+    row.addEventListener('touchcancel',letGo,{passive:true});
+  });
+
   closeBtn.addEventListener('click',close);
   lb.addEventListener('click',e=>{ if(e.target===lb) close() });
-  addEventListener('keydown',e=>{ if(e.key==='Escape' && lb.classList.contains('open')) close() });
+  addEventListener('keydown',e=>{
+    if(!lb.classList.contains('open')) return;
+    if(e.key==='Escape'){close(); return}
+    /* Close is the only control in here; Tab must not walk off behind the panel */
+    if(e.key==='Tab'){e.preventDefault(); closeBtn.focus()}
+  });
 })();
 
 /* ═══════════════════ header nav ═══════════════════ */
