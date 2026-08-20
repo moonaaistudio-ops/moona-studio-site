@@ -56,11 +56,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:none}
    ported verbatim to vanilla CSS. Source:
    https://magicui.design/r/rainbow-button.json                      */
 :root{
-  --color-1:oklch(66.2% 0.225 25.9);
-  --color-2:oklch(60.4% 0.26 302);
-  --color-3:oklch(69.6% 0.165 251);
-  --color-4:oklch(80.2% 0.134 225);
-  --color-5:oklch(90.7% 0.231 133);
+  /* warm-gold retint of the Rainbow Button ramp (Moona palette) */
+  --color-1:oklch(66% 0.135 48);   /* deep amber   */
+  --color-2:oklch(60% 0.120 38);   /* dark copper  */
+  --color-3:oklch(81% 0.125 82);   /* gold         */
+  --color-4:oklch(94% 0.055 98);   /* champagne    */
+  --color-5:oklch(87% 0.145 74);   /* honey        */
   --speed:2s;
 }
 @property --speed{syntax:"<time>";inherits:true;initial-value:2s}
