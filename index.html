@@ -312,6 +312,8 @@ main{position:relative;z-index:2;background:var(--void)}
 .work-head{max-width:1200px;margin:0 auto 10vh;padding:0 clamp(22px,5vw,72px)}
 .work-head .idx{font-family:var(--mono);font-size:10px;letter-spacing:.4em;color:var(--ice-dim);
   text-transform:uppercase;display:block;margin-bottom:14px}
+.work-head .work-note{font-size:clamp(15px,1.7vw,19px);color:rgba(190,212,238,.72);
+  line-height:1.6;max-width:46ch;margin-top:4px}
 .piece{max-width:1200px;margin:0 auto 18vh;padding:0 clamp(22px,5vw,72px)}
 .piece .frame{position:relative;overflow:hidden;border-radius:var(--r-lg);background:var(--void-2);
   box-shadow:0 40px 120px -40px rgba(0,0,0,.8);
@@ -328,7 +330,14 @@ main{position:relative;z-index:2;background:var(--void)}
    you are near keeps one; the rest fall back to their poster. */
 .piece:not(.live) video{display:none}
 /* a video should look like a video even on its first frame */
-.vbadge{position:absolute;left:14px;bottom:14px;z-index:3;
+.specbadge{position:absolute;left:14px;bottom:14px;z-index:3;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;
+  color:#d9c69c;padding:5px 11px;border-radius:var(--r-pill);
+  border:1px solid rgba(217,198,156,.45);background:rgba(5,7,12,.72);
+  opacity:0;transition:opacity .7s var(--ease) .5s}
+.piece.seen .specbadge{opacity:.9}
+.vbadge{margin-left:0}
+.vbadge{position:absolute;left:76px;bottom:14px;z-index:3;
   font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--ice-hot);
   padding:5px 11px;border-radius:var(--r-pill);background:rgba(5,7,12,.72);
   opacity:0;transition:opacity .7s var(--ease) .5s}
@@ -396,6 +405,25 @@ main{position:relative;z-index:2;background:var(--void)}
 }
 @media(prefers-reduced-motion:reduce){
   .mq-track{animation:none}
+}
+
+/* ————————————————————— how it goes ————————————————————— */
+.how{max-width:1200px;margin:0 auto;padding:2vh clamp(22px,6vw,80px) 12vh}
+.how-lab{font-family:var(--mono);font-size:10px;letter-spacing:.4em;text-transform:uppercase;
+  color:var(--ice-dim);margin-bottom:6vh}
+.how-steps{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);
+  gap:clamp(28px,4vw,64px)}
+.how-steps li{border-top:1px solid var(--line);padding-top:22px}
+.how-steps .n{font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:#d9c69c;display:block}
+.how-steps h3{margin-top:16px;font-family:var(--serif);font-weight:400;
+  font-size:clamp(21px,2.4vw,30px);line-height:1.15;color:var(--ice-hot)}
+.how-steps p{margin-top:12px;font-size:clamp(14px,1.5vw,16px);line-height:1.65;
+  color:rgba(190,212,238,.72);max-width:34ch}
+@media(max-width:860px){
+  .how{padding:0 clamp(22px,6vw,80px) 10vh}
+  .how-steps{grid-template-columns:1fr;gap:0}
+  .how-steps li{padding:22px 0 26px}
+  .how-steps h3{margin-top:12px}
 }
 
 /* ————————————————————— lightbox ————————————————————— */
@@ -568,45 +596,46 @@ main{position:relative;z-index:2;background:var(--void)}
 <main>
   <section class="work" id="work">
     <div class="work-head rv">
-      <span class="idx">Selected work</span>
+      <span class="idx">Spec work &middot; nobody asked for these</span>
+      <p class="work-note">Four brands we don't work for. We made these anyway &mdash; the same way we'll make yours.</p>
     </div>
 
     <article class="piece rv" data-piece>
-      <div class="frame"><video src="v/mcdonalds.mp4" poster="p/mcdonalds.jpg" muted loop playsinline preload="none" aria-label="McDonald's — self-initiated spec film by Moona"></video><span class="vbadge">00:08</span><i class="vprog"></i></div>
+      <div class="frame"><video src="v/mcdonalds.mp4" poster="p/mcdonalds.jpg" muted loop playsinline preload="none" aria-label="McDonald's — self-initiated spec film by Moona"></video><span class="specbadge">Spec</span><span class="vbadge">00:08</span><i class="vprog"></i></div>
       <div class="meta">
         <span class="num">01</span><span class="brand">McDonald's</span>
         <p class="concept">You already know the taste. Now watch it move.</p>
-        <p class="tag">image-to-video · 8s · appetite pacing · single continuous move</p>
+        <p class="tag">from one product photo &middot; 3 days &middot; appetite pacing &middot; single continuous move</p>
       </div>
       <div class="breakdown"></div>
     </article>
 
     <article class="piece rv" data-piece>
-      <div class="frame"><video src="v/strava.mp4" poster="p/strava.jpg" muted loop playsinline preload="none" aria-label="Strava — self-initiated spec film by Moona"></video><span class="vbadge">00:14</span><i class="vprog"></i></div>
+      <div class="frame"><video src="v/strava.mp4" poster="p/strava.jpg" muted loop playsinline preload="none" aria-label="Strava — self-initiated spec film by Moona"></video><span class="specbadge">Spec</span><span class="vbadge">00:14</span><i class="vprog"></i></div>
       <div class="meta">
         <span class="num">02</span><span class="brand">Strava</span>
         <p class="concept">Every run already has a soundtrack. We cut to it.</p>
-        <p class="tag">kinetic type · 14s · beat-matched cut · product-locked colour</p>
+        <p class="tag">from their own site &middot; 3 days &middot; beat-matched cut &middot; product-locked colour</p>
       </div>
       <div class="breakdown"><!-- breakdown slot — content later --></div>
     </article>
 
     <article class="piece rv" data-piece>
-      <div class="frame"><video src="v/bull-padel.mp4" poster="p/bull-padel.jpg" muted loop playsinline preload="none" aria-label="Bull Padel — self-initiated spec film by Moona"></video><span class="vbadge">00:15</span><i class="vprog"></i></div>
+      <div class="frame"><video src="v/bull-padel.mp4" poster="p/bull-padel.jpg" muted loop playsinline preload="none" aria-label="Bull Padel — self-initiated spec film by Moona"></video><span class="specbadge">Spec</span><span class="vbadge">00:15</span><i class="vprog"></i></div>
       <div class="meta">
         <span class="num">03</span><span class="brand">Bull Padel</span>
         <p class="concept">The court hits back.</p>
-        <p class="tag">image-to-video · 15s · 3-beat cut · frame-accurate brand colour</p>
+        <p class="tag">from one product photo &middot; 3 days &middot; 3-beat cut &middot; frame-accurate brand colour</p>
       </div>
       <div class="breakdown"></div>
     </article>
 
     <article class="piece vert rv" data-piece>
-      <div class="frame"><video src="v/koda.mp4" poster="p/koda.jpg" muted loop playsinline preload="none" aria-label="Koda — self-initiated spec film by Moona"></video><span class="vbadge">00:10</span><i class="vprog"></i></div>
+      <div class="frame"><video src="v/koda.mp4" poster="p/koda.jpg" muted loop playsinline preload="none" aria-label="Koda — self-initiated spec film by Moona"></video><span class="specbadge">Spec</span><span class="vbadge">00:10</span><i class="vprog"></i></div>
       <div class="meta">
         <span class="num">04</span><span class="brand">Koda</span>
         <p class="concept">Built for the feed it lives in.</p>
-        <p class="tag">vertical master · 10s · loop-safe edit · legibility at 0.4s</p>
+        <p class="tag">from their own site &middot; 3 days &middot; loop-safe edit &middot; legibility at 0.4s</p>
       </div>
       <div class="breakdown"></div>
     </article>
@@ -670,6 +699,21 @@ main{position:relative;z-index:2;background:var(--void)}
 
   <section class="sentence">
     <p class="rv">Moona is an AI-native studio making cinematic motion for brands. <em>The camera was optional.</em></p>
+  </section>
+
+  <section class="how">
+    <p class="how-lab rv">How it goes</p>
+    <ol class="how-steps">
+      <li class="rv"><span class="n">01</span>
+        <h3>Nothing to send</h3>
+        <p>One photo from your own site is the whole brief. You don't have to lift a finger.</p></li>
+      <li class="rv"><span class="n">02</span>
+        <h3>One finished film</h3>
+        <p>No call, no brief, no revision round. Up to three business days.</p></li>
+      <li class="rv"><span class="n">03</span>
+        <h3>Yours either way</h3>
+        <p>Use it or leave it. No invoice follows.</p></li>
+    </ol>
   </section>
 
   <section class="contact">
