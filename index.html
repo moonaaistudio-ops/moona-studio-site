@@ -1020,8 +1020,10 @@ let scrollDustAcc=0, lastScrollY=scrollY, pageVel=0;
 function scrollDust(){
   if(reduced||!isMobile) return;
   const dy=Math.abs(scrollY-lastScrollY); lastScrollY=scrollY;
-  /* the trail belongs to the sky. Once the work starts it is just confetti. */
-  if(!heroOnScreen){ pageVel=0; scrollDustAcc=0; return }
+  /* the trail belongs to the sky, and only to the first part of it. Past the
+     third beat it stops being weather and starts being confetti. */
+  if(!heroOnScreen || shown>.62){ pageVel=0; scrollDustAcc=0; dustFading=true; return }
+  dustFading=false;
   pageVel+=(dy-pageVel)*.25;
   scrollDustAcc += Math.min(pageVel,60)*.022;      /* a third of what it was */
   while(scrollDustAcc>1){
@@ -1030,8 +1032,9 @@ function scrollDust(){
   }
 }
 
-let dustWasEmpty=true;
+let dustWasEmpty=true, dustFading=false;
 function drawDust(dt){
+  if(dustFading) dt*=3.2;            /* what is still in the air clears quickly */
   if(reduced){dust.length=0; return}
   if(!dust.length){                       /* nothing to draw: clear once, then leave it alone */
     if(!dustWasEmpty){dcx.clearRect(0,0,W,H); dustWasEmpty=true}
