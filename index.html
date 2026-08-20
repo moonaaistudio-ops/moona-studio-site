@@ -24,6 +24,10 @@
   --sans:"Inter Tight",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --serif:"Instrument Serif",Georgia,serif;
   --ease:cubic-bezier(.16,1,.3,1);
+  /* radius scale — the CTA pill is the extreme of a rounded family, not an outlier */
+  --r-pill:999px;   /* buttons, chips  */
+  --r-lg:20px;      /* media surfaces  */
+  --r-md:14px;      /* panels          */
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:auto}
@@ -68,7 +72,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:none}
 .cta-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;
   flex-shrink:0;white-space:nowrap;text-decoration:none;cursor:none;
   font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;
-  color:#0d0b07;padding:17px 30px;border-radius:999px;
+  color:#0d0b07;padding:17px 30px;border-radius:var(--r-pill);
   border:.125rem solid transparent;
   background-image:
     linear-gradient(#fff,#fff),
@@ -158,7 +162,7 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
   text-transform:uppercase;color:var(--ice-dim);padding:12px 4px;transition:color .3s}
 .qskip:hover{color:var(--ice-hot)}
 
-.drop{border:1px dashed var(--ice-faint);border-radius:4px;padding:34px 26px;text-align:center;
+.drop{border:1px dashed var(--ice-faint);border-radius:var(--r-md);padding:34px 26px;text-align:center;
   transition:border-color .4s var(--ease),background .4s var(--ease);cursor:none}
 @media(pointer:coarse){.drop{cursor:auto}}
 .drop.over{border-color:#d9c69c;background:rgba(217,198,156,.06)}
@@ -182,7 +186,7 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
 
 .skip{position:fixed;top:-60px;left:16px;z-index:100;padding:12px 18px;
   font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
-  background:var(--void-2);color:var(--ice-hot);border:1px solid #d9c69c;border-radius:3px;
+  background:var(--void-2);color:var(--ice-hot);border:1px solid #d9c69c;border-radius:var(--r-pill);
   text-decoration:none;transition:top .25s var(--ease)}
 .skip:focus{top:16px;outline:2px solid #d9c69c;outline-offset:2px}
 
@@ -278,7 +282,7 @@ main{position:relative;z-index:2;background:var(--void)}
 .work-head .idx{font-family:var(--mono);font-size:10px;letter-spacing:.4em;color:var(--ice-dim);
   text-transform:uppercase;display:block;margin-bottom:14px}
 .piece{max-width:1200px;margin:0 auto 18vh;padding:0 clamp(22px,5vw,72px)}
-.piece .frame{position:relative;overflow:hidden;border-radius:6px;background:var(--void-2);
+.piece .frame{position:relative;overflow:hidden;border-radius:var(--r-lg);background:var(--void-2);
   box-shadow:0 40px 120px -40px rgba(0,0,0,.8);
   clip-path:circle(18% at 50% 50%);transition:clip-path 1.05s var(--ease)}  /* the aperture */
 .piece.seen .frame{clip-path:circle(75% at 50% 50%)}
@@ -288,7 +292,7 @@ main{position:relative;z-index:2;background:var(--void)}
 /* a video should look like a video even on its first frame */
 .vbadge{position:absolute;left:14px;bottom:14px;z-index:3;
   font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--ice-hot);
-  padding:5px 9px;border-radius:2px;background:rgba(5,7,12,.72);
+  padding:5px 11px;border-radius:var(--r-pill);background:rgba(5,7,12,.72);
   opacity:0;transition:opacity .7s var(--ease) .5s}
 .piece.seen .vbadge{opacity:.82}
 .vprog{position:absolute;left:0;bottom:0;height:1.5px;width:0;z-index:3;
@@ -339,7 +343,7 @@ main{position:relative;z-index:2;background:var(--void)}
 @keyframes mq{from{transform:translateX(0)}to{transform:translateX(calc(-100% - var(--gap)))}}
 
 .mq-item{position:relative;flex:0 0 auto;width:clamp(126px,12vw,180px);aspect-ratio:1/1;
-  overflow:hidden;border-radius:6px;background:var(--void-2);
+  overflow:hidden;border-radius:var(--r-lg);background:var(--void-2);
   border:1px solid rgba(168,198,232,.10);box-shadow:0 20px 54px -30px rgba(0,0,0,.9)}
 .mq-item.w2{aspect-ratio:3/4}   /* the film keeps its own shape; squares sit beside it */
 .mq-item img,.mq-item video{width:100%;height:100%;object-fit:cover;display:block}
