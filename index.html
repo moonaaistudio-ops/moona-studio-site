@@ -1483,19 +1483,6 @@ ask.addEventListener('keydown',e=>{
 });
 document.querySelectorAll('[data-ask]').forEach(b=>{
   b.addEventListener('click',openAsk);
-  const label=[...b.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());
-  if(label && !reduced){
-    b.addEventListener('pointerenter',()=>{
-      const full=label.textContent, G='!<>-_\\/[]{}=+*^?#';
-      let f=0; clearInterval(b._sc);
-      b._sc=setInterval(()=>{
-        f++;
-        label.textContent=full.split('').map((c,i)=>
-          c===' '?' ':(i<f/1.6?c:G[Math.floor(Math.random()*G.length)])).join('');
-        if(f/1.6>=full.length){label.textContent=full;clearInterval(b._sc)}
-      },26);
-    });
-  }
 });
 document.getElementById('askClose').addEventListener('click',closeAsk);
 document.getElementById('askDone').addEventListener('click',closeAsk);
