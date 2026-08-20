@@ -1,0 +1,8 @@
+{
+  "name": "moona-studio-site",
+  "private": true,
+  "description": "Static site. The only dependency belongs to the /api lead handler.",
+  "dependencies": {
+    "nodemailer": "^6.9.14"
+  }
+}
