@@ -237,7 +237,7 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
 #loader .pct{font-family:var(--mono);font-size:10px;color:var(--ice-dim);letter-spacing:.2em}
 
 /* ————————————————————— hero ————————————————————— */
-#hero-track{height:150vh;position:relative}   /* the hold is half as long as it was */
+#hero-track{height:340vh;position:relative}   /* three beats need room to land */
 #hero-stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;
   contain:paint;transform:translateZ(0)}
 #sky{position:absolute;inset:0;width:100%;height:100%;transform:translateZ(0)}
@@ -276,7 +276,13 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
 }
 .htxt h1.statement{font-family:var(--serif);font-size:clamp(34px,6vw,82px);font-weight:400;
   letter-spacing:.005em;line-height:1.08;color:var(--ice-hot);max-width:17ch;text-wrap:balance;
-  text-shadow:0 0 60px rgba(168,198,232,.25)}
+  position:relative}
+/* the halo used to be a 60px text-shadow. The beat's opacity changes every frame,
+   so the browser re-blurred the whole headline 60 times a second — 64 of every 150
+   frames missed. It is a gradient behind the text now: same glow, rasterised once. */
+.htxt h1.statement::before{content:"";position:absolute;z-index:-1;pointer-events:none;
+  left:50%;top:50%;width:126%;height:200%;transform:translate(-50%,-50%);
+  background:radial-gradient(closest-side,rgba(168,198,232,.20),rgba(168,198,232,0) 72%)}
 .htxt h1.statement em{font-style:italic}
 .htxt .statement-sub{margin-top:20px;font-size:clamp(16px,1.9vw,21px);font-weight:400;
   color:rgba(190,212,238,.72);letter-spacing:.01em;line-height:1.55}
@@ -374,7 +380,7 @@ main{position:relative;z-index:2;background:var(--void)}
 .mq:hover .mq-track{animation-play-state:paused}
 @keyframes mq{from{transform:translateX(0)}to{transform:translateX(calc(-100% - var(--gap)))}}
 
-.mq-item{position:relative;flex:0 0 auto;width:clamp(126px,12vw,180px);aspect-ratio:1/1;
+.mq-item{position:relative;flex:0 0 auto;width:clamp(158px,15.5vw,232px);aspect-ratio:1/1;cursor:none;
   overflow:hidden;border-radius:var(--r-lg);background:var(--void-2);
   border:1px solid rgba(168,198,232,.10);box-shadow:0 20px 54px -30px rgba(0,0,0,.9)}
 .mq-item.w2{aspect-ratio:3/4}   /* the film keeps its own shape; squares sit beside it */
@@ -386,10 +392,43 @@ main{position:relative;z-index:2;background:var(--void)}
 @media(max-width:860px){
   .ctagal{grid-template-columns:1fr;gap:52px;padding:12vh clamp(22px,6vw,80px) 10vh}
   .ctagal-h{max-width:18ch}
-  .mq-item{width:clamp(112px,30vw,150px)}
+  .mq-item{width:clamp(140px,40vw,196px)}
 }
 @media(prefers-reduced-motion:reduce){
   .mq-track{animation:none}
+}
+
+/* ————————————————————— lightbox ————————————————————— */
+/* the running strip is small by design; this is where you actually look at one */
+.mq-item{transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
+.mq-item:hover,.mq-item:focus-visible{transform:translateY(-4px) scale(1.03);
+  box-shadow:0 26px 60px -26px rgba(0,0,0,.95);outline:none}
+.mq-item:focus-visible{box-shadow:0 0 0 2px #d9c69c,0 26px 60px -26px rgba(0,0,0,.95)}
+@media(pointer:coarse){.mq-item{cursor:auto}}
+
+#lb{position:fixed;inset:0;z-index:94;display:grid;place-items:center;
+  padding:clamp(16px,4vw,48px);background:rgba(3,5,9,.9);
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .4s var(--ease),visibility .4s}
+#lb.open{opacity:1;visibility:visible;pointer-events:auto}
+#lb .lb-stage{position:relative;max-width:min(1100px,100%);max-height:100%;
+  border-radius:var(--r-lg);overflow:hidden;background:var(--void-2);
+  box-shadow:0 60px 140px -50px rgba(0,0,0,.95);
+  transform:scale(.94);transition:transform .5s var(--ease)}
+#lb.open .lb-stage{transform:none}
+#lb .lb-stage>*{display:block;max-width:100%;max-height:calc(100vh - clamp(96px,16vw,180px));
+  width:auto;height:auto;object-fit:contain}
+#lb .lb-close{position:absolute;top:clamp(12px,2.4vw,22px);right:clamp(12px,2.4vw,22px);z-index:2;
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-width:44px;min-height:44px;padding:12px 18px;border-radius:var(--r-pill);
+  font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--ice-hot);border:1px solid rgba(217,198,156,.5);background:rgba(5,7,12,.66);
+  cursor:none;transition:background .3s,border-color .3s}
+#lb .lb-close:hover{background:rgba(217,198,156,.16);border-color:#d9c69c}
+@media(pointer:coarse){#lb .lb-close{cursor:auto}}
+@media(prefers-reduced-motion:reduce){
+  #lb,#lb .lb-stage{transition:none}
+  .mq-item{transition:none}
 }
 
 /* contact */
@@ -456,6 +495,10 @@ main{position:relative;z-index:2;background:var(--void)}
 
 <div class="grain"></div>
 <div class="cur ring"></div>
+<div id="lb" role="dialog" aria-modal="true" aria-label="Enlarged work" hidden>
+  <div class="lb-stage"></div>
+  <button class="lb-close" type="button" data-hover>Close</button>
+</div>
 <div class="cur dot"></div>
 
 <!-- ═══════════ LOADER ═══════════ -->
@@ -1049,10 +1092,11 @@ const t1=document.getElementById('t1'),t2=document.getElementById('t2'),t3=docum
 const cue=document.getElementById('cue');
 let target=0, shown=0;
 
+const HOLD=.45;                    /* the middle of a beat sits at full, so it reads */
 function textWindow(el,p,s,e){
   const m=(s+e)/2, half=(e-s)/2;
   const d=Math.abs(p-m)/half;
-  const o=Math.max(0,1-Math.pow(d,1.6));
+  const o = d<=HOLD ? 1 : Math.max(0,1-Math.pow((d-HOLD)/(1-HOLD),1.5));
   el.style.opacity=o;
   el.style.transform=`translate(${pxs*-14}px,${(p-m)*-60 + pys*-10}px)`;  /* text floats against scene */
 }
@@ -1092,9 +1136,10 @@ function loop(t){
       lastHudOp=hudOp; lastPxs=pxs;
       for(const h of huds){h.style.opacity=hudOp; h.style.transform=`translate(${pxs*8}px,${pys*6}px)`}
     }
-    textWindow(t1,shown,-.40,.42);
-    textWindow(t2,shown,.38,.86);
-    textWindow(t3,shown,.80,1.30);
+    /* evenly spaced so all three get the same dwell inside the track */
+    textWindow(t1,shown,-.18,.42);
+    textWindow(t2,shown,.20,.80);
+    textWindow(t3,shown,.58,1.18);
     const ch = shown<.34?'a':shown<.67?'b':'c';
     if(ch!==lastHudCh){lastHudCh=ch; hudCh.textContent=HUD_NAMES[ch]}
     const pr=String(Math.round(shown*100)).padStart(3,'0');
@@ -1161,7 +1206,7 @@ const ioLoad=new IntersectionObserver(es=>es.forEach(e=>{
   const v=e.target.querySelector('video');
   if(v && v.preload!=='auto'){v.preload='auto'; v.load()}
   ioLoad.unobserve(e.target);
-}),{rootMargin:'60% 0px'});
+}),{rootMargin:'200% 0px'});
 
 /* ── play once it can actually run, and reveal only then ── */
 function startPiece(piece){
@@ -1191,7 +1236,7 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{
   const v=e.target.querySelector('video');
   if(e.isIntersecting) startPiece(e.target);
   else if(v){ delete v.dataset.wasPlaying; if(!v.paused) v.pause() }
-}),{threshold:.12, rootMargin:'0px 0px -8% 0px'});
+}),{threshold:.01, rootMargin:'12% 0px 0px 0px'});
 document.querySelectorAll('[data-piece]').forEach(p=>{io.observe(p);ioLoad.observe(p)});
 
 /* Decoding a film while the page is moving costs about half the frame rate,
@@ -1213,8 +1258,17 @@ function setTravelling(on){
 addEventListener('scroll',()=>{
   setTravelling(true);
   clearTimeout(scrollIdle);
-  scrollIdle=setTimeout(()=>setTravelling(false),180);
+  scrollIdle=setTimeout(()=>setTravelling(false),120);
 },{passive:true});
+
+/* the first film is the one that decides whether this reads as video at all,
+   so it starts fetching while the visitor is still up in the hero */
+(()=>{
+  const first=document.querySelector('[data-piece] video');
+  if(!first) return;
+  const warm=()=>{ if(first.preload!=='auto'){first.preload='auto'; first.load()} };
+  if(document.readyState==='complete') warm(); else addEventListener('load',warm,{once:true});
+})();
 
 /* the poster is what the frame shows while the video layer is unmounted */
 document.querySelectorAll('[data-piece] .frame').forEach(f=>{
@@ -1469,6 +1523,77 @@ async function submitAsk(){
   }
 }
 askForm.addEventListener('submit',e=>{e.preventDefault();submitAsk()});
+
+/* ═══════════════════ lightbox ═══════════════════ */
+/* the strip is a glance; this is the look. A film keeps running when it opens. */
+(()=>{
+  const lb=document.getElementById('lb');
+  if(!lb) return;
+  const stage=lb.querySelector('.lb-stage'), closeBtn=lb.querySelector('.lb-close');
+  let opener=null;
+
+  /* only the first copy of each row is reachable — the second is the loop's twin */
+  document.querySelectorAll('.mq').forEach(row=>{
+    const [live,twin]=row.querySelectorAll('.mq-track');
+    if(twin) twin.setAttribute('aria-hidden','true');
+    if(!live) return;
+    row.removeAttribute('aria-hidden');
+    live.querySelectorAll('.mq-item').forEach(it=>{
+      const m=it.querySelector('img,video');
+      it.setAttribute('role','button');
+      it.setAttribute('tabindex','0');
+      it.setAttribute('aria-label','Open '+((m&&m.tagName==='VIDEO')?'film':'still')+' larger');
+    });
+  });
+
+  function open(item){
+    const src=item.querySelector('img,video');
+    if(!src) return;
+    opener=item;
+    stage.innerHTML='';
+    if(src.tagName==='VIDEO'){
+      const v=document.createElement('video');
+      v.src=src.currentSrc||src.src; v.muted=true; v.loop=true;
+      v.playsInline=true; v.autoplay=true; v.controls=false;
+      v.currentTime=src.currentTime||0;          /* pick it up where the strip was */
+      stage.appendChild(v); v.play().catch(()=>{});
+    }else{
+      /* the strip runs on 640px crops; blown up we want the real thing, and it
+         is only ever fetched for the one tile someone actually opened */
+      const i=document.createElement('img');
+      const small=src.getAttribute('src');
+      i.alt='';
+      i.onerror=()=>{ i.onerror=null; i.src=small };
+      i.src=small.replace(/^p\//,'p/lg/');
+      stage.appendChild(i);
+    }
+    lb.hidden=false;
+    requestAnimationFrame(()=>lb.classList.add('open'));
+    document.body.style.overflow='hidden';
+    closeBtn.focus({preventScroll:true});
+  }
+  function close(){
+    lb.classList.remove('open');
+    document.body.style.overflow='';
+    setTimeout(()=>{stage.innerHTML=''; lb.hidden=true},420);
+    if(opener){opener.focus({preventScroll:true}); opener=null}
+  }
+
+  document.querySelectorAll('.mq').forEach(row=>{
+    row.addEventListener('click',e=>{
+      const it=e.target.closest('.mq-item');
+      if(it && it.getAttribute('tabindex')==='0') open(it);
+    });
+    row.addEventListener('keydown',e=>{
+      if(e.key!=='Enter' && e.key!==' ') return;
+      const it=e.target.closest('.mq-item');
+      if(it && it.getAttribute('tabindex')==='0'){e.preventDefault(); open(it)}
+    });
+  });
+  closeBtn.addEventListener('click',close);
+  lb.addEventListener('click',e=>{ if(e.target===lb) close() });
+  addEventListener('keydown',e=>{ if(e.key==='Escape' && lb.classList.contains('open')) close() });
+})();
 
 /* ═══════════════════ header nav ═══════════════════ */
 /* our own tween: native smooth scrolling is unreliable on a page whose body
