@@ -433,6 +433,25 @@ main{position:relative;z-index:2;background:var(--void)}
 
 /* contact */
 .contact{padding:14vh clamp(22px,6vw,80px) 12vh;text-align:center;border-top:1px solid var(--line)}
+@media(max-width:700px){
+  /* 16:9 inside a portrait phone is short no matter what; give it every pixel
+     of width there is, and let a tap open it properly. */
+  .piece:not(.vert){padding:0}
+  .piece:not(.vert) .frame{border-radius:0}
+  .piece:not(.vert) .meta{padding:0 22px}
+}
+
+.piece .frame{cursor:none}
+@media(pointer:coarse){.piece .frame{cursor:auto}}
+.piece .frame:focus-visible{outline:none;box-shadow:0 0 0 2px #d9c69c,0 40px 120px -40px rgba(0,0,0,.8)}
+/* a quiet hint that the frame opens */
+.piece .frame::after{content:"";position:absolute;right:14px;top:14px;z-index:3;
+  width:30px;height:30px;border-radius:var(--r-pill);pointer-events:none;
+  background:rgba(5,7,12,.6) no-repeat center/13px 13px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23dcecff' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4'/%3E%3C/svg%3E");
+  opacity:0;transition:opacity .5s var(--ease)}
+.piece.seen .frame::after{opacity:.75}
+
 /* the second door. Same family as the CTA so it reads as a real control,
    dark with a gold hairline so it never competes with the white one. */
 .contact .or{display:flex;align-items:center;gap:16px;width:min(300px,72vw);
@@ -957,8 +976,10 @@ let scrollDustAcc=0, lastScrollY=scrollY, pageVel=0;
 function scrollDust(){
   if(reduced||!isMobile) return;
   const dy=Math.abs(scrollY-lastScrollY); lastScrollY=scrollY;
+  /* the trail belongs to the sky. Once the work starts it is just confetti. */
+  if(!heroOnScreen){ pageVel=0; scrollDustAcc=0; return }
   pageVel+=(dy-pageVel)*.25;
-  scrollDustAcc += Math.min(pageVel,60)*.055;
+  scrollDustAcc += Math.min(pageVel,60)*.022;      /* a third of what it was */
   while(scrollDustAcc>1){
     scrollDustAcc-=1;
     emitDust(Math.random()*W, H*(.12+Math.random()*.8), 0, -1.6-Math.random()*1.4, 1);
@@ -1588,6 +1609,20 @@ askForm.addEventListener('submit',e=>{e.preventDefault();submitAsk()});
       if(e.key!=='Enter' && e.key!==' ') return;
       const it=e.target.closest('.mq-item');
       if(it && it.getAttribute('tabindex')==='0'){e.preventDefault(); open(it)}
+    });
+  });
+
+  /* a 16:9 film is small on a phone. Tapping one gives it the whole screen —
+     and sideways it finally fills. */
+  document.querySelectorAll('[data-piece] .frame').forEach(f=>{
+    const v=f.querySelector('video');
+    if(!v) return;
+    f.setAttribute('role','button');
+    f.setAttribute('tabindex','0');
+    f.setAttribute('aria-label','Open this film larger');
+    f.addEventListener('click',()=>open(f));
+    f.addEventListener('keydown',e=>{
+      if(e.key==='Enter'||e.key===' '){e.preventDefault(); open(f)}
     });
   });
   closeBtn.addEventListener('click',close);
