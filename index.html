@@ -1298,9 +1298,28 @@ drop.addEventListener('drop',e=>{
 });
 
 /* ── submit ── */
-/* Netlify Forms died with the move to Vercel; this posts to a hosted
-   form endpoint instead, and still falls back to mail if that fails. */
-const FORM_ENDPOINT = 'https://formsubmit.co/ajax/moona.ai.studio@gmail.com';
+/* Posts to our own serverless function (api/lead.js), which mails the studio
+   over its own SMTP. No form service in the middle. Files ride along as
+   base64 inside the JSON, so the function has no multipart to parse. */
+const FORM_ENDPOINT = '/api/lead';
+const ATTACH_BUDGET = 3.2 * 1024 * 1024;   /* below the 4.5MB request cap */
+
+const readB64 = f => new Promise((res,rej)=>{
+  const r=new FileReader();
+  r.onload=()=>res(String(r.result).split(',')[1]||'');
+  r.onerror=rej;
+  r.readAsDataURL(f);
+});
+
+async function packFiles(list){
+  const out=[]; let total=0;
+  for(const f of [...list].slice(0,6)){
+    if(total+f.size>ATTACH_BUDGET) break;      /* the rest are named, not sent */
+    total+=f.size;
+    out.push({name:f.name,type:f.type,data:await readB64(f)});
+  }
+  return out;
+}
 
 async function submitAsk(){
   for(let i=0;i<=3;i++) if(!valid(i)){showStep(i);return}
@@ -1309,22 +1328,22 @@ async function submitAsk(){
   const q=qs[LAST];
   hint(q,'Sending…',false);
 
-  const fd=new FormData();
-  fd.append('name',    askForm.elements.name.value.trim());
-  fd.append('company', askForm.elements.company.value.trim());
-  fd.append('website', askForm.elements.website.value.trim());
-  fd.append('email',   askForm.elements.email.value.trim());
-  const files=document.getElementById('f-files').files;
-  fd.append('files', files.length ? [...files].map(f=>f.name).join(', ') : 'none');
-  for(const f of files) fd.append('attachment', f);
-  fd.append('_subject', 'New ad request — '+(askForm.elements.company.value.trim()||'Moona'));
-  fd.append('_template','table');
-  fd.append('_captcha','false');
-
   try{
-    const r=await fetch(FORM_ENDPOINT,{method:'POST',body:fd,headers:{Accept:'application/json'}});
+    const payload={
+      name:    askForm.elements.name.value.trim(),
+      company: askForm.elements.company.value.trim(),
+      website: askForm.elements.website.value.trim(),
+      email:   askForm.elements.email.value.trim(),
+      'bot-field': (askForm.elements['bot-field']||{}).value||'',
+      files:   await packFiles(document.getElementById('f-files').files)
+    };
+    const r=await fetch(FORM_ENDPOINT,{
+      method:'POST',
+      headers:{'Content-Type':'application/json',Accept:'application/json'},
+      body:JSON.stringify(payload)
+    });
     const j=await r.json().catch(()=>({}));
-    if(!r.ok || j.success==='false') throw new Error(j.message||r.status);
+    if(!r.ok || j.ok!==true) throw new Error(j.error||r.status);
     hint(q,null,false);
     showStep(DONE);
   }catch(err){
