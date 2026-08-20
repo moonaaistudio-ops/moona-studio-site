@@ -1298,10 +1298,15 @@ drop.addEventListener('drop',e=>{
 });
 
 /* ── submit ── */
-/* Posts to our own serverless function (api/lead.js), which mails the studio
-   over its own SMTP. No form service in the middle. Files ride along as
-   base64 inside the JSON, so the function has no multipart to parse. */
+/* Three rungs, tried in order, so a lead is never lost:
+     1. our own serverless function (api/lead.js) — mails over the studio's
+        own SMTP, nothing in the middle. Needs SMTP_USER / SMTP_PASS set in
+        Vercel; until they are, it answers 503 and we drop to rung 2.
+     2. the hosted form service, as a stand-in.
+     3. the visitor's own mail client.
+   Files ride along as base64 in the JSON, so rung 1 has no multipart to parse. */
 const FORM_ENDPOINT = '/api/lead';
+const FORM_FALLBACK = 'https://formsubmit.co/ajax/moona.ai.studio@gmail.com';
 const ATTACH_BUDGET = 3.2 * 1024 * 1024;   /* below the 4.5MB request cap */
 
 const readB64 = f => new Promise((res,rej)=>{
@@ -1319,6 +1324,24 @@ async function packFiles(list){
     out.push({name:f.name,type:f.type,data:await readB64(f)});
   }
   return out;
+}
+
+/* rung 2 — used only while our own endpoint has no credentials yet */
+async function viaFallback(p){
+  const fd=new FormData();
+  fd.append('name',p.name); fd.append('company',p.company);
+  fd.append('website',p.website); fd.append('email',p.email);
+  fd.append('files', p.files.length ? p.files.map(f=>f.name).join(', ') : 'none');
+  for(const f of p.files){
+    const bin=atob(f.data), buf=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++) buf[i]=bin.charCodeAt(i);
+    fd.append('attachment', new File([buf], f.name, {type:f.type||'application/octet-stream'}));
+  }
+  fd.append('_subject','New ad request — '+(p.company||'Moona'));
+  fd.append('_template','table'); fd.append('_captcha','false');
+  const r=await fetch(FORM_FALLBACK,{method:'POST',body:fd,headers:{Accept:'application/json'}});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok || j.success==='false') throw new Error(j.message||r.status);
 }
 
 async function submitAsk(){
@@ -1343,7 +1366,7 @@ async function submitAsk(){
       body:JSON.stringify(payload)
     });
     const j=await r.json().catch(()=>({}));
-    if(!r.ok || j.ok!==true) throw new Error(j.error||r.status);
+    if(!r.ok || j.ok!==true) await viaFallback(payload);   /* throws if that fails too */
     hint(q,null,false);
     showStep(DONE);
   }catch(err){
