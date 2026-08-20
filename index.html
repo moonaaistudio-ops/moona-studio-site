@@ -504,7 +504,7 @@ main{position:relative;z-index:2;background:var(--void)}
     </article>
   </section>
 
-  <section class="ctagal">
+  <section class="ctagal" id="studio">
     <div class="ctagal-text">
       <p class="ctagal-label rv">No pitch</p>
       <h2 class="ctagal-h rv">We'd rather <em>show</em> you than tell you.</h2>
@@ -549,7 +549,7 @@ main{position:relative;z-index:2;background:var(--void)}
     </div>
   </section>
 
-  <section class="sentence" id="studio">
+  <section class="sentence">
     <p class="rv">Moona is an AI-native studio making cinematic motion for brands. <em>The camera was optional.</em></p>
   </section>
 
@@ -1332,12 +1332,33 @@ async function submitAsk(){
 askForm.addEventListener('submit',e=>{e.preventDefault();submitAsk()});
 
 /* ═══════════════════ header nav ═══════════════════ */
+/* our own tween: native smooth scrolling is unreliable on a page whose body
+   is its own scroll container, and this way the easing matches the site */
+let tween=0;
+['wheel','touchstart','keydown'].forEach(ev=>
+  addEventListener(ev,()=>{tween++},{passive:true}));
+function scrollToY(y){
+  const max=document.documentElement.scrollHeight-innerHeight;
+  y=Math.max(0,Math.min(y,max));
+  const start=scrollY, d=y-start;
+  if(Math.abs(d)<2) return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){window.scrollTo(0,y);return}
+  const id=++tween, dur=Math.min(1100,420+Math.abs(d)*.12);
+  let t0=null;
+  (function frame(t){
+    if(t0===null) t0=t;
+    const p=Math.min(1,(t-t0)/dur);
+    window.scrollTo(0,start+d*(1-Math.pow(1-p,3)));
+    if(p<1 && id===tween) requestAnimationFrame(frame);
+  })(performance.now());
+}
 document.querySelectorAll('#hdr [data-goto]').forEach(b=>b.addEventListener('click',()=>{
-  document.getElementById(b.dataset.goto).scrollIntoView({behavior:'smooth'});
+  const t=document.getElementById(b.dataset.goto);
+  if(t) scrollToY(t.getBoundingClientRect().top+scrollY);
 }));
 document.getElementById('yr').textContent=new Date().getFullYear();
 document.getElementById('homeLink').addEventListener('click',e=>{
-  e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'});
+  e.preventDefault(); scrollToY(0);
 });
 
 </script>
