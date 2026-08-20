@@ -108,7 +108,7 @@ module.exports = async (req, res) => {
       from: `"Moona site" <${user}>`,
       to: process.env.LEAD_TO || user,
       replyTo: `"${name}" <${email}>`,     /* hitting reply answers the lead */
-      subject: `New ad request — ${company}`,
+      subject: `New ad request: ${company}`,
       text, html, attachments
     });
     return res.status(200).json({ ok: true });
