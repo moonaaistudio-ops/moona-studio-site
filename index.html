@@ -439,25 +439,6 @@ main{position:relative;z-index:2;background:var(--void)}
   .mq-track{animation:none}
 }
 
-/* ————————————————————— how it goes ————————————————————— */
-.how{max-width:1200px;margin:0 auto;padding:2vh clamp(22px,6vw,80px) 12vh}
-.how-lab{font-family:var(--mono);font-size:10px;letter-spacing:.4em;text-transform:uppercase;
-  color:var(--ice-dim);margin-bottom:6vh}
-.how-steps{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);
-  gap:clamp(28px,4vw,64px)}
-.how-steps li{border-top:1px solid var(--line);padding-top:22px}
-.how-steps .n{font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:#d9c69c;display:block}
-.how-steps h3{margin-top:16px;font-family:var(--serif);font-weight:400;
-  font-size:clamp(21px,2.4vw,30px);line-height:1.15;color:var(--ice-hot)}
-.how-steps p{margin-top:12px;font-size:clamp(14px,1.5vw,16px);line-height:1.65;
-  color:rgba(190,212,238,.72);max-width:34ch}
-@media(max-width:860px){
-  .how{padding:0 clamp(22px,6vw,80px) 10vh}
-  .how-steps{grid-template-columns:1fr;gap:0}
-  .how-steps li{padding:22px 0 26px}
-  .how-steps h3{margin-top:12px}
-}
-
 /* ————————————————————— lightbox ————————————————————— */
 /* the running strip is small by design; this is where you actually look at one */
 .mq-item{transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
@@ -738,22 +719,6 @@ main{position:relative;z-index:2;background:var(--void)}
 
   <section class="sentence">
     <p class="rv">Moona is an AI-native studio making cinematic motion for brands. <em>The camera was optional.</em></p>
-  </section>
-
-  <section class="how">
-    <p class="how-lab rv">How it goes</p>
-    <ol class="how-steps">
-      <li class="rv"><span class="n">01</span>
-        <h3>Nothing to send</h3>
-        <p>One photo from your own site is enough to start. Anything else is optional.</p></li>
-      <li class="rv"><span class="n">02</span>
-        <h3>One finished film</h3>
-        <p>No call needed, no revision round expected. Up to three business days.
-           If you'd rather be in it, send notes and we'll cut to them.</p></li>
-      <li class="rv"><span class="n">03</span>
-        <h3>Yours either way</h3>
-        <p>Use it or leave it. No invoice follows.</p></li>
-    </ol>
   </section>
 
   <section class="contact">
