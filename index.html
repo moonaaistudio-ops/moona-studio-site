@@ -1989,6 +1989,12 @@ function openAsk(event){
   document.body.classList.add('asking');
   ask.removeAttribute('aria-hidden');
   document.body.style.overflow='hidden';
+  /* The trigger is usually the header CTA, and the browser refuses aria-hidden
+     on an ancestor of the focused element. Focusing into the dialog here does
+     not work - it is still visibility:hidden for this frame, so focus() is
+     silently dropped - so let the trigger go instead. showStep picks the
+     focus up on the input a moment later. */
+  if(lastFocus && lastFocus.blur) lastFocus.blur();
   /* the page behind is inert while the dialog owns the screen */
   pageRegions.forEach(el=>el.setAttribute('aria-hidden','true'));
   showStep(0);
@@ -1996,10 +2002,14 @@ function openAsk(event){
 function closeAsk(){
   ask.classList.remove('open');
   document.body.classList.remove('asking');
-  ask.setAttribute('aria-hidden','true');
   document.body.style.overflow='';
   pageRegions.forEach(el=>el.removeAttribute('aria-hidden'));
+  /* focus has to leave before the dialog is hidden from assistive tech: the
+     browser refuses aria-hidden on an ancestor of the focused element, and
+     the attribute silently does nothing. */
+  if(ask.contains(document.activeElement)) document.activeElement.blur();
   if(lastFocus) lastFocus.focus({preventScroll:true});
+  ask.setAttribute('aria-hidden','true');
 }
 const pageRegions=[document.getElementById('hdr'),document.querySelector('main'),
   document.getElementById('hero-track')].filter(Boolean);
