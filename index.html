@@ -166,6 +166,12 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
 .q{position:absolute;width:min(760px,100%);opacity:0;visibility:hidden;
   transform:translateY(18px);transition:opacity .5s var(--ease),transform .6s var(--ease),visibility .5s}
 .q.active{opacity:1;visibility:visible;transform:none}
+/* A closed dialog is only opacity:0, and opacity does nothing for hit testing,
+   while .q.active re-asserts visibility and pointer-events over the parent's
+   'none'. Without this the last open step stays an invisible, clickable sheet
+   across the middle of the page: clicking anything there lands on a form
+   field, and over the upload label it opens a file picker. */
+#ask:not(.open) .q,#ask:not(.open) .q.active{visibility:hidden;pointer-events:none}
 .q .qlab{font-family:var(--mono);font-size:10px;letter-spacing:.32em;text-transform:uppercase;
   color:var(--ice-dim);margin-bottom:20px}
 .q .qtitle{font-family:var(--serif);font-size:clamp(30px,5.4vw,62px);font-weight:400;
