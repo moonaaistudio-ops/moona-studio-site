@@ -550,6 +550,22 @@ main{position:relative;z-index:2;background:var(--void)}
 .film-ctl button:hover{background:rgba(217,198,156,.16);border-color:#d9c69c}
 .film-ctl button:focus-visible{outline:none;box-shadow:0 0 0 2px #d9c69c}
 @media(pointer:coarse){.film-ctl button{cursor:auto}}
+/* the grid films get the same control, in the same place, at the same size */
+.piece-ctl{position:absolute;right:14px;bottom:14px;z-index:4;
+  display:flex;flex-direction:column;align-items:flex-end;gap:8px;
+  opacity:0;pointer-events:none;transition:opacity .7s var(--ease) .5s}
+.piece.seen .piece-ctl{opacity:1;pointer-events:auto}
+.piece-ctl button{display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;padding:0;border-radius:var(--r-pill);
+  color:#d9c69c;border:1px solid rgba(217,198,156,.5);background:rgba(5,7,12,.72);
+  cursor:none;transition:background .3s,border-color .3s}
+.piece-ctl button:hover{background:rgba(217,198,156,.16);border-color:#d9c69c}
+.piece-ctl button:focus-visible{outline:none;box-shadow:0 0 0 2px #d9c69c}
+@media(pointer:coarse){.piece-ctl button{cursor:auto}}
+/* the badge names the studio and the terms, so the duration chip clears it */
+.piece .vbadge{left:228px}
+@media(max-width:480px){.piece .specbadge{display:none}.piece .vbadge{left:14px}}
+
 .film-credit{margin-top:22px;font-family:var(--mono);font-size:11px;
   color:var(--ice-dim);letter-spacing:.12em;line-height:1.7}
 /* the process strip: how it was made, in the grid's own meta idiom */
@@ -970,7 +986,7 @@ main{position:relative;z-index:2;background:var(--void)}
     </div>
 
     <article class="piece rv" data-piece>
-      <div class="frame"><video src="v/mcdonalds.mp4" poster="p/mcdonalds.jpg" muted loop playsinline preload="none" aria-label="McDonald's self-initiated spec film by Moona"></video><span class="specbadge">Spec</span><span class="vbadge">00:08</span><i class="vprog"></i></div>
+      <div class="frame"><video src="v/mcdonalds.mp4" poster="p/mcdonalds.jpg" muted loop playsinline preload="none" aria-label="McDonald's self-initiated spec film by Moona"></video><span class="specbadge">Moona original &middot; Spec</span><span class="vbadge">00:08</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-pressed="true" aria-label="Pause the film" data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
       <div class="meta">
         <span class="num">01</span><span class="brand">McDonald's</span>
         <p class="concept">You already know the taste. Now watch it move.</p>
@@ -980,7 +996,7 @@ main{position:relative;z-index:2;background:var(--void)}
     </article>
 
     <article class="piece rv" data-piece>
-      <div class="frame"><video src="v/strava.mp4" poster="p/strava.jpg" muted loop playsinline preload="none" aria-label="Strava self-initiated spec film by Moona"></video><span class="specbadge">Spec</span><span class="vbadge">00:14</span><i class="vprog"></i></div>
+      <div class="frame"><video src="v/strava.mp4" poster="p/strava.jpg" muted loop playsinline preload="none" aria-label="Strava self-initiated spec film by Moona"></video><span class="specbadge">Moona original &middot; Spec</span><span class="vbadge">00:14</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-pressed="true" aria-label="Pause the film" data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
       <div class="meta">
         <span class="num">02</span><span class="brand">Strava</span>
         <p class="concept">Every run already has a soundtrack. We cut to it.</p>
@@ -990,7 +1006,7 @@ main{position:relative;z-index:2;background:var(--void)}
     </article>
 
     <article class="piece rv" data-piece>
-      <div class="frame"><video src="v/bull-padel.mp4" poster="p/bull-padel.jpg" muted loop playsinline preload="none" aria-label="Bull Padel self-initiated spec film by Moona"></video><span class="specbadge">Spec</span><span class="vbadge">00:15</span><i class="vprog"></i></div>
+      <div class="frame"><video src="v/bull-padel.mp4" poster="p/bull-padel.jpg" muted loop playsinline preload="none" aria-label="Bull Padel self-initiated spec film by Moona"></video><span class="specbadge">Moona original &middot; Spec</span><span class="vbadge">00:15</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-pressed="true" aria-label="Pause the film" data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
       <div class="meta">
         <span class="num">03</span><span class="brand">Bull Padel</span>
         <p class="concept">The court hits back.</p>
@@ -1000,7 +1016,7 @@ main{position:relative;z-index:2;background:var(--void)}
     </article>
 
     <article class="piece vert rv" data-piece>
-      <div class="frame"><video src="v/koda.mp4" poster="p/koda.jpg" muted loop playsinline preload="none" aria-label="Koda self-initiated spec film by Moona"></video><span class="specbadge">Spec</span><span class="vbadge">00:10</span><i class="vprog"></i></div>
+      <div class="frame"><video src="v/koda.mp4" poster="p/koda.jpg" muted loop playsinline preload="none" aria-label="Koda self-initiated spec film by Moona"></video><span class="specbadge">Moona original &middot; Spec</span><span class="vbadge">00:10</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-pressed="true" aria-label="Pause the film" data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
       <div class="meta">
         <span class="num">04</span><span class="brand">Koda</span>
         <p class="concept">Built for the feed it lives in.</p>
@@ -1668,7 +1684,7 @@ function startPiece(piece){
 }
 const io=new IntersectionObserver(es=>es.forEach(e=>{
   const v=e.target.querySelector('video');
-  if(e.isIntersecting) startPiece(e.target);
+  if(e.isIntersecting){ if(!e.target.dataset.userPaused) startPiece(e.target); }
   else if(v){ delete v.dataset.wasPlaying; if(!v.paused) v.pause() }
 }),{threshold:.01, rootMargin:'12% 0px 0px 0px'});
 document.querySelectorAll('[data-piece]').forEach(p=>{io.observe(p);ioLoad.observe(p)});
@@ -1684,6 +1700,7 @@ function setTravelling(on){
     else if(v.dataset.wasPlaying){
       delete v.dataset.wasPlaying;
       const p=v.closest('[data-piece]');
+      if(p.dataset.userPaused) return;      /* they chose to stop it */
       const r=p.getBoundingClientRect();
       if(r.bottom>0 && r.top<innerHeight) v.play().catch(()=>{});
     }
@@ -1734,6 +1751,41 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
   });
   v.addEventListener('waiting',()=>bar.style.opacity='.2');
   v.addEventListener('playing',()=>bar.style.opacity='.55');
+});
+
+/* ── the grid films get a play control too ──
+   These four are silent, so there is no sound toggle: a button that does
+   nothing reads as a broken one. It appears on its own if a film ever ships
+   with an audio track. A press here is a decision and outranks the scroll
+   machinery, which otherwise resumes anything on screen. */
+document.querySelectorAll('[data-piece]').forEach(piece=>{
+  const v=piece.querySelector('video');
+  const btn=piece.querySelector('.piece-ctl .film-play');
+  if(!v||!btn) return;
+
+  const paint=()=>{
+    const ended=v.ended, playing=!v.paused&&!ended;
+    btn.dataset.state = playing?'playing':(ended?'ended':'paused');
+    btn.setAttribute('aria-pressed',String(playing));
+    btn.setAttribute('aria-label',(playing?'Pause':(ended?'Replay':'Play'))+' this film');
+  };
+  v.addEventListener('play',paint);
+  v.addEventListener('pause',paint);
+  v.addEventListener('ended',paint);
+
+  btn.addEventListener('click',e=>{
+    e.stopPropagation();               /* the frame itself opens the lightbox */
+    if(!v.paused){ piece.dataset.userPaused='1'; v.pause(); }
+    else{
+      delete piece.dataset.userPaused;
+      delete v.dataset.wasPlaying;     /* do not let the scroll handler undo this */
+      if(v.ended) v.currentTime=0;
+      v.play().catch(()=>{});
+    }
+  });
+  /* Enter and Space on the frame open the lightbox; keep them off the button */
+  btn.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ') e.stopPropagation() });
+  paint();
 });
 
 /* ═══════════════════ the flagship film ═══════════════════
