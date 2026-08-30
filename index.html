@@ -145,14 +145,19 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
   background:linear-gradient(90deg,rgba(217,198,156,.55),#d9c69c);
   box-shadow:0 0 12px -1px rgba(217,198,156,.75);
   transition:width .6s var(--ease)}
-/* the rail alone is a hairline you can miss; the dots say how many are left */
-#ask .ask-dots{display:flex;align-items:center;gap:7px;margin-inline-start:14px}
-#ask .ask-dots i{width:6px;height:6px;border-radius:50%;background:rgba(168,198,232,.22);
-  transition:background .45s var(--ease),transform .45s var(--ease)}
-#ask .ask-dots i.done{background:rgba(217,198,156,.55)}
-#ask .ask-dots i.now{background:#d9c69c;transform:scale(1.55);
-  box-shadow:0 0 10px -1px rgba(217,198,156,.8)}
-@media(max-width:520px){#ask .ask-dots{margin-inline-start:10px;gap:6px}}
+/* the stepper sits with the question, not in a far corner: three joined dots
+   say 'three, and you are here' before anyone decides whether to start */
+.qsteps{display:flex;align-items:center;margin-bottom:26px}
+.qs-dot{flex:none;width:9px;height:9px;border-radius:50%;background:rgba(168,198,232,.2);
+  transition:background .45s var(--ease),width .45s var(--ease),height .45s var(--ease)}
+.qs-dot.done{background:rgba(217,198,156,.6)}
+.qs-dot.now{width:12px;height:12px;background:#d9c69c;
+  box-shadow:0 0 12px -1px rgba(217,198,156,.9)}
+.qs-seg{flex:none;width:clamp(34px,7vw,58px);height:1px;background:rgba(168,198,232,.18);
+  transition:background .45s var(--ease)}
+.qs-seg.done{background:rgba(217,198,156,.5)}
+@media(max-width:560px){.qsteps{margin-bottom:20px}.qs-seg{width:clamp(28px,9vw,44px)}}
+@media(prefers-reduced-motion:reduce){.qs-dot,.qs-seg{transition:none}}
 
 .qwrap{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;
   /* 12vh is nothing on a phone held sideways, and the step ran into the top bar */
@@ -257,6 +262,10 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
   transition:background .25s,color .25s}
 .filechip button:hover{background:rgba(217,198,156,.2);color:var(--ice-hot)}
 .filechip button:focus-visible{outline:none;box-shadow:0 0 0 2px #d9c69c}
+.filechip.over{border-color:rgba(232,160,154,.5);background:rgba(232,160,154,.08);color:#e8a09a}
+.filechip.over b{color:rgba(232,160,154,.75)}
+.filenote{flex-basis:100%;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;
+  color:#e8a09a;line-height:1.6}
 @media(pointer:coarse){.filechip button{width:38px;height:38px;cursor:auto}}
 
 .qdone{text-align:center}
@@ -1069,7 +1078,6 @@ main{position:relative;z-index:2;background:var(--void)}
 <div id="ask" role="dialog" aria-modal="true" aria-label="Get an ad for your brand">
   <div class="ask-top">
     <span class="ask-step"><b id="askNum">01</b> / 03</span>
-    <span class="ask-dots" id="askDots" aria-hidden="true"></span>
     <button class="ask-close" id="askClose" data-hover>Close</button>
   </div>
 
@@ -1911,8 +1919,24 @@ let step=0, lastFocus=null;
 document.getElementById('doneIris').innerHTML =
   '<circle cx="50" cy="50" r="48" fill="#100D07"/>' + irisSVG(.34,'d',true,48);
 
-const askDots=document.getElementById('askDots');
-if(askDots) askDots.innerHTML='<i></i>'.repeat(LAST+1);
+/* one stepper per question so it rides the crossfade and always sits exactly
+   above that step's own label */
+const steppers=[];
+qs.forEach(q=>{
+  const lab=q.querySelector('.qlab');
+  if(!lab) return;                       /* the done screen has no stepper */
+  const el=document.createElement('div');
+  el.className='qsteps';
+  el.setAttribute('aria-hidden','true');
+  let html='';
+  for(let i=0;i<=LAST;i++){
+    if(i) html+='<span class="qs-seg"></span>';
+    html+='<span class="qs-dot"></span>';
+  }
+  el.innerHTML=html;
+  q.insertBefore(el,lab);
+  steppers.push(el);
+});
 
 function showStep(n){
   step=n;
@@ -1922,9 +1946,12 @@ function showStep(n){
   /* fill for the step you are on, not the ones behind you: an empty bar on
      the first screen reads as 'nothing done yet' and costs people */
   askRail.style.width=(Math.min(n+1,LAST+1)/(LAST+1)*100)+'%';
-  if(askDots) [...askDots.children].forEach((d,i)=>{
-    d.classList.toggle('done', i<n);
-    d.classList.toggle('now',  i===n);
+  steppers.forEach(el=>{
+    [...el.querySelectorAll('.qs-dot')].forEach((d,i)=>{
+      d.classList.toggle('done', i<n);
+      d.classList.toggle('now',  i===n);
+    });
+    [...el.querySelectorAll('.qs-seg')].forEach((g,i)=>g.classList.toggle('done', i<n));
   });
   document.querySelector('.ask-step').style.opacity = n===DONE?0:1;
   const inp=qs[n].querySelector('input:not([type=file]):not([type=hidden])');
@@ -2025,15 +2052,53 @@ const fmt=b=> b>=1048576 ? (b/1048576).toFixed(1)+' MB'
             : b>=1024    ? Math.round(b/1024)+' KB'
                          : b+' B';
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function renderFiles(){
-  fileList.innerHTML=[...fileInput.files].map((f,i)=>
-    `<span class="filechip"><span class="nm">${esc(f.name)}</span> <b>${fmt(f.size)}</b>`+
-    `<button type="button" data-rm="${i}" aria-label="Remove ${esc(f.name)}" data-hover>`+
-    `<svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" `+
-    `stroke-width="1.6" stroke-linecap="round" aria-hidden="true">`+
-    `<path d="M3 3l8 8M11 3l-8 8"/></svg></button></span>`).join('');
+/* A phone photo is 4-8MB, and the request cap is 4.5MB before base64 inflates
+   it by a third. Shrinking to 2000px covers anything we would work from and
+   turns 'one photo, maybe' into 'eight photos, comfortably'. */
+const MAX_EDGE=2000, JPEG_Q=.85;
+async function shrinkImage(f){
+  if(!/^image\//.test(f.type) || /svg|gif/i.test(f.type)) return f;
+  try{
+    const bmp=await createImageBitmap(f);
+    const scale=Math.min(1, MAX_EDGE/Math.max(bmp.width,bmp.height));
+    if(scale===1 && f.size<900*1024) return f;          /* already small enough */
+    const w=Math.round(bmp.width*scale), h=Math.round(bmp.height*scale);
+    const c=document.createElement('canvas'); c.width=w; c.height=h;
+    c.getContext('2d').drawImage(bmp,0,0,w,h);
+    bmp.close&&bmp.close();
+    const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',JPEG_Q));
+    if(!blob || blob.size>=f.size) return f;            /* never make it worse */
+    return new File([blob], f.name.replace(/\.[^.]+$/,'')+'.jpg', {type:'image/jpeg'});
+  }catch(_){ return f }
 }
-fileInput.addEventListener('change',renderFiles);
+
+function renderFiles(){
+  let total=0, dropped=0;
+  fileList.innerHTML=[...fileInput.files].map((f,i)=>{
+    /* mirror packFiles exactly, so what is marked here is what actually rides */
+    const fits = i<6 && total+f.size<=ATTACH_BUDGET;
+    if(fits) total+=f.size; else dropped++;
+    return `<span class="filechip${fits?'':' over'}"`+
+      (fits?'':' title="Too large to send with the form"')+`>`+
+      `<span class="nm">${esc(f.name)}</span> <b>${fmt(f.size)}</b>`+
+      `<button type="button" data-rm="${i}" aria-label="Remove ${esc(f.name)}" data-hover>`+
+      `<svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" `+
+      `stroke-width="1.6" stroke-linecap="round" aria-hidden="true">`+
+      `<path d="M3 3l8 8M11 3l-8 8"/></svg></button></span>`;
+  }).join('');
+  /* say it out loud rather than dropping the file in silence at send time */
+  if(dropped) fileList.insertAdjacentHTML('beforeend',
+    `<span class="filenote">${dropped} won't fit &middot; ${fmt(ATTACH_BUDGET)} total. `+
+    `Remove one, or send the rest by reply.</span>`);
+}
+
+async function ingest(){
+  const shrunk=await Promise.all([...fileInput.files].map(shrinkImage));
+  const dt=new DataTransfer(); shrunk.forEach(f=>dt.items.add(f));
+  fileInput.files=dt.files;                 /* assignment does not re-fire change */
+  renderFiles();
+}
+fileInput.addEventListener('change',ingest);
 /* a FileList is read-only, so removal means rebuilding one without that entry */
 fileList.addEventListener('click',e=>{
   const btn=e.target.closest('[data-rm]');
@@ -2048,7 +2113,7 @@ fileList.addEventListener('click',e=>{
 ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{
   e.preventDefault();drop.classList.remove('over')}));
 drop.addEventListener('drop',e=>{
-  if(e.dataTransfer.files.length){fileInput.files=e.dataTransfer.files;renderFiles()}
+  if(e.dataTransfer.files.length){fileInput.files=e.dataTransfer.files;ingest()}
 });
 
 /* ── submit ── */
