@@ -883,7 +883,7 @@ main{position:relative;z-index:2;background:var(--void)}
              aria-label="Open DUSTLINE larger, with controls">
           <video data-src="v/dustline.mp4"
                  poster="p/dustline.jpg"
-                 playsinline muted preload="none"
+                 playsinline muted loop preload="none"
                  aria-label="DUSTLINE. A one-night desert love story told through an energy bar. A film by Moona."></video>
           <span class="specbadge">Moona original</span>
           <span class="vbadge">00:31</span>
@@ -1764,14 +1764,13 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
   if(!v||!btn) return;
 
   const paint=()=>{
-    const ended=v.ended, playing=!v.paused&&!ended;
-    btn.dataset.state = playing?'playing':(ended?'ended':'paused');
+    const playing=!v.paused;
+    btn.dataset.state = playing?'playing':'paused';
     btn.setAttribute('aria-pressed',String(playing));
-    btn.setAttribute('aria-label',(playing?'Pause':(ended?'Replay':'Play'))+' this film');
+    btn.setAttribute('aria-label',(playing?'Pause':'Play')+' this film');
   };
   v.addEventListener('play',paint);
   v.addEventListener('pause',paint);
-  v.addEventListener('ended',paint);
 
   btn.addEventListener('click',e=>{
     e.stopPropagation();               /* the frame itself opens the lightbox */
@@ -1779,7 +1778,6 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
     else{
       delete piece.dataset.userPaused;
       delete v.dataset.wasPlaying;     /* do not let the scroll handler undo this */
-      if(v.ended) v.currentTime=0;
       v.play().catch(()=>{});
     }
   });
@@ -1826,14 +1824,14 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
   /* the play button's glyph follows the media, never the click */
   function paintPlay(){
     if(!playBtn) return;
-    const ended=v.ended, playing=!v.paused&&!ended;
+    const playing=!v.paused;
     playBtn.setAttribute('aria-pressed',String(playing));
-    playBtn.dataset.state = playing?'playing':(ended?'ended':'paused');
-    playBtn.setAttribute('aria-label',(playing?'Pause':(ended?'Replay':'Play'))+' the film');
+    playBtn.dataset.state = playing?'playing':'paused';
+    playBtn.setAttribute('aria-label',(playing?'Pause':'Play')+' the film');
   }
   v.addEventListener('play',paintPlay);
   v.addEventListener('pause',paintPlay);
-  v.addEventListener('ended',()=>{film.classList.add('done');paintPlay()});
+
 
   function play(){ if(reduced&&v.paused&&!v.dataset.userStarted) return; v.play().catch(()=>{}); }
   function clearWatch(){ if(watch){v.removeEventListener('pause',watch); watch=null} }
@@ -1865,7 +1863,6 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
     /* a real gesture: unmuted playback is always allowed here */
     showCta(false);
     v.muted=false; v.volume=1; remember('0');
-    if(v.ended){ v.currentTime=0; film.classList.remove('done'); }
     userPaused=false; v.dataset.userStarted='1';
     v.play().catch(()=>{});
     paintSound();
@@ -1884,7 +1881,6 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
     if(!v.paused){ userPaused=true; v.pause(); }
     else{
       userPaused=false; v.dataset.userStarted='1';
-      if(v.ended){ v.currentTime=0; film.classList.remove('done'); }
       v.play().catch(()=>{});
       tryUnmute();                      /* a real gesture buys sound too */
     }
@@ -1905,7 +1901,7 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
     if(r.top<H*2.5) fetchIt();          /* bytes start a screen and a half early */
     if(ratio>=0.5){
       film.classList.add('seen');
-      if(!reduced&&!userPaused&&!v.ended&&v.paused){
+      if(!reduced&&!userPaused&&v.paused){
         if(v.readyState>=2){ play(); tryUnmute(); }
         else v.addEventListener('canplay',()=>{ if(ratio>=0.5&&!userPaused){play();tryUnmute()} },{once:true});
       }
@@ -1921,11 +1917,11 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
   /* the score must not play under a hidden tab or under the request flow */
   addEventListener('visibilitychange',()=>{
     if(document.hidden) suspend();
-    else if(ratio>=0.55&&!userPaused&&!v.ended) play();
+    else if(ratio>=0.55&&!userPaused) play();
   });
   new MutationObserver(()=>{
     if(document.body.classList.contains('asking')) suspend();
-    else if(ratio>=0.55&&!userPaused&&!v.ended) play();
+    else if(ratio>=0.55&&!userPaused) play();
   }).observe(document.body,{attributes:true,attributeFilter:['class']});
 
   /* the lightbox hands the film back and forth */
@@ -2336,7 +2332,7 @@ askForm.addEventListener('submit',e=>{e.preventDefault();submitAsk()});
       const wantsSound=item.hasAttribute('data-lb-sound');
       let chose=false; try{chose=sessionStorage.getItem('moona.film.muted')==='1'}catch(e){}
       v.src=src.currentSrc||src.src;
-      v.muted=wantsSound?chose:true; v.loop=!wantsControls;
+      v.muted=wantsSound?chose:true; v.loop=true;   /* every film loops */
       v.playsInline=true; v.autoplay=true; v.controls=wantsControls;
       v.currentTime=src.currentTime||0;          /* pick it up where the strip was */
       if(wantsSound){const h=item.closest('#film'); if(h) h.dispatchEvent(new Event('film:suspend'));}
