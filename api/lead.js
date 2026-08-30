@@ -65,8 +65,11 @@ module.exports = async (req, res) => {
   }
   const skipped = (Array.isArray(body.files) ? body.files.length : 0) - attachments.length;
 
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
+  const user = (process.env.SMTP_USER || '').trim();
+  /* Google shows an App Password as 'abcd efgh ijkl mnop'; the spaces are
+     presentation, not part of the secret, and pasting them verbatim is the
+     usual cause of 535 BadCredentials. */
+  const pass = (process.env.SMTP_PASS || '').replace(/\s+/g, '');
   if (!user || !pass) {
     console.error('lead: SMTP_USER / SMTP_PASS are not set');
     return res.status(503).json({ ok: false, error: 'unconfigured' });
@@ -115,6 +118,7 @@ module.exports = async (req, res) => {
     });
     return res.status(200).json({ ok: true });
   } catch (err) {
+    console.error('lead: smtp user', user, '| app-password length', pass.length, '(expected 16)');
     console.error('lead: send failed', err && err.message);
     return res.status(502).json({ ok: false, error: 'send' });
   }
