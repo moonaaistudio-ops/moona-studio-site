@@ -230,20 +230,29 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
 }
 
 /* ————————————————————— analytics consent ————————————————————— */
-.analytics-consent{position:fixed;right:16px;bottom:16px;z-index:110;width:min(310px,calc(100vw - 32px));
-  padding:13px 14px;background:rgba(8,11,19,.96);border:1px solid rgba(217,198,156,.34);border-radius:var(--r-md);
+/* one row: sentence, then the two choices. A thin bar reads as a notice,
+   a tall card reads as a dialogue you have to finish. */
+.analytics-consent{position:fixed;right:16px;bottom:16px;z-index:110;
+  display:flex;align-items:center;gap:18px;max-width:calc(100vw - 32px);
+  padding:11px 14px;background:rgba(8,11,19,.96);border:1px solid rgba(217,198,156,.34);border-radius:var(--r-pill);
   box-shadow:0 14px 44px rgba(0,0,0,.38)}
-.analytics-consent p{font-size:11.5px;line-height:1.5;color:var(--ice-dim);max-width:34ch}
+.analytics-consent p{font-size:11.5px;line-height:1.5;color:var(--ice-dim);white-space:nowrap}
 .analytics-consent p a{color:var(--ice-hot)}
-.analytics-consent__actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
+.analytics-consent__actions{display:flex;gap:8px;flex:none}
 .analytics-consent button{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
-  padding:8px 13px;border-radius:var(--r-pill);cursor:pointer}
+  white-space:nowrap;padding:8px 13px;border-radius:var(--r-pill);cursor:pointer}
 .analytics-consent__accept{background:#d9c69c;color:#0d0b07}
 .analytics-consent__reject{border:1px solid var(--ice-faint);color:var(--ice-dim)}
 .analytics-consent button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 /* a thumb needs more than an eye does */
 @media(pointer:coarse){.analytics-consent button{min-height:44px;padding:8px 16px}}
-@media(max-width:520px){.analytics-consent{right:10px;bottom:10px;width:calc(100vw - 20px)}}
+/* too narrow for one row: stack, and let the sentence wrap again */
+@media(max-width:700px){
+  .analytics-consent{right:10px;bottom:10px;left:10px;max-width:none;
+    flex-direction:column;align-items:flex-start;gap:11px;
+    padding:13px 15px;border-radius:var(--r-md)}
+  .analytics-consent p{white-space:normal}
+}
 
 /* ————————————————————— cursor ————————————————————— */
 .cur{position:fixed;z-index:99;pointer-events:none;top:0;left:0;
