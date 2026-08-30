@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Accessibility statement | Moona</title>
+  <meta name="description" content="Accessibility arrangements on the Moona website and how to contact us about accessibility.">
+  <script>
+  /* This page has no loader. Hide only a Hebrew first paint until the shared
+     dictionary has applied, then fail open if that script cannot load. */
+  (()=>{
+    const valid=new Set(['en','he']),key='moona.locale',params=new URLSearchParams(location.search);
+    const requested=params.get('lang');
+    let locale='en',source='default';
+    if(valid.has(requested)){
+      locale=requested;source='query';
+      try{localStorage.setItem(key,locale)}catch(_){}
+    }else{
+      try{const saved=localStorage.getItem(key);if(valid.has(saved)){locale=saved;source='storage'}}catch(_){}
+    }
+    const metadata={
+      en:{title:'Accessibility statement | Moona',description:'Accessibility arrangements on the Moona website and how to contact us about accessibility.'},
+      he:{title:'הצהרת נגישות | Moona',description:'מידע על נגישות אתר Moona ודרכי פנייה בנושא נגישות.'}
+    };
+    const root=document.documentElement;
+    root.lang=locale;root.dir=locale==='he'?'rtl':'ltr';
+    window.__MOONA_LOCALE__=locale;window.__MOONA_LOCALE_SOURCE__=source;
+    document.title=metadata[locale].title;
+    document.querySelector('meta[name="description"]').content=metadata[locale].description;
+    if(locale==='he'){
+      root.classList.add('i18n-pending');
+      window.__MOONA_I18N_FAILOPEN__=setTimeout(()=>root.classList.remove('i18n-pending'),1200);
+      const font=document.createElement('link');
+      font.id='moona-hebrew-fonts';font.rel='stylesheet';
+      font.href='https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600&family=Frank+Ruhl+Libre:wght@400;600&display=swap';
+      document.head.appendChild(font);
+    }
+  })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:dark;background:#0d101b;color:#f6f3ea;--sans:Arial,sans-serif;--serif:"Instrument Serif",Georgia,serif;--line:rgba(217,198,156,.28);--gold:#d9c69c}
+    html[lang="he"]{--sans:Assistant,Arial,sans-serif;--serif:"Frank Ruhl Libre","Times New Roman",serif}
+    html.i18n-pending body{visibility:hidden}
+    *{box-sizing:border-box}
+    body{margin:0;line-height:1.65;font-family:var(--sans);font-synthesis:none}
+    .skip{position:fixed;top:-70px;inset-inline-start:16px;z-index:10;padding:12px 18px;border:1px solid var(--gold);border-radius:999px;background:#0d101b;color:#fff;text-decoration:none}
+    .skip:focus{top:16px;outline:2px solid #fff;outline-offset:3px}
+    .wrap{max-width:800px;margin:0 auto;padding:48px 24px 88px}
+    .topline{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:46px}
+    a{color:var(--gold)}
+    h1{font-family:var(--serif);font-size:clamp(2.2rem,7vw,4.5rem);font-weight:400;line-height:1.02;margin:0 0 26px}
+    h2{margin-top:38px;font-size:1.15rem;color:#f6f3ea}
+    p,li{color:#d9dce8}
+    li+li{margin-top:8px}
+    .back{display:inline-flex;align-items:center;gap:9px;min-height:44px;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;text-decoration:none}
+    .back-arrow{display:inline-block;transition:transform .25s}
+    html[dir="rtl"] .back-arrow{transform:scaleX(-1)}
+    .language-toggle{display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:none;color:#f6f3ea;font:600 11px ui-monospace,monospace;cursor:pointer}
+    .language-toggle:hover{border-color:var(--gold);background:rgba(217,198,156,.08)}
+    :is(.back,.language-toggle,.legal a):focus-visible{outline:2px solid #fff;outline-offset:3px}
+    .legal{display:flex;flex-wrap:wrap;gap:12px 22px;margin-top:46px;padding-top:24px;border-top:1px solid var(--line)}
+    .legal a{display:inline-flex;align-items:center;min-height:44px}
+    [dir="ltr"],bdi{unicode-bidi:isolate}
+    html[lang="he"] .back{font-family:var(--sans);font-size:14px;letter-spacing:0;text-transform:none}
+    @media(max-width:520px){.wrap{padding:28px 20px 64px}.topline{margin-bottom:34px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.back-arrow{transition:none}}
+  </style>
+</head>
+<body data-page="accessibility">
+  <a class="skip" href="#statement" data-i18n="accessibility.skip">Skip to the accessibility statement</a>
+  <main class="wrap" id="statement" tabindex="-1">
+    <div class="topline">
+      <a class="back" href="/" data-locale-link><span class="back-arrow" aria-hidden="true">←</span><span><span data-i18n="accessibility.back">Back to </span><bdi dir="ltr">Moona</bdi></span></a>
+      <button class="language-toggle" type="button" data-language-toggle aria-label="Switch to Hebrew">HE</button>
+    </div>
+
+    <article>
+      <h1 data-i18n="accessibility.heading">Accessibility statement</h1>
+      <p data-i18n="accessibility.intro">Moona is committed to making this website accessible to people with disabilities and to providing an equal, respectful and independent browsing experience.</p>
+
+      <h2 data-i18n="accessibility.standard.heading">Accessibility standard</h2>
+      <p data-i18n="accessibility.standard.body">The site is designed and tested with the aim of meeting Israeli Standard 5568 for accessible web content, based on WCAG 2.0 Level AA. Accessibility is maintained as part of ongoing site development.</p>
+
+      <h2 data-i18n="accessibility.features.heading">Accessibility features on the site</h2>
+      <ul>
+        <li data-i18n="accessibility.features.keyboard">Keyboard navigation, visible focus indicators and a skip link to the main work.</li>
+        <li data-i18n="accessibility.features.structure">Semantic headings, landmarks and accessible names for interactive controls.</li>
+        <li data-i18n="accessibility.features.language">English and Hebrew interfaces with the appropriate language and reading direction.</li>
+        <li data-i18n="accessibility.features.motion">Play and pause controls for films, a site motion control and support for the operating system reduced-motion preference.</li>
+        <li data-i18n="accessibility.features.forms">Form instructions, linked field descriptions and validation messages announced to assistive technology.</li>
+      </ul>
+
+      <h2 data-i18n="accessibility.limitations.heading">Known limitations</h2>
+      <ul>
+        <li data-i18n="accessibility.limitations.media">Some portfolio films are primarily visual and do not yet include complete captions or audio description. Contact us for a written description or an accessible alternative.</li>
+        <li data-i18n="accessibility.limitations.testing">Automated and keyboard testing has been completed. A full external audit with NVDA and JAWS has not yet been completed.</li>
+      </ul>
+
+      <h2 data-i18n="accessibility.arrangements.heading">Service accessibility arrangements</h2>
+      <p data-i18n="accessibility.arrangements.body">Moona provides its website service online. For information about accessibility arrangements for a meeting or another service channel, contact us in advance by email.</p>
+
+      <h2 data-i18n="accessibility.contact.heading">Accessibility inquiries and feedback</h2>
+      <p><span data-i18n="accessibility.contact.lead">Accessibility contact: the Moona team. Email </span><a href="mailto:moona.ai.studio@gmail.com" dir="ltr">moona.ai.studio@gmail.com</a><span data-i18n="accessibility.contact.tail">. Please include the page, device and browser, assistive technology used and a short description of the issue so we can investigate it efficiently.</span></p>
+
+      <h2 data-i18n="accessibility.audit.heading">Statement details</h2>
+      <p data-i18n="accessibility.audit.date">Last accessibility review: 31 August 2026.</p>
+      <p data-i18n="accessibility.updated.date">Statement last updated: 31 August 2026.</p>
+    </article>
+
+    <nav class="legal" aria-label="Legal and accessibility" data-i18n-aria-label="footer.nav">
+      <a href="/privacy.html" data-locale-link data-i18n="footer.privacy">Privacy notice</a>
+    </nav>
+  </main>
+  <script src="/i18n.js"></script>
+</body>
+</html>
