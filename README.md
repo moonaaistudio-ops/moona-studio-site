@@ -18,11 +18,12 @@ English is the default. A language choice is shared as `?lang=en|he` and stored 
 
 ```sh
 npm ci
-npx playwright install chromium
+npm ci --prefix tests
+npm --prefix tests exec -- playwright install chromium
 npm run test:e2e
 ```
 
-The Playwright configuration starts the repository's dependency-free static test server automatically. Tests mock lead submission and analytics; they do not send email or analytics data.
+The Playwright harness has its own development-only package under `tests/`. The configuration starts the repository's dependency-free static test server automatically. Tests mock lead submission and analytics; they do not send email or analytics data.
 
 ## Deployment
 
@@ -32,7 +33,7 @@ Vercel is the only production path. The repository is already linked to its Verc
 2. Create a Vercel Preview for browser acceptance.
 3. Merge the verified change to `main`; do not run `vercel --prod` manually.
 
-`vercel.json` installs production dependencies with `npm ci --omit=dev`, so Playwright is not installed in Vercel builds while `nodemailer` remains available to `api/lead.js`.
+`vercel.json` installs production dependencies with `npm ci --omit=dev`. The Playwright package is isolated under `tests/` and excluded from deployment, while `nodemailer` remains available to `api/lead.js`.
 
 `netlify.toml` is retained for historical compatibility, but Netlify is not the production deployment path.
 

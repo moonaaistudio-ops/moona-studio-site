@@ -3,12 +3,9 @@
   "private": true,
   "description": "Static site. The only dependency belongs to the /api lead handler.",
   "scripts": {
-    "test:e2e": "playwright test"
+    "test:e2e": "npm --prefix tests test"
   },
   "dependencies": {
     "nodemailer": "^9.0.6"
-  },
-  "devDependencies": {
-    "@playwright/test": "^1.62.1"
   }
 }
