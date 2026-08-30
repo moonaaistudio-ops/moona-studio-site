@@ -6,7 +6,7 @@ const BASE_URL = `http://127.0.0.1:${Number(process.env.PLAYWRIGHT_PORT || 4317)
 const HOME_EN_TITLE = 'Moona | AI-native studio for cinematic brand films';
 const HOME_EN_DESCRIPTION = 'We build the world, then film the ad. An AI-native studio making cinematic brand films with uncompromising craft.';
 const HOME_HE_TITLE = 'Moona | סטודיו AI-native לסרטי מותג קולנועיים';
-const HOME_HE_DESCRIPTION = 'אנחנו בונים את העולם, ואז מצלמים את הפרסומת. סטודיו AI-native שיוצר סרטי מותג קולנועיים במלאכת מחשבת חסרת פשרות.';
+const HOME_HE_DESCRIPTION = 'סטודיו AI-native להפקת סרטי מותג ופרסומות ברמה קולנועית.';
 
 const errorsByPage = new WeakMap();
 
@@ -175,6 +175,30 @@ test.describe('locale bootstrap, URL contract, and metadata', () => {
 });
 
 test.describe('dictionary and first-paint privacy contract', () => {
+  test('approved Hebrew brand copy is applied without stale cards or long dashes', async ({ page }) => {
+    await openHome(page, '/?lang=he');
+
+    await expect(page.locator('#t3 .setup')).toHaveText('אנחנו לא רק יוצרים פרסומות למותגים.');
+    await expect(page.locator('#t3 .turn')).toHaveText('אנחנו הופכים את החוויה שלהם לסרט.');
+    await expect(page.locator('.statement-sub')).toContainText('מתמחים בהפקת סרטי מותג ופרסומות באמצעות AI,');
+    await expect(page.locator('.statement-sub')).toContainText('במראה ריאליסטי וברמה קולנועית, בלי להתפשר על אף פריים.');
+    await expect(page.locator('.film-strip-head .film-eyebrow')).toHaveText('מאחורי הסרט');
+    await expect(page.locator('.film-story .film-beat')).toHaveCount(3);
+    await expect(page.locator('.film-story .film-beat h3')).toHaveText([
+      'לוקיישן שאפשר להאמין בו.',
+      'הכול נמצא בפרטים.',
+      'קריאייטיב שעובד.'
+    ]);
+    await expect(page.locator('.work-note')).toHaveText('סרטי הקונספט האלה נוצרו ביוזמתנו כדי להראות מה נוכל ליצור עבור המותג הבא. המותגים המוצגים אינם לקוחות של Moona.');
+    await expect(page.locator('#analyticsAccept')).toHaveText('אישור עוגיות');
+    await expect(page.locator('#analyticsReject')).toHaveText('דחיית עוגיות');
+
+    const dictionarySource = fs.readFileSync(path.join(__dirname, '..', 'i18n.js'), 'utf8');
+    const hebrewStart = dictionarySource.indexOf('\n    he: {');
+    const hebrewEnd = dictionarySource.indexOf('\n    }\n  };', hebrewStart);
+    expect(dictionarySource.slice(hebrewStart, hebrewEnd)).not.toContain('—');
+  });
+
   test('all DOM keys resolve in both locales, plural forms interpolate, and emphasis survives', async ({ page }) => {
     await openHome(page);
     const homeKeys = await page.evaluate(() => {
@@ -642,7 +666,7 @@ test.describe('analytics consent mocks', () => {
     await expect(page.locator('#analyticsConsent')).toBeVisible();
 
     await page.locator('[data-language-toggle]').click();
-    await expect(page.locator('#analyticsConsent')).toHaveAttribute('aria-label', 'העדפות אנליטיקה');
+    await expect(page.locator('#analyticsConsent')).toHaveAttribute('aria-label', 'העדפות עוגיות אנליטיקה');
     await page.locator('#analyticsAccept').click();
     await expect(page.locator('#analyticsConsent')).toBeHidden();
     await expect.poll(() => providerRequests.length).toBe(1);

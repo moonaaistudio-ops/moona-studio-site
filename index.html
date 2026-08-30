@@ -23,7 +23,7 @@
   }
   const metadata={
     en:{title:'Moona | AI-native studio for cinematic brand films',description:'We build the world, then film the ad. An AI-native studio making cinematic brand films with uncompromising craft.'},
-    he:{title:'Moona | סטודיו AI-native לסרטי מותג קולנועיים',description:'אנחנו בונים את העולם, ואז מצלמים את הפרסומת. סטודיו AI-native שיוצר סרטי מותג קולנועיים במלאכת מחשבת חסרת פשרות.'}
+    he:{title:'Moona | סטודיו AI-native לסרטי מותג קולנועיים',description:'סטודיו AI-native להפקת סרטי מותג ופרסומות ברמה קולנועית.'}
   };
   document.documentElement.lang=locale;
   document.documentElement.dir=locale==='he'?'rtl':'ltr';
@@ -626,7 +626,7 @@ main{position:relative;z-index:2;background:var(--void)}
 .film-strip-head .film-note{max-width:62ch}
 @media(max-width:700px){.film-strip-head{margin-top:6vh}}
 .film-story{max-width:1560px;margin:4vh auto 0;padding:0 clamp(22px,5vw,72px);
-  display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(24px,3.5vw,56px)}
+  display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3.5vw,56px)}
 /* each beat is a card in the DUSTLINE palette: void glass, an ember-gold and
    ice glow rising from the floor, a lit bottom edge, and a quiet 3D tilt.
    The tilt lives on .beat-3d so it never fights the .rv reveal transform. */
@@ -665,7 +665,6 @@ main{position:relative;z-index:2;background:var(--void)}
 /* the cards land one after another, left to right */
 .film-story .film-beat:nth-child(2){transition-delay:.12s}
 .film-story .film-beat:nth-child(3){transition-delay:.24s}
-.film-story .film-beat:nth-child(4){transition-delay:.36s}
 @media(prefers-reduced-motion:reduce){.film-story .film-beat{transition-delay:0s}}
 @media(prefers-reduced-motion:reduce){.beat-3d{transform:none;transition:none}}
 @media(max-width:1000px){.film-story{grid-template-columns:repeat(2,1fr)}}
@@ -1042,18 +1041,6 @@ html[dir="rtl"] :is(.cta-btn,.qnext,.contact .mail):hover i{transform:rotate(-13
           </div>
           <h3 data-i18n="film.beat.cast.title">The reference outranks the script.</h3>
           <p data-i18n="film.beat.cast.body">Faces, wardrobe and packaging lock to approved plates before a frame is generated, and where the writing disagrees with the reference the writing changes. Drift between shots is the first failure we design against.</p>
-        </div>
-      </div>
-      <div class="film-beat rv">
-        <div class="beat-3d">
-          <i class="beat-glow" aria-hidden="true"></i>
-          <i class="beat-line" aria-hidden="true"></i>
-          <div class="beat-head">
-            <span class="beat-num" aria-hidden="true">04</span>
-            <span class="beat-label" data-i18n="film.beat.viewer.label">The viewer</span>
-          </div>
-          <h3 data-i18n="film.beat.viewer.title">Built for how people actually watch.</h3>
-          <p data-i18n="film.beat.viewer.body">It has to land on mute, on a phone, in one pass. Every clue sits on screen the whole time, so the second viewing pays and the first stays clean. We watch it silent before anyone else does.</p>
         </div>
       </div>
     </div>
