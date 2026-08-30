@@ -1658,30 +1658,33 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
     }
   });
 
-  /* fetch early, mount late, play later still */
-  new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) fetchIt() }),
-    {rootMargin:'150% 0px'}).observe(film);
-
-  /* thresholds watch the stage, not the section: the section (head + film +
-     story strip) is taller than a viewport, so its ratio can never reach the
-     play threshold. The stage is the 16:9 frame and can. */
+  /* Coverage is computed straight from the rects on every scroll tick, with an
+     IntersectionObserver only as a wake-up call. IO ratios go quietly wrong on
+     iOS under a tall sticky ancestor, and a reveal that depends on one exact
+     threshold then never fires. Rect math cannot be wrong. */
   const stage=film.querySelector('.film-stage')||film;
-  new IntersectionObserver(es=>es.forEach(e=>{
-    ratio=e.intersectionRatio;
-    film.classList.toggle('live', ratio>0);
+  function update(){
+    const r=stage.getBoundingClientRect(), H=innerHeight;
+    if(!r.height) return;
+    const vis=Math.max(0,Math.min(r.bottom,H)-Math.max(r.top,0));
+    ratio=vis/Math.min(r.height,H);
+    film.classList.toggle('live', vis>0);
     filmCovering = ratio>=0.9;          /* the hero yields the GPU */
-    if(ratio>=0.55){
+    if(r.top<H*2.5) fetchIt();          /* bytes start a screen and a half early */
+    if(ratio>=0.5){
       film.classList.add('seen');
-      if(!reduced&&!userPaused&&!v.ended){
+      if(!reduced&&!userPaused&&!v.ended&&v.paused){
         if(v.readyState>=2){ play(); tryUnmute(); }
-        else{
-          v.addEventListener('canplay',()=>{ if(ratio>=0.55&&!userPaused){play();tryUnmute()} },{once:true});
-        }
+        else v.addEventListener('canplay',()=>{ if(ratio>=0.5&&!userPaused){play();tryUnmute()} },{once:true});
       }
-    }else if(ratio<0.35){
+    }else if(ratio<0.3){
       suspend(); showCta(false);
     }
-  }),{threshold:[0,0.35,0.55,0.9]}).observe(stage);
+  }
+  addEventListener('scroll',update,{passive:true});
+  addEventListener('resize',update,{passive:true});
+  new IntersectionObserver(update,{threshold:[0,.25,.5,.75,1],rootMargin:'160% 0px'}).observe(stage);
+  update();
 
   /* the score must not play under a hidden tab or under the request flow */
   addEventListener('visibilitychange',()=>{
