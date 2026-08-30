@@ -140,9 +140,19 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
 #ask .ask-close{position:relative;z-index:4;font-family:var(--mono);font-size:10px;letter-spacing:.28em;
   text-transform:uppercase;color:var(--ice-dim);padding:16px 14px;transition:color .3s}
 #ask .ask-close:hover{color:var(--ice-hot)}
-#ask .ask-rail{position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line)}
-#ask .ask-rail i{display:block;height:100%;width:0;background:#d9c69c;opacity:.75;
+#ask .ask-rail{position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(168,198,232,.1)}
+#ask .ask-rail i{display:block;height:100%;width:0;border-radius:0 2px 2px 0;
+  background:linear-gradient(90deg,rgba(217,198,156,.55),#d9c69c);
+  box-shadow:0 0 12px -1px rgba(217,198,156,.75);
   transition:width .6s var(--ease)}
+/* the rail alone is a hairline you can miss; the dots say how many are left */
+#ask .ask-dots{display:flex;align-items:center;gap:7px;margin-inline-start:14px}
+#ask .ask-dots i{width:6px;height:6px;border-radius:50%;background:rgba(168,198,232,.22);
+  transition:background .45s var(--ease),transform .45s var(--ease)}
+#ask .ask-dots i.done{background:rgba(217,198,156,.55)}
+#ask .ask-dots i.now{background:#d9c69c;transform:scale(1.55);
+  box-shadow:0 0 10px -1px rgba(217,198,156,.8)}
+@media(max-width:520px){#ask .ask-dots{margin-inline-start:10px;gap:6px}}
 
 .qwrap{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;
   /* 12vh is nothing on a phone held sideways, and the step ran into the top bar */
@@ -176,6 +186,23 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
   transform:rotate(45deg);margin-left:-3px;transition:transform .4s var(--ease)}
 .qnext:hover span.ring{background:rgba(217,198,156,.12);border-color:#d9c69c}
 .qnext:hover span.ring i{transform:rotate(45deg) translate(2px,-2px)}
+/* the last press is the finish line: filled, warm, and lit */
+.qnext.qsend{background:#d9c69c;color:#0d0b07;padding:7px 7px 7px 26px;border-radius:var(--r-pill);
+  box-shadow:0 10px 30px -12px rgba(217,198,156,.7);
+  animation:sendglow 2.8s var(--ease) infinite;
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+.qnext.qsend span.ring{width:38px;height:38px;border-color:rgba(13,11,7,.28);
+  background:rgba(13,11,7,.07)}
+.qnext.qsend span.ring i{border-right-color:#0d0b07;border-top-color:#0d0b07}
+.qnext.qsend:hover{transform:translateY(-2px);
+  box-shadow:0 16px 40px -12px rgba(217,198,156,.85);animation:none}
+.qnext.qsend:hover span.ring{background:rgba(13,11,7,.16);border-color:rgba(13,11,7,.45)}
+.qnext.qsend:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(220,236,255,.55)}
+@keyframes sendglow{
+  0%,100%{box-shadow:0 10px 30px -12px rgba(217,198,156,.55)}
+  50%    {box-shadow:0 12px 38px -12px rgba(217,198,156,.95)}
+}
+@media(prefers-reduced-motion:reduce){.qnext.qsend{animation:none}}
 .qback{font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;
   color:var(--ice-dim);padding:12px 4px;transition:color .3s}
 .qback:hover{color:var(--ice-hot)}
@@ -1042,6 +1069,7 @@ main{position:relative;z-index:2;background:var(--void)}
 <div id="ask" role="dialog" aria-modal="true" aria-label="Get an ad for your brand">
   <div class="ask-top">
     <span class="ask-step"><b id="askNum">01</b> / 03</span>
+    <span class="ask-dots" id="askDots" aria-hidden="true"></span>
     <button class="ask-close" id="askClose" data-hover>Close</button>
   </div>
 
@@ -1087,7 +1115,7 @@ main{position:relative;z-index:2;background:var(--void)}
 
       <div class="qnav">
         <button type="button" class="qback" data-back data-hover>Back</button>
-        <button type="submit" class="qnext" id="askSubmit" data-hover>Send<span class="ring"><i></i></span></button>
+        <button type="submit" class="qnext qsend" id="askSubmit" data-hover>Send<span class="ring"><i></i></span></button>
       </div>
     </div>
 
@@ -1883,12 +1911,21 @@ let step=0, lastFocus=null;
 document.getElementById('doneIris').innerHTML =
   '<circle cx="50" cy="50" r="48" fill="#100D07"/>' + irisSVG(.34,'d',true,48);
 
+const askDots=document.getElementById('askDots');
+if(askDots) askDots.innerHTML='<i></i>'.repeat(LAST+1);
+
 function showStep(n){
   step=n;
   qs.forEach(q=>q.classList.toggle('active',+q.dataset.step===n));
   const shown=Math.min(n+1,DONE);
   askNum.textContent=String(shown).padStart(2,'0');
-  askRail.style.width=(n/ (LAST+1) *100)+'%';
+  /* fill for the step you are on, not the ones behind you: an empty bar on
+     the first screen reads as 'nothing done yet' and costs people */
+  askRail.style.width=(Math.min(n+1,LAST+1)/(LAST+1)*100)+'%';
+  if(askDots) [...askDots.children].forEach((d,i)=>{
+    d.classList.toggle('done', i<n);
+    d.classList.toggle('now',  i===n);
+  });
   document.querySelector('.ask-step').style.opacity = n===DONE?0:1;
   const inp=qs[n].querySelector('input:not([type=file]):not([type=hidden])');
   if(inp) setTimeout(()=>inp.focus({preventScroll:true}),340);
