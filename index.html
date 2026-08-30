@@ -479,6 +479,7 @@ main{position:relative;z-index:2;background:var(--void)}
 /* ————————————————— flagship: DUSTLINE ————————————————— */
 /* Same visual language as .piece and .ctagal, none of their behaviour. */
 .film{position:relative;padding:13vh 0 11vh}
+.film:focus,.work:focus{outline:none}
 .film-head{max-width:1560px;margin:0 auto 6vh;padding:0 clamp(22px,5vw,72px)}
 .film-eyebrow{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.32em;
   text-transform:uppercase;color:#d9c69c;margin-bottom:22px}
@@ -783,7 +784,7 @@ main{position:relative;z-index:2;background:var(--void)}
 </head>
 <body>
 
-<a class="skip" href="#work">Skip to the work</a>
+<a class="skip" href="#film">Skip to the work</a>
 
 
 <canvas id="dust" aria-hidden="true"></canvas>
@@ -816,7 +817,7 @@ main{position:relative;z-index:2;background:var(--void)}
 <header id="hdr">
   <a class="lockup" href="#" id="homeLink"><svg class="lockup-iris" viewBox="0 0 100 100" id="markSvg" aria-hidden="true"></svg><span data-scramble>MOONA</span></a>
   <nav aria-label="Sections">
-    <button data-goto="work">Work</button>
+    <button data-goto="film">Work</button>
     <button data-goto="studio">Studio</button>
     <button class="cta-btn sm" data-ask>Get an ad<i></i></button>
   </nav>
@@ -852,7 +853,7 @@ main{position:relative;z-index:2;background:var(--void)}
   <!-- Deliberately not [data-piece]. The spec-grid observers, the travelling
        scroll-pause and the window-load warm-up all key off that attribute,
        and a 31-second scored film wants none of them. -->
-  <section class="film" id="film">
+  <section class="film" id="film" tabindex="-1">
     <div class="film-head">
       <span class="film-eyebrow rv">The flagship</span>
       <h2 class="film-title rv">We invented a brand. <em>Then we shot its ad.</em></h2>
@@ -962,7 +963,7 @@ main{position:relative;z-index:2;background:var(--void)}
     </div>
   </section>
 
-  <section class="work" id="work">
+  <section class="work" id="work" tabindex="-1">
     <div class="work-head rv">
       <span class="idx">Spec work &middot; nobody asked for these</span>
       <p class="work-note">Four brands we don't work for. We made these anyway, the same way we'll make yours.</p>
@@ -2380,7 +2381,9 @@ function scrollToY(y){
 }
 document.querySelectorAll('#hdr [data-goto]').forEach(b=>b.addEventListener('click',()=>{
   const t=document.getElementById(b.dataset.goto);
-  if(t) scrollToY(t.getBoundingClientRect().top+scrollY);
+  /* the header is fixed and painted over the top of the page, so landing on a
+     section's exact top tucks its first line underneath it */
+  if(t) scrollToY(t.getBoundingClientRect().top+scrollY-(document.getElementById('hdr')?.offsetHeight||0));
 }));
 document.getElementById('yr').textContent=new Date().getFullYear();
 document.getElementById('homeLink').addEventListener('click',e=>{
