@@ -7,10 +7,11 @@ AI-native studio for film and motion ads. The site is static HTML, CSS and JavaS
 - `index.html` — the main site and request flow
 - `i18n.js` — shared English/Hebrew locale runtime and semantic copy
 - `privacy.html` — consent and privacy notice in both languages
+- `accessibility.html` — bilingual accessibility statement, tested features and known limitations
 - `analytics.js` — consent-gated analytics client
 - `api/lead.js` — serverless email handler
 - `v/` and `p/` — films and poster/still assets
-- `tests/` — focused Playwright coverage for locale, RTL, state and form behavior
+- `tests/` — focused Playwright and axe coverage for locale, RTL, accessibility, state and form behavior
 
 English is the default. A language choice is shared as `?lang=en|he` and stored under `moona.locale` when browser storage is available.
 
@@ -24,6 +25,12 @@ npm run test:e2e
 ```
 
 The Playwright harness has its own development-only package under `tests/`. The configuration starts the repository's dependency-free static test server automatically. Tests mock lead submission and analytics; they do not send email or analytics data.
+
+## Accessibility
+
+The site includes semantic landmarks, keyboard navigation, visible focus, translated accessible names, form error announcements, reduced-motion support and a persistent motion control. Automated axe checks run in Chromium alongside keyboard and reflow tests.
+
+The public accessibility statement lists the features that were verified and the limitations that remain. It intentionally does not claim a completed external screen-reader certification. Portfolio films that do not yet include complete captions or audio description are identified as a known limitation, and an accessible written alternative can be requested by email.
 
 ## Deployment
 

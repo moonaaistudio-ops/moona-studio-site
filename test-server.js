@@ -36,6 +36,7 @@ function parseCookies(header = '') {
 }
 
 function send(res, status, body, contentType) {
+  if (res.destroyed || res.writableEnded) return;
   const payload = Buffer.isBuffer(body) ? body : Buffer.from(String(body));
   res.writeHead(status, {
     'Cache-Control': 'no-store',
@@ -43,6 +44,18 @@ function send(res, status, body, contentType) {
     'Content-Length': payload.length
   });
   res.end(payload);
+}
+
+function streamFile(res, filePath, options) {
+  const stream = fs.createReadStream(filePath, options);
+  const stop = () => stream.destroy();
+  res.once('close', stop);
+  res.once('error', stop);
+  stream.once('error', error => {
+    if (!res.headersSent) send(res, 500, 'Unable to read file', 'text/plain; charset=utf-8');
+    else res.destroy(error);
+  });
+  stream.pipe(res);
 }
 
 function serveFile(req, res, filePath) {
@@ -76,7 +89,7 @@ function serveFile(req, res, filePath) {
         'Content-Type': type
       });
       if (req.method === 'HEAD') res.end();
-      else fs.createReadStream(filePath, { start, end }).pipe(res);
+      else streamFile(res, filePath, { start, end });
       return;
     }
 
@@ -87,7 +100,7 @@ function serveFile(req, res, filePath) {
       'Content-Type': type
     });
     if (req.method === 'HEAD') res.end();
-    else fs.createReadStream(filePath).pipe(res);
+    else streamFile(res, filePath);
   });
 }
 
@@ -165,6 +178,8 @@ const server = http.createServer((req, res) => {
 server.listen(port, host, () => {
   process.stdout.write(`Moona E2E server listening on http://${host}:${port}\n`);
 });
+
+server.on('clientError', (_error, socket) => socket.destroy());
 
 function shutdown() {
   server.close(() => process.exit(0));

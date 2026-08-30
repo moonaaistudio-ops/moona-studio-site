@@ -178,10 +178,10 @@ test.describe('dictionary and first-paint privacy contract', () => {
   test('approved Hebrew brand copy is applied without stale cards or long dashes', async ({ page }) => {
     await openHome(page, '/?lang=he');
 
-    await expect(page.locator('#t3 .setup')).toHaveText('אנחנו לא רק יוצרים פרסומות למותגים.');
-    await expect(page.locator('#t3 .turn')).toHaveText('אנחנו הופכים את החוויה שלהם לסרט.');
-    await expect(page.locator('.statement-sub')).toContainText('מתמחים בהפקת סרטי מותג ופרסומות באמצעות AI,');
-    await expect(page.locator('.statement-sub')).toContainText('במראה ריאליסטי וברמה קולנועית, בלי להתפשר על אף פריים.');
+    await expect(page.locator('#t1 h1')).toHaveText('סטודיו AI-native לסרטי מותג ופרסומות');
+    await expect(page.locator('.statement-sub')).toContainText('מקריאטיב ובימוי ועד הפקה ופוסט,');
+    await expect(page.locator('.statement-sub')).toContainText('בשליטה מלאה על כל פריים.');
+    await expect(page.locator('#t3')).toHaveCount(0);
     await expect(page.locator('.film-strip-head .film-eyebrow')).toHaveText('מאחורי הסרט');
     await expect(page.locator('.film-story .film-beat')).toHaveCount(3);
     await expect(page.locator('.film-story .film-beat h3')).toHaveText([
@@ -191,7 +191,8 @@ test.describe('dictionary and first-paint privacy contract', () => {
     ]);
     await expect(page.locator('.work-note')).toHaveText('סרטי הקונספט האלה נוצרו ביוזמתנו כדי להראות מה נוכל ליצור עבור המותג הבא. המותגים המוצגים אינם לקוחות של Moona.');
     await expect(page.locator('[data-i18n="nav.cta"]')).toHaveText('דברו איתנו');
-    await expect(page.locator('[data-i18n="hero.cta"]')).toHaveText(['דברו איתנו', 'דברו איתנו', 'דברו איתנו']);
+    await expect(page.locator('.hero-cta [data-i18n="hero.workCta"]')).toHaveText('לצפייה בעבודות');
+    await expect(page.locator('[data-i18n="hero.cta"]')).toHaveText(['דברו איתנו', 'דברו איתנו']);
     await expect(page.locator('.ctagal-body')).toHaveText('יצירה מוגמרת אחת עם המוצר שלכם.');
     await expect(page.locator('.ctagal-note')).toHaveText('בלי עלות ובלי התחייבות.');
     await expect(page.locator('.contact .cta-sub')).toHaveText('בלי עלות ובלי התחייבות.');
@@ -204,12 +205,14 @@ test.describe('dictionary and first-paint privacy contract', () => {
     expect(await page.evaluate(() => ({
       nav: window.MoonaI18n.t('nav.cta', {}, 'en'),
       hero: window.MoonaI18n.t('hero.cta', {}, 'en'),
+      work: window.MoonaI18n.t('hero.workCta', {}, 'en'),
       dialog: window.MoonaI18n.t('form.dialog', {}, 'en'),
       send: window.MoonaI18n.t('form.send', {}, 'en'),
       note: window.MoonaI18n.t('studio.note', {}, 'en')
     }))).toEqual({
       nav: 'Talk to us',
       hero: 'Talk to us',
+      work: 'View our work',
       dialog: 'Tell us about your brand',
       send: 'Send details',
       note: 'No cost, no commitment.'
@@ -239,6 +242,13 @@ test.describe('dictionary and first-paint privacy contract', () => {
         [...document.querySelectorAll(`[${attribute}]`)].map(element => element.getAttribute(attribute))
       ).filter(Boolean)
     )]);
+    await page.goto('/accessibility.html?lang=he');
+    await waitForI18n(page);
+    const accessibilityKeys = await page.evaluate(() => [...new Set(
+      ['data-i18n', 'data-i18n-aria-label'].flatMap(attribute =>
+        [...document.querySelectorAll(`[${attribute}]`)].map(element => element.getAttribute(attribute))
+      ).filter(Boolean)
+    )]);
     const unresolved = await page.evaluate(keys => {
       const result = [];
       for (const locale of ['en', 'he']) {
@@ -249,7 +259,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
         }
       }
       return result;
-    }, [...new Set([...homeKeys, ...privacyKeys])]);
+    }, [...new Set([...homeKeys, ...privacyKeys, ...accessibilityKeys])]);
     expect(unresolved).toEqual([]);
 
     const plurals = await page.evaluate(() => [1, 2, 3].map(count =>
@@ -343,6 +353,40 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('body')).toBeVisible();
     await expect(page.locator('h1')).toHaveText('הודעת פרטיות');
     await expect(page.locator('.back')).toHaveAttribute('href', '/?lang=he');
+  });
+
+  test('accessibility statement hides delayed Hebrew copy and keeps bootstrap metadata in sync', async ({ context, page }) => {
+    await context.addCookies([{ name: 'e2e_i18n', value: 'delay', url: BASE_URL }]);
+    await page.goto('/accessibility.html?lang=he', { waitUntil: 'commit' });
+    await page.waitForFunction(() => document.body && document.documentElement.classList.contains('i18n-pending'));
+    const beforeRuntime = await metadata(page);
+    expect(beforeRuntime).toMatchObject({
+      lang: 'he',
+      dir: 'rtl',
+      title: 'הצהרת נגישות | Moona',
+      description: 'מידע על נגישות אתר Moona ודרכי פנייה בנושא נגישות.'
+    });
+    expect(await page.evaluate(() => getComputedStyle(document.body).visibility)).toBe('hidden');
+
+    await waitForI18n(page);
+    await expect(page.locator('html')).not.toHaveClass(/i18n-pending/);
+    await expect(page.locator('body')).toBeVisible();
+    await expect(page.locator('h1')).toHaveText('הצהרת נגישות');
+    expect(await metadata(page)).toMatchObject(beforeRuntime);
+  });
+
+  test('accessibility statement fails open if the shared translation runtime cannot load', async ({ context, page }, testInfo) => {
+    testInfo.annotations.push({ type: 'expected-console-error', description: 'The mocked i18n.js 404 is intentional.' });
+    await context.addCookies([{ name: 'e2e_i18n', value: 'fail', url: BASE_URL }]);
+    await page.goto('/accessibility.html?lang=he');
+    await expect(page.locator('html')).toHaveClass(/i18n-pending/);
+    expect(await page.evaluate(() => getComputedStyle(document.body).visibility)).toBe('hidden');
+
+    await expect(page.locator('html')).not.toHaveClass(/i18n-pending/, { timeout: 2_500 });
+    await expect(page.locator('body')).toBeVisible();
+    await expect(page.locator('html')).toHaveAttribute('lang', 'he');
+    await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+    expect(errorsByPage.get(page).some(error => error.includes('404'))).toBe(true);
   });
 
   test('privacy fails open when the translation runtime cannot load', async ({ context, page }, testInfo) => {
@@ -448,7 +492,9 @@ test.describe('responsive header and dynamic UI', () => {
           const header = document.getElementById('hdr');
           const lockup = header.querySelector('.lockup');
           const nav = header.querySelector('nav');
-          const buttons = [...nav.querySelectorAll('button')].map(rect).sort((a, b) => a.left - b.left);
+          const buttons = [...nav.children]
+            .filter(element => element.tagName === 'BUTTON' && getComputedStyle(element).display !== 'none')
+            .map(rect).sort((a, b) => a.left - b.left);
           return {
             viewport: innerWidth,
             scrollWidth: document.documentElement.scrollWidth,
@@ -457,6 +503,8 @@ test.describe('responsive header and dynamic UI', () => {
             nav: rect(nav),
             buttons,
             toggle: rect(nav.querySelector('[data-language-toggle]')),
+            menuToggleDisplay: getComputedStyle(nav.querySelector('[data-mobile-menu-toggle]')).display,
+            sectionDisplays: [...nav.querySelectorAll(':scope > .nav-section')].map(element => getComputedStyle(element).display),
             wordmarkDisplay: getComputedStyle(lockup.querySelector('.lockup-name')).display,
             navLetterSpacing: getComputedStyle(nav.querySelector('[data-goto]')).letterSpacing,
             containerType: getComputedStyle(header).containerType
@@ -481,9 +529,59 @@ test.describe('responsive header and dynamic UI', () => {
           expect(layout.buttons[index].left - layout.buttons[index - 1].right).toBeGreaterThanOrEqual(6);
         }
         expect(layout.wordmarkDisplay === 'none').toBe(width <= 386);
+        expect(layout.menuToggleDisplay === 'none').toBe(width > 700);
+        expect(layout.sectionDisplays.every(display => display === 'none')).toBe(width <= 700);
         if (locale === 'he') expect(['0px', 'normal']).toContain(layout.navLetterSpacing);
       }
     }
+  });
+
+  test('single-beat hero leads to the work and mobile navigation stays accessible', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await openHome(page, '/?lang=he');
+    const desktopHeroRatio = await page.locator('#hero-track').evaluate(element => element.offsetHeight / innerHeight);
+    expect(desktopHeroRatio).toBeGreaterThanOrEqual(1.69);
+    expect(desktopHeroRatio).toBeLessThanOrEqual(1.71);
+    await expect(page.locator('[data-mobile-menu-toggle]')).toBeHidden();
+
+    await page.locator('.hero-cta').click();
+    await expect(page.locator('#ask')).not.toHaveClass(/open/);
+    await expect.poll(() => page.evaluate(() => {
+      const film = document.getElementById('film');
+      const header = document.getElementById('hdr');
+      return Math.abs(film.getBoundingClientRect().top - header.offsetHeight);
+    })).toBeLessThan(3);
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.evaluate(() => window.scrollTo(0, 0));
+    const mobileHero = await page.evaluate(() => ({
+      ratio: document.getElementById('hero-track').offsetHeight / innerHeight,
+      filmTop: document.getElementById('film').getBoundingClientRect().top,
+      viewport: innerHeight
+    }));
+    expect(mobileHero.ratio).toBeGreaterThanOrEqual(.95);
+    expect(mobileHero.ratio).toBeLessThanOrEqual(.97);
+    expect(mobileHero.filmTop).toBeLessThan(mobileHero.viewport);
+
+    const menuToggle = page.locator('[data-mobile-menu-toggle]');
+    await expect(menuToggle).toBeVisible();
+    await expect(menuToggle).toHaveAttribute('aria-expanded', 'false');
+    await menuToggle.click();
+    await expect(menuToggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(menuToggle).toHaveAttribute('aria-label', 'סגירת תפריט');
+    await expect(page.locator('#mobileMenu')).toBeVisible();
+    const menuTargets = await page.locator('#mobileMenu button').evaluateAll(elements => elements.map(element => {
+      const rect = element.getBoundingClientRect();
+      return { width: rect.width, height: rect.height };
+    }));
+    menuTargets.forEach(target => {
+      expect(target.width).toBeGreaterThanOrEqual(44);
+      expect(target.height).toBeGreaterThanOrEqual(44);
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#mobileMenu')).toBeHidden();
+    await expect(menuToggle).toBeFocused();
+    await expect(menuToggle).toHaveAttribute('aria-expanded', 'false');
   });
 
   test('validation and uploaded-file labels rerender without losing files', async ({ page }) => {
@@ -531,7 +629,10 @@ test.describe('responsive header and dynamic UI', () => {
         playLabel: play.getAttribute('aria-label'),
         expectedPlay: window.MoonaI18n.t('media.playThisFilm'),
         openLabelsValid: [...document.querySelectorAll('[data-open-key]')].every(element =>
-          element.getAttribute('aria-label') === window.MoonaI18n.t(element.dataset.openKey)
+          element.getAttribute('aria-label') === window.MoonaI18n.t(
+            element.dataset.openKey,
+            { name: element.dataset.openName || 'Moona' }
+          )
         )
       };
     });
@@ -565,7 +666,10 @@ test.describe('responsive header and dynamic UI', () => {
         closeText: document.querySelector('#lb .lb-close').textContent,
         expectedClose: window.MoonaI18n.t('common.close'),
         openLabelsValid: [...document.querySelectorAll('[data-open-key]')].every(element =>
-          element.getAttribute('aria-label') === window.MoonaI18n.t(element.dataset.openKey)
+          element.getAttribute('aria-label') === window.MoonaI18n.t(
+            element.dataset.openKey,
+            { name: element.dataset.openName || 'Moona' }
+          )
         )
       };
     });
@@ -639,6 +743,7 @@ test.describe('lead submission mocks', () => {
     await expect(page.locator('[data-step="3"]')).toHaveClass(/active/);
     await expect(page.locator('[data-step="3"] .qtitle')).toHaveText('אנחנו על זה.');
     await expect(page.locator('#doneMsg')).toHaveText('העבודה תגיע למייל בתוך כמה ימים.');
+    await expect(page.locator('#doneTitle')).toBeFocused();
   });
 
   test('mocked API and hosted fallback failure opens a translated mailto without navigation', async ({ page }) => {

@@ -13,6 +13,8 @@
       'meta.home.description': 'We build the world, then film the ad. An AI-native studio making cinematic brand films with uncompromising craft.',
       'meta.privacy.title': 'Privacy notice | Moona',
       'meta.privacy.description': 'How Moona uses optional, consent-based analytics and protects inquiry form data.',
+      'meta.accessibility.title': 'Accessibility statement | Moona',
+      'meta.accessibility.description': 'Accessibility arrangements on the Moona website and how to contact us about accessibility.',
 
       'language.switchToHebrew': 'Switch to Hebrew',
       'language.switchToEnglish': 'Switch to English',
@@ -21,7 +23,10 @@
       'nav.work': 'Work',
       'nav.studio': 'Studio',
       'nav.cta': 'Talk to us',
+      'nav.menu.open': 'Open menu',
+      'nav.menu.close': 'Close menu',
       'skip.work': 'Skip to the work',
+      'footer.nav': 'Legal and accessibility',
 
       'consent.label': 'Analytics preferences',
       'consent.text': 'We use analytics to see how the site performs.',
@@ -31,14 +36,17 @@
       'lightbox.label': 'Enlarged work',
       'common.close': 'Close',
       'loader.label': 'Loading',
+      'motion.pause': 'Pause motion',
+      'motion.resume': 'Resume motion',
+      'motion.systemReduced': 'Motion reduced by system settings',
 
       'hero.headline.lead': 'Cinematic ads, ',
+      'hero.headline.aiTerm': '',
       'hero.headline.emphasis': 'born without a camera',
       'hero.subline.one': 'An AI-native studio for film and motion ads.',
       'hero.subline.two': 'Story, craft and taste first.',
       'hero.cta': 'Talk to us',
-      'hero.turn.setup': "We don't film products.",
-      'hero.turn.payoff': 'We film what they mean.',
+      'hero.workCta': 'View our work',
       'hero.scroll': 'Scroll',
 
       'film.eyebrow': 'The flagship',
@@ -63,18 +71,23 @@
       'film.beat.cast.title': 'The reference outranks the script.',
       'film.beat.cast.body': 'Faces, wardrobe and packaging lock to approved plates before a frame is generated, and where the writing disagrees with the reference the writing changes. Drift between shots is the first failure we design against.',
       'work.eyebrow': 'Spec work · nobody asked for these',
+      'work.heading': 'Selected concept films',
       'work.note': "Four brands we don't work for. We made these anyway, the same way we'll make yours.",
       'work.specBadge': 'Moona original · Spec',
       'work.mcdonalds.video': "McDonald's self-initiated spec film by Moona",
+      'work.mcdonalds.open': "Open the McDonald's concept film larger",
       'work.mcdonalds.concept': 'You already know the taste. Now watch it move.',
       'work.mcdonalds.tag': 'from one product photo · 3 days · appetite pacing · single continuous move',
       'work.strava.video': 'Strava self-initiated spec film by Moona',
+      'work.strava.open': 'Open the Strava concept film larger',
       'work.strava.concept': 'Every run already has a soundtrack. We cut to it.',
       'work.strava.tag': 'from their own site · 3 days · beat-matched cut · product-locked colour',
       'work.bullPadel.video': 'Bull Padel self-initiated spec film by Moona',
+      'work.bullPadel.open': 'Open the Bull Padel concept film larger',
       'work.bullPadel.concept': 'The court hits back.',
       'work.bullPadel.tag': 'from one product photo · 3 days · 3-beat cut · frame-accurate brand colour',
       'work.koda.video': 'Koda self-initiated spec film by Moona',
+      'work.koda.open': 'Open the Koda concept film larger',
       'work.koda.concept': 'Built for the feed it lives in.',
       'work.koda.tag': 'from their own site · 3 days · loop-safe edit · legibility at 0.4s',
 
@@ -84,7 +97,8 @@
       'studio.title.tail': ' you than tell you.',
       'studio.body': 'One finished piece with your product.',
       'studio.note': 'No cost, no commitment.',
-      'studio.statement.lead': 'Moona is an AI-native studio making cinematic motion for brands. ',
+      'studio.statement.afterBrand': ' is an ',
+      'studio.statement.afterAi': ' studio making cinematic motion for brands. ',
       'studio.statement.emphasis': 'The camera was optional.',
 
       'contact.line': 'Your product, next.',
@@ -92,6 +106,8 @@
       'contact.email': 'Email the studio',
       'contact.disclaimer': 'All work self-initiated. Brands are shown for demonstration only and are not clients. No client relationship implied.',
       'contact.rights': 'All rights reserved.',
+      'footer.privacy': 'Privacy notice',
+      'footer.accessibility': 'Accessibility statement',
 
       'form.dialog': 'Tell us about your brand',
       'form.step.name.label': "01 / Who we're speaking with",
@@ -142,8 +158,26 @@
       'media.openFilm': 'Open film larger',
       'media.openStill': 'Open still larger',
       'media.openThisFilm': 'Open this film larger',
+      'media.openNamedFilm': 'Open the {name} film larger',
+      'media.openNamedStill': 'Open the {name} image larger',
+      'media.asset.loccitaneFlat': "L'Occitane flat lay",
+      'media.asset.proteinBar': 'Protein Bar',
+      'media.asset.btan': 'B.Tan',
+      'media.asset.kodaCans': 'Koda cans',
+      'media.asset.acoustic': 'Acoustic',
+      'media.asset.forgeskinStudio': 'ForgeSkin studio portrait',
+      'media.asset.sanMiguelCan': 'San Miguel can',
+      'media.asset.joseon': 'Joseon',
+      'media.asset.medix': 'Medix',
+      'media.asset.kodaYuzu': 'Koda Yuzu',
+      'media.asset.innisfree': 'Innisfree',
+      'media.asset.aerial': 'Aerial',
+      'media.asset.forgeskinBag': 'ForgeSkin bag',
+      'media.asset.loccitaneDuo': "L'Occitane duo",
+      'media.asset.sanMiguelSun': 'San Miguel sunset',
 
       'privacy.back': 'Back to ',
+      'privacy.skip': 'Skip to the privacy notice',
       'privacy.heading': 'Privacy notice',
       'privacy.intro': 'Moona Studio uses optional analytics to understand website use and improve our work. Analytics do not load until you choose “Accept analytics” in the notice on the site. You can choose “Decline” instead.',
       'privacy.services.heading': 'Analytics services',
@@ -156,7 +190,31 @@
       'privacy.choices.body': 'You can decline analytics in the site notice. If you previously accepted, clear this website’s stored data in your browser and reload the site to choose again. Browser privacy controls such as Do Not Track and Global Privacy Control are respected where available.',
       'privacy.contact.heading': 'Contact',
       'privacy.contact.lead': 'For privacy questions, email ',
-      'privacy.contact.tail': '.'
+      'privacy.contact.tail': '.',
+
+      'accessibility.back': 'Back to ',
+      'accessibility.skip': 'Skip to the accessibility statement',
+      'accessibility.heading': 'Accessibility statement',
+      'accessibility.intro': 'Moona is committed to making this website accessible to people with disabilities and to providing an equal, respectful and independent browsing experience.',
+      'accessibility.standard.heading': 'Accessibility standard',
+      'accessibility.standard.body': 'The site is designed and tested with the aim of meeting Israeli Standard 5568 for accessible web content, based on WCAG 2.0 Level AA. Accessibility is maintained as part of ongoing site development.',
+      'accessibility.features.heading': 'Accessibility features on the site',
+      'accessibility.features.keyboard': 'Keyboard navigation, visible focus indicators and a skip link to the main work.',
+      'accessibility.features.structure': 'Semantic headings, landmarks and accessible names for interactive controls.',
+      'accessibility.features.language': 'English and Hebrew interfaces with the appropriate language and reading direction.',
+      'accessibility.features.motion': 'Play and pause controls for films, a site motion control and support for the operating system reduced-motion preference.',
+      'accessibility.features.forms': 'Form instructions, linked field descriptions and validation messages announced to assistive technology.',
+      'accessibility.limitations.heading': 'Known limitations',
+      'accessibility.limitations.media': 'Some portfolio films are primarily visual and do not yet include complete captions or audio description. Contact us for a written description or an accessible alternative.',
+      'accessibility.limitations.testing': 'Automated and keyboard testing has been completed. A full external audit with NVDA and JAWS has not yet been completed.',
+      'accessibility.arrangements.heading': 'Service accessibility arrangements',
+      'accessibility.arrangements.body': 'Moona provides its website service online. For information about accessibility arrangements for a meeting or another service channel, contact us in advance by email.',
+      'accessibility.contact.heading': 'Accessibility inquiries and feedback',
+      'accessibility.contact.lead': 'Accessibility contact: the Moona team. Email ',
+      'accessibility.contact.tail': '. Please include the page, device and browser, assistive technology used and a short description of the issue so we can investigate it efficiently.',
+      'accessibility.audit.heading': 'Statement details',
+      'accessibility.audit.date': 'Last accessibility review: 31 August 2026.',
+      'accessibility.updated.date': 'Statement last updated: 31 August 2026.'
     },
 
     he: {
@@ -164,6 +222,8 @@
       'meta.home.description': 'סטודיו AI-native להפקת סרטי מותג ופרסומות ברמה קולנועית.',
       'meta.privacy.title': 'הודעת פרטיות | Moona',
       'meta.privacy.description': 'שימוש אופציונלי ומבוסס־הסכמה באנליטיקה ב־Moona, והאופן שבו נשמר המידע בטופס הפנייה.',
+      'meta.accessibility.title': 'הצהרת נגישות | Moona',
+      'meta.accessibility.description': 'מידע על נגישות אתר Moona ודרכי פנייה בנושא נגישות.',
 
       'language.switchToHebrew': 'מעבר לעברית',
       'language.switchToEnglish': 'מעבר לאנגלית',
@@ -172,7 +232,10 @@
       'nav.work': 'עבודות',
       'nav.studio': 'סטודיו',
       'nav.cta': 'דברו איתנו',
+      'nav.menu.open': 'פתיחת תפריט',
+      'nav.menu.close': 'סגירת תפריט',
       'skip.work': 'דילוג לעבודות',
+      'footer.nav': 'מידע משפטי ונגישות',
 
       'consent.label': 'העדפות עוגיות אנליטיקה',
       'consent.text': 'אנחנו משתמשים בעוגיות אנליטיקה כדי להבין איך משתמשים באתר ולשפר אותו.',
@@ -182,14 +245,17 @@
       'lightbox.label': 'עבודה בתצוגה מוגדלת',
       'common.close': 'סגירה',
       'loader.label': 'טעינה',
+      'motion.pause': 'עצירת אנימציות',
+      'motion.resume': 'הפעלת אנימציות',
+      'motion.systemReduced': 'התנועה הופחתה לפי הגדרת המערכת',
 
-      'hero.headline.lead': 'פרסומות קולנועיות, ',
-      'hero.headline.emphasis': 'שנולדו בלי מצלמה',
-      'hero.subline.one': 'מתמחים בהפקת סרטי מותג ופרסומות באמצעות AI,',
-      'hero.subline.two': 'במראה ריאליסטי וברמה קולנועית, בלי להתפשר על אף פריים.',
+      'hero.headline.lead': 'סטודיו ',
+      'hero.headline.aiTerm': 'AI-native ',
+      'hero.headline.emphasis': 'לסרטי מותג ופרסומות',
+      'hero.subline.one': 'מקריאטיב ובימוי ועד הפקה ופוסט,',
+      'hero.subline.two': 'בשליטה מלאה על כל פריים.',
       'hero.cta': 'דברו איתנו',
-      'hero.turn.setup': 'אנחנו לא רק יוצרים פרסומות למותגים.',
-      'hero.turn.payoff': 'אנחנו הופכים את החוויה שלהם לסרט.',
+      'hero.workCta': 'לצפייה בעבודות',
       'hero.scroll': 'לגלול',
 
       'film.eyebrow': 'סרט הדגל',
@@ -215,18 +281,23 @@
       'film.beat.cast.body': 'הכול מתחיל בקריאייטיב ובתסריט. הדמויות, הסטיילינג והשפה הוויזואלית נקבעים כבר בשלב הקריאייטיב. משם נבנים הליהוק, תנועות המצלמה, עיצוב הסאונד והעריכה. את החיבור ביניהם רואים בכל פריים של DUSTLINE.',
 
       'work.eyebrow': 'סרטי קונספט · ביוזמת Moona',
+      'work.heading': 'סרטי קונספט נבחרים',
       'work.note': 'סרטי הקונספט האלה נוצרו ביוזמתנו כדי להראות מה נוכל ליצור עבור המותג הבא. המותגים המוצגים אינם לקוחות של Moona.',
       'work.specBadge': 'יצירה מקורית של Moona · קונספט',
       'work.mcdonalds.video': "סרט קונספט ביוזמת Moona עבור McDonald's",
+      'work.mcdonalds.open': "פתיחת סרט הקונספט של McDonald's בתצוגה מוגדלת",
       'work.mcdonalds.concept': 'את הטעם כבר מכירים. עכשיו אפשר לראות אותו זז.',
       'work.mcdonalds.tag': 'מתמונת מוצר אחת · 3 ימים · קצב שמעורר תיאבון · תנועה רציפה אחת',
       'work.strava.video': 'סרט קונספט ביוזמת Moona עבור Strava',
+      'work.strava.open': 'פתיחת סרט הקונספט של Strava בתצוגה מוגדלת',
       'work.strava.concept': 'לכל ריצה כבר יש פסקול. ערכנו לפיו.',
       'work.strava.tag': 'מהאתר שלהם · 3 ימים · עריכה לפי הקצב · צבע נעול למוצר',
       'work.bullPadel.video': 'סרט קונספט ביוזמת Moona עבור Bull Padel',
+      'work.bullPadel.open': 'פתיחת סרט הקונספט של Bull Padel בתצוגה מוגדלת',
       'work.bullPadel.concept': 'המגרש מחזיר מכה.',
       'work.bullPadel.tag': 'מתמונת מוצר אחת · 3 ימים · עריכה בשלושה ביטים · צבע מותג מדויק לפריים',
       'work.koda.video': 'סרט קונספט ביוזמת Moona עבור Koda',
+      'work.koda.open': 'פתיחת סרט הקונספט של Koda בתצוגה מוגדלת',
       'work.koda.concept': 'נבנה לפיד שבו הוא חי.',
       'work.koda.tag': 'מהאתר שלהם · 3 ימים · עריכה ללופ חלק · קריאות בתוך 0.4 שניות',
 
@@ -236,7 +307,8 @@
       'studio.title.tail': ' במקום לספר.',
       'studio.body': 'יצירה מוגמרת אחת עם המוצר שלכם.',
       'studio.note': 'בלי עלות ובלי התחייבות.',
-      'studio.statement.lead': 'Moona הוא סטודיו AI-native שיוצר תוכן קולנועי בתנועה למותגים. ',
+      'studio.statement.afterBrand': ' הוא סטודיו ',
+      'studio.statement.afterAi': ' שיוצר תוכן קולנועי בתנועה למותגים. ',
       'studio.statement.emphasis': 'המצלמה הייתה אופציונלית.',
 
       'contact.line': 'עכשיו תור המוצר.',
@@ -244,6 +316,8 @@
       'contact.email': 'מייל לסטודיו',
       'contact.disclaimer': 'כל העבודות נוצרו ביוזמתנו. המותגים מוצגים לצורכי הדגמה בלבד ואינם לקוחות. אין בכך כדי לרמוז על קשר מסחרי.',
       'contact.rights': 'כל הזכויות שמורות.',
+      'footer.privacy': 'הודעת פרטיות',
+      'footer.accessibility': 'הצהרת נגישות',
 
       'form.dialog': 'ספרו לנו על המותג',
       'form.step.name.label': '01 / עם מי מדברים',
@@ -294,8 +368,26 @@
       'media.openFilm': 'פתיחת הסרט בתצוגה מוגדלת',
       'media.openStill': 'פתיחת התמונה בתצוגה מוגדלת',
       'media.openThisFilm': 'פתיחת הסרט בתצוגה מוגדלת',
+      'media.openNamedFilm': 'פתיחת הסרט {name} בתצוגה מוגדלת',
+      'media.openNamedStill': 'פתיחת התמונה {name} בתצוגה מוגדלת',
+      'media.asset.loccitaneFlat': "L'Occitane, פריסת מוצרים",
+      'media.asset.proteinBar': 'Protein Bar',
+      'media.asset.btan': 'B.Tan',
+      'media.asset.kodaCans': 'פחיות Koda',
+      'media.asset.acoustic': 'Acoustic',
+      'media.asset.forgeskinStudio': 'ForgeSkin, דיוקן סטודיו',
+      'media.asset.sanMiguelCan': 'פחית San Miguel',
+      'media.asset.joseon': 'Joseon',
+      'media.asset.medix': 'Medix',
+      'media.asset.kodaYuzu': 'Koda Yuzu',
+      'media.asset.innisfree': 'Innisfree',
+      'media.asset.aerial': 'Aerial',
+      'media.asset.forgeskinBag': 'תיק ForgeSkin',
+      'media.asset.loccitaneDuo': "צמד מוצרי L'Occitane",
+      'media.asset.sanMiguelSun': 'San Miguel בשקיעה',
 
       'privacy.back': 'חזרה ל־',
+      'privacy.skip': 'דילוג להודעת הפרטיות',
       'privacy.heading': 'הודעת פרטיות',
       'privacy.intro': 'ב־Moona Studio נעשה שימוש בעוגיות אנליטיקה אופציונליות כדי להבין איך משתמשים באתר ולשפר אותו. שירותי האנליטיקה אינם נטענים עד לבחירה ב״אישור עוגיות״ בהודעה שבאתר. אפשר לבחור במקום זאת ב״דחיית עוגיות״.',
       'privacy.services.heading': 'שירותי אנליטיקה',
@@ -308,7 +400,31 @@
       'privacy.choices.body': 'אפשר לדחות עוגיות אנליטיקה בהודעה שבאתר. אם ניתנה בעבר הסכמה, אפשר למחוק את נתוני האתר השמורים בדפדפן ולטעון מחדש כדי לבחור שוב. אנחנו מכבדים, כשהם זמינים, מנגנוני פרטיות בדפדפן כגון Do Not Track ו־Global Privacy Control.',
       'privacy.contact.heading': 'יצירת קשר',
       'privacy.contact.lead': 'לשאלות בנושא פרטיות אפשר לפנות במייל אל ',
-      'privacy.contact.tail': '.'
+      'privacy.contact.tail': '.',
+
+      'accessibility.back': 'חזרה ל־',
+      'accessibility.skip': 'דילוג להצהרת הנגישות',
+      'accessibility.heading': 'הצהרת נגישות',
+      'accessibility.intro': 'ב־Moona אנחנו מחויבים להנגיש את האתר לאנשים עם מוגבלויות ולאפשר חוויית גלישה שוויונית, מכבדת ועצמאית.',
+      'accessibility.standard.heading': 'תקן הנגישות',
+      'accessibility.standard.body': 'האתר תוכנן ונבדק במטרה לעמוד בדרישות ת״י 5568 לנגישות תכנים באינטרנט, המבוסס על WCAG 2.0 ברמה AA. הנגישות נשמרת כחלק מהפיתוח השוטף של האתר.',
+      'accessibility.features.heading': 'התאמות הנגישות באתר',
+      'accessibility.features.keyboard': 'ניווט באמצעות מקלדת, סימון פוקוס ברור וקישור לדילוג ישיר לעבודות.',
+      'accessibility.features.structure': 'מבנה כותרות סמנטי, אזורי עמוד מוגדרים ושמות נגישים לפקדים אינטראקטיביים.',
+      'accessibility.features.language': 'ממשק בעברית ובאנגלית, עם הגדרת שפה וכיוון קריאה מתאימים.',
+      'accessibility.features.motion': 'פקדי ניגון והשהיה לסרטים, שליטה בתנועה באתר ותמיכה בהעדפת הפחתת תנועה של מערכת ההפעלה.',
+      'accessibility.features.forms': 'הנחיות לטופס, תיאורים המקושרים לשדות והודעות אימות שמוקראות לטכנולוגיות מסייעות.',
+      'accessibility.limitations.heading': 'מגבלות נגישות ידועות',
+      'accessibility.limitations.media': 'חלק מסרטי תיק העבודות הם יצירות חזותיות ואינם כוללים עדיין כתוביות או תיאור קולי מלאים. אפשר לפנות אלינו לקבלת תיאור כתוב או חלופה נגישה.',
+      'accessibility.limitations.testing': 'בוצעו בדיקות אוטומטיות ובדיקות ניווט במקלדת. טרם הושלמה ביקורת חיצונית מלאה באמצעות NVDA ו־JAWS.',
+      'accessibility.arrangements.heading': 'הסדרי נגישות בשירות',
+      'accessibility.arrangements.body': 'השירות באתר ניתן באופן מקוון. לקבלת מידע על הסדרי נגישות לפגישה או בערוץ שירות אחר, אפשר לפנות אלינו מראש במייל.',
+      'accessibility.contact.heading': 'פניות ומשוב בנושא נגישות',
+      'accessibility.contact.lead': 'אחראי לפניות נגישות: צוות Moona. מייל ',
+      'accessibility.contact.tail': '. כדי שנוכל לבדוק את הפנייה ביעילות, מומלץ לציין את העמוד, המכשיר והדפדפן, הטכנולוגיה המסייעת ותיאור קצר של הבעיה.',
+      'accessibility.audit.heading': 'פרטי ההצהרה',
+      'accessibility.audit.date': 'בדיקת הנגישות האחרונה: 31 באוגוסט 2026.',
+      'accessibility.updated.date': 'הצהרה זו עודכנה לאחרונה: 31 באוגוסט 2026.'
     }
   };
 
@@ -354,9 +470,9 @@
   }
 
   function pageName() {
-    return document.body?.dataset.page === 'privacy' || /\/privacy\.html$/.test(location.pathname)
-      ? 'privacy'
-      : 'home';
+    if (document.body?.dataset.page === 'privacy' || /\/privacy\.html$/.test(location.pathname)) return 'privacy';
+    if (document.body?.dataset.page === 'accessibility' || /\/accessibility\.html$/.test(location.pathname)) return 'accessibility';
+    return 'home';
   }
 
   function setDocumentLocale() {
@@ -386,10 +502,20 @@
   function updateLanguageToggles(root) {
     root.querySelectorAll?.('[data-language-toggle]').forEach(button => {
       const target = locale === 'he' ? 'en' : 'he';
-      button.textContent = target.toUpperCase();
+      let code = button.querySelector('[data-language-code]');
+      if (!code) {
+        button.textContent = '';
+        code = document.createElement('span');
+        code.dataset.languageCode = '';
+        code.setAttribute('lang', 'en');
+        code.setAttribute('dir', 'ltr');
+        code.setAttribute('aria-hidden', 'true');
+        button.appendChild(code);
+      }
+      code.textContent = target.toUpperCase();
       button.setAttribute('aria-label', t(target === 'he' ? 'language.switchToHebrew' : 'language.switchToEnglish'));
-      button.setAttribute('lang', 'en');
-      button.setAttribute('dir', 'ltr');
+      button.removeAttribute('lang');
+      button.removeAttribute('dir');
     });
   }
 

@@ -50,6 +50,8 @@
     html.i18n-pending body{visibility:hidden}
     *{box-sizing:border-box}
     body{margin:0;line-height:1.65;font-family:var(--sans);font-synthesis:none}
+    .skip{position:fixed;top:-70px;inset-inline-start:16px;z-index:10;padding:12px 18px;border:1px solid var(--gold);border-radius:999px;background:#0d101b;color:#fff;text-decoration:none}
+    .skip:focus{top:16px;outline:2px solid #fff;outline-offset:3px}
     .wrap{max-width:760px;margin:0 auto;padding:48px 24px 88px}
     .topline{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:46px}
     a{color:var(--gold)}
@@ -61,13 +63,17 @@
     .language-toggle{display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:none;color:#f6f3ea;font:600 11px ui-monospace,monospace;cursor:pointer}
     .language-toggle:hover{border-color:var(--gold);background:rgba(217,198,156,.08)}
     :is(.back,.language-toggle):focus-visible{outline:2px solid #fff;outline-offset:3px}
+    .legal{display:flex;flex-wrap:wrap;gap:12px 22px;margin-top:46px;padding-top:24px;border-top:1px solid var(--line)}
+    .legal a{display:inline-flex;align-items:center;min-height:44px}
+    .legal a:focus-visible{outline:2px solid #fff;outline-offset:3px}
     [dir="ltr"],bdi{unicode-bidi:isolate}
     html[lang="he"] .back{font-family:var(--sans);font-size:14px;letter-spacing:0;text-transform:none}
     @media(max-width:520px){.wrap{padding:28px 20px 64px}.topline{margin-bottom:34px}}
   </style>
 </head>
 <body data-page="privacy">
-  <main class="wrap">
+  <a class="skip" href="#privacyNotice" data-i18n="privacy.skip">Skip to the privacy notice</a>
+  <main class="wrap" id="privacyNotice" tabindex="-1">
     <div class="topline">
       <a class="back" href="/" data-locale-link><span class="back-arrow" aria-hidden="true">←</span><span><span data-i18n="privacy.back">Back to </span><bdi dir="ltr">Moona</bdi></span></a>
       <button class="language-toggle" type="button" data-language-toggle aria-label="Switch to Hebrew">HE</button>
@@ -90,6 +96,9 @@
 
     <h2 data-i18n="privacy.contact.heading">Contact</h2>
     <p><span data-i18n="privacy.contact.lead">For privacy questions, email </span><a href="mailto:moona.ai.studio@gmail.com" dir="ltr">moona.ai.studio@gmail.com</a><span data-i18n="privacy.contact.tail">.</span></p>
+    <nav class="legal" aria-label="Legal and accessibility" data-i18n-aria-label="footer.nav">
+      <a href="/accessibility.html" data-locale-link data-i18n="footer.accessibility">Accessibility statement</a>
+    </nav>
   </main>
   <script src="/i18n.js"></script>
 </body>
