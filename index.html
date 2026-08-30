@@ -552,7 +552,10 @@ main{position:relative;z-index:2;background:var(--void)}
 .film-credit{margin-top:22px;font-family:var(--mono);font-size:11px;
   color:var(--ice-dim);letter-spacing:.12em;line-height:1.7}
 /* the process strip: how it was made, in the grid's own meta idiom */
-.film-story{max-width:1560px;margin:7vh auto 0;padding:0 clamp(22px,5vw,72px);
+.film-strip-head{max-width:1560px;margin:9vh auto 0;padding:0 clamp(22px,5vw,72px)}
+.film-strip-head .film-note{max-width:62ch}
+@media(max-width:700px){.film-strip-head{margin-top:6vh}}
+.film-story{max-width:1560px;margin:4vh auto 0;padding:0 clamp(22px,5vw,72px);
   display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(24px,3.5vw,56px)}
 /* each beat is a card in the DUSTLINE palette: void glass, an ember-gold and
    ice glow rising from the floor, a lit bottom edge, and a quiet 3D tilt.
@@ -902,6 +905,11 @@ main{position:relative;z-index:2;background:var(--void)}
       <p class="film-credit rv">DUSTLINE &middot; born without a camera</p>
     </div>
 
+    <div class="film-strip-head">
+      <span class="film-eyebrow rv">How we work</span>
+      <p class="film-note rv">Nothing here was left to the model. Days of retakes, and every frame decided, measured and graded before it existed. We work at the front of these tools, which only counts because someone made the decisions first.</p>
+    </div>
+
     <div class="film-story">
       <div class="film-beat rv">
         <div class="beat-3d">
@@ -909,10 +917,10 @@ main{position:relative;z-index:2;background:var(--void)}
           <i class="beat-line" aria-hidden="true"></i>
           <div class="beat-head">
             <span class="beat-num" aria-hidden="true">01</span>
-            <span class="beat-label">The product</span>
+            <span class="beat-label">The experience</span>
           </div>
-          <h3>Keep it close.</h3>
-          <p>Our invented flagship: a bar designed from zero, wrapper to wordmark, its whole promise printed as one thin cream horizon line.</p>
+          <h3>We don't find locations. We build experience.</h3>
+          <p>A world you can believe, then measured to the metre: the gap between the stones at 0.90 m, the towers at 21, sky and ground lifted colour by colour. Get the place wrong and every shot standing in it is wrong.</p>
         </div>
       </div>
       <div class="film-beat rv">
@@ -921,10 +929,10 @@ main{position:relative;z-index:2;background:var(--void)}
           <i class="beat-line" aria-hidden="true"></i>
           <div class="beat-head">
             <span class="beat-num" aria-hidden="true">02</span>
-            <span class="beat-label">The experience</span>
+            <span class="beat-label">The shots</span>
           </div>
-          <h3>Not an ad. A world you step into.</h3>
-          <p>We built an experience: you chase with him, you feel every miss. The bar is never pitched. It is simply why she is still standing.</p>
+          <h3>The profession is in the details.</h3>
+          <p>A mathematically frozen frame is the clearest tell that a shot was generated. Every camera here breathes, carries a footstep, drifts, and never moves without a reason inside the story. Nobody notices it. Everybody feels it.</p>
         </div>
       </div>
       <div class="film-beat rv">
@@ -933,10 +941,10 @@ main{position:relative;z-index:2;background:var(--void)}
           <i class="beat-line" aria-hidden="true"></i>
           <div class="beat-head">
             <span class="beat-num" aria-hidden="true">03</span>
-            <span class="beat-label">The craft</span>
+            <span class="beat-label">The cast</span>
           </div>
-          <h3>Nothing in frame stands still.</h3>
-          <p>It reads human because of an uncompromising eye for detail: living crowds, dust and wind on every plane, light matched across five hours, a camera that only moves with a reason.</p>
+          <h3>The reference outranks the script.</h3>
+          <p>Faces, wardrobe and packaging lock to approved plates before a frame is generated, and where the writing disagrees with the reference the writing changes. Drift between shots is the first failure we design against.</p>
         </div>
       </div>
       <div class="film-beat rv">
@@ -945,10 +953,10 @@ main{position:relative;z-index:2;background:var(--void)}
           <i class="beat-line" aria-hidden="true"></i>
           <div class="beat-head">
             <span class="beat-num" aria-hidden="true">04</span>
-            <span class="beat-label">The studio</span>
+            <span class="beat-label">The viewer</span>
           </div>
-          <h3>Planted at dusk. Paid at sunrise.</h3>
-          <p>One studio, end to end: story, world, score and cut. The open palm is filled, the printed horizon meets the real one, and the film hands over without a seam.</p>
+          <h3>Built for how people actually watch.</h3>
+          <p>It has to land on mute, on a phone, in one pass. Every clue sits on screen the whole time, so the second viewing pays and the first stays clean. We watch it silent before anyone else does.</p>
         </div>
       </div>
     </div>
