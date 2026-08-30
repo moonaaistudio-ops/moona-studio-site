@@ -1,25 +1,41 @@
 # Moona — studio site
 
-AI-native studio for film and motion ads. Single-page static site, no build step.
+AI-native studio for film and motion ads. The site is static HTML, CSS and JavaScript, with one Vercel serverless function for project inquiries.
 
 ## What's here
 
-- `index.html` — the whole site: aurora WebGL shader, canvas starfield, cursor/touch stardust trail, and the five-step request flow
-- `v/` — the work films (H.264, web-optimised)
-- `p/` — poster frames
-- `netlify.toml` — publishes the folder as-is; no build minutes consumed
+- `index.html` — the main site and request flow
+- `i18n.js` — shared English/Hebrew locale runtime and semantic copy
+- `privacy.html` — consent and privacy notice in both languages
+- `analytics.js` — consent-gated analytics client
+- `api/lead.js` — serverless email handler
+- `v/` and `p/` — films and poster/still assets
+- `tests/` — focused Playwright coverage for locale, RTL, state and form behavior
 
-## Deploying
+English is the default. A language choice is shared as `?lang=en|he` and stored under `moona.locale` when browser storage is available.
 
-Connect this repo to Netlify. Publish directory `.`, build command empty.
+## Local testing
 
-## The request form
+```sh
+npm ci
+npx playwright install chromium
+npm run test:e2e
+```
 
-Posts to Netlify Forms as `sample-request` (name, website, company, email, attachments).
-Two things to set per Netlify account:
+The Playwright configuration starts the repository's dependency-free static test server automatically. Tests mock lead submission and analytics; they do not send email or analytics data.
 
-1. **Forms → enable form detection**, then redeploy — detection runs at deploy time
-2. **Forms → sample-request → Settings → Form notifications** → add email notification
-   to `moona.ai.studio@gmail.com`
+## Deployment
 
-If the POST fails the flow falls back to a prefilled mailto so a lead is never lost.
+Vercel is the only production path. The repository is already linked to its Vercel project, and production deploys from `main`.
+
+1. Work on a feature branch and run `npm run test:e2e`.
+2. Create a Vercel Preview for browser acceptance.
+3. Merge the verified change to `main`; do not run `vercel --prod` manually.
+
+`vercel.json` installs production dependencies with `npm ci --omit=dev`, so Playwright is not installed in Vercel builds while `nodemailer` remains available to `api/lead.js`.
+
+`netlify.toml` is retained for historical compatibility, but Netlify is not the production deployment path.
+
+## Request form
+
+The client first posts to `/api/lead`. The handler requires the SMTP environment variables documented in `api/lead.js`. If the API and hosted fallback both fail, the browser opens a translated, prefilled email so the inquiry is not lost.

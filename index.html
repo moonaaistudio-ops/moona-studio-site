@@ -5,11 +5,46 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Moona | AI-native studio for cinematic brand films</title>
 <meta name="description" content="We build the world, then film the ad. An AI-native studio making cinematic brand films with uncompromising craft.">
+<script>
+/* Resolve direction before CSS or analytics can paint the wrong locale. Keep this
+   small map in lock-step with i18n.js; the E2E suite checks it for drift. */
+(()=>{
+  const valid=new Set(['en','he']), key='moona.locale', params=new URLSearchParams(location.search);
+  const requested=params.get('lang');
+  let locale='en', source='default';
+  if(valid.has(requested)){
+    locale=requested; source='query';
+    try{localStorage.setItem(key,locale)}catch(_){}
+  }else{
+    try{
+      const saved=localStorage.getItem(key);
+      if(valid.has(saved)){locale=saved;source='storage'}
+    }catch(_){}
+  }
+  const metadata={
+    en:{title:'Moona | AI-native studio for cinematic brand films',description:'We build the world, then film the ad. An AI-native studio making cinematic brand films with uncompromising craft.'},
+    he:{title:'Moona | סטודיו AI-native לסרטי מותג קולנועיים',description:'אנחנו בונים את העולם, ואז מצלמים את הפרסומת. סטודיו AI-native שיוצר סרטי מותג קולנועיים במלאכת מחשבת חסרת פשרות.'}
+  };
+  document.documentElement.lang=locale;
+  document.documentElement.dir=locale==='he'?'rtl':'ltr';
+  window.__MOONA_LOCALE__=locale;
+  window.__MOONA_LOCALE_SOURCE__=source;
+  document.title=metadata[locale].title;
+  document.querySelector('meta[name="description"]').content=metadata[locale].description;
+  if(locale==='he'){
+    const font=document.createElement('link');
+    font.id='moona-hebrew-fonts'; font.rel='stylesheet';
+    font.href='https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600&family=Frank+Ruhl+Libre:wght@400;600&display=swap';
+    document.head.appendChild(font);
+  }
+})();
+</script>
 <meta name="theme-color" content="#05070c">
 <link rel="canonical" href="https://moona-studio-two.vercel.app/">
 
 <!-- how the link looks when someone shares it -->
 <meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Moona">
 <meta property="og:url" content="https://moona-studio-two.vercel.app/">
 <meta property="og:title" content="Moona | AI-native studio for cinematic brand films">
@@ -43,11 +78,17 @@
   --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
   --sans:"Inter Tight",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --serif:"Instrument Serif",Georgia,serif;
+  --he-emphasis-weight:600;
+  --he-emphasis-color:#f3e9d2;
   --ease:cubic-bezier(.16,1,.3,1);
   /* radius scale — the CTA pill is the extreme of a rounded family, not an outlier */
   --r-pill:999px;   /* buttons, chips  */
   --r-lg:20px;      /* media surfaces  */
   --r-md:14px;      /* panels          */
+}
+html[lang="he"]{
+  --sans:Assistant,Arial,sans-serif;
+  --serif:"Frank Ruhl Libre","Times New Roman",serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:auto}
@@ -133,18 +174,20 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:none}
   opacity:0;visibility:hidden;transition:opacity .55s var(--ease),visibility .55s}
 #ask.open{opacity:1;visibility:visible;pointer-events:auto}
 body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease)}
-#ask .ask-top{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;align-items:center;
+#ask .ask-top{position:absolute;top:0;inset-inline:0;z-index:3;display:flex;align-items:center;
   justify-content:space-between;padding:26px clamp(24px,4vw,52px)}
 #ask .ask-step{font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--ice-dim)}
 #ask .ask-step b{color:var(--ice-hot);font-weight:400}
 #ask .ask-close{position:relative;z-index:4;font-family:var(--mono);font-size:10px;letter-spacing:.28em;
   text-transform:uppercase;color:var(--ice-dim);padding:16px 14px;transition:color .3s}
 #ask .ask-close:hover{color:var(--ice-hot)}
-#ask .ask-rail{position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(168,198,232,.1)}
+#ask .ask-rail{position:absolute;inset-inline:0;bottom:0;height:2px;background:rgba(168,198,232,.1)}
 #ask .ask-rail i{display:block;height:100%;width:0;border-radius:0 2px 2px 0;
   background:linear-gradient(90deg,rgba(217,198,156,.55),#d9c69c);
   box-shadow:0 0 12px -1px rgba(217,198,156,.75);
   transition:width .6s var(--ease)}
+html[dir="rtl"] #ask .ask-rail i{
+  border-radius:2px 0 0 2px;background:linear-gradient(270deg,rgba(217,198,156,.55),#d9c69c)}
 /* the stepper sits with the question, not in a far corner: three joined dots
    say 'three, and you are here' before anyone decides whether to start */
 .qsteps{display:flex;align-items:center;margin-bottom:26px}
@@ -194,11 +237,11 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
 .qnext span.ring{width:44px;height:44px;border:1px solid rgba(217,198,156,.5);border-radius:50%;
   display:grid;place-items:center;transition:background .4s var(--ease),border-color .4s var(--ease)}
 .qnext span.ring i{width:8px;height:8px;border-right:1.5px solid #d9c69c;border-top:1.5px solid #d9c69c;
-  transform:rotate(45deg);margin-left:-3px;transition:transform .4s var(--ease)}
+  transform:rotate(45deg);margin-inline-start:-3px;transition:transform .4s var(--ease)}
 .qnext:hover span.ring{background:rgba(217,198,156,.12);border-color:#d9c69c}
 .qnext:hover span.ring i{transform:rotate(45deg) translate(2px,-2px)}
 /* the last press is the finish line: filled, warm, and lit */
-.qnext.qsend{background:#d9c69c;color:#0d0b07;padding:7px 7px 7px 26px;border-radius:var(--r-pill);
+.qnext.qsend{background:#d9c69c;color:#0d0b07;padding-block:7px;padding-inline:26px 7px;border-radius:var(--r-pill);
   box-shadow:0 10px 30px -12px rgba(217,198,156,.7);
   animation:sendglow 2.8s var(--ease) infinite;
   transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
@@ -225,7 +268,7 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
    collapsed sliver with the text outside it.
    It also has to look like something you can act on, so it carries an icon, a
    plain-language action in the body face, and a visible Browse control. */
-.drop{display:flex;align-items:center;gap:15px;margin-top:26px;text-align:left;
+.drop{display:flex;align-items:center;gap:15px;margin-top:26px;text-align:start;
   border:1px dashed rgba(217,198,156,.4);border-radius:var(--r-md);padding:15px 16px;
   background:rgba(217,198,156,.035);
   transition:border-color .35s var(--ease),background .35s var(--ease);cursor:none}
@@ -257,7 +300,7 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
 .filelist{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
 .filelist:empty{margin-top:0}
 .filechip{display:inline-flex;align-items:center;gap:9px;max-width:100%;
-  padding:6px 6px 6px 13px;border-radius:var(--r-pill);
+  padding-block:6px;padding-inline:13px 6px;border-radius:var(--r-pill);
   background:rgba(168,198,232,.07);border:1px solid var(--line);
   font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--ice)}
 .filechip .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:22ch}
@@ -288,7 +331,7 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
   .qback,.qskip,.qnext{padding:15px 6px}
 }
 
-.skip{position:fixed;top:-60px;left:16px;z-index:100;padding:12px 18px;
+.skip{position:fixed;top:-60px;inset-inline-start:16px;z-index:100;padding:12px 18px;
   font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
   background:var(--void-2);color:var(--ice-hot);border:1px solid #d9c69c;border-radius:var(--r-pill);
   text-decoration:none;transition:top .25s var(--ease)}
@@ -319,7 +362,7 @@ body.cur-off .cur{opacity:0}
 /* author display beats the UA's [hidden]{display:none}, so the attribute has
    to be honoured explicitly - without this the banner never goes away */
 .analytics-consent[hidden]{display:none}
-.analytics-consent{position:fixed;right:16px;bottom:16px;z-index:110;cursor:auto;
+.analytics-consent{position:fixed;inset-inline-end:16px;bottom:16px;z-index:110;cursor:auto;
   display:flex;align-items:center;gap:18px;max-width:calc(100vw - 32px);
   padding:11px 14px;background:rgba(8,11,19,.96);border:1px solid rgba(217,198,156,.34);border-radius:var(--r-pill);
   box-shadow:0 14px 44px rgba(0,0,0,.38)}
@@ -334,7 +377,7 @@ body.cur-off .cur{opacity:0}
 .analytics-consent button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 /* too narrow for one row: stack, and let the sentence wrap again */
 @media(max-width:700px){
-  .analytics-consent{right:10px;bottom:10px;left:10px;max-width:none;
+  .analytics-consent{inset-inline:10px;bottom:10px;max-width:none;
     flex-direction:column;align-items:flex-start;gap:11px;
     padding:13px 15px;border-radius:var(--r-md)}
   .analytics-consent p{white-space:normal}
@@ -376,20 +419,26 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
   background:radial-gradient(120% 90% at 50% 50%,transparent 55%,rgba(3,4,8,.75) 100%)}
 .htxt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-align:center;pointer-events:none;padding:0 6vw 12vh;opacity:0}
-#hdr{position:fixed;top:0;left:0;right:0;z-index:65;
+#hdr{position:fixed;top:0;inset-inline:0;z-index:65;container:header/inline-size;
   display:flex;align-items:center;justify-content:space-between;
   padding:26px clamp(28px,4vw,52px) 12px;
   background:linear-gradient(rgba(5,7,12,.72),rgba(5,7,12,0));pointer-events:none}
 #hdr>*{pointer-events:auto}
 .lockup{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;
-  letter-spacing:.34em;color:var(--ice-hot);text-decoration:none;text-transform:uppercase}
+  min-height:44px;letter-spacing:.34em;color:var(--ice-hot);text-decoration:none;text-transform:uppercase}
+.lockup-name{white-space:nowrap}
 .lockup-iris{width:28px;height:28px;flex:none;border-radius:50%;
   filter:drop-shadow(0 0 12px rgba(217,198,156,.35))}
 #hdr nav{display:flex;align-items:center;gap:clamp(14px,2.6vw,30px)}
 #hdr nav button[data-goto]{font-family:var(--mono);font-size:10px;letter-spacing:.28em;
-  text-transform:uppercase;color:var(--ice-dim);padding:9px 2px;
+  min-width:44px;min-height:44px;text-transform:uppercase;color:var(--ice-dim);padding:9px 2px;
   border-bottom:1px solid transparent;transition:color .3s,border-color .3s}
 #hdr nav button[data-goto]:hover{color:var(--ice-hot);border-color:var(--ice)}
+.language-toggle{display:grid;place-items:center;flex:none;width:44px;height:44px;
+  border:1px solid var(--ice-faint);border-radius:50%;font-family:var(--mono);
+  font-size:10px;letter-spacing:.08em;color:var(--ice-hot);transition:border-color .3s,background .3s}
+.language-toggle:hover{border-color:#d9c69c;background:rgba(217,198,156,.1)}
+.language-toggle:focus-visible{outline:2px solid #fff;outline-offset:3px}
 @media(max-width:700px){
   #hdr{padding:18px 18px 10px}
   .lockup{gap:7px;font-size:10px;letter-spacing:.22em}
@@ -397,9 +446,13 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
   #hdr nav{gap:6px}
   /* keep the type small but give every target a 44px hit area (Apple HIG) */
   #hdr nav button[data-goto]{font-size:9px;letter-spacing:.18em;padding:15px 8px;min-width:44px}
-  .lockup{min-height:44px}                       /* the mark is a link home; give it a thumb */
+  .lockup{min-width:44px;min-height:44px}         /* the mark is a link home; give it a thumb */
   .cta-btn.sm{font-size:9px;padding:14px 14px;letter-spacing:.14em;gap:8px;white-space:nowrap}
   }
+@container header (max-width:350px){.lockup-name{display:none}}
+@supports not (container-type:inline-size){
+  @media(max-width:386px){.lockup-name{display:none}}
+}
 /* the long CTA has to survive a 360px phone with room to spare */
 @media(max-width:410px){
   .cta-btn.lg{font-size:11px;padding:19px 22px;letter-spacing:.15em;gap:10px}
@@ -413,7 +466,7 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
 .htxt h1.statement::before{content:"";position:absolute;z-index:-1;pointer-events:none;
   left:50%;top:50%;width:126%;height:200%;transform:translate(-50%,-50%);
   background:radial-gradient(closest-side,rgba(168,198,232,.20),rgba(168,198,232,0) 72%)}
-.htxt h1.statement em{font-style:italic}
+.htxt h1.statement em{font-style:normal}
 .htxt .statement-sub{margin-top:20px;font-size:clamp(16px,1.9vw,21px);font-weight:400;
   color:rgba(190,212,238,.72);letter-spacing:.01em;line-height:1.55}
 .htxt .statement-sub span{display:block;text-wrap:balance;max-width:38ch;margin:0 auto}
@@ -426,7 +479,7 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
 .scrollcue{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none;
   transition:opacity .6s}
-.scrollcue span{font-family:var(--mono);font-size:9px;letter-spacing:.4em;color:var(--ice-dim);text-transform:uppercase;padding-left:.4em}
+.scrollcue span{font-family:var(--mono);font-size:9px;letter-spacing:.4em;color:var(--ice-dim);text-transform:uppercase;padding-inline-start:.4em}
 .scrollcue i{width:1px;height:44px;background:linear-gradient(var(--ice),transparent);display:block;
   animation:cue 2.2s var(--ease) infinite}
 @keyframes cue{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}
@@ -664,11 +717,11 @@ main{position:relative;z-index:2;background:var(--void)}
   text-transform:uppercase;color:var(--ice-dim)}
 
 .mqwrap{display:flex;flex-direction:column;gap:clamp(12px,1.4vw,18px);overflow:hidden}
-.mq{--gap:clamp(12px,1.4vw,18px);display:flex;gap:var(--gap);overflow:hidden;
+.mq{--gap:clamp(12px,1.4vw,18px);display:flex;gap:var(--gap);overflow:hidden;direction:ltr;
   /* the rows bleed away at both edges instead of stopping at a hard line */
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);
   mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
-.mq-track{display:flex;align-items:center;gap:var(--gap);flex:0 0 auto;min-width:100%;
+.mq-track{display:flex;align-items:center;gap:var(--gap);flex:0 0 auto;min-width:100%;direction:ltr;
   animation:mq var(--dur,42s) linear infinite;will-change:transform}
 .mq.rev .mq-track{animation-direction:reverse;--dur:52s}   /* two speeds, so they never lock together */
 .mq:hover .mq-track,.mq.hold .mq-track{animation-play-state:paused}
@@ -712,7 +765,7 @@ main{position:relative;z-index:2;background:var(--void)}
 #lb.open .lb-stage{transform:none}
 #lb .lb-stage>*{display:block;max-width:100%;max-height:calc(100vh - clamp(96px,16vw,180px));
   width:auto;height:auto;object-fit:contain}
-#lb .lb-close{position:absolute;top:clamp(12px,2.4vw,22px);right:clamp(12px,2.4vw,22px);z-index:2;
+#lb .lb-close{position:absolute;top:clamp(12px,2.4vw,22px);inset-inline-end:clamp(12px,2.4vw,22px);z-index:2;
   display:inline-flex;align-items:center;justify-content:center;gap:9px;
   min-width:44px;min-height:44px;padding:12px 18px;border-radius:var(--r-pill);
   font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;
@@ -771,7 +824,33 @@ main{position:relative;z-index:2;background:var(--void)}
 .contact .copy{margin-top:3.5vh;font-family:var(--mono);font-size:10px;letter-spacing:.24em;
   text-transform:uppercase;color:rgba(168,198,232,.66)}
 .contact .disc{margin-top:7vh;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;
-  color:var(--ice-dim);max-width:52ch;margin-left:auto;margin-right:auto;line-height:1.9}
+  color:var(--ice-dim);max-width:52ch;margin-inline:auto;line-height:1.9}
+
+/* Hebrew uses its own readable interface face without changing the Latin HUD,
+   brand marks, timestamps or AI terminology. */
+html[lang="he"] body{font-synthesis:none}
+html[lang="he"] :is(.htxt h1.statement,.film-title,.ctagal-h,.sentence p) em{
+  font-family:var(--serif);font-style:normal;font-weight:var(--he-emphasis-weight);
+  color:var(--he-emphasis-color);font-synthesis:none}
+html[lang="he"] :is(.cta-btn,.q .qlab,.q .qhint,.qnext,.qback,.qskip,.ask-close,
+  .drop-s,.drop-cta,.filenote,.ctagal-label,.ctagal-note,.contact .or,.contact .mail,
+  .contact .cta-sub,.contact .copy,.contact .disc,.analytics-consent button,
+  #hdr nav button[data-goto],#lb .lb-close,.scrollcue span,.work-head .idx,.beat-label,
+  .meta .tag,.film-eyebrow,.film-soundcta,.film-credit,.specbadge,.filechip .nm,.skip){
+  font-family:var(--sans);letter-spacing:0;text-transform:none}
+html[lang="he"] :is(.q .qlab,.q .qhint,.qnext,.qback,.qskip,.drop-s,.drop-cta,
+  .filenote,.ctagal-label,.ctagal-note,.analytics-consent button,#hdr nav button[data-goto],
+  #lb .lb-close,.scrollcue span,.work-head .idx,.beat-label,.film-eyebrow,.film-soundcta,
+  .specbadge,.skip,.cta-btn.sm,.ask-close,.contact .or,.contact .copy,.contact .mail){font-size:11px}
+html[lang="he"] .scrollcue span{padding-inline-start:0}
+html[lang="he"] :is(.lockup,#loader,.hud,.meta .num,.vbadge,.film-time,.piece-time){font-family:var(--mono)}
+html[lang="he"] :is(.brand-ltr,.meta .brand){
+  font-family:"Inter Tight",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;direction:ltr}
+html[dir="rtl"] :is(.cta-btn,.qnext,.contact .mail) i{transform:rotate(-135deg)}
+html[dir="rtl"] :is(.cta-btn,.qnext,.contact .mail):hover i{transform:rotate(-135deg) translate(3px,-3px)}
+.ask-step,.hud,.beat-num,.meta .num,.vbadge,.film-time,.piece-time{
+  direction:ltr;unicode-bidi:isolate}
+.bidi-isolate,[dir="auto"],bdi{unicode-bidi:isolate}
 
 /* a phone on its side has no vertical room: the headline was running into the nav */
 @media(orientation:landscape) and (max-height:540px){
@@ -798,9 +877,9 @@ main{position:relative;z-index:2;background:var(--void)}
 }
 </style>
 </head>
-<body>
+<body data-page="home">
 
-<a class="skip" href="#film">Skip to the work</a>
+<a class="skip" href="#film" data-i18n="skip.work">Skip to the work</a>
 
 
 <canvas id="dust" aria-hidden="true"></canvas>
@@ -808,21 +887,21 @@ main{position:relative;z-index:2;background:var(--void)}
 
 <div class="grain"></div>
 <div class="cur ring"></div>
-<aside class="analytics-consent" id="analyticsConsent" aria-label="Analytics preferences" hidden>
-  <p>We use analytics to see how the site performs. <a href="/privacy.html">Privacy notice</a></p>
+<aside class="analytics-consent" id="analyticsConsent" aria-label="Analytics preferences" data-i18n-aria-label="consent.label" hidden>
+  <p><span data-i18n="consent.text">We use analytics to see how the site performs.</span> <a href="/privacy.html" data-locale-link data-i18n="consent.privacy">Privacy notice</a></p>
   <div class="analytics-consent__actions">
-    <button class="analytics-consent__accept" type="button" id="analyticsAccept">Accept analytics</button>
-    <button class="analytics-consent__reject" type="button" id="analyticsReject">Decline</button>
+    <button class="analytics-consent__accept" type="button" id="analyticsAccept" data-i18n="consent.accept">Accept analytics</button>
+    <button class="analytics-consent__reject" type="button" id="analyticsReject" data-i18n="consent.decline">Decline</button>
   </div>
 </aside>
-<div id="lb" role="dialog" aria-modal="true" aria-label="Enlarged work" hidden>
+<div id="lb" role="dialog" aria-modal="true" aria-label="Enlarged work" data-i18n-aria-label="lightbox.label" hidden>
   <div class="lb-stage"></div>
-  <button class="lb-close" type="button" data-hover>Close</button>
+  <button class="lb-close" type="button" data-hover data-i18n="common.close">Close</button>
 </div>
 <div class="cur dot"></div>
 
 <!-- ═══════════ LOADER ═══════════ -->
-<div id="loader" role="status" aria-label="Loading">
+<div id="loader" role="status" aria-label="Loading" data-i18n-aria-label="loader.label" dir="ltr">
   <div class="morse" aria-hidden="true">- - · - -</div>
   <div class="word">Moona</div>
   <div class="bar"><i></i></div>
@@ -831,11 +910,12 @@ main{position:relative;z-index:2;background:var(--void)}
 
 <!-- ═══════════ HEADER ═══════════ -->
 <header id="hdr">
-  <a class="lockup" href="#" id="homeLink"><svg class="lockup-iris" viewBox="0 0 100 100" id="markSvg" aria-hidden="true"></svg><span data-scramble>MOONA</span></a>
-  <nav aria-label="Sections">
-    <button data-goto="film">Work</button>
-    <button data-goto="studio">Studio</button>
-    <button class="cta-btn sm" data-ask>Get an ad<i></i></button>
+  <a class="lockup" href="#" id="homeLink" aria-label="Moona home" data-i18n-aria-label="header.home" dir="ltr"><svg class="lockup-iris" viewBox="0 0 100 100" id="markSvg" aria-hidden="true"></svg><span class="lockup-name" data-scramble>MOONA</span></a>
+  <nav aria-label="Sections" data-i18n-aria-label="nav.sections">
+    <button data-goto="film" data-i18n="nav.work">Work</button>
+    <button data-goto="studio" data-i18n="nav.studio">Studio</button>
+    <button class="language-toggle" type="button" data-language-toggle aria-label="Switch to Hebrew">HE</button>
+    <button class="cta-btn sm" data-ask><span data-i18n="nav.cta">Get an ad</span><i></i></button>
   </nav>
 </header>
 
@@ -850,15 +930,15 @@ main{position:relative;z-index:2;background:var(--void)}
     <div class="hud br" id="hud-progress">000</div>
 
     <div class="htxt" id="t1">
-      <h1 class="statement">Cinematic ads, born without a camera</h1>
-      <p class="statement-sub"><span>An AI-native studio for film and motion ads.</span><span>Story, craft and taste first.</span></p>
-      <button class="cta-btn hero-cta" data-ask data-hover>Get an ad for your brand<i></i></button>
+      <h1 class="statement"><span data-i18n="hero.headline.lead">Cinematic ads, </span><em data-i18n="hero.headline.emphasis">born without a camera</em></h1>
+      <p class="statement-sub"><span data-i18n="hero.subline.one">An AI-native studio for film and motion ads.</span><span data-i18n="hero.subline.two">Story, craft and taste first.</span></p>
+      <button class="cta-btn hero-cta" data-ask data-hover><span data-i18n="hero.cta">Get an ad for your brand</span><i></i></button>
     </div>
     <div class="htxt small" id="t3">
-      <h2><span class="setup">We don't film products.</span> <span class="turn">We film what they mean.</span></h2>
+      <h2><span class="setup" data-i18n="hero.turn.setup">We don't film products.</span> <span class="turn" data-i18n="hero.turn.payoff">We film what they mean.</span></h2>
     </div>
 
-    <div class="scrollcue" id="cue"><span>Scroll</span><i></i></div>
+    <div class="scrollcue" id="cue"><span data-i18n="hero.scroll">Scroll</span><i></i></div>
   </div>
 </div>
 
@@ -871,21 +951,21 @@ main{position:relative;z-index:2;background:var(--void)}
        and a 31-second scored film wants none of them. -->
   <section class="film" id="film" tabindex="-1">
     <div class="film-head">
-      <span class="film-eyebrow rv">The flagship</span>
-      <h2 class="film-title rv">We invented a brand. <em>Then we shot its ad.</em></h2>
-      <p class="film-note rv">DUSTLINE is an energy bar you cannot buy.</p>
+      <span class="film-eyebrow rv" data-i18n="film.eyebrow">The flagship</span>
+      <h2 class="film-title rv"><span data-i18n="film.title.lead">We invented a brand. </span><em data-i18n="film.title.emphasis">Then we shot its ad.</em></h2>
+      <p class="film-note rv"><bdi class="brand-ltr" dir="ltr">DUSTLINE</bdi><span data-i18n="film.note.tail"> is an energy bar you cannot buy.</span></p>
     </div>
 
     <div class="film-wrap">
       <div class="film-stage">
         <div class="film-frame" role="button" tabindex="0"
              data-lb-controls data-lb-sound
-             aria-label="Open DUSTLINE larger, with controls">
+             aria-label="Open DUSTLINE larger, with controls" data-i18n-aria-label="film.frame.open">
           <video data-src="v/dustline.mp4"
                  poster="p/dustline.jpg"
                  playsinline muted loop preload="none"
-                 aria-label="DUSTLINE. A one-night desert love story told through an energy bar. A film by Moona."></video>
-          <span class="specbadge">Moona original</span>
+                 aria-label="DUSTLINE. A one-night desert love story told through an energy bar. A film by Moona." data-i18n-aria-label="film.video.description"></video>
+          <span class="specbadge" data-i18n="film.original" dir="auto">Moona original</span>
           <span class="vbadge">00:31</span>
           <i class="vprog"></i>
         </div>
@@ -893,12 +973,12 @@ main{position:relative;z-index:2;background:var(--void)}
         <!-- shown only when the browser refused the unmute; takes the click itself
              so it never steals one meant for the lightbox. While visible the frame
              is tabindex=-1 so focus cannot land behind it. -->
-        <button class="film-soundcta" type="button" hidden data-hover>Play with sound</button>
+        <button class="film-soundcta" type="button" hidden data-hover data-i18n="film.playWithSound">Play with sound</button>
 
         <!-- siblings, not children: .film-frame is role=button and clip-path'd -->
         <div class="film-ctl">
           <button class="film-play" type="button" data-state="playing" aria-pressed="true"
-                  aria-label="Pause the film" data-hover>
+                  aria-label="Pause the film" data-media-play data-hover>
             <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor"
                  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g>
@@ -907,7 +987,7 @@ main{position:relative;z-index:2;background:var(--void)}
             </svg>
           </button>
           <button class="film-sound" type="button" aria-pressed="false"
-                  aria-label="Turn the film sound on" data-hover>
+                  aria-label="Turn the film sound on" data-media-sound data-hover>
             <svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor"
                  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M4 7.5h2.6L10.5 4v12L6.6 12.5H4z"/>
@@ -919,12 +999,12 @@ main{position:relative;z-index:2;background:var(--void)}
         </div>
       </div>
 
-      <p class="film-credit rv">DUSTLINE &middot; born without a camera</p>
+      <p class="film-credit rv" dir="auto"><bdi class="brand-ltr" dir="ltr" data-i18n="film.credit.lead">DUSTLINE</bdi> &middot; <span data-i18n="film.credit.tail">born without a camera</span></p>
     </div>
 
     <div class="film-strip-head">
-      <span class="film-eyebrow rv">How we work</span>
-      <p class="film-note rv">Nothing here was left to the model. Days of retakes, and every frame decided, measured and graded before it existed. We work at the front of these tools, which only counts because someone made the decisions first.</p>
+      <span class="film-eyebrow rv" data-i18n="film.how.eyebrow">How we work</span>
+      <p class="film-note rv" data-i18n="film.how.body">Nothing here was left to the model. Days of retakes, and every frame decided, measured and graded before it existed. We work at the front of these tools, which only counts because someone made the decisions first.</p>
     </div>
 
     <div class="film-story">
@@ -934,10 +1014,10 @@ main{position:relative;z-index:2;background:var(--void)}
           <i class="beat-line" aria-hidden="true"></i>
           <div class="beat-head">
             <span class="beat-num" aria-hidden="true">01</span>
-            <span class="beat-label">The experience</span>
+            <span class="beat-label" data-i18n="film.beat.experience.label">The experience</span>
           </div>
-          <h3>We don't find locations. We build experience.</h3>
-          <p>A world you can believe, then measured to the metre: the gap between the stones at 0.90 m, the towers at 21, sky and ground lifted colour by colour. Get the place wrong and every shot standing in it is wrong.</p>
+          <h3 data-i18n="film.beat.experience.title">We don't find locations. We build experience.</h3>
+          <p data-i18n="film.beat.experience.body">A world you can believe, then measured to the metre: the gap between the stones at 0.90 m, the towers at 21, sky and ground lifted colour by colour. Get the place wrong and every shot standing in it is wrong.</p>
         </div>
       </div>
       <div class="film-beat rv">
@@ -946,10 +1026,10 @@ main{position:relative;z-index:2;background:var(--void)}
           <i class="beat-line" aria-hidden="true"></i>
           <div class="beat-head">
             <span class="beat-num" aria-hidden="true">02</span>
-            <span class="beat-label">The shots</span>
+            <span class="beat-label" data-i18n="film.beat.shots.label">The shots</span>
           </div>
-          <h3>The profession is in the details.</h3>
-          <p>A mathematically frozen frame is the clearest tell that a shot was generated. Every camera here breathes, carries a footstep, drifts, and never moves without a reason inside the story. Nobody notices it. Everybody feels it.</p>
+          <h3 data-i18n="film.beat.shots.title">The profession is in the details.</h3>
+          <p data-i18n="film.beat.shots.body">A mathematically frozen frame is the clearest tell that a shot was generated. Every camera here breathes, carries a footstep, drifts, and never moves without a reason inside the story. Nobody notices it. Everybody feels it.</p>
         </div>
       </div>
       <div class="film-beat rv">
@@ -958,10 +1038,10 @@ main{position:relative;z-index:2;background:var(--void)}
           <i class="beat-line" aria-hidden="true"></i>
           <div class="beat-head">
             <span class="beat-num" aria-hidden="true">03</span>
-            <span class="beat-label">The cast</span>
+            <span class="beat-label" data-i18n="film.beat.cast.label">The cast</span>
           </div>
-          <h3>The reference outranks the script.</h3>
-          <p>Faces, wardrobe and packaging lock to approved plates before a frame is generated, and where the writing disagrees with the reference the writing changes. Drift between shots is the first failure we design against.</p>
+          <h3 data-i18n="film.beat.cast.title">The reference outranks the script.</h3>
+          <p data-i18n="film.beat.cast.body">Faces, wardrobe and packaging lock to approved plates before a frame is generated, and where the writing disagrees with the reference the writing changes. Drift between shots is the first failure we design against.</p>
         </div>
       </div>
       <div class="film-beat rv">
@@ -970,10 +1050,10 @@ main{position:relative;z-index:2;background:var(--void)}
           <i class="beat-line" aria-hidden="true"></i>
           <div class="beat-head">
             <span class="beat-num" aria-hidden="true">04</span>
-            <span class="beat-label">The viewer</span>
+            <span class="beat-label" data-i18n="film.beat.viewer.label">The viewer</span>
           </div>
-          <h3>Built for how people actually watch.</h3>
-          <p>It has to land on mute, on a phone, in one pass. Every clue sits on screen the whole time, so the second viewing pays and the first stays clean. We watch it silent before anyone else does.</p>
+          <h3 data-i18n="film.beat.viewer.title">Built for how people actually watch.</h3>
+          <p data-i18n="film.beat.viewer.body">It has to land on mute, on a phone, in one pass. Every clue sits on screen the whole time, so the second viewing pays and the first stays clean. We watch it silent before anyone else does.</p>
         </div>
       </div>
     </div>
@@ -981,46 +1061,46 @@ main{position:relative;z-index:2;background:var(--void)}
 
   <section class="work" id="work" tabindex="-1">
     <div class="work-head rv">
-      <span class="idx">Spec work &middot; nobody asked for these</span>
-      <p class="work-note">Four brands we don't work for. We made these anyway, the same way we'll make yours.</p>
+      <span class="idx" data-i18n="work.eyebrow">Spec work &middot; nobody asked for these</span>
+      <p class="work-note" data-i18n="work.note">Four brands we don't work for. We made these anyway, the same way we'll make yours.</p>
     </div>
 
     <article class="piece rv" data-piece>
-      <div class="frame"><video src="v/mcdonalds.mp4" poster="p/mcdonalds.jpg" muted loop playsinline preload="none" aria-label="McDonald's self-initiated spec film by Moona"></video><span class="specbadge">Moona original &middot; Spec</span><span class="vbadge">00:08</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-pressed="true" aria-label="Pause the film" data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
+      <div class="frame"><video src="v/mcdonalds.mp4" poster="p/mcdonalds.jpg" muted loop playsinline preload="none" aria-label="McDonald's self-initiated spec film by Moona" data-i18n-aria-label="work.mcdonalds.video"></video><span class="specbadge" data-i18n="work.specBadge" dir="auto">Moona original &middot; Spec</span><span class="vbadge">00:08</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-pressed="true" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
       <div class="meta">
-        <span class="num">01</span><span class="brand">McDonald's</span>
-        <p class="concept">You already know the taste. Now watch it move.</p>
-        <p class="tag">from one product photo &middot; 3 days &middot; appetite pacing &middot; single continuous move</p>
+        <span class="num">01</span><span class="brand" dir="ltr">McDonald's</span>
+        <p class="concept" data-i18n="work.mcdonalds.concept">You already know the taste. Now watch it move.</p>
+        <p class="tag" data-i18n="work.mcdonalds.tag" dir="auto">from one product photo &middot; 3 days &middot; appetite pacing &middot; single continuous move</p>
       </div>
       <div class="breakdown"></div>
     </article>
 
     <article class="piece rv" data-piece>
-      <div class="frame"><video src="v/strava.mp4" poster="p/strava.jpg" muted loop playsinline preload="none" aria-label="Strava self-initiated spec film by Moona"></video><span class="specbadge">Moona original &middot; Spec</span><span class="vbadge">00:14</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-pressed="true" aria-label="Pause the film" data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
+      <div class="frame"><video src="v/strava.mp4" poster="p/strava.jpg" muted loop playsinline preload="none" aria-label="Strava self-initiated spec film by Moona" data-i18n-aria-label="work.strava.video"></video><span class="specbadge" data-i18n="work.specBadge" dir="auto">Moona original &middot; Spec</span><span class="vbadge">00:14</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-pressed="true" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
       <div class="meta">
-        <span class="num">02</span><span class="brand">Strava</span>
-        <p class="concept">Every run already has a soundtrack. We cut to it.</p>
-        <p class="tag">from their own site &middot; 3 days &middot; beat-matched cut &middot; product-locked colour</p>
+        <span class="num">02</span><span class="brand" dir="ltr">Strava</span>
+        <p class="concept" data-i18n="work.strava.concept">Every run already has a soundtrack. We cut to it.</p>
+        <p class="tag" data-i18n="work.strava.tag" dir="auto">from their own site &middot; 3 days &middot; beat-matched cut &middot; product-locked colour</p>
       </div>
       <div class="breakdown"><!-- breakdown slot — content later --></div>
     </article>
 
     <article class="piece rv" data-piece>
-      <div class="frame"><video src="v/bull-padel.mp4" poster="p/bull-padel.jpg" muted loop playsinline preload="none" aria-label="Bull Padel self-initiated spec film by Moona"></video><span class="specbadge">Moona original &middot; Spec</span><span class="vbadge">00:15</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-pressed="true" aria-label="Pause the film" data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
+      <div class="frame"><video src="v/bull-padel.mp4" poster="p/bull-padel.jpg" muted loop playsinline preload="none" aria-label="Bull Padel self-initiated spec film by Moona" data-i18n-aria-label="work.bullPadel.video"></video><span class="specbadge" data-i18n="work.specBadge" dir="auto">Moona original &middot; Spec</span><span class="vbadge">00:15</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-pressed="true" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
       <div class="meta">
-        <span class="num">03</span><span class="brand">Bull Padel</span>
-        <p class="concept">The court hits back.</p>
-        <p class="tag">from one product photo &middot; 3 days &middot; 3-beat cut &middot; frame-accurate brand colour</p>
+        <span class="num">03</span><span class="brand" dir="ltr">Bull Padel</span>
+        <p class="concept" data-i18n="work.bullPadel.concept">The court hits back.</p>
+        <p class="tag" data-i18n="work.bullPadel.tag" dir="auto">from one product photo &middot; 3 days &middot; 3-beat cut &middot; frame-accurate brand colour</p>
       </div>
       <div class="breakdown"></div>
     </article>
 
     <article class="piece vert rv" data-piece>
-      <div class="frame"><video src="v/koda.mp4" poster="p/koda.jpg" muted loop playsinline preload="none" aria-label="Koda self-initiated spec film by Moona"></video><span class="specbadge">Moona original &middot; Spec</span><span class="vbadge">00:10</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-pressed="true" aria-label="Pause the film" data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
+      <div class="frame"><video src="v/koda.mp4" poster="p/koda.jpg" muted loop playsinline preload="none" aria-label="Koda self-initiated spec film by Moona" data-i18n-aria-label="work.koda.video"></video><span class="specbadge" data-i18n="work.specBadge" dir="auto">Moona original &middot; Spec</span><span class="vbadge">00:10</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-pressed="true" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
       <div class="meta">
-        <span class="num">04</span><span class="brand">Koda</span>
-        <p class="concept">Built for the feed it lives in.</p>
-        <p class="tag">from their own site &middot; 3 days &middot; loop-safe edit &middot; legibility at 0.4s</p>
+        <span class="num">04</span><span class="brand" dir="ltr">Koda</span>
+        <p class="concept" data-i18n="work.koda.concept">Built for the feed it lives in.</p>
+        <p class="tag" data-i18n="work.koda.tag" dir="auto">from their own site &middot; 3 days &middot; loop-safe edit &middot; legibility at 0.4s</p>
       </div>
       <div class="breakdown"></div>
     </article>
@@ -1028,11 +1108,11 @@ main{position:relative;z-index:2;background:var(--void)}
 
   <section class="ctagal" id="studio">
     <div class="ctagal-text">
-      <p class="ctagal-label rv">No pitch</p>
-      <h2 class="ctagal-h rv">We'd rather <em>show</em> you than tell you.</h2>
-      <p class="ctagal-body rv">One finished piece with your actual product, moving or still. Then you decide.</p>
-      <button class="cta-btn lg rv" data-ask data-hover>Get an ad for your brand<i></i></button>
-      <p class="ctagal-note rv">No cost, no call, no commitment.</p>
+      <p class="ctagal-label rv" data-i18n="studio.eyebrow">No pitch</p>
+      <h2 class="ctagal-h rv"><span data-i18n="studio.title.lead">We'd rather </span><em data-i18n="studio.title.emphasis">show</em><span data-i18n="studio.title.tail"> you than tell you.</span></h2>
+      <p class="ctagal-body rv" data-i18n="studio.body">One finished piece with your actual product, moving or still. Then you decide.</p>
+      <button class="cta-btn lg rv" data-ask data-hover><span data-i18n="hero.cta">Get an ad for your brand</span><i></i></button>
+      <p class="ctagal-note rv" data-i18n="studio.note">No cost, no call, no commitment.</p>
     </div>
 
     <!-- two marquee rows, opposite directions; the film takes a double slot.
@@ -1089,57 +1169,57 @@ main{position:relative;z-index:2;background:var(--void)}
   </section>
 
   <section class="sentence">
-    <p class="rv">Moona is an AI-native studio making cinematic motion for brands. <em>The camera was optional.</em></p>
+    <p class="rv"><span data-i18n="studio.statement.lead">Moona is an AI-native studio making cinematic motion for brands. </span><em data-i18n="studio.statement.emphasis">The camera was optional.</em></p>
   </section>
 
   <section class="contact">
-    <p class="contact-line rv">Your product, next.</p>
-    <button class="cta-btn lg rv" data-ask data-hover>Get an ad for your brand<i></i></button>
-    <p class="cta-sub rv">No cost, no call, no commitment.</p>
-    <p class="or rv"><span>or</span></p>
+    <p class="contact-line rv" data-i18n="contact.line">Your product, next.</p>
+    <button class="cta-btn lg rv" data-ask data-hover><span data-i18n="hero.cta">Get an ad for your brand</span><i></i></button>
+    <p class="cta-sub rv" data-i18n="studio.note">No cost, no call, no commitment.</p>
+    <p class="or rv"><span data-i18n="contact.or">or</span></p>
     <a class="mail rv" href="mailto:moona.ai.studio@gmail.com" data-hover>
       <svg class="mail-ico" viewBox="0 0 20 20" width="15" height="15" fill="none"
            stroke="currentColor" stroke-width="1.5" aria-hidden="true">
         <rect x="2" y="4" width="16" height="12" rx="2.5"/>
         <path d="M2.8 5.6 10 11l7.2-5.4" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <span class="mail-label">Email the studio</span>
+      <span class="mail-label" data-i18n="contact.email">Email the studio</span>
       <i aria-hidden="true"></i>
     </a>
-    <p class="disc rv">All work self-initiated. Brands are shown for demonstration only and are not clients. No client relationship implied.</p>
-    <p class="copy rv">&copy; <span id="yr">2026</span> Moona. All rights reserved.</p>
+    <p class="disc rv" data-i18n="contact.disclaimer">All work self-initiated. Brands are shown for demonstration only and are not clients. No client relationship implied.</p>
+    <p class="copy rv" dir="auto">&copy; <span id="yr" dir="ltr">2026</span> <bdi dir="ltr">Moona.</bdi> <span data-i18n="contact.rights">All rights reserved.</span></p>
   </section>
 </main>
 
 <!-- ═══════════ REQUEST FLOW ═══════════ -->
-<div id="ask" role="dialog" aria-modal="true" aria-label="Get an ad for your brand">
+<div id="ask" role="dialog" aria-modal="true" aria-label="Get an ad for your brand" data-i18n-aria-label="form.dialog">
   <div class="ask-top">
     <span class="ask-step"><b id="askNum">01</b> / 03</span>
-    <button class="ask-close" id="askClose" data-hover>Close</button>
+    <button class="ask-close" id="askClose" type="button" data-hover data-i18n="common.close">Close</button>
   </div>
 
-  <form class="qwrap" id="askForm" autocomplete="on" data-clarity-mask="true">
+  <form class="qwrap" id="askForm" autocomplete="on" data-clarity-mask="true" novalidate>
     <div class="q" data-step="0">
-      <p class="qlab">01 / Who we're speaking with</p>
-      <h2 class="qtitle" id="q-name">What's your name?</h2>
-      <input type="text" name="name" id="f-name" aria-labelledby="q-name" placeholder="Jane Cohen" autocomplete="name" data-hover>
-      <p class="qhint">Press Enter to continue</p>
-      <div class="qnav"><button type="button" class="qnext" data-next data-hover>Next<span class="ring"><i></i></span></button></div>
+      <p class="qlab" data-i18n="form.step.name.label">01 / Who we're speaking with</p>
+      <h2 class="qtitle" id="q-name" data-i18n="form.step.name.title">What's your name?</h2>
+      <input type="text" name="name" id="f-name" aria-labelledby="q-name" placeholder="Jane Cohen" data-i18n-placeholder="form.step.name.placeholder" autocomplete="name" dir="auto" data-hover>
+      <p class="qhint" data-hint-key="form.step.name.hint" data-i18n="form.step.name.hint">Press Enter to continue</p>
+      <div class="qnav"><button type="button" class="qnext" data-next data-hover><span data-i18n="form.next">Next</span><span class="ring"><i></i></span></button></div>
     </div>
 
     <div class="q" data-step="1">
-      <p class="qlab">02 / Where it lands</p>
-      <h2 class="qtitle" id="q-mail">Where should we send the work?</h2>
-      <input type="email" name="email" id="f-mail" aria-labelledby="q-mail" placeholder="you@yourbrand.com" autocomplete="email" inputmode="email" data-hover>
-      <p class="qhint">Used for the work and nothing else.</p>
-      <div class="qnav"><button type="button" class="qback" data-back data-hover>Back</button><button type="button" class="qnext" data-next data-hover>Next<span class="ring"><i></i></span></button></div>
+      <p class="qlab" data-i18n="form.step.email.label">02 / Where it lands</p>
+      <h2 class="qtitle" id="q-mail" data-i18n="form.step.email.title">Where should we send the work?</h2>
+      <input type="email" name="email" id="f-mail" aria-labelledby="q-mail" placeholder="you@yourbrand.com" data-i18n-placeholder="form.step.email.placeholder" autocomplete="email" inputmode="email" dir="ltr" data-hover>
+      <p class="qhint" data-hint-key="form.step.email.hint" data-i18n="form.step.email.hint">Used for the work and nothing else.</p>
+      <div class="qnav"><button type="button" class="qback" data-back data-hover data-i18n="form.back">Back</button><button type="button" class="qnext" data-next data-hover><span data-i18n="form.next">Next</span><span class="ring"><i></i></span></button></div>
     </div>
 
     <div class="q" data-step="2">
-      <p class="qlab">03 / The product</p>
-      <h2 class="qtitle" id="q-site">Where can we see it?</h2>
-      <input type="url" name="website" id="f-site" aria-labelledby="q-site" placeholder="yourbrand.com" inputmode="url" data-hover>
-      <p class="qhint">A site or a product page. We pull the rest ourselves.</p>
+      <p class="qlab" data-i18n="form.step.site.label">03 / The product</p>
+      <h2 class="qtitle" id="q-site" data-i18n="form.step.site.title">Where can we see it?</h2>
+      <input type="url" name="website" id="f-site" aria-labelledby="q-site" placeholder="yourbrand.com" data-i18n-placeholder="form.step.site.placeholder" inputmode="url" dir="ltr" data-hover>
+      <p class="qhint" data-hint-key="form.step.site.hint" data-i18n="form.step.site.hint">A site or a product page. We pull the rest ourselves.</p>
 
       <label class="drop" id="drop" data-hover>
         <input type="file" name="attachments" id="f-files" multiple accept="image/*,video/*,.pdf,.ai,.psd,.zip">
@@ -1151,39 +1231,42 @@ main{position:relative;z-index:2;background:var(--void)}
           </svg>
         </span>
         <span class="drop-txt">
-          <span class="drop-t">Add product shots or a logo</span>
-          <span class="drop-s">Optional &middot; images, PDF or zip &middot; up to 3.5 MB</span>
+          <span class="drop-t" data-i18n="form.upload.title">Add product shots or a logo</span>
+          <span class="drop-s" data-i18n="form.upload.detail">Optional &middot; images, PDF or zip &middot; up to 3.5 MB</span>
         </span>
-        <span class="drop-cta">Browse</span>
+        <span class="drop-cta" data-i18n="form.upload.browse">Browse</span>
       </label>
       <div class="filelist" id="filelist"></div>
 
       <div class="qnav">
-        <button type="button" class="qback" data-back data-hover>Back</button>
-        <button type="submit" class="qnext qsend" id="askSubmit" data-hover>Send<span class="ring"><i></i></span></button>
+        <button type="button" class="qback" data-back data-hover data-i18n="form.back">Back</button>
+        <button type="submit" class="qnext qsend" id="askSubmit" data-hover><span data-i18n="form.send">Send</span><span class="ring"><i></i></span></button>
       </div>
     </div>
 
     <div class="q qdone" data-step="3">
       <svg class="iris-done" viewBox="0 0 100 100" id="doneIris" aria-hidden="true"></svg>
-      <h2 class="qtitle">We're on it.</h2>
-      <p class="qhint" id="doneMsg">Your work lands in your inbox within a few days.</p>
-      <div class="qnav" style="justify-content:center"><button type="button" class="qback" id="askDone" data-hover>Close</button></div>
+      <h2 class="qtitle" data-i18n="form.done.title">We're on it.</h2>
+      <p class="qhint" id="doneMsg" data-i18n="form.done.body">Your work lands in your inbox within a few days.</p>
+      <div class="qnav" style="justify-content:center"><button type="button" class="qback" id="askDone" data-hover data-i18n="common.close">Close</button></div>
     </div>
 
-    <input name="bot-field" tabindex="-1" style="position:absolute;left:-9999px" aria-hidden="true">
+    <input name="bot-field" tabindex="-1" style="position:absolute;inset-inline-start:-9999px" aria-hidden="true">
   </form>
   <div class="ask-rail"><i id="askRail"></i></div>
 </div>
-
-
-
+<script src="/i18n.js"></script>
 <script>
 /* ═══════════════════ config ═══════════════════ */
 const CHAPTERS = ['a','b','c'];
 const HUD_NAMES = {a:'CH·01', b:'CH·02'};
 const isMobile = matchMedia('(max-width:760px)').matches;
 const reduced  = matchMedia('(prefers-reduced-motion:reduce)').matches;
+const i18n = window.MoonaI18n;
+const tr = (key,vars) => i18n.t(key,vars);
+const localeRenderers = new Set();
+const onLocaleRender = renderer => { localeRenderers.add(renderer); return renderer };
+const renderLocaleState = () => localeRenderers.forEach(renderer=>renderer());
 
 /* ═══════════════════ cursor ═══════════════════ */
 const dot = document.querySelector('.cur.dot'), ring = document.querySelector('.cur.ring');
@@ -1605,18 +1688,38 @@ function loop(t){
 
 /* ═══════════════════ scramble ═══════════════════ */
 const GLYPHS='!<>-_\\/[]{}=+*^?#·';
+const textIntervals=new Map(), textTimeouts=new Map();
+let textGeneration=0;
+function finishAnimatedText(el){
+  if(!el) return;
+  const key=el.dataset.i18n;
+  if(key) el.textContent=tr(key);
+  else if(el.matches('[data-scramble]')) el.textContent='MOONA';
+  delete el.dataset.busy;
+  delete el.dataset.final;
+  delete el.dataset.typed;
+}
+function cancelTextAnimations(){
+  textGeneration++;
+  textIntervals.forEach((handle,el)=>{clearInterval(handle);finishAnimatedText(el)});
+  textTimeouts.forEach((handle,el)=>{clearTimeout(handle);finishAnimatedText(el)});
+  textIntervals.clear(); textTimeouts.clear();
+}
 function scramble(el){
-  if(reduced) return;
-  if(el.dataset.busy) return;
+  if(!el) return;
+  if(reduced || i18n.getLocale()==='he'){el.textContent='MOONA';return}
+  if(textIntervals.has(el)) return;
   el.dataset.busy='1';
-  const final=el.dataset.final || (el.dataset.final=el.textContent);
+  const final='MOONA', generation=textGeneration;
   let f=0;
   const iv=setInterval(()=>{
+    if(generation!==textGeneration){clearInterval(iv);textIntervals.delete(el);return}
     f++;
     el.textContent=final.split('').map((c,i)=>
       c===' '?' ':(i < f/2 ? c : GLYPHS[Math.floor(Math.random()*GLYPHS.length)])).join('');
-    if(f/2>=final.length){el.textContent=final;clearInterval(iv);delete el.dataset.busy}
+    if(f/2>=final.length){el.textContent=final;clearInterval(iv);textIntervals.delete(el);delete el.dataset.busy}
   },40);
+  textIntervals.set(el,iv);
 }
 
 /* ═══════════════════ loader ═══════════════════ */
@@ -1640,15 +1743,19 @@ requestAnimationFrame(loop);
 /* ═══════════════════ work videos ═══════════════════ */
 let scrollIdle, travelling=false;
 function typeTag(el){
-  if(el.dataset.typed) return; el.dataset.typed='1';
-  if(reduced) return;                       /* the tag is already legible; don't animate it */
-  const full=el.textContent; el.textContent='';
+  if(!el || textIntervals.has(el)) return;
+  const full=el.dataset.i18n?tr(el.dataset.i18n):el.textContent;
+  if(reduced || i18n.getLocale()==='he'){el.textContent=full;return}
+  const characters=Array.from(full), generation=textGeneration;
+  el.textContent='';
   el.style.minHeight='1.2em';
   let i=0;
   const iv=setInterval(()=>{
-    i++; el.textContent=full.slice(0,i);
-    if(i>=full.length) clearInterval(iv);
+    if(generation!==textGeneration){clearInterval(iv);textIntervals.delete(el);return}
+    i++; el.textContent=characters.slice(0,i).join('');
+    if(i>=characters.length){clearInterval(iv);textIntervals.delete(el)}
   },16);
+  textIntervals.set(el,iv);
 }
 /* ── fetch early: a full viewport ahead, so nothing starts on an empty buffer ── */
 const ioLoad=new IntersectionObserver(es=>es.forEach(e=>{
@@ -1665,7 +1772,10 @@ function startPiece(piece){
   const reveal=()=>{
     if(piece.classList.contains('seen')) return;
     piece.classList.add('seen');
-    if(tag) setTimeout(()=>typeTag(tag),600);
+    if(tag){
+      const handle=setTimeout(()=>{textTimeouts.delete(tag);typeTag(tag)},600);
+      textTimeouts.set(tag,handle);
+    }
   };
   if(!v){reveal();return}
   /* while the page is moving we only reveal; playback waits for the stop */
@@ -1767,7 +1877,7 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
     const playing=!v.paused;
     btn.dataset.state = playing?'playing':'paused';
     btn.setAttribute('aria-pressed',String(playing));
-    btn.setAttribute('aria-label',(playing?'Pause':'Play')+' this film');
+    btn.setAttribute('aria-label',tr(playing?'media.pauseThisFilm':'media.playThisFilm'));
   };
   v.addEventListener('play',paint);
   v.addEventListener('pause',paint);
@@ -1783,6 +1893,7 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
   });
   /* Enter and Space on the frame open the lightbox; keep them off the button */
   btn.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ') e.stopPropagation() });
+  onLocaleRender(paint);
   paint();
 });
 
@@ -1819,7 +1930,7 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
     const on=!v.muted;
     if(!sndBtn) return;
     sndBtn.setAttribute('aria-pressed',String(on));
-    sndBtn.setAttribute('aria-label', on?'Turn the film sound off':'Turn the film sound on');
+    sndBtn.setAttribute('aria-label',tr(on?'media.soundOff':'media.soundOn'));
   }
   /* the play button's glyph follows the media, never the click */
   function paintPlay(){
@@ -1827,10 +1938,11 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
     const playing=!v.paused;
     playBtn.setAttribute('aria-pressed',String(playing));
     playBtn.dataset.state = playing?'playing':'paused';
-    playBtn.setAttribute('aria-label',(playing?'Pause':'Play')+' the film');
+    playBtn.setAttribute('aria-label',tr(playing?'media.pauseTheFilm':'media.playTheFilm'));
   }
   v.addEventListener('play',paintPlay);
   v.addEventListener('pause',paintPlay);
+  onLocaleRender(()=>{paintPlay();paintSound()});
 
 
   function play(){ if(reduced&&v.paused&&!v.dataset.userStarted) return; v.play().catch(()=>{}); }
@@ -2084,23 +2196,30 @@ document.getElementById('askDone').addEventListener('click',closeAsk);
 addEventListener('keydown',e=>{if(e.key==='Escape'&&ask.classList.contains('open'))closeAsk()});
 
 /* ── validation: only what the step actually needs ── */
-function hint(q,msg,isErr){
+function hint(q,key,isErr){
   const h=q.querySelector('.qhint');
   if(!h) return;
-  if(!h.dataset.base) h.dataset.base=h.textContent;
-  h.textContent = msg || h.dataset.base;
+  const nextKey=key || h.dataset.hintKey || h.dataset.i18n;
+  if(!nextKey) return;
+  h.dataset.i18nCurrent=nextKey;
+  h.textContent=tr(nextKey);
   h.classList.toggle('err',!!isErr);
 }
+const renderHints=onLocaleRender(()=>{
+  document.querySelectorAll('.qhint[data-i18n-current]').forEach(h=>{
+    h.textContent=tr(h.dataset.i18nCurrent);
+  });
+});
 function valid(n){
   const q=qs[n], inp=q.querySelector('input:not([type=file]):not([type=hidden])');
   if(!inp) return true;
   const v=inp.value.trim();
-  if(!v){hint(q,'This one we need.',true);inp.focus();return false}
+  if(!v){hint(q,'form.validation.required',true);inp.focus();return false}
   if(inp.type==='email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){
-    hint(q,'That address looks off.',true);return false}
+    hint(q,'form.validation.email',true);return false}
   if(inp.type==='url'){
     const u=/^https?:\/\//i.test(v)?v:'https://'+v;
-    if(!/^https?:\/\/[^\s.]+\.[^\s]{2,}$/i.test(u)){hint(q,'A link we can open, please.',true);return false}
+    if(!/^https?:\/\/[^\s.]+\.[^\s]{2,}$/i.test(u)){hint(q,'form.validation.url',true);return false}
     inp.value=u;
   }
   hint(q,null,false);
@@ -2130,7 +2249,6 @@ const drop=document.getElementById('drop'), fileInput=document.getElementById('f
 const fmt=b=> b>=1048576 ? (b/1048576).toFixed(1)+' MB'
             : b>=1024    ? Math.round(b/1024)+' KB'
                          : b+' B';
-const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 /* A phone photo is 4-8MB, and the request cap is 4.5MB before base64 inflates
    it by a third. Shrinking to 2000px covers anything we would work from and
    turns 'one photo, maybe' into 'eight photos, comfortably'. */
@@ -2153,23 +2271,34 @@ async function shrinkImage(f){
 
 function renderFiles(){
   let total=0, dropped=0;
-  fileList.innerHTML=[...fileInput.files].map((f,i)=>{
+  const fragment=document.createDocumentFragment();
+  [...fileInput.files].forEach((f,i)=>{
     /* mirror packFiles exactly, so what is marked here is what actually rides */
     const fits = i<6 && total+f.size<=ATTACH_BUDGET;
     if(fits) total+=f.size; else dropped++;
-    return `<span class="filechip${fits?'':' over'}"`+
-      (fits?'':' title="Too large to send with the form"')+`>`+
-      `<span class="nm">${esc(f.name)}</span> <b>${fmt(f.size)}</b>`+
-      `<button type="button" data-rm="${i}" aria-label="Remove ${esc(f.name)}" data-hover>`+
-      `<svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" `+
-      `stroke-width="1.6" stroke-linecap="round" aria-hidden="true">`+
-      `<path d="M3 3l8 8M11 3l-8 8"/></svg></button></span>`;
-  }).join('');
+    const chip=document.createElement('span');
+    chip.className=`filechip${fits?'':' over'}`;
+    if(!fits) chip.title=tr('form.files.tooLarge');
+    const name=document.createElement('bdi');
+    name.className='nm'; name.dir='auto'; name.textContent=f.name;
+    const size=document.createElement('b');
+    size.dir='ltr'; size.textContent=fmt(f.size);
+    const remove=document.createElement('button');
+    remove.type='button'; remove.dataset.rm=String(i); remove.dataset.hover='';
+    remove.setAttribute('aria-label',tr('form.files.remove',{name:f.name}));
+    remove.innerHTML='<svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8"/></svg>';
+    chip.append(name,size,remove); fragment.append(chip);
+  });
   /* say it out loud rather than dropping the file in silence at send time */
-  if(dropped) fileList.insertAdjacentHTML('beforeend',
-    `<span class="filenote">${dropped} won't fit &middot; ${fmt(ATTACH_BUDGET)} total. `+
-    `Remove one, or send the rest by reply.</span>`);
+  if(dropped){
+    const note=document.createElement('span');
+    note.className='filenote';
+    note.textContent=tr('form.files.notFit',{count:dropped,size:fmt(ATTACH_BUDGET)});
+    fragment.append(note);
+  }
+  fileList.replaceChildren(fragment);
 }
+onLocaleRender(renderFiles);
 
 async function ingest(){
   const shrunk=await Promise.all([...fileInput.files].map(shrinkImage));
@@ -2253,12 +2382,14 @@ function brandFromSite(v){
   return label ? label.charAt(0).toUpperCase()+label.slice(1) : host;
 }
 
+function openMailFallback(url){ location.href=url }
+
 async function submitAsk(){
   for(let i=0;i<=2;i++) if(!valid(i)){showStep(i);return}
   const btn=document.getElementById('askSubmit');
   btn.style.opacity='.45'; btn.disabled=true;
   const q=qs[LAST];
-  hint(q,'Sending…',false);
+  hint(q,'form.status.sending',false);
 
   try{
     const payload={
@@ -2282,14 +2413,16 @@ async function submitAsk(){
   }catch(err){
     window.MoonaAnalytics?.capture('lead_form_submission_failed');
     /* never lose a lead: hand the details to their mail client instead */
-    hint(q,"Couldn't send from here, opening your mail instead.",true);
-    const g=n=>encodeURIComponent((askForm.elements[n]||{}).value||'');
+    hint(q,'form.status.mailFallback',true);
+    const value=n=>(askForm.elements[n]||{}).value||'';
     const brand=brandFromSite(askForm.elements.website.value);
-    const body=['Name: '+g('name'),'Company: '+encodeURIComponent(brand),
-                'Website: '+g('website'),'Email: '+g('email')].join('%0A');
-    location.href='mailto:moona.ai.studio@gmail.com'
-      +'?subject='+encodeURIComponent('Ad request: '+brand)
-      +'&body='+body;
+    const body=[`${tr('form.mailto.name')}: ${value('name')}`,
+                `${tr('form.mailto.company')}: ${brand}`,
+                `${tr('form.mailto.website')}: ${value('website')}`,
+                `${tr('form.mailto.email')}: ${value('email')}`].join('\n');
+    openMailFallback('mailto:moona.ai.studio@gmail.com'
+      +'?subject='+encodeURIComponent(tr('form.mailto.subject',{brand}))
+      +'&body='+encodeURIComponent(body));
   }finally{
     btn.style.opacity=''; btn.disabled=false;
   }
@@ -2314,7 +2447,7 @@ askForm.addEventListener('submit',e=>{e.preventDefault();submitAsk()});
       const m=it.querySelector('img,video');
       it.setAttribute('role','button');
       it.setAttribute('tabindex','0');
-      it.setAttribute('aria-label','Open '+((m&&m.tagName==='VIDEO')?'film':'still')+' larger');
+      it.dataset.openKey=(m&&m.tagName==='VIDEO')?'media.openFilm':'media.openStill';
     });
   });
 
@@ -2386,12 +2519,18 @@ askForm.addEventListener('submit',e=>{e.preventDefault();submitAsk()});
     if(!v) return;
     f.setAttribute('role','button');
     f.setAttribute('tabindex','0');
-    if(!f.hasAttribute('aria-label')) f.setAttribute('aria-label','Open this film larger');
+    if(!f.hasAttribute('aria-label')) f.dataset.openKey='media.openThisFilm';
     f.addEventListener('click',()=>open(f));
     f.addEventListener('keydown',e=>{
       if(e.key==='Enter'||e.key===' '){e.preventDefault(); open(f)}
     });
   });
+  const paintOpenLabels=onLocaleRender(()=>{
+    document.querySelectorAll('[data-open-key]').forEach(item=>{
+      item.setAttribute('aria-label',tr(item.dataset.openKey));
+    });
+  });
+  paintOpenLabels();
   /* no hover on a phone: the row would slide out from under the finger */
   document.querySelectorAll('.mq').forEach(row=>{
     let release;
@@ -2447,6 +2586,21 @@ document.getElementById('yr').textContent=new Date().getFullYear();
 document.getElementById('homeLink').addEventListener('click',e=>{
   e.preventDefault(); scrollToY(0);
 });
+
+/* Locale changes update copy in place. Component state stays owned by the
+   component; only its labels and any in-flight text animation are refreshed. */
+i18n.subscribe(change=>{
+  if(change.phase==='before'){
+    cancelTextAnimations();
+    return;
+  }
+  if(change.phase==='after'){
+    const wordmark=document.querySelector('[data-scramble]');
+    if(wordmark) wordmark.textContent='MOONA';
+    renderLocaleState();
+  }
+});
+renderLocaleState();
 
 </script>
 </body>
