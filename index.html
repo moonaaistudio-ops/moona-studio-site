@@ -477,16 +477,25 @@ main{position:relative;z-index:2;background:var(--void)}
   box-shadow:0 0 14px 2px rgba(217,198,156,.5);opacity:.55;transition:opacity .5s,box-shadow .5s}
 .film-beat:hover .beat-line{opacity:.95;box-shadow:0 0 20px 4px rgba(217,198,156,.7)}
 .beat-num{position:relative;z-index:1;display:grid;place-items:center;width:44px;height:44px;
-  margin-bottom:20px;border-radius:var(--r-pill);
+  border-radius:var(--r-pill);
   background:linear-gradient(225deg,#10141f 0%,#0a0d15 100%);
   border:1px solid rgba(217,198,156,.22);
   box-shadow:0 6px 12px -2px rgba(0,0,0,.4),inset 1px 1px 3px rgba(255,255,255,.1),inset -2px -2px 4px rgba(0,0,0,.5);
   font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:#d9c69c;
   transition:box-shadow .4s var(--ease)}
 .film-beat:hover .beat-num{box-shadow:0 8px 16px -2px rgba(0,0,0,.5),inset 2px 2px 5px rgba(255,255,255,.14),inset -2px -2px 5px rgba(0,0,0,.7),0 0 18px -4px rgba(217,198,156,.5)}
-.film-beat h3{position:relative;z-index:1;font-family:var(--serif);font-size:clamp(18px,1.6vw,22px);
-  font-weight:400;font-style:italic;color:#f3e9d2;letter-spacing:.01em}
-.film-beat p{position:relative;z-index:1;margin-top:10px;font-size:14px;line-height:1.6;color:rgba(190,212,238,.7)}
+.beat-head{position:relative;z-index:1;display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.beat-head .beat-num{margin-bottom:0}
+.beat-label{font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#d9c69c}
+/* the hook: each card leads with one line in the hero's own voice */
+.film-beat h3{position:relative;z-index:1;font-family:var(--serif);font-size:clamp(21px,1.9vw,27px);
+  font-weight:400;line-height:1.18;letter-spacing:.005em;color:var(--ice-hot);text-wrap:balance}
+.film-beat p{position:relative;z-index:1;margin-top:14px;font-size:14.5px;line-height:1.65;color:rgba(190,212,238,.78)}
+/* the cards land one after another, left to right */
+.film-story .film-beat:nth-child(2){transition-delay:.12s}
+.film-story .film-beat:nth-child(3){transition-delay:.24s}
+.film-story .film-beat:nth-child(4){transition-delay:.36s}
+@media(prefers-reduced-motion:reduce){.film-story .film-beat{transition-delay:0s}}
 @media(prefers-reduced-motion:reduce){.beat-3d{transform:none;transition:none}}
 @media(max-width:1000px){.film-story{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:700px){
@@ -803,36 +812,48 @@ main{position:relative;z-index:2;background:var(--void)}
         <div class="beat-3d">
           <i class="beat-glow" aria-hidden="true"></i>
           <i class="beat-line" aria-hidden="true"></i>
-          <span class="beat-num" aria-hidden="true">01</span>
-          <h3>The product</h3>
-          <p>DUSTLINE is a pressed date&#8209;and&#8209;seed bar built for the long night: dense, slow&#8209;burning, made to live in a pocket. The wrapper says it before the film does, with a thin cream horizon line and two words. Keep it close.</p>
+          <div class="beat-head">
+            <span class="beat-num" aria-hidden="true">01</span>
+            <span class="beat-label">The product</span>
+          </div>
+          <h3>Keep it close.</h3>
+          <p>A pressed date&#8209;and&#8209;seed bar that lives in a pocket, built for the long night. The wrapper makes the promise before the film does: a thin cream horizon line, and two words.</p>
         </div>
       </div>
       <div class="film-beat rv">
         <div class="beat-3d">
           <i class="beat-glow" aria-hidden="true"></i>
           <i class="beat-line" aria-hidden="true"></i>
-          <span class="beat-num" aria-hidden="true">02</span>
-          <h3>The idea</h3>
-          <p>Energy brands shout. We wanted quiet proof: she runs on Dustline and never loses a step; he runs on empty and keeps missing her. The bar is never pitched. It is simply the reason one of them is still standing at dawn.</p>
+          <div class="beat-head">
+            <span class="beat-num" aria-hidden="true">02</span>
+            <span class="beat-label">The idea</span>
+          </div>
+          <h3>The bar is never pitched.</h3>
+          <p>She runs on Dustline and never loses a step. He runs on empty and keeps missing her. It is simply the reason one of them is still standing at dawn.</p>
         </div>
       </div>
       <div class="film-beat rv">
         <div class="beat-3d">
           <i class="beat-glow" aria-hidden="true"></i>
           <i class="beat-line" aria-hidden="true"></i>
-          <span class="beat-num" aria-hidden="true">03</span>
-          <h3>The craft</h3>
-          <p>The same two faces hold through five hours of light, golden hour to dawn, on one continuous location. Every background lives: crowd, dust, wind, fire. The camera never stops moving, and never moves without a reason. The score, the sound, the world itself, all built from nothing.</p>
+          <div class="beat-head">
+            <span class="beat-num" aria-hidden="true">03</span>
+            <span class="beat-label">The craft</span>
+          </div>
+          <h3>Nothing in frame stands still.</h3>
+          <p>The same two faces hold through five hours of light on one continuous location. Crowd, dust, wind, fire, all alive. The camera never moves without a reason.</p>
         </div>
       </div>
       <div class="film-beat rv">
         <div class="beat-3d">
           <i class="beat-glow" aria-hidden="true"></i>
           <i class="beat-line" aria-hidden="true"></i>
-          <span class="beat-num" aria-hidden="true">04</span>
-          <h3>The payoff</h3>
-          <p>Why it works: a gesture planted at dusk is paid off at sunrise, the same open palm, empty and then filled. In the final frame the horizon printed on the wrapper meets the real one, and the film hands the frame to the product without a seam.</p>
+          <div class="beat-head">
+            <span class="beat-num" aria-hidden="true">04</span>
+            <span class="beat-label">The payoff</span>
+          </div>
+          <h3>Planted at dusk. Paid at sunrise.</h3>
+          <p>The same open palm, empty and then filled. In the final frame the horizon printed on the wrapper meets the real one, and the film hands over to the product without a seam.</p>
         </div>
       </div>
     </div>
