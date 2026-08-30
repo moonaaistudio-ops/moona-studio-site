@@ -178,6 +178,9 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
   justify-content:space-between;padding:26px clamp(24px,4vw,52px)}
 #ask .ask-step{font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--ice-dim)}
 #ask .ask-step b{color:var(--ice-hot);font-weight:400}
+#ask .ask-title{position:absolute;inset-inline-start:50%;transform:translateX(-50%);
+  max-width:calc(100% - 200px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--ice-dim)}
 #ask .ask-close{position:relative;z-index:4;font-family:var(--mono);font-size:10px;letter-spacing:.28em;
   text-transform:uppercase;color:var(--ice-dim);padding:16px 14px;transition:color .3s}
 #ask .ask-close:hover{color:var(--ice-hot)}
@@ -447,7 +450,7 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
   /* keep the type small but give every target a 44px hit area (Apple HIG) */
   #hdr nav button[data-goto]{font-size:9px;letter-spacing:.18em;padding:15px 8px;min-width:44px}
   .lockup{min-width:44px;min-height:44px}         /* the mark is a link home; give it a thumb */
-  .cta-btn.sm{font-size:9px;padding:14px 14px;letter-spacing:.14em;gap:8px;white-space:nowrap}
+  .cta-btn.sm{font-size:9px;padding:14px 11px;letter-spacing:.14em;gap:8px;white-space:nowrap}
   }
 @container header (max-width:350px){.lockup-name{display:none}}
 @supports not (container-type:inline-size){
@@ -831,7 +834,7 @@ html[lang="he"] body{font-synthesis:none}
 html[lang="he"] :is(.htxt h1.statement,.film-title,.ctagal-h,.sentence p) em{
   font-family:var(--serif);font-style:normal;font-weight:var(--he-emphasis-weight);
   color:var(--he-emphasis-color);font-synthesis:none}
-html[lang="he"] :is(.cta-btn,.q .qlab,.q .qhint,.qnext,.qback,.qskip,.ask-close,
+html[lang="he"] :is(.cta-btn,.q .qlab,.q .qhint,.qnext,.qback,.qskip,.ask-title,.ask-close,
   .drop-s,.drop-cta,.filenote,.ctagal-label,.ctagal-note,.contact .or,.contact .mail,
   .contact .cta-sub,.contact .copy,.contact .disc,.analytics-consent button,
   #hdr nav button[data-goto],#lb .lb-close,.scrollcue span,.work-head .idx,.beat-label,
@@ -840,7 +843,7 @@ html[lang="he"] :is(.cta-btn,.q .qlab,.q .qhint,.qnext,.qback,.qskip,.ask-close,
 html[lang="he"] :is(.q .qlab,.q .qhint,.qnext,.qback,.qskip,.drop-s,.drop-cta,
   .filenote,.ctagal-label,.ctagal-note,.analytics-consent button,#hdr nav button[data-goto],
   #lb .lb-close,.scrollcue span,.work-head .idx,.beat-label,.film-eyebrow,.film-soundcta,
-  .specbadge,.skip,.cta-btn.sm,.ask-close,.contact .or,.contact .copy,.contact .mail){font-size:11px}
+  .specbadge,.skip,.cta-btn.sm,.ask-title,.ask-close,.contact .or,.contact .copy,.contact .mail){font-size:11px}
 html[lang="he"] .scrollcue span{padding-inline-start:0}
 html[lang="he"] :is(.lockup,#loader,.hud,.meta .num,.vbadge,.film-time,.piece-time){font-family:var(--mono)}
 html[lang="he"] :is(.brand-ltr,.meta .brand){
@@ -914,7 +917,7 @@ html[dir="rtl"] :is(.cta-btn,.qnext,.contact .mail):hover i{transform:rotate(-13
     <button data-goto="film" data-i18n="nav.work">Work</button>
     <button data-goto="studio" data-i18n="nav.studio">Studio</button>
     <button class="language-toggle" type="button" data-language-toggle aria-label="Switch to Hebrew">HE</button>
-    <button class="cta-btn sm" data-ask><span data-i18n="nav.cta">Get an ad</span><i></i></button>
+    <button class="cta-btn sm" data-ask><span data-i18n="nav.cta">Talk to us</span><i></i></button>
   </nav>
 </header>
 
@@ -931,7 +934,7 @@ html[dir="rtl"] :is(.cta-btn,.qnext,.contact .mail):hover i{transform:rotate(-13
     <div class="htxt" id="t1">
       <h1 class="statement"><span data-i18n="hero.headline.lead">Cinematic ads, </span><em data-i18n="hero.headline.emphasis">born without a camera</em></h1>
       <p class="statement-sub"><span data-i18n="hero.subline.one">An AI-native studio for film and motion ads.</span><span data-i18n="hero.subline.two">Story, craft and taste first.</span></p>
-      <button class="cta-btn hero-cta" data-ask data-hover><span data-i18n="hero.cta">Get an ad for your brand</span><i></i></button>
+      <button class="cta-btn hero-cta" data-ask data-hover><span data-i18n="hero.cta">Talk to us</span><i></i></button>
     </div>
     <div class="htxt small" id="t3">
       <h2><span class="setup" data-i18n="hero.turn.setup">We don't film products.</span> <span class="turn" data-i18n="hero.turn.payoff">We film what they mean.</span></h2>
@@ -1097,9 +1100,9 @@ html[dir="rtl"] :is(.cta-btn,.qnext,.contact .mail):hover i{transform:rotate(-13
     <div class="ctagal-text">
       <p class="ctagal-label rv" data-i18n="studio.eyebrow">No pitch</p>
       <h2 class="ctagal-h rv"><span data-i18n="studio.title.lead">We'd rather </span><em data-i18n="studio.title.emphasis">show</em><span data-i18n="studio.title.tail"> you than tell you.</span></h2>
-      <p class="ctagal-body rv" data-i18n="studio.body">One finished piece with your actual product, moving or still. Then you decide.</p>
-      <button class="cta-btn lg rv" data-ask data-hover><span data-i18n="hero.cta">Get an ad for your brand</span><i></i></button>
-      <p class="ctagal-note rv" data-i18n="studio.note">No cost, no call, no commitment.</p>
+      <p class="ctagal-body rv" data-i18n="studio.body">One finished piece with your product.</p>
+      <button class="cta-btn lg rv" data-ask data-hover><span data-i18n="hero.cta">Talk to us</span><i></i></button>
+      <p class="ctagal-note rv" data-i18n="studio.note">No cost, no commitment.</p>
     </div>
 
     <!-- two marquee rows, opposite directions; the film takes a double slot.
@@ -1161,8 +1164,8 @@ html[dir="rtl"] :is(.cta-btn,.qnext,.contact .mail):hover i{transform:rotate(-13
 
   <section class="contact">
     <p class="contact-line rv" data-i18n="contact.line">Your product, next.</p>
-    <button class="cta-btn lg rv" data-ask data-hover><span data-i18n="hero.cta">Get an ad for your brand</span><i></i></button>
-    <p class="cta-sub rv" data-i18n="studio.note">No cost, no call, no commitment.</p>
+    <button class="cta-btn lg rv" data-ask data-hover><span data-i18n="hero.cta">Talk to us</span><i></i></button>
+    <p class="cta-sub rv" data-i18n="studio.note">No cost, no commitment.</p>
     <p class="or rv"><span data-i18n="contact.or">or</span></p>
     <a class="mail rv" href="mailto:moona.ai.studio@gmail.com" data-hover>
       <svg class="mail-ico" viewBox="0 0 20 20" width="15" height="15" fill="none"
@@ -1179,9 +1182,10 @@ html[dir="rtl"] :is(.cta-btn,.qnext,.contact .mail):hover i{transform:rotate(-13
 </main>
 
 <!-- ═══════════ REQUEST FLOW ═══════════ -->
-<div id="ask" role="dialog" aria-modal="true" aria-label="Get an ad for your brand" data-i18n-aria-label="form.dialog">
+<div id="ask" role="dialog" aria-modal="true" aria-labelledby="askTitle">
   <div class="ask-top">
     <span class="ask-step"><b id="askNum">01</b> / 03</span>
+    <span class="ask-title" id="askTitle" data-i18n="form.dialog">Tell us about your brand</span>
     <button class="ask-close" id="askClose" type="button" data-hover data-i18n="common.close">Close</button>
   </div>
 
@@ -1227,7 +1231,7 @@ html[dir="rtl"] :is(.cta-btn,.qnext,.contact .mail):hover i{transform:rotate(-13
 
       <div class="qnav">
         <button type="button" class="qback" data-back data-hover data-i18n="form.back">Back</button>
-        <button type="submit" class="qnext qsend" id="askSubmit" data-hover><span data-i18n="form.send">Send</span><span class="ring"><i></i></span></button>
+        <button type="submit" class="qnext qsend" id="askSubmit" data-hover><span data-i18n="form.send">Send details</span><span class="ring"><i></i></span></button>
       </div>
     </div>
 
