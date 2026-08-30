@@ -236,6 +236,9 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
    cursor trails its true position, and a 44px target is not worth aiming
    at with a cursor that lies. */
 body.cur-off .cur{opacity:0}
+/* author display beats the UA's [hidden]{display:none}, so the attribute has
+   to be honoured explicitly - without this the banner never goes away */
+.analytics-consent[hidden]{display:none}
 .analytics-consent{position:fixed;right:16px;bottom:16px;z-index:110;cursor:auto;
   display:flex;align-items:center;gap:18px;max-width:calc(100vw - 32px);
   padding:11px 14px;background:rgba(8,11,19,.96);border:1px solid rgba(217,198,156,.34);border-radius:var(--r-pill);
