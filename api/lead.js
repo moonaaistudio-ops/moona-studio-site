@@ -40,11 +40,13 @@ module.exports = async (req, res) => {
   if (clean(body['bot-field'])) return res.status(200).json({ ok: true });
 
   const name    = clean(body.name);
-  const company = clean(body.company);
   const website = clean(body.website);
   const email   = clean(body.email);
+  /* the form stopped asking for a company name once it had the site; fall back
+     to the domain so the subject line still says who this is */
+  const company = clean(body.company) || website.replace(/^https?:\/\//i, '').replace(/^www\./i, '').split('/')[0];
 
-  if (!name || !company || !website || !email) return res.status(422).json({ ok: false, error: 'missing' });
+  if (!name || !website || !email) return res.status(422).json({ ok: false, error: 'missing' });
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return res.status(422).json({ ok: false, error: 'email' });
 
   /* attachments arrive base64 in JSON, so there is no multipart to parse */

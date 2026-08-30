@@ -1003,7 +1003,7 @@ main{position:relative;z-index:2;background:var(--void)}
 <!-- ═══════════ REQUEST FLOW ═══════════ -->
 <div id="ask" role="dialog" aria-modal="true" aria-label="Get an ad for your brand">
   <div class="ask-top">
-    <span class="ask-step"><b id="askNum">01</b> / 05</span>
+    <span class="ask-step"><b id="askNum">01</b> / 04</span>
     <button class="ask-close" id="askClose" data-hover>Close</button>
   </div>
 
@@ -1017,31 +1017,23 @@ main{position:relative;z-index:2;background:var(--void)}
     </div>
 
     <div class="q" data-step="1">
-      <p class="qlab">02 / The product</p>
-      <h2 class="qtitle" id="q-site">Where can we see it?</h2>
-      <input type="url" name="website" id="f-site" aria-labelledby="q-site" placeholder="yourbrand.com" inputmode="url" data-hover>
-      <p class="qhint">A site or a product page. We pull the rest ourselves.</p>
-      <div class="qnav"><button type="button" class="qback" data-back data-hover>Back</button><button type="button" class="qnext" data-next data-hover>Next<span class="ring"><i></i></span></button></div>
-    </div>
-
-    <div class="q" data-step="2">
-      <p class="qlab">03 / The brand</p>
-      <h2 class="qtitle" id="q-co">What's the company called?</h2>
-      <input type="text" name="company" id="f-co" aria-labelledby="q-co" placeholder="Brand name" autocomplete="organization" data-hover>
-      <p class="qhint">Press Enter to continue</p>
-      <div class="qnav"><button type="button" class="qback" data-back data-hover>Back</button><button type="button" class="qnext" data-next data-hover>Next<span class="ring"><i></i></span></button></div>
-    </div>
-
-    <div class="q" data-step="3">
-      <p class="qlab">04 / Where it lands</p>
+      <p class="qlab">02 / Where it lands</p>
       <h2 class="qtitle" id="q-mail">Where should we send the work?</h2>
       <input type="email" name="email" id="f-mail" aria-labelledby="q-mail" placeholder="you@yourbrand.com" autocomplete="email" inputmode="email" data-hover>
       <p class="qhint">Used for the work and nothing else.</p>
       <div class="qnav"><button type="button" class="qback" data-back data-hover>Back</button><button type="button" class="qnext" data-next data-hover>Next<span class="ring"><i></i></span></button></div>
     </div>
 
-    <div class="q" data-step="4">
-      <p class="qlab">05 / Optional</p>
+    <div class="q" data-step="2">
+      <p class="qlab">03 / The product</p>
+      <h2 class="qtitle" id="q-site">Where can we see it?</h2>
+      <input type="url" name="website" id="f-site" aria-labelledby="q-site" placeholder="yourbrand.com" inputmode="url" data-hover>
+      <p class="qhint">A site or a product page. We pull the rest ourselves.</p>
+      <div class="qnav"><button type="button" class="qback" data-back data-hover>Back</button><button type="button" class="qnext" data-next data-hover>Next<span class="ring"><i></i></span></button></div>
+    </div>
+
+    <div class="q" data-step="3">
+      <p class="qlab">04 / Optional</p>
       <h2 class="qtitle">Anything we should work from?</h2>
       <label class="drop" id="drop" data-hover>
         <input type="file" name="attachments" id="f-files" multiple accept="image/*,video/*,.pdf,.ai,.psd,.zip">
@@ -1055,7 +1047,7 @@ main{position:relative;z-index:2;background:var(--void)}
       </div>
     </div>
 
-    <div class="q qdone" data-step="5">
+    <div class="q qdone" data-step="4">
       <svg class="iris-done" viewBox="0 0 100 100" id="doneIris" aria-hidden="true"></svg>
       <h2 class="qtitle">We're on it.</h2>
       <p class="qhint" id="doneMsg">Your work lands in your inbox within a few days.</p>
@@ -1841,7 +1833,7 @@ setTimeout(()=>document.querySelectorAll('.rv:not(.seen)').forEach(el=>{
 const ask=document.getElementById('ask'), askForm=document.getElementById('askForm');
 const qs=[...askForm.querySelectorAll('.q')];
 const askNum=document.getElementById('askNum'), askRail=document.getElementById('askRail');
-const LAST=4, DONE=5;
+const LAST=3, DONE=4;
 let step=0, lastFocus=null;
 
 document.getElementById('doneIris').innerHTML =
@@ -2008,8 +2000,19 @@ async function viaFallback(p){
   if(!r.ok || j.success==='false') throw new Error(j.message||r.status);
 }
 
+/* nobody should have to type their company name when they just gave us the site */
+function brandFromSite(v){
+  const raw=(v||'').trim();
+  if(!raw) return '';
+  let host=raw;
+  try{ host=new URL(/^https?:\/\//i.test(raw)?raw:'https://'+raw).hostname }catch(_){}
+  host=host.replace(/^www\./i,'');
+  const label=host.split('.')[0]||host;
+  return label ? label.charAt(0).toUpperCase()+label.slice(1) : host;
+}
+
 async function submitAsk(){
-  for(let i=0;i<=3;i++) if(!valid(i)){showStep(i);return}
+  for(let i=0;i<=2;i++) if(!valid(i)){showStep(i);return}
   const btn=document.getElementById('askSubmit');
   btn.style.opacity='.45'; btn.disabled=true;
   const q=qs[LAST];
@@ -2018,7 +2021,7 @@ async function submitAsk(){
   try{
     const payload={
       name:    askForm.elements.name.value.trim(),
-      company: askForm.elements.company.value.trim(),
+      company: brandFromSite(askForm.elements.website.value),
       website: askForm.elements.website.value.trim(),
       email:   askForm.elements.email.value.trim(),
       'bot-field': (askForm.elements['bot-field']||{}).value||'',
@@ -2039,10 +2042,11 @@ async function submitAsk(){
     /* never lose a lead: hand the details to their mail client instead */
     hint(q,"Couldn't send from here, opening your mail instead.",true);
     const g=n=>encodeURIComponent((askForm.elements[n]||{}).value||'');
-    const body=['Name: '+g('name'),'Company: '+g('company'),
+    const brand=brandFromSite(askForm.elements.website.value);
+    const body=['Name: '+g('name'),'Company: '+encodeURIComponent(brand),
                 'Website: '+g('website'),'Email: '+g('email')].join('%0A');
     location.href='mailto:moona.ai.studio@gmail.com'
-      +'?subject='+encodeURIComponent('Ad request: '+(askForm.elements.company.value||''))
+      +'?subject='+encodeURIComponent('Ad request: '+brand)
       +'&body='+body;
   }finally{
     btn.style.opacity=''; btn.disabled=false;
