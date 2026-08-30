@@ -230,17 +230,20 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
 }
 
 /* ————————————————————— analytics consent ————————————————————— */
-.analytics-consent{position:fixed;right:18px;bottom:18px;z-index:110;width:min(420px,calc(100vw - 36px));
-  padding:18px;background:rgba(8,11,19,.96);border:1px solid rgba(217,198,156,.44);border-radius:var(--r-md);
-  box-shadow:0 18px 60px rgba(0,0,0,.38)}
-.analytics-consent p{font-size:13px;line-height:1.55;color:var(--ice-hot);max-width:38ch}
-.analytics-consent__actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:15px}
-.analytics-consent button{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
-  padding:11px 14px;border-radius:var(--r-pill);cursor:pointer}
+.analytics-consent{position:fixed;right:16px;bottom:16px;z-index:110;width:min(310px,calc(100vw - 32px));
+  padding:13px 14px;background:rgba(8,11,19,.96);border:1px solid rgba(217,198,156,.34);border-radius:var(--r-md);
+  box-shadow:0 14px 44px rgba(0,0,0,.38)}
+.analytics-consent p{font-size:11.5px;line-height:1.5;color:var(--ice-dim);max-width:34ch}
+.analytics-consent p a{color:var(--ice-hot)}
+.analytics-consent__actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
+.analytics-consent button{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  padding:8px 13px;border-radius:var(--r-pill);cursor:pointer}
 .analytics-consent__accept{background:#d9c69c;color:#0d0b07}
-.analytics-consent__reject{border:1px solid var(--ice-faint);color:var(--ice-hot)}
+.analytics-consent__reject{border:1px solid var(--ice-faint);color:var(--ice-dim)}
 .analytics-consent button:focus-visible{outline:2px solid #fff;outline-offset:3px}
-@media(max-width:520px){.analytics-consent{right:12px;bottom:12px;width:calc(100vw - 24px)}}
+/* a thumb needs more than an eye does */
+@media(pointer:coarse){.analytics-consent button{min-height:44px;padding:8px 16px}}
+@media(max-width:520px){.analytics-consent{right:10px;bottom:10px;width:calc(100vw - 20px)}}
 
 /* ————————————————————— cursor ————————————————————— */
 .cur{position:fixed;z-index:99;pointer-events:none;top:0;left:0;
@@ -269,7 +272,7 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
 #loader .pct{font-family:var(--mono);font-size:10px;color:var(--ice-dim);letter-spacing:.2em}
 
 /* ————————————————————— hero ————————————————————— */
-#hero-track{height:340vh;position:relative}   /* three beats need room to land */
+#hero-track{height:230vh;position:relative}   /* two beats need room to land */
 #hero-stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;
   contain:paint;transform:translateZ(0)}
 #sky{position:absolute;inset:0;width:100%;height:100%;transform:translateZ(0)}
@@ -691,7 +694,7 @@ main{position:relative;z-index:2;background:var(--void)}
 <div class="grain"></div>
 <div class="cur ring"></div>
 <aside class="analytics-consent" id="analyticsConsent" aria-label="Analytics preferences" hidden>
-  <p>We use analytics to understand how the site performs and improve it. You can accept or decline. <a href="/privacy.html">Privacy notice</a></p>
+  <p>We use analytics to see how the site performs. <a href="/privacy.html">Privacy notice</a></p>
   <div class="analytics-consent__actions">
     <button class="analytics-consent__accept" type="button" id="analyticsAccept">Accept analytics</button>
     <button class="analytics-consent__reject" type="button" id="analyticsReject">Decline</button>
@@ -735,9 +738,6 @@ main{position:relative;z-index:2;background:var(--void)}
       <h1 class="statement">Cinematic ads, born without a camera</h1>
       <p class="statement-sub"><span>An AI-native studio for film and motion ads.</span><span>Story, craft and taste first.</span></p>
       <button class="cta-btn hero-cta" data-ask data-hover>Get an ad for your brand<i></i></button>
-    </div>
-    <div class="htxt small" id="t2">
-      <h2><span class="setup">We bring a brand's own world</span> <span class="turn">to life around an idea.</span></h2>
     </div>
     <div class="htxt small" id="t3">
       <h2><span class="setup">We don't film products.</span> <span class="turn">We film what they mean.</span></h2>
@@ -1057,7 +1057,7 @@ main{position:relative;z-index:2;background:var(--void)}
 <script>
 /* ═══════════════════ config ═══════════════════ */
 const CHAPTERS = ['a','b','c'];
-const HUD_NAMES = {a:'CH·01', b:'CH·02', c:'CH·03'};
+const HUD_NAMES = {a:'CH·01', b:'CH·02'};
 const isMobile = matchMedia('(max-width:760px)').matches;
 const reduced  = matchMedia('(prefers-reduced-motion:reduce)').matches;
 
@@ -1406,7 +1406,7 @@ function drawScrub(p, t){
 /* ═══════════════════ scroll scrub ═══════════════════ */
 const track=document.getElementById('hero-track');
 const hudCh=document.getElementById('hud-chapter'), hudPr=document.getElementById('hud-progress');
-const t1=document.getElementById('t1'),t2=document.getElementById('t2'),t3=document.getElementById('t3');
+const t1=document.getElementById('t1'),t3=document.getElementById('t3');
 const cue=document.getElementById('cue');
 let target=0, shown=0;
 
@@ -1455,11 +1455,10 @@ function loop(t){
       lastHudOp=hudOp; lastPxs=pxs;
       for(const h of huds){h.style.opacity=hudOp; h.style.transform=`translate(${pxs*8}px,${pys*6}px)`}
     }
-    /* evenly spaced so all three get the same dwell inside the track */
-    textWindow(t1,shown,-.18,.42);
-    textWindow(t2,shown,.20,.80);
-    textWindow(t3,shown,.58,1.18);
-    const ch = shown<.34?'a':shown<.67?'b':'c';
+    /* evenly spaced so both get the same dwell inside the track */
+    textWindow(t1,shown,-.26,.54);
+    textWindow(t3,shown,.46,1.26);
+    const ch = shown<.5?'a':'b';
     if(ch!==lastHudCh){lastHudCh=ch; hudCh.textContent=HUD_NAMES[ch]}
     const pr=String(Math.round(shown*100)).padStart(3,'0');
     if(pr!==lastHudPr){lastHudPr=pr; hudPr.textContent=pr}
