@@ -183,7 +183,10 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
   text-transform:uppercase;color:var(--ice-dim);padding:12px 4px;transition:color .3s}
 .qskip:hover{color:var(--ice-hot)}
 
-.drop{border:1px dashed var(--ice-faint);border-radius:var(--r-md);padding:34px 26px;text-align:center;
+/* a <label> is inline by default: with padding and a border that renders as a
+   collapsed sliver with the text outside it */
+.drop{display:block;margin-top:26px;
+  border:1px dashed var(--ice-faint);border-radius:var(--r-md);padding:20px 22px;text-align:center;
   transition:border-color .4s var(--ease),background .4s var(--ease);cursor:none}
 @media(pointer:coarse){.drop{cursor:auto}}
 .drop.over{border-color:#d9c69c;background:rgba(217,198,156,.06)}
@@ -225,7 +228,7 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
   .q input[type=text],.q input[type=email],.q input[type=url]{font-size:18px;padding:9px 2px}
   .q .qhint{margin-top:10px}
   .qnav{margin-top:20px}
-  .drop{padding:20px 18px}
+  .drop{padding:16px 14px;margin-top:20px}
   .qdone .iris-done{width:52px;height:52px;margin-bottom:18px}
 }
 
@@ -1003,7 +1006,7 @@ main{position:relative;z-index:2;background:var(--void)}
 <!-- ═══════════ REQUEST FLOW ═══════════ -->
 <div id="ask" role="dialog" aria-modal="true" aria-label="Get an ad for your brand">
   <div class="ask-top">
-    <span class="ask-step"><b id="askNum">01</b> / 04</span>
+    <span class="ask-step"><b id="askNum">01</b> / 03</span>
     <button class="ask-close" id="askClose" data-hover>Close</button>
   </div>
 
@@ -1029,25 +1032,20 @@ main{position:relative;z-index:2;background:var(--void)}
       <h2 class="qtitle" id="q-site">Where can we see it?</h2>
       <input type="url" name="website" id="f-site" aria-labelledby="q-site" placeholder="yourbrand.com" inputmode="url" data-hover>
       <p class="qhint">A site or a product page. We pull the rest ourselves.</p>
-      <div class="qnav"><button type="button" class="qback" data-back data-hover>Back</button><button type="button" class="qnext" data-next data-hover>Next<span class="ring"><i></i></span></button></div>
-    </div>
 
-    <div class="q" data-step="3">
-      <p class="qlab">04 / Optional</p>
-      <h2 class="qtitle">Anything we should work from?</h2>
       <label class="drop" id="drop" data-hover>
         <input type="file" name="attachments" id="f-files" multiple accept="image/*,video/*,.pdf,.ai,.psd,.zip">
-        <p>Drop product shots, logos or brand guidelines, or click to browse</p>
+        <p>Optional &middot; drop product shots or a logo, or click to browse</p>
       </label>
       <div class="filelist" id="filelist"></div>
-      <p class="qhint">Skip this and we'll source everything from your site.</p>
+
       <div class="qnav">
         <button type="button" class="qback" data-back data-hover>Back</button>
         <button type="submit" class="qnext" id="askSubmit" data-hover>Send<span class="ring"><i></i></span></button>
       </div>
     </div>
 
-    <div class="q qdone" data-step="4">
+    <div class="q qdone" data-step="3">
       <svg class="iris-done" viewBox="0 0 100 100" id="doneIris" aria-hidden="true"></svg>
       <h2 class="qtitle">We're on it.</h2>
       <p class="qhint" id="doneMsg">Your work lands in your inbox within a few days.</p>
@@ -1833,7 +1831,7 @@ setTimeout(()=>document.querySelectorAll('.rv:not(.seen)').forEach(el=>{
 const ask=document.getElementById('ask'), askForm=document.getElementById('askForm');
 const qs=[...askForm.querySelectorAll('.q')];
 const askNum=document.getElementById('askNum'), askRail=document.getElementById('askRail');
-const LAST=3, DONE=4;
+const LAST=2, DONE=3;
 let step=0, lastFocus=null;
 
 document.getElementById('doneIris').innerHTML =
