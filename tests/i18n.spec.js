@@ -202,9 +202,9 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('[data-i18n="nav.cta"]')).toHaveText('דברו איתנו');
     await expect(page.locator('.hero-cta [data-i18n="hero.workCta"]')).toHaveText('לצפייה בעבודות');
     await expect(page.locator('[data-i18n="hero.cta"]')).toHaveText(['דברו איתנו', 'דברו איתנו']);
-    await expect(page.locator('.ctagal-body')).toHaveText('יצירה מוגמרת אחת עם המוצר שלכם.');
-    await expect(page.locator('.ctagal-note')).toHaveText('בלי עלות ובלי התחייבות.');
-    await expect(page.locator('.contact .cta-sub')).toHaveText('בלי עלות ובלי התחייבות.');
+    await expect(page.locator('.ctagal-body')).toHaveCount(0);
+    await expect(page.locator('.ctagal-note')).toHaveText('ללא התחייבות');
+    await expect(page.locator('.contact .cta-sub')).toHaveText('ללא התחייבות');
     await expect(page.locator('#askTitle')).toHaveText('ספרו לנו על המותג');
     await expect(page.locator('#ask')).toHaveAttribute('aria-labelledby', 'askTitle');
     await expect(page.locator('#askSubmit [data-i18n="form.send"]')).toHaveText('שליחת הפרטים');
@@ -224,7 +224,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
       work: 'View our work',
       dialog: 'Tell us about your brand',
       send: 'Send details',
-      note: 'No cost, no commitment.'
+      note: 'No commitment'
     });
 
     const bidiSpacing = await page.evaluate(() => {
@@ -545,6 +545,48 @@ test.describe('animation cancellation and state preservation', () => {
 });
 
 test.describe('responsive header and dynamic UI', () => {
+  test('studio shows the work before its CTA in visual, DOM, and focus order', async ({ page }) => {
+    const widths = [361, 390, 1440];
+    for (const width of widths) {
+      await page.setViewportSize({ width, height: width === 1440 ? 900 : 844 });
+      await openHome(page, '/?lang=he');
+      const layout = await page.locator('#studio').evaluate(async section => {
+        await document.fonts.ready;
+        const rect = element => {
+          const value = element.getBoundingClientRect();
+          return { top: value.top, bottom: value.bottom, width: value.width, height: value.height };
+        };
+        const intro = section.querySelector('.ctagal-text');
+        const showcase = section.querySelector('.mqwrap');
+        const actions = section.querySelector('.ctagal-actions');
+        const cta = actions.querySelector('[data-ask]');
+        const firstWork = showcase.querySelector('.mq-item[tabindex="0"]');
+        return {
+          childOrder: [...section.children].map(element => element.classList[0]),
+          bodyCount: section.querySelectorAll('.ctagal-body').length,
+          intro: rect(intro),
+          showcase: rect(showcase),
+          actions: rect(actions),
+          cta: rect(cta),
+          note: actions.querySelector('.ctagal-note').textContent,
+          showcaseBeforeCta: Boolean(firstWork.compareDocumentPosition(cta) & Node.DOCUMENT_POSITION_FOLLOWING),
+          overflow: document.documentElement.scrollWidth - innerWidth
+        };
+      });
+
+      expect(layout.childOrder).toEqual(['ctagal-text', 'mqwrap', 'ctagal-actions']);
+      expect(layout.bodyCount).toBe(0);
+      expect(layout.showcaseBeforeCta).toBe(true);
+      expect(layout.cta.top - layout.showcase.bottom).toBeGreaterThanOrEqual(32);
+      expect(layout.actions.top).toBeGreaterThan(layout.showcase.bottom);
+      expect(layout.cta.width).toBeGreaterThanOrEqual(44);
+      expect(layout.cta.height).toBeGreaterThanOrEqual(44);
+      expect(layout.note).toBe('ללא התחייבות');
+      expect(layout.overflow).toBeLessThanOrEqual(0);
+      if (width <= 860) expect(layout.showcase.top).toBeGreaterThan(layout.intro.bottom);
+    }
+  });
+
   test('a preloaded concept film starts automatically after scrolling settles', async ({ page }) => {
     await page.addInitScript(() => localStorage.setItem('moona-analytics-consent', 'denied'));
     await page.setViewportSize({ width: 390, height: 844 });
