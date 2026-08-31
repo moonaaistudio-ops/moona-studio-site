@@ -665,7 +665,7 @@ main{position:relative;z-index:2;background:var(--void)}
   transition:border-color .45s var(--ease),box-shadow .45s var(--ease)}
 .beat-media{position:relative;isolation:isolate;overflow:hidden;flex:none;height:clamp(190px,18vw,260px);
   margin:0;background:#090c13}
-.film-beat--world .beat-media{height:clamp(230px,22vw,330px)}
+.film-beat--world .beat-media{height:clamp(360px,37.5vw,560px)}
 .beat-media::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
   background:linear-gradient(180deg,rgba(5,7,12,.02) 48%,rgba(5,7,12,.52) 100%),
     radial-gradient(ellipse at 50% 32%,transparent 44%,rgba(5,7,12,.24) 100%)}
@@ -673,28 +673,13 @@ main{position:relative;z-index:2;background:var(--void)}
   filter:saturate(.9) contrast(1.04);opacity:.88;transform:scale(1.025);
   transition:opacity .65s var(--ease),transform .75s var(--ease),filter .55s var(--ease)}
 .beat-media:not(.beat-media--sequence)>img{position:absolute;inset:0}
-.beat-media--world img{object-position:50% 5%}
+.beat-media--world img{object-position:50% 0}
 .beat-media--creative img{object-position:50% 47%}
 .beat-media--sequence{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px}
 .beat-media--sequence img{min-width:0}
 .beat-media--sequence img:nth-child(1){object-position:66% 46%}
 .beat-media--sequence img:nth-child(2){object-position:64% 48%}
 .beat-media--sequence img:nth-child(3){object-position:38% 45%}
-.beat-measure{position:absolute;z-index:3;pointer-events:none;font-family:var(--mono);
-  font-size:9px;line-height:1;letter-spacing:.14em;color:#f0ddb3;
-  text-shadow:0 2px 7px rgba(0,0,0,.9)}
-.beat-measure b{font-weight:500;white-space:nowrap}
-.beat-measure--gap{left:27%;bottom:19%;width:24%;height:1px;
-  background:rgba(240,221,179,.78)}
-.beat-measure--gap::before,.beat-measure--gap::after{content:"";position:absolute;top:-5px;
-  width:1px;height:11px;background:inherit}
-.beat-measure--gap::before{left:0}.beat-measure--gap::after{right:0}
-.beat-measure--gap b{position:absolute;left:50%;bottom:8px;transform:translateX(-50%)}
-.beat-measure--height{left:55%;top:20%;height:47%;width:1px;background:rgba(240,221,179,.78)}
-.beat-measure--height::before,.beat-measure--height::after{content:"";position:absolute;left:-5px;
-  width:11px;height:1px;background:inherit}
-.beat-measure--height::before{top:0}.beat-measure--height::after{bottom:0}
-.beat-measure--height b{position:absolute;left:9px;top:2px}
 .beat-framecode{position:absolute;z-index:3;inset-inline-end:16px;bottom:13px;
   font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:rgba(243,233,210,.8);
   text-transform:uppercase;text-shadow:0 2px 7px rgba(0,0,0,.9)}
@@ -744,7 +729,8 @@ html[dir="rtl"] .beat-line{transform-origin:right}
   .film-story{grid-template-columns:1fr;margin-top:5vh;gap:30px}
   .film-beat--world{grid-column:auto}
   .beat-3d{display:flex}
-  .beat-media,.film-beat--world .beat-media{height:clamp(132px,38vw,166px);min-height:0}
+  .beat-media{height:clamp(132px,38vw,166px);min-height:0}
+  .film-beat--world .beat-media{height:clamp(148px,42vw,260px)}
   .beat-copy,.film-beat--world .beat-copy{padding:24px 24px 30px}
   .beat-num{top:20px;right:20px;font-size:64px}
   html[dir="rtl"] .beat-num{right:auto;left:20px}
@@ -1121,11 +1107,9 @@ html.motion-paused .beat-line{opacity:.64!important}
       <article class="film-beat film-beat--world rv" aria-labelledby="film-beat-world-title">
         <div class="beat-3d">
           <figure class="beat-media beat-media--world" role="img"
-                  aria-label="DUSTLINE desert-festival world with its stage, crowd and measured spatial guides."
+                  aria-label="DUSTLINE desert-festival world, with a monumental mirrored stage facing the crowd at sunset."
                   data-i18n-aria-label="film.beat.experience.mediaLabel">
             <img src="p/dustline-world-17.webp" alt="" width="1280" height="720" loading="lazy" decoding="async">
-            <span class="beat-measure beat-measure--gap" dir="ltr"><b>0.90 m</b></span>
-            <span class="beat-measure beat-measure--height" dir="ltr"><b>21 m</b></span>
           </figure>
           <div class="beat-copy">
             <span class="beat-num" aria-hidden="true" dir="ltr">01</span>

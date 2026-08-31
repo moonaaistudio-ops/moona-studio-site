@@ -548,7 +548,7 @@ test.describe('responsive header and dynamic UI', () => {
   test('DUSTLINE process is a responsive cinematic storyboard with accessible static frames', async ({ page }) => {
     test.setTimeout(90_000);
     for (const locale of ['he', 'en']) {
-      for (const width of [360, 390, 700, 701, 768, 1000, 1001, 1440]) {
+      for (const width of [360, 390, 700, 701, 768, 1000, 1001, 1440, 2268]) {
       await page.setViewportSize({ width, height: width >= 1001 ? 900 : 844 });
       await openHome(page, `/?lang=${locale}`);
       const story = page.locator('.film-story');
@@ -582,9 +582,11 @@ test.describe('responsive header and dynamic UI', () => {
           interactiveCount: section.querySelectorAll('button,[role="button"],[tabindex]').length,
           videoCount: section.querySelectorAll('video').length,
           imageCount: images.length,
+          measurementCount: section.querySelectorAll('.beat-measure').length,
           proofLabels: [...section.querySelectorAll('.beat-media[role="img"]')]
             .map(figure => figure.getAttribute('aria-label')),
-          measurementTransform: getComputedStyle(section.querySelector('.beat-measure')).textTransform,
+          worldMediaAspect: firstMedia.width / firstMedia.height,
+          worldObjectPosition: getComputedStyle(cards[0].querySelector('.beat-media img')).objectPosition,
           images: images.map(image => ({
             file: new URL(image.currentSrc || image.src).pathname.split('/').pop(),
             alt: image.getAttribute('alt'),
@@ -614,10 +616,12 @@ test.describe('responsive header and dynamic UI', () => {
       expect(layout.interactiveCount).toBe(0);
       expect(layout.videoCount).toBe(0);
       expect(layout.imageCount).toBe(5);
+      expect(layout.measurementCount).toBe(0);
       expect(layout.proofLabels).toHaveLength(3);
       expect(new Set(layout.proofLabels).size).toBe(3);
       expect(layout.proofLabels.every(Boolean)).toBe(true);
-      expect(layout.measurementTransform).toBe('none');
+      expect(layout.worldMediaAspect).toBeLessThanOrEqual(2.6);
+      expect(layout.worldObjectPosition).toBe('50% 0px');
       expect(layout.images.map(image => image.file)).toEqual([
         'dustline-world-17.webp',
         'dustline-detail-a.webp',
