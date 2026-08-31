@@ -62,7 +62,7 @@ test('the tokens still paint the page they came from', async ({ page }) => {
 
   await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(5, 7, 12)');
 
-  const cta = page.locator('.cta-btn').first();
+  const cta = page.locator('.contact .cta-btn').first();
   await expect(cta).toHaveCSS('color', 'rgb(13, 11, 7)');
   await expect(cta).toHaveCSS('border-radius', '999px');
 });

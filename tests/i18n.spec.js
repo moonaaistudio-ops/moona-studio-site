@@ -182,11 +182,18 @@ test.describe('dictionary and first-paint privacy contract', () => {
   test('brand-first bilingual copy preserves the approved Hebrew DUSTLINE narrative', async ({ page }) => {
     await openHome(page, '/?lang=he');
 
-    await expect(page.locator('#t1 h1')).toHaveText('MOONA');
-    await expect(page.locator('#t1 h1')).toHaveAccessibleName('MOONA');
-    await expect(page.locator('.hero-wordmark')).toHaveAccessibleName('Moona');
-    await expect(page.locator('.hero-kicker')).toHaveText('סטודיו קריאייטיב טכנולוגי בהובלת המייסד');
-    await expect(page.locator('.hero-position')).toHaveText('קמפיינים קולנועיים, שנבנו אחרת');
+    const headerWordmark = page.locator('.lockup-wordmark');
+    const heroWordmark = page.locator('.hero-wordmark');
+    const heroWordmarkImage = heroWordmark.locator('img');
+    await expect(heroWordmark).toHaveText('MOONA');
+    await expect(heroWordmark).toHaveAccessibleName('MOONA');
+    await expect(headerWordmark).toHaveAttribute('src', 'p/brand/moona-wordmark.svg');
+    await expect(heroWordmarkImage).toHaveAttribute('src', 'p/brand/moona-wordmark.svg');
+    await expect(headerWordmark).toHaveAttribute('alt', '');
+    await expect(heroWordmarkImage).toHaveAttribute('alt', '');
+    await expect(page.locator('#markSvg, #heroIris, .lockup-iris, [data-scramble]')).toHaveCount(0);
+    await expect(page.locator('.hero-kicker')).toHaveText('בהובלת המייסד · קריאייטיב טכנולוגי · תל אביב');
+    await expect(page.locator('.hero-position')).toHaveText('בימוי · פיתוח תוכנה · הפקת AI');
     await expect(page.locator('.film-head .film-eyebrow')).toHaveText('סרט הדגל');
     await expect(page.locator('.film-title')).toHaveText('יצרנו מותג. וצילמנו לו פרסומת.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE הוא חטיף אנרגיה שאנחנו יצרנו מאפס.');
@@ -219,6 +226,8 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.contact-body')).toHaveText('ספרו לנו מה אתם בונים. נחזור אליכם בתוך שני ימי עסקים.');
     await expect(page.locator('[data-i18n="nav.cta"]')).toHaveText('מתחילים פרויקט');
     await expect(page.locator('.hero-corner--work')).toHaveText('עבודות');
+    await expect(page.locator('.hero-corner--project')).toHaveText('פנייה');
+    await expect(page.locator('.hero-corner--project')).toHaveAccessibleName(/פנייה/);
     await expect(page.locator('.contact [data-i18n="hero.cta"]')).toHaveText('מתחילים פרויקט');
     await expect(page.locator('#askTitle')).toHaveText('מתחילים פרויקט');
     await expect(page.locator('#ask')).toHaveAttribute('aria-labelledby', 'askTitle');
@@ -230,6 +239,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
       nav: window.MoonaI18n.t('nav.cta', {}, 'en'),
       hero: window.MoonaI18n.t('hero.cta', {}, 'en'),
       work: window.MoonaI18n.t('hero.workCta', {}, 'en'),
+      contact: window.MoonaI18n.t('hero.projectCta', {}, 'en'),
       dialog: window.MoonaI18n.t('form.dialog', {}, 'en'),
       send: window.MoonaI18n.t('form.send', {}, 'en'),
       note: window.MoonaI18n.t('studio.note', {}, 'en')
@@ -237,6 +247,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
       nav: 'Start a project',
       hero: 'Start a project',
       work: 'Work',
+      contact: 'Contact',
       dialog: 'Start a project',
       send: 'Send details',
       note: 'Reply within two business days'
@@ -262,9 +273,11 @@ test.describe('dictionary and first-paint privacy contract', () => {
     });
 
     await page.evaluate(() => window.MoonaI18n.setLocale('en', { source: 'programmatic' }));
-    await expect(page.locator('#t1 h1')).toHaveText('MOONA');
-    await expect(page.locator('.hero-kicker')).toHaveText('Founder-led creative technology studio');
-    await expect(page.locator('.hero-position')).toHaveText('Cinematic campaigns, built differently');
+    await expect(heroWordmark).toHaveText('MOONA');
+    await expect(page.locator('.hero-kicker')).toHaveText('Founder-led · Creative technology · Tel Aviv');
+    await expect(page.locator('.hero-position')).toHaveText('Direction · Software development · AI production');
+    await expect(page.locator('.hero-corner--project')).toHaveText('Contact');
+    await expect(page.locator('.hero-corner--project')).toHaveAccessibleName(/Contact/);
     await expect(page.locator('.film-title')).toHaveText('We created a brand. Then we shot its ad.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE is an energy bar you cannot buy.');
     await expect(page.locator('.film-credit')).toHaveText('Made with AI. Directed to the final frame.');
@@ -461,30 +474,34 @@ test.describe('dictionary and first-paint privacy contract', () => {
   });
 });
 
-test.describe('animation cancellation and state preservation', () => {
-  test('switching locale cancels the wordmark scramble after work tags were retired', async ({ page }) => {
+test.describe('locale transitions and state preservation', () => {
+  test('switching locale preserves the stable wordmark assets after iris and scramble were retired', async ({ page }) => {
     await openHome(page, '/?lang=en');
-    const result = await page.evaluate(async () => {
-      cancelTextAnimations();
-      const wordmark = document.querySelector('[data-scramble]');
-      scramble(wordmark);
-      await new Promise(resolve => setTimeout(resolve, 80));
-      const wasAnimating = wordmark.dataset.busy === '1';
+    const result = await page.evaluate(() => {
+      const headerWordmark = document.querySelector('.lockup-wordmark');
+      const heroWordmark = document.querySelector('.hero-wordmark img');
+      headerWordmark.dataset.e2eMarker = 'header-wordmark';
+      heroWordmark.dataset.e2eMarker = 'hero-wordmark';
       window.MoonaI18n.setLocale('he', { source: 'programmatic' });
-      await new Promise(resolve => setTimeout(resolve, 120));
       return {
-        wasAnimating,
-        wordmark: wordmark.textContent,
-        wordmarkBusy: wordmark.hasAttribute('data-busy'),
+        headerMarker: headerWordmark.dataset.e2eMarker,
+        heroMarker: heroWordmark.dataset.e2eMarker,
+        sameAsset: headerWordmark.getAttribute('src') === heroWordmark.getAttribute('src'),
+        wordmark: document.querySelector('.hero-wordmark').textContent.trim(),
+        scrambleTargets: document.querySelectorAll('[data-scramble]').length,
+        irisTargets: document.querySelectorAll('#markSvg, #heroIris, .lockup-iris').length,
         workTags: document.querySelectorAll('#work .tag').length,
         workSpecBadges: document.querySelectorAll('#work .specbadge').length,
         staleFinal: document.querySelectorAll('[data-final],[data-typed],[data-busy]').length
       };
     });
 
-    expect(result.wasAnimating).toBe(true);
+    expect(result.headerMarker).toBe('header-wordmark');
+    expect(result.heroMarker).toBe('hero-wordmark');
+    expect(result.sameAsset).toBe(true);
     expect(result.wordmark).toBe('MOONA');
-    expect(result.wordmarkBusy).toBe(false);
+    expect(result.scrambleTargets).toBe(0);
+    expect(result.irisTargets).toBe(0);
     expect(result.workTags).toBe(0);
     expect(result.workSpecBadges).toBe(0);
     expect(result.staleFinal).toBe(0);
@@ -881,22 +898,45 @@ test.describe('responsive header and dynamic UI', () => {
           };
           const header = document.getElementById('hdr');
           const lockup = header.querySelector('.lockup');
-          const nav = header.querySelector('nav');
-          const buttons = [...nav.children]
-            .filter(element => element.tagName === 'BUTTON' && getComputedStyle(element).display !== 'none')
+          const headerLinks = header.querySelector('.header-links');
+          const headerActions = header.querySelector('.header-actions');
+          const isVisible = element => {
+            const style = getComputedStyle(element);
+            return style.display !== 'none' && style.visibility !== 'hidden' && element.getClientRects().length > 0;
+          };
+          const visibleTargets = [...header.querySelectorAll('a, button')]
+            .filter(isVisible)
+            .map(element => ({ ...rect(element), minimumHeight: element.matches('.cta-btn.sm') ? 40 : 44 }))
+            .sort((a, b) => a.left - b.left);
+          const visibleLinkTargets = [...headerLinks.querySelectorAll('button')]
+            .filter(isVisible)
             .map(rect).sort((a, b) => a.left - b.left);
+          const visibleActionTargets = [...headerActions.querySelectorAll('button')]
+            .filter(isVisible)
+            .map(rect).sort((a, b) => a.left - b.left);
+          const visibleGroups = [lockup, headerLinks, headerActions]
+            .filter(isVisible)
+            .map(rect).sort((a, b) => a.left - b.left);
+          const wordmark = lockup.querySelector('.lockup-wordmark');
           return {
             viewport: innerWidth,
             scrollWidth: document.documentElement.scrollWidth,
             header: rect(header),
             lockup: rect(lockup),
-            nav: rect(nav),
-            buttons,
-            toggle: rect(nav.querySelector('[data-language-toggle]')),
-            menuToggleDisplay: getComputedStyle(nav.querySelector('[data-mobile-menu-toggle]')).display,
-            sectionDisplays: [...nav.querySelectorAll(':scope > .nav-section')].map(element => getComputedStyle(element).display),
-            wordmarkDisplay: getComputedStyle(lockup.querySelector('.lockup-name')).display,
-            navLetterSpacing: getComputedStyle(nav.querySelector('[data-goto]')).letterSpacing,
+            wordmark: rect(wordmark),
+            wordmarkDisplay: getComputedStyle(wordmark).display,
+            wordmarkSrc: wordmark.getAttribute('src'),
+            headerLinks: rect(headerLinks),
+            headerActions: rect(headerActions),
+            visibleTargets,
+            visibleLinkTargets,
+            visibleActionTargets,
+            visibleGroups,
+            headerLinksDisplay: getComputedStyle(headerLinks).display,
+            menuToggleDisplay: getComputedStyle(headerActions.querySelector('[data-mobile-menu-toggle]')).display,
+            desktopCtaDisplay: getComputedStyle(headerActions.querySelector('.cta-btn.sm')).display,
+            sectionRendered: [...headerLinks.querySelectorAll('.nav-section')].map(isVisible),
+            navLetterSpacing: getComputedStyle(headerLinks.querySelector('[data-goto]')).letterSpacing,
             containerType: getComputedStyle(header).containerType
           };
         });
@@ -905,22 +945,31 @@ test.describe('responsive header and dynamic UI', () => {
         expect(layout.containerType).toBe('inline-size');
         expect(layout.lockup.width).toBeGreaterThanOrEqual(44);
         expect(layout.lockup.height).toBeGreaterThanOrEqual(44);
-        for (const target of layout.buttons) {
+        expect(layout.wordmarkDisplay).not.toBe('none');
+        expect(layout.wordmarkSrc).toBe('p/brand/moona-wordmark.svg');
+        for (const target of layout.visibleTargets) {
           expect(target.width).toBeGreaterThanOrEqual(44);
-          expect(target.height).toBeGreaterThanOrEqual(44);
+          expect(target.height).toBeGreaterThanOrEqual(target.minimumHeight);
         }
-        expect(layout.lockup.left).toBeGreaterThanOrEqual(-0.5);
-        expect(layout.nav.left).toBeGreaterThanOrEqual(-0.5);
-        expect(layout.lockup.right).toBeLessThanOrEqual(layout.viewport + 0.5);
-        expect(layout.nav.right).toBeLessThanOrEqual(layout.viewport + 0.5);
-        const topLevel = [layout.lockup, layout.nav].sort((a, b) => a.left - b.left);
-        expect(topLevel[1].left - topLevel[0].right).toBeGreaterThanOrEqual(6);
-        for (let index = 1; index < layout.buttons.length; index += 1) {
-          expect(layout.buttons[index].left - layout.buttons[index - 1].right).toBeGreaterThanOrEqual(6);
+        for (const target of [layout.lockup, layout.wordmark, layout.headerActions]) {
+          expect(target.left).toBeGreaterThanOrEqual(-0.5);
+          expect(target.right).toBeLessThanOrEqual(layout.viewport + 0.5);
         }
-        expect(layout.wordmarkDisplay === 'none').toBe(width <= 386);
+        for (let index = 1; index < layout.visibleGroups.length; index += 1) {
+          expect(layout.visibleGroups[index].left - layout.visibleGroups[index - 1].right).toBeGreaterThanOrEqual(6);
+        }
+        for (const targets of [layout.visibleLinkTargets, layout.visibleActionTargets]) {
+          for (let index = 1; index < targets.length; index += 1) {
+            expect(targets[index].left - targets[index - 1].right).toBeGreaterThanOrEqual(6);
+          }
+        }
         expect(layout.menuToggleDisplay === 'none').toBe(width > 700);
-        expect(layout.sectionDisplays.every(display => display === 'none')).toBe(width <= 700);
+        expect(layout.desktopCtaDisplay === 'none').toBe(width <= 700);
+        expect(layout.headerLinksDisplay === 'none').toBe(width <= 700);
+        expect(layout.sectionRendered.every(Boolean)).toBe(width > 700);
+        if (width > 700) {
+          expect(Math.abs((layout.headerLinks.left + layout.headerLinks.right) / 2 - layout.viewport / 2)).toBeLessThanOrEqual(2);
+        }
         if (locale === 'he') expect(['0px', 'normal']).toContain(layout.navLetterSpacing);
       }
     }
@@ -929,12 +978,47 @@ test.describe('responsive header and dynamic UI', () => {
   test('brand-first hero fills one viewport, leads to the flagship, and keeps mobile navigation accessible', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await openHome(page, '/?lang=he');
-    const desktopHeroRatio = await page.locator('#hero-track').evaluate(element => element.offsetHeight / innerHeight);
-    expect(desktopHeroRatio).toBeCloseTo(1, 2);
     await expect(page.locator('.hero-wordmark')).toBeVisible();
+    await expect(page.locator('.hero-wordmark img')).toHaveAttribute('src', 'p/brand/moona-wordmark.svg');
     await expect(page.locator('.hero-corner--work')).toBeVisible();
     await expect(page.locator('.hero-corner--project')).toBeVisible();
     await expect(page.locator('[data-mobile-menu-toggle]')).toBeHidden();
+    const desktopHero = await page.evaluate(async () => {
+      const box = element => {
+        const value = element.getBoundingClientRect();
+        return { left: value.left, right: value.right, top: value.top, bottom: value.bottom, width: value.width, height: value.height };
+      };
+      const wordmark = document.querySelector('.hero-wordmark');
+      const image = wordmark.querySelector('img');
+      try { await image.decode(); } catch (_) {}
+      return {
+        ratio: document.getElementById('hero-track').offsetHeight / innerHeight,
+        viewportWidth: innerWidth,
+        viewportHeight: innerHeight,
+        wordmark: box(wordmark),
+        image: box(image),
+        direction: getComputedStyle(wordmark).direction,
+        naturalWidth: image.naturalWidth,
+        kicker: box(document.querySelector('.hero-kicker')),
+        position: box(document.querySelector('.hero-position')),
+        work: box(document.querySelector('.hero-corner--work')),
+        contact: box(document.querySelector('.hero-corner--project'))
+      };
+    });
+    expect(desktopHero.ratio).toBeCloseTo(1, 2);
+    expect(desktopHero.direction).toBe('ltr');
+    expect(desktopHero.naturalWidth).toBeGreaterThan(0);
+    expect(desktopHero.wordmark.width / desktopHero.viewportWidth).toBeGreaterThanOrEqual(0.42);
+    expect(desktopHero.wordmark.width / desktopHero.viewportWidth).toBeLessThanOrEqual(0.68);
+    expect(Math.abs((desktopHero.wordmark.left + desktopHero.wordmark.right) / 2 - desktopHero.viewportWidth / 2)).toBeLessThanOrEqual(2);
+    expect(desktopHero.image.left).toBeGreaterThanOrEqual(desktopHero.wordmark.left - 1);
+    expect(desktopHero.image.right).toBeLessThanOrEqual(desktopHero.wordmark.right + 1);
+    for (const element of [desktopHero.wordmark, desktopHero.kicker, desktopHero.position, desktopHero.work, desktopHero.contact]) {
+      expect(element.left).toBeGreaterThanOrEqual(-1);
+      expect(element.right).toBeLessThanOrEqual(desktopHero.viewportWidth + 1);
+      expect(element.top).toBeGreaterThanOrEqual(-1);
+      expect(element.bottom).toBeLessThanOrEqual(desktopHero.viewportHeight + 1);
+    }
 
     await page.locator('.hero-corner--work').click();
     await expect(page.locator('#ask')).not.toHaveClass(/open/);
@@ -946,32 +1030,42 @@ test.describe('responsive header and dynamic UI', () => {
 
     await page.setViewportSize({ width: 390, height: 844 });
     await page.evaluate(() => window.scrollTo(0, 0));
-    const mobileHero = await page.evaluate(() => {
+    const mobileHero = await page.evaluate(async () => {
+      const box = element => {
+        const value = element.getBoundingClientRect();
+        return { left: value.left, right: value.right, top: value.top, bottom: value.bottom, width: value.width, height: value.height };
+      };
       const wordmark = document.querySelector('.hero-wordmark');
-      const rect = wordmark.getBoundingClientRect();
-      const contentRects = [...wordmark.querySelectorAll('text')]
-        .map(element => element.getBoundingClientRect());
+      const image = wordmark.querySelector('img');
+      try { await image.decode(); } catch (_) {}
+      const corners = [document.querySelector('.hero-corner--work'), document.querySelector('.hero-corner--project')]
+        .map(box).sort((a, b) => a.left - b.left);
       return {
         ratio: document.getElementById('hero-track').offsetHeight / innerHeight,
         filmTop: document.getElementById('film').getBoundingClientRect().top,
         viewport: innerHeight,
-        wordmark: {
-          left: rect.left,
-          right: rect.right,
-          contentLeft: Math.min(...contentRects.map(content => content.left)),
-          contentRight: Math.max(...contentRects.map(content => content.right)),
-          direction: getComputedStyle(wordmark).direction
-        },
+        wordmark: box(wordmark),
+        image: box(image),
+        direction: getComputedStyle(wordmark).direction,
+        naturalWidth: image.naturalWidth,
+        corners,
         viewportWidth: innerWidth
       };
     });
     expect(mobileHero.ratio).toBeCloseTo(1, 2);
     expect(mobileHero.filmTop).toBeLessThanOrEqual(mobileHero.viewport + 1);
-    expect(mobileHero.wordmark.direction).toBe('ltr');
+    expect(mobileHero.direction).toBe('ltr');
+    expect(mobileHero.naturalWidth).toBeGreaterThan(0);
+    expect(mobileHero.wordmark.width / mobileHero.viewportWidth).toBeGreaterThanOrEqual(0.72);
+    expect(mobileHero.wordmark.width / mobileHero.viewportWidth).toBeLessThanOrEqual(0.97);
     expect(mobileHero.wordmark.left).toBeGreaterThanOrEqual(-1);
     expect(mobileHero.wordmark.right).toBeLessThanOrEqual(mobileHero.viewportWidth + 1);
-    expect(mobileHero.wordmark.contentLeft).toBeGreaterThanOrEqual(-1);
-    expect(mobileHero.wordmark.contentRight).toBeLessThanOrEqual(mobileHero.viewportWidth + 1);
+    expect(mobileHero.image.left).toBeGreaterThanOrEqual(mobileHero.wordmark.left - 1);
+    expect(mobileHero.image.right).toBeLessThanOrEqual(mobileHero.wordmark.right + 1);
+    expect(mobileHero.wordmark.bottom).toBeLessThan(mobileHero.corners[0].top - 20);
+    expect(mobileHero.corners[0].left).toBeGreaterThanOrEqual(-1);
+    expect(mobileHero.corners[1].right).toBeLessThanOrEqual(mobileHero.viewportWidth + 1);
+    expect(mobileHero.corners[1].left - mobileHero.corners[0].right).toBeGreaterThanOrEqual(8);
 
     const menuToggle = page.locator('[data-mobile-menu-toggle]');
     await expect(menuToggle).toBeVisible();
@@ -992,6 +1086,9 @@ test.describe('responsive header and dynamic UI', () => {
     await expect(page.locator('#mobileMenu')).toBeHidden();
     await expect(menuToggle).toBeFocused();
     await expect(menuToggle).toHaveAttribute('aria-expanded', 'false');
+
+    await page.locator('.hero-corner--project').click();
+    await expect(page.locator('#ask')).toHaveClass(/open/);
   });
 
   test('validation and uploaded-file labels rerender without losing files', async ({ page }) => {
