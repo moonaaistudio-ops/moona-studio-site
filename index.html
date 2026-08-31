@@ -729,21 +729,23 @@ main{position:relative;z-index:2;background:var(--void)}
   letter-spacing:.005em;line-height:1.22;max-width:24ch;color:var(--ice-hot)}
 .sentence p em{font-style:normal;color:var(--ice-dim)}
 
-.ctagal{display:grid;grid-template-columns:0.8fr 1.2fr;align-items:center;
-  gap:clamp(40px,6vw,90px);padding:16vh clamp(22px,6vw,80px) 14vh;
+.ctagal{display:grid;grid-template-columns:0.8fr 1.2fr;
+  grid-template-areas:"intro showcase" ". actions";align-items:center;
+  column-gap:clamp(40px,6vw,90px);row-gap:clamp(36px,4vw,60px);
+  padding:16vh clamp(22px,6vw,80px) 14vh;
   border-top:1px solid var(--line)}
+.ctagal-text{grid-area:intro}
 .ctagal-label{font-family:var(--mono);font-size:10px;letter-spacing:.32em;text-transform:uppercase;
   color:#d9c69c;margin-bottom:22px}
 .ctagal-h{font-family:var(--serif);font-size:clamp(30px,4.4vw,58px);font-weight:400;
   line-height:1.08;letter-spacing:.005em;color:var(--ice-hot);max-width:16ch;text-wrap:balance}
 .ctagal-h em{font-style:italic;color:#f3e9d2}
-.ctagal-body{margin-top:22px;font-size:clamp(15px,1.7vw,19px);color:rgba(190,212,238,.72);
-  max-width:34ch;line-height:1.55}
-.ctagal .cta-btn{margin-top:34px}
-.ctagal-note{margin-top:32px;font-family:var(--mono);font-size:10px;letter-spacing:.24em;
+.ctagal-actions{grid-area:actions;display:flex;flex-direction:column;align-items:center;text-align:center}
+.ctagal .cta-btn{margin-top:0}
+.ctagal-note{margin-top:24px;font-family:var(--mono);font-size:10px;letter-spacing:.24em;
   text-transform:uppercase;color:var(--ice-dim)}
 
-.mqwrap{display:flex;flex-direction:column;gap:clamp(12px,1.4vw,18px);overflow:hidden}
+.mqwrap{grid-area:showcase;display:flex;flex-direction:column;gap:clamp(12px,1.4vw,18px);overflow:hidden}
 .mq{--gap:clamp(12px,1.4vw,18px);display:flex;gap:var(--gap);overflow:hidden;direction:ltr;
   /* the rows bleed away at both edges instead of stopping at a hard line */
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);
@@ -764,7 +766,8 @@ main{position:relative;z-index:2;background:var(--void)}
   background:linear-gradient(180deg,rgba(5,7,12,0) 58%,rgba(5,7,12,.42) 100%)}
 
 @media(max-width:860px){
-  .ctagal{grid-template-columns:1fr;gap:52px;padding:12vh clamp(22px,6vw,80px) 10vh}
+  .ctagal{grid-template-columns:1fr;grid-template-areas:"intro" "showcase" "actions";
+    gap:52px;padding:12vh clamp(22px,6vw,80px) 10vh}
   .ctagal-h{max-width:18ch}
   .mq-item{width:clamp(140px,40vw,196px)}
 }
@@ -1150,9 +1153,6 @@ html.motion-paused :is(.beat-3d,.mq-item:hover,.mq-item:focus-visible){transform
     <div class="ctagal-text">
       <p class="ctagal-label rv" data-i18n="studio.eyebrow">No pitch</p>
       <h2 class="ctagal-h rv"><span data-i18n="studio.title.lead">We'd rather </span><em data-i18n="studio.title.emphasis">show</em><span data-i18n="studio.title.tail"> you than tell you.</span></h2>
-      <p class="ctagal-body rv" data-i18n="studio.body">One finished piece with your product.</p>
-      <button class="cta-btn lg rv" data-ask data-hover><span data-i18n="hero.cta">Talk to us</span><i></i></button>
-      <p class="ctagal-note rv" data-i18n="studio.note">No cost, no commitment.</p>
     </div>
 
     <!-- two marquee rows, opposite directions; the film takes a double slot.
@@ -1204,6 +1204,11 @@ html.motion-paused :is(.beat-3d,.mq-item:hover,.mq-item:focus-visible){transform
         </div>
         </div>
     </div>
+
+    <div class="ctagal-actions">
+      <button class="cta-btn lg rv" data-ask data-hover><span data-i18n="hero.cta">Talk to us</span><i></i></button>
+      <p class="ctagal-note rv" data-i18n="studio.note">No commitment</p>
+    </div>
   </section>
 
   <section class="sentence">
@@ -1214,7 +1219,7 @@ html.motion-paused :is(.beat-3d,.mq-item:hover,.mq-item:focus-visible){transform
   <footer class="contact">
     <p class="contact-line rv" data-i18n="contact.line">Your product, next.</p>
     <button class="cta-btn lg rv" data-ask data-hover><span data-i18n="hero.cta">Talk to us</span><i></i></button>
-    <p class="cta-sub rv" data-i18n="studio.note">No cost, no commitment.</p>
+    <p class="cta-sub rv" data-i18n="studio.note">No commitment</p>
     <p class="or rv"><span data-i18n="contact.or">or</span></p>
     <a class="mail rv" href="mailto:moona.ai.studio@gmail.com" data-hover>
       <svg class="mail-ico" viewBox="0 0 20 20" width="15" height="15" fill="none"
