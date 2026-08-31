@@ -654,48 +654,86 @@ main{position:relative;z-index:2;background:var(--void)}
 .film-strip-head .film-note{max-width:62ch}
 @media(max-width:700px){.film-strip-head{margin-top:6vh}}
 .film-story{max-width:1560px;margin:4vh auto 0;padding:0 clamp(22px,5vw,72px);
-  display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3.5vw,56px)}
-/* each beat is a card in the DUSTLINE palette: void glass, an ember-gold and
-   ice glow rising from the floor, a lit bottom edge, and a quiet 3D tilt.
-   The tilt lives on .beat-3d so it never fights the .rv reveal transform. */
-.film-beat{perspective:900px}
-.beat-3d{position:relative;overflow:hidden;height:100%;border-radius:var(--r-lg);
-  background:var(--void-2);border:1px solid var(--line);padding:26px 24px 34px;
-  box-shadow:0 30px 80px -30px rgba(0,0,0,.8);
-  transform:translateY(var(--lift,0px)) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
-  transition:transform .18s ease-out,border-color .45s var(--ease)}
-.film-beat:hover .beat-3d{--lift:-5px;border-color:rgba(217,198,156,.28)}
-.beat-glow{position:absolute;left:-20%;right:-20%;bottom:-35%;height:85%;pointer-events:none;
-  background:
-    radial-gradient(ellipse at 80% 100%, rgba(217,198,156,.42), rgba(217,198,156,0) 62%),
-    radial-gradient(ellipse at 15% 100%, rgba(168,198,232,.30), rgba(168,198,232,0) 62%);
-  filter:blur(30px);opacity:.5;transition:opacity .5s var(--ease)}
-.film-beat:hover .beat-glow{opacity:.85}
-.beat-line{position:absolute;left:7%;right:7%;bottom:0;height:1.5px;pointer-events:none;
-  background:linear-gradient(90deg,rgba(220,236,255,.04),rgba(220,236,255,.7) 50%,rgba(220,236,255,.04));
-  box-shadow:0 0 14px 2px rgba(217,198,156,.5);opacity:.55;transition:opacity .5s,box-shadow .5s}
-.film-beat:hover .beat-line{opacity:.95;box-shadow:0 0 20px 4px rgba(217,198,156,.7)}
-.beat-num{position:relative;z-index:1;display:grid;place-items:center;width:44px;height:44px;
-  border-radius:var(--r-pill);
-  background:linear-gradient(225deg,#10141f 0%,#0a0d15 100%);
-  border:1px solid rgba(217,198,156,.22);
-  box-shadow:0 6px 12px -2px rgba(0,0,0,.4),inset 1px 1px 3px rgba(255,255,255,.1),inset -2px -2px 4px rgba(0,0,0,.5);
-  font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:#d9c69c;
-  transition:box-shadow .4s var(--ease)}
-.film-beat:hover .beat-num{box-shadow:0 8px 16px -2px rgba(0,0,0,.5),inset 2px 2px 5px rgba(255,255,255,.14),inset -2px -2px 5px rgba(0,0,0,.7),0 0 18px -4px rgba(217,198,156,.5)}
-.beat-head{position:relative;z-index:1;display:flex;align-items:center;gap:14px;margin-bottom:22px}
-.beat-head .beat-num{margin-bottom:0}
-.beat-label{font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#d9c69c}
-/* the hook: each card leads with one line in the hero's own voice */
-.film-beat h3{position:relative;z-index:1;font-family:var(--serif);font-size:clamp(21px,1.9vw,27px);
-  font-weight:400;line-height:1.18;letter-spacing:.005em;color:var(--ice-hot);text-wrap:balance}
-.film-beat p{position:relative;z-index:1;margin-top:14px;font-size:14.5px;line-height:1.65;color:rgba(190,212,238,.78)}
-/* the cards land one after another, left to right */
-.film-story .film-beat:nth-child(2){transition-delay:.12s}
-.film-story .film-beat:nth-child(3){transition-delay:.24s}
-@media(prefers-reduced-motion:reduce){.film-story .film-beat{transition-delay:0s}}
-@media(prefers-reduced-motion:reduce){.beat-3d{transform:none;transition:none}}
-@media(max-width:1000px){.film-story{grid-template-columns:repeat(2,1fr)}}
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(24px,3.5vw,48px)}
+.film-beat{min-width:0}
+.film-beat--world{grid-column:1/-1}
+/* A production dossier, not a feature-card UI: the proof is a frame from the
+   film, while the copy stays on an opaque, quiet surface underneath. */
+.beat-3d{position:relative;overflow:hidden;height:100%;display:flex;flex-direction:column;
+  border-radius:22px;background:linear-gradient(145deg,#0a0e17,#080b12 76%);
+  border:1px solid rgba(168,198,232,.13);box-shadow:0 30px 80px -34px rgba(0,0,0,.88);
+  transition:border-color .45s var(--ease),box-shadow .45s var(--ease)}
+.beat-media{position:relative;isolation:isolate;overflow:hidden;flex:none;height:clamp(190px,18vw,260px);
+  margin:0;background:#090c13}
+.film-beat--world .beat-media{height:clamp(230px,22vw,330px)}
+.beat-media::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(180deg,rgba(5,7,12,.02) 48%,rgba(5,7,12,.52) 100%),
+    radial-gradient(ellipse at 50% 32%,transparent 44%,rgba(5,7,12,.24) 100%)}
+.beat-media img{display:block;width:100%;height:100%;object-fit:cover;
+  filter:saturate(.9) contrast(1.04);opacity:.88;transform:scale(1.025);
+  transition:opacity .65s var(--ease),transform .75s var(--ease),filter .55s var(--ease)}
+.beat-media:not(.beat-media--sequence)>img{position:absolute;inset:0}
+.beat-media--world img{object-position:50% 52%}
+.beat-media--creative img{object-position:50% 47%}
+.beat-media--sequence{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px}
+.beat-media--sequence img{min-width:0}
+.beat-media--sequence img:nth-child(1){object-position:66% 46%}
+.beat-media--sequence img:nth-child(2){object-position:64% 48%}
+.beat-media--sequence img:nth-child(3){object-position:38% 45%}
+.beat-measure{position:absolute;z-index:3;pointer-events:none;font-family:var(--mono);
+  font-size:9px;line-height:1;letter-spacing:.14em;color:#f0ddb3;
+  text-shadow:0 2px 7px rgba(0,0,0,.9)}
+.beat-measure b{font-weight:500;white-space:nowrap}
+.beat-measure--gap{left:27%;bottom:19%;width:24%;height:1px;
+  background:rgba(240,221,179,.78)}
+.beat-measure--gap::before,.beat-measure--gap::after{content:"";position:absolute;top:-5px;
+  width:1px;height:11px;background:inherit}
+.beat-measure--gap::before{left:0}.beat-measure--gap::after{right:0}
+.beat-measure--gap b{position:absolute;left:50%;bottom:8px;transform:translateX(-50%)}
+.beat-measure--height{left:55%;top:20%;height:47%;width:1px;background:rgba(240,221,179,.78)}
+.beat-measure--height::before,.beat-measure--height::after{content:"";position:absolute;left:-5px;
+  width:11px;height:1px;background:inherit}
+.beat-measure--height::before{top:0}.beat-measure--height::after{bottom:0}
+.beat-measure--height b{position:absolute;left:9px;top:2px}
+.beat-framecode{position:absolute;z-index:3;inset-inline-end:16px;bottom:13px;
+  font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:rgba(243,233,210,.8);
+  text-transform:uppercase;text-shadow:0 2px 7px rgba(0,0,0,.9)}
+.beat-copy{position:relative;isolation:isolate;flex:1;min-width:0;padding:30px 30px 36px}
+.film-beat--world .beat-copy{padding-inline-end:clamp(104px,12vw,174px)}
+.beat-num{position:absolute;z-index:0;top:22px;right:24px;font-family:var(--mono);
+  font-size:clamp(58px,7vw,104px);font-weight:500;line-height:.78;letter-spacing:.04em;
+  color:#d9c69c;opacity:.09;pointer-events:none}
+html[dir="rtl"] .beat-num{right:auto;left:24px}
+.beat-label{position:relative;z-index:1;display:block;margin-bottom:18px;font-family:var(--mono);
+  font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#d9c69c}
+/* the hook: each chapter leads with one line in the hero's own voice */
+.film-beat h3{position:relative;z-index:1;font-family:var(--serif);font-size:clamp(24px,2.25vw,34px);
+  font-weight:400;line-height:1.16;letter-spacing:.005em;color:var(--ice-hot);text-wrap:balance}
+.film-beat p{position:relative;z-index:1;margin-top:16px;max-width:65ch;font-size:16px;
+  line-height:1.65;color:rgba(190,212,238,.82)}
+.beat-line{position:absolute;z-index:4;left:8%;right:8%;bottom:0;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,rgba(220,236,255,.03),rgba(217,198,156,.78) 50%,rgba(220,236,255,.03));
+  box-shadow:0 0 12px 1px rgba(217,198,156,.36);opacity:.64;transform:scaleX(0);
+  transform-origin:left;transition:transform .65s var(--ease),opacity .45s var(--ease)}
+html[dir="rtl"] .beat-line{transform-origin:right}
+.film-story .film-beat.rv{transform:translateY(16px);
+  transition:opacity .5s var(--ease),transform .5s var(--ease)}
+.film-story .film-beat:nth-child(2){transition-delay:.06s}
+.film-story .film-beat:nth-child(3){transition-delay:.12s}
+.film-beat.seen .beat-media img{opacity:1;transform:scale(1)}
+.film-beat.seen .beat-line{transform:scaleX(1)}
+@media(hover:hover) and (pointer:fine){
+  .film-beat:hover .beat-3d{border-color:rgba(217,198,156,.27);
+    box-shadow:0 34px 92px -34px rgba(0,0,0,.94)}
+  .film-beat:hover .beat-media img{filter:saturate(1) contrast(1.04);transform:scale(1.018)}
+  .film-beat:hover .beat-line{opacity:.95}
+}
+@media(min-width:701px) and (max-width:1000px){
+  .film-story{grid-template-columns:1fr}
+  .film-beat--world{grid-column:auto}
+  .beat-3d{display:grid;grid-template-columns:minmax(280px,44%) minmax(0,1fr)}
+  .beat-media,.film-beat--world .beat-media{height:100%;min-height:280px}
+}
 @media(max-width:700px){
   .film{padding:9vh 0 9vh}
   .film-head{margin-bottom:4vh}
@@ -703,7 +741,23 @@ main{position:relative;z-index:2;background:var(--void)}
   .film-frame{border-radius:0}
   .film-frame::after{display:none}
   .film-credit{padding:0 22px}
-  .film-story{grid-template-columns:1fr;margin-top:5vh}
+  .film-story{grid-template-columns:1fr;margin-top:5vh;gap:30px}
+  .film-beat--world{grid-column:auto}
+  .beat-3d{display:flex}
+  .beat-media,.film-beat--world .beat-media{height:clamp(132px,38vw,166px);min-height:0}
+  .beat-copy,.film-beat--world .beat-copy{padding:24px 24px 30px}
+  .beat-num{top:20px;right:20px;font-size:64px}
+  html[dir="rtl"] .beat-num{right:auto;left:20px}
+  .beat-label{margin-bottom:16px;font-size:11px;letter-spacing:.16em}
+  .film-beat h3{font-size:clamp(24px,7.2vw,26px)}
+  .film-beat p{margin-top:14px;font-size:16px;line-height:1.6}
+  .film-story .film-beat{transition-delay:0s}
+}
+@media(prefers-reduced-motion:reduce){
+  .film-story .film-beat{opacity:1;transform:none;transition:none!important}
+  .beat-3d,.beat-media img,.beat-line{transition:none!important}
+  .beat-media img{opacity:1;transform:none!important}
+  .beat-line{opacity:.64;transform:none!important}
 }
 @media(prefers-reduced-motion:reduce){
   .film-frame{clip-path:none;transition:none}
@@ -917,8 +971,10 @@ html[dir="rtl"] :is(.cta-btn,.qnext,.contact .mail):hover i{transform:rotate(-13
 }
 html.motion-paused *,html.motion-paused *::before,html.motion-paused *::after{
   animation-play-state:paused!important;scroll-behavior:auto!important}
-html.motion-paused :is(.rv,.piece video,.beat-3d,#lb,#lb .lb-stage,.htxt){transition:none!important}
-html.motion-paused :is(.beat-3d,.mq-item:hover,.mq-item:focus-visible){transform:none!important}
+html.motion-paused :is(.rv,.piece video,.beat-3d,.beat-media img,.beat-line,#lb,#lb .lb-stage,.htxt){transition:none!important}
+html.motion-paused :is(.beat-3d,.beat-media img,.beat-line,.mq-item:hover,.mq-item:focus-visible){transform:none!important}
+html.motion-paused .beat-media img{opacity:1!important}
+html.motion-paused .beat-line{opacity:.64!important}
 </style>
 </head>
 <body data-page="home">
@@ -1062,42 +1118,60 @@ html.motion-paused :is(.beat-3d,.mq-item:hover,.mq-item:focus-visible){transform
     </div>
 
     <div class="film-story">
-      <div class="film-beat rv">
+      <article class="film-beat film-beat--world rv" aria-labelledby="film-beat-world-title">
         <div class="beat-3d">
-          <i class="beat-glow" aria-hidden="true"></i>
-          <i class="beat-line" aria-hidden="true"></i>
-          <div class="beat-head">
-            <span class="beat-num" aria-hidden="true">01</span>
+          <figure class="beat-media beat-media--world" role="img"
+                  aria-label="DUSTLINE desert-festival world with its stage, crowd and measured spatial guides."
+                  data-i18n-aria-label="film.beat.experience.mediaLabel">
+            <img src="p/dustline-world.webp" alt="" width="1280" height="720" loading="lazy" decoding="async">
+            <span class="beat-measure beat-measure--gap" dir="ltr"><b>0.90 m</b></span>
+            <span class="beat-measure beat-measure--height" dir="ltr"><b>21 m</b></span>
+          </figure>
+          <div class="beat-copy">
+            <span class="beat-num" aria-hidden="true" dir="ltr">01</span>
             <span class="beat-label" data-i18n="film.beat.experience.label">The experience</span>
+            <h3 id="film-beat-world-title" data-i18n="film.beat.experience.title">We don't find locations. We build experience.</h3>
+            <p data-i18n="film.beat.experience.body">A world you can believe, then measured to the metre: the gap between the stones at 0.90 m, the towers at 21, sky and ground lifted colour by colour. Get the place wrong and every shot standing in it is wrong.</p>
           </div>
-          <h3 data-i18n="film.beat.experience.title">We don't find locations. We build experience.</h3>
-          <p data-i18n="film.beat.experience.body">A world you can believe, then measured to the metre: the gap between the stones at 0.90 m, the towers at 21, sky and ground lifted colour by colour. Get the place wrong and every shot standing in it is wrong.</p>
-        </div>
-      </div>
-      <div class="film-beat rv">
-        <div class="beat-3d">
-          <i class="beat-glow" aria-hidden="true"></i>
           <i class="beat-line" aria-hidden="true"></i>
-          <div class="beat-head">
-            <span class="beat-num" aria-hidden="true">02</span>
+        </div>
+      </article>
+      <article class="film-beat film-beat--detail rv" aria-labelledby="film-beat-detail-title">
+        <div class="beat-3d">
+          <figure class="beat-media beat-media--sequence" role="img"
+                  aria-label="Three DUSTLINE character frames demonstrating visual continuity across the film."
+                  data-i18n-aria-label="film.beat.shots.mediaLabel">
+            <img src="p/dustline-detail-a.webp" alt="" width="1280" height="720" loading="lazy" decoding="async">
+            <img src="p/dustline-detail-b.webp" alt="" width="1280" height="720" loading="lazy" decoding="async">
+            <img src="p/dustline-detail-c.webp" alt="" width="1280" height="720" loading="lazy" decoding="async">
+            <span class="beat-framecode" dir="ltr">03 / 03</span>
+          </figure>
+          <div class="beat-copy">
+            <span class="beat-num" aria-hidden="true" dir="ltr">02</span>
             <span class="beat-label" data-i18n="film.beat.shots.label">The shots</span>
+            <h3 id="film-beat-detail-title" data-i18n="film.beat.shots.title">The profession is in the details.</h3>
+            <p data-i18n="film.beat.shots.body">A mathematically frozen frame is the clearest tell that a shot was generated. Every camera here breathes, carries a footstep, drifts, and never moves without a reason inside the story. Nobody notices it. Everybody feels it.</p>
           </div>
-          <h3 data-i18n="film.beat.shots.title">The profession is in the details.</h3>
-          <p data-i18n="film.beat.shots.body">A mathematically frozen frame is the clearest tell that a shot was generated. Every camera here breathes, carries a footstep, drifts, and never moves without a reason inside the story. Nobody notices it. Everybody feels it.</p>
-        </div>
-      </div>
-      <div class="film-beat rv">
-        <div class="beat-3d">
-          <i class="beat-glow" aria-hidden="true"></i>
           <i class="beat-line" aria-hidden="true"></i>
-          <div class="beat-head">
-            <span class="beat-num" aria-hidden="true">03</span>
-            <span class="beat-label" data-i18n="film.beat.cast.label">The cast</span>
-          </div>
-          <h3 data-i18n="film.beat.cast.title">The reference outranks the script.</h3>
-          <p data-i18n="film.beat.cast.body">Faces, wardrobe and packaging lock to approved plates before a frame is generated, and where the writing disagrees with the reference the writing changes. Drift between shots is the first failure we design against.</p>
         </div>
-      </div>
+      </article>
+      <article class="film-beat film-beat--creative rv" aria-labelledby="film-beat-creative-title">
+        <div class="beat-3d">
+          <figure class="beat-media beat-media--creative" role="img"
+                  aria-label="The DUSTLINE lead characters facing each other at sunset in the desert festival."
+                  data-i18n-aria-label="film.beat.cast.mediaLabel">
+            <img src="p/dustline-creative.webp" alt="" width="1280" height="720" loading="lazy" decoding="async">
+            <span class="beat-framecode" dir="ltr">DUSTLINE / 00:04</span>
+          </figure>
+          <div class="beat-copy">
+            <span class="beat-num" aria-hidden="true" dir="ltr">03</span>
+            <span class="beat-label" data-i18n="film.beat.cast.label">The cast</span>
+            <h3 id="film-beat-creative-title" data-i18n="film.beat.cast.title">The reference outranks the script.</h3>
+            <p data-i18n="film.beat.cast.body">Faces, wardrobe and packaging lock to approved plates before a frame is generated, and where the writing disagrees with the reference the writing changes. Drift between shots is the first failure we design against.</p>
+          </div>
+          <i class="beat-line" aria-hidden="true"></i>
+        </div>
+      </article>
     </div>
   </section>
 
@@ -2166,25 +2240,6 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
     });
     v.addEventListener('waiting',()=>bar.style.opacity='.2');
     v.addEventListener('playing',()=>bar.style.opacity='.55');
-  }
-
-  /* the quiet 3D tilt on the story cards: pointer devices only */
-  if(matchMedia('(pointer:fine)').matches && !reduced){
-    film.querySelectorAll('.film-beat').forEach(card=>{
-      const inner=card.querySelector('.beat-3d');
-      if(!inner) return;
-      card.addEventListener('pointermove',e=>{
-        if(motionReduced())return;
-        const r=inner.getBoundingClientRect();
-        const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
-        inner.style.setProperty('--rx',(-y*5).toFixed(2)+'deg');
-        inner.style.setProperty('--ry',(x*5).toFixed(2)+'deg');
-      });
-      card.addEventListener('pointerleave',()=>{
-        inner.style.setProperty('--rx','0deg');
-        inner.style.setProperty('--ry','0deg');
-      });
-    });
   }
 
   /* reduced motion: nothing moves and nothing sounds until asked */
