@@ -59,7 +59,7 @@ async function heroMotionState(page) {
     };
     return {
       signal: read('.hero-media-fallback', '::before'),
-      orbit: read('.hero-aperture', '::before')
+      planet: read('.hero-media-fallback', '::after')
     };
   });
 }
@@ -241,7 +241,7 @@ test('Hebrew content reflows at the supported narrow width with WCAG text spacin
       return rect.left >= -1 && rect.right <= innerWidth + 1;
     };
     const headline = document.querySelector('.film-title');
-    const cta = document.querySelector('.hero-project-cta');
+    const cta = document.querySelector('.contact .cta-btn.lg');
     const header = document.getElementById('hdr');
     const headlineRange = document.createRange();
     headlineRange.selectNodeContents(headline);
@@ -313,10 +313,9 @@ test.describe('motion accessibility', () => {
       elements.every(element => getComputedStyle(element).animationName === 'none'))).toBe(true);
     expect(await page.evaluate(() => ({
       fallback: getComputedStyle(document.querySelector('.hero-media-fallback'), '::before').animationName,
-      aperture: getComputedStyle(document.querySelector('.hero-aperture'), '::before').animationName,
-      actionTransitionsDisabled: [...document.querySelectorAll('.hero-project-cta,.hero-work-link')]
-        .every(element => getComputedStyle(element).transitionDuration.split(',').every(value => parseFloat(value) === 0))
-    }))).toEqual({ fallback: 'none', aperture: 'none', actionTransitionsDisabled: true });
+      planet: getComputedStyle(document.querySelector('.hero-media-fallback'), '::after').animationName,
+      scrimTransform: getComputedStyle(document.querySelector('.hero-media'), '::after').transform
+    }))).toEqual({ fallback: 'none', planet: 'none', scrimTransform: 'none' });
     await page.locator('.film-story').scrollIntoViewIfNeeded();
     const storyMotion = await page.locator('.film-story').evaluate(section => ({
       cards: [...section.querySelectorAll('.film-beat')].every(card => {

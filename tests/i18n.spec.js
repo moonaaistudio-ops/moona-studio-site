@@ -202,12 +202,9 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await openHome(page, '/?lang=he');
 
     const headerWordmark = page.locator('.lockup-wordmark');
-    const heroMark = page.locator('.hero-aperture img');
     await expect(headerWordmark).toHaveAttribute('src', 'p/brand/moona-logo-lockup.svg');
-    await expect(heroMark).toHaveAttribute('src', 'p/brand/moona-logo-mark.svg');
     await expect(headerWordmark).toHaveAttribute('alt', '');
-    await expect(heroMark).toHaveAttribute('alt', '');
-    await expect(page.locator('.hero-wordmark, .hero-chroma, #markSvg, #heroIris, .lockup-iris, [data-scramble]')).toHaveCount(0);
+    await expect(page.locator('.hero-wordmark, .hero-chroma, .hero-aperture, #markSvg, #heroIris, .lockup-iris, [data-scramble]')).toHaveCount(0);
     await expect(page.locator('.hero-kicker')).toHaveText('בהובלת המייסד · תל אביב');
     await expect(page.locator('.hero-statement [data-i18n="hero.headline.lead"]')).toHaveText('קריאייטיב טכנולוגי.');
     await expect(page.locator('.hero-statement-accent')).toHaveText('תחת בימוי.');
@@ -243,9 +240,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.contact-line')).toHaveText('יש לכם פרויקט ששווה ליצור?');
     await expect(page.locator('.contact-body')).toHaveText('ספרו לנו מה אתם בונים. נחזור אליכם בתוך שני ימי עסקים.');
     await expect(page.locator('[data-i18n="nav.cta"]')).toHaveText('מתחילים פרויקט');
-    await expect(page.locator('.hero-work-link')).toContainText('לעבודות');
-    await expect(page.locator('.hero-project-cta')).toContainText('מתחילים פרויקט');
-    await expect(page.locator('.hero-project-cta')).toHaveAccessibleName('מתחילים פרויקט עם Moona');
+    await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
     await expect(page.locator('.contact [data-i18n="hero.cta"]')).toHaveText('מתחילים פרויקט');
     await expect(page.locator('#askTitle')).toHaveText('מתחילים פרויקט');
     await expect(page.locator('#ask')).toHaveAttribute('aria-labelledby', 'askTitle');
@@ -295,9 +290,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.hero-statement [data-i18n="hero.headline.lead"]')).toHaveText('Creative technology.');
     await expect(page.locator('.hero-statement-accent')).toHaveText('Directed.');
     await expect(page.locator('.hero-position')).toHaveText('Film · Software · AI systems');
-    await expect(page.locator('.hero-work-link')).toContainText('View work');
-    await expect(page.locator('.hero-project-cta')).toContainText('Start a project');
-    await expect(page.locator('.hero-project-cta')).toHaveAccessibleName('Start a project with Moona');
+    await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
     await expect(page.locator('.film-title')).toHaveText('We created a brand. Then we shot its ad.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE is an energy bar you cannot buy.');
     await expect(page.locator('.film-credit')).toHaveText('Made with AI. Directed to the final frame.');
@@ -495,21 +488,21 @@ test.describe('dictionary and first-paint privacy contract', () => {
 });
 
 test.describe('locale transitions and state preservation', () => {
-  test('switching locale preserves the stable official logo assets after iris and scramble were retired', async ({ page }) => {
+  test('switching locale preserves the official header logo and physical hero media stage', async ({ page }) => {
     await openHome(page, '/?lang=en');
     const result = await page.evaluate(() => {
       const headerWordmark = document.querySelector('.lockup-wordmark');
-      const heroMark = document.querySelector('.hero-aperture img');
+      const heroMedia = document.querySelector('.hero-media');
       headerWordmark.dataset.e2eMarker = 'header-wordmark';
-      heroMark.dataset.e2eMarker = 'hero-mark';
+      heroMedia.dataset.e2eMarker = 'hero-media';
       window.MoonaI18n.setLocale('he', { source: 'programmatic' });
       return {
         headerMarker: headerWordmark.dataset.e2eMarker,
-        heroMarker: heroMark.dataset.e2eMarker,
+        heroMarker: heroMedia.dataset.e2eMarker,
         headerAsset: headerWordmark.getAttribute('src'),
-        heroAsset: heroMark.getAttribute('src'),
+        heroDirection: getComputedStyle(heroMedia).direction,
         statement: document.querySelector('.hero-statement').textContent.replace(/\s+/g, ' ').trim(),
-        retiredHeroLayers: document.querySelectorAll('.hero-wordmark, .hero-chroma').length,
+        retiredHeroLayers: document.querySelectorAll('.hero-wordmark, .hero-chroma, .hero-aperture, .hero-actions').length,
         scrambleTargets: document.querySelectorAll('[data-scramble]').length,
         irisTargets: document.querySelectorAll('#markSvg, #heroIris, .lockup-iris').length,
         workTags: document.querySelectorAll('#work .tag').length,
@@ -519,9 +512,9 @@ test.describe('locale transitions and state preservation', () => {
     });
 
     expect(result.headerMarker).toBe('header-wordmark');
-    expect(result.heroMarker).toBe('hero-mark');
+    expect(result.heroMarker).toBe('hero-media');
     expect(result.headerAsset).toBe('p/brand/moona-logo-lockup.svg');
-    expect(result.heroAsset).toBe('p/brand/moona-logo-mark.svg');
+    expect(result.heroDirection).toBe('ltr');
     expect(result.statement).toBe('קריאייטיב טכנולוגי. תחת בימוי.');
     expect(result.retiredHeroLayers).toBe(0);
     expect(result.scrambleTargets).toBe(0);
@@ -1005,18 +998,14 @@ test.describe('responsive header and dynamic UI', () => {
     }
   });
 
-  test('asymmetric media hero mirrors by locale, leads to the flagship, and keeps mobile actions accessible', async ({ page }) => {
+  test('future-video hero keeps media physical across locales and leaves the film unobstructed', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await openHome(page, '/?lang=en');
 
     const heroVideo = page.locator('.hero-media-video');
     await expect(page.locator('.hero-media')).toBeVisible();
-    await expect(page.locator('.hero-aperture img')).toHaveAttribute('src', 'p/brand/moona-logo-mark.svg');
     await expect(page.locator('.hero-statement')).toBeVisible();
-    await expect(page.locator('.hero-actions')).toBeVisible();
-    await expect(page.locator('.hero-work-link')).toBeVisible();
-    await expect(page.locator('.hero-project-cta')).toBeVisible();
-    await expect(page.locator('.hero-wordmark, .hero-chroma, .hero-corner')).toHaveCount(0);
+    await expect(page.locator('.hero-actions, .hero-corner, .hero-corner--work, .hero-corner--project, .hero-project-cta, .hero-work-link, .hero-aperture')).toHaveCount(0);
     await expect(heroVideo).toHaveAttribute('hidden', '');
     await expect(heroVideo).toHaveAttribute('muted', '');
     await expect(heroVideo).toHaveAttribute('loop', '');
@@ -1025,26 +1014,25 @@ test.describe('responsive header and dynamic UI', () => {
     await expect(heroVideo).not.toHaveAttribute('autoplay', /.+/);
     await expect(page.locator('[data-mobile-menu-toggle]')).toBeHidden();
 
-    const inspectDesktopHero = () => page.evaluate(async () => {
+    const inspectDesktopHero = () => page.evaluate(() => {
       const box = element => {
         const value = element.getBoundingClientRect();
         return { left: value.left, right: value.right, top: value.top, bottom: value.bottom, width: value.width, height: value.height };
       };
-      const apertureImage = document.querySelector('.hero-aperture img');
-      try { await apertureImage.decode(); } catch (_) {}
+      const media = document.querySelector('.hero-media');
+      const fallback = document.querySelector('.hero-media-fallback');
       const video = document.querySelector('.hero-media-video');
       return {
         ratio: document.getElementById('hero-track').offsetHeight / innerHeight,
         viewportWidth: innerWidth,
         viewportHeight: innerHeight,
-        media: box(document.querySelector('.hero-media')),
+        media: box(media),
         stage: box(document.querySelector('.hero-brand-stage')),
         statement: box(document.querySelector('.hero-statement')),
         position: box(document.querySelector('.hero-position')),
-        actions: box(document.querySelector('.hero-actions')),
-        aperture: box(document.querySelector('.hero-aperture')),
-        apertureNaturalWidth: apertureImage.naturalWidth,
-        targets: [...document.querySelectorAll('.hero-actions button')].map(box),
+        mediaDirection: getComputedStyle(media).direction,
+        scrimTransform: getComputedStyle(media, '::after').transform,
+        planetRight: getComputedStyle(fallback, '::after').right,
         videoPolicy: {
           hidden: video.hidden,
           muted: video.muted,
@@ -1052,7 +1040,9 @@ test.describe('responsive header and dynamic UI', () => {
           playsInline: video.playsInline,
           preload: video.preload,
           autoplay: video.autoplay,
-          paused: video.paused
+          paused: video.paused,
+          objectFit: getComputedStyle(video).objectFit,
+          objectPosition: getComputedStyle(video).objectPosition
         }
       };
     });
@@ -1064,7 +1054,6 @@ test.describe('responsive header and dynamic UI', () => {
 
     for (const layout of [englishHero, hebrewHero]) {
       expect(layout.ratio).toBeCloseTo(1, 2);
-      expect(layout.apertureNaturalWidth).toBeGreaterThan(0);
       expect(layout.videoPolicy).toEqual({
         hidden: true,
         muted: true,
@@ -1072,41 +1061,33 @@ test.describe('responsive header and dynamic UI', () => {
         playsInline: true,
         preload: 'none',
         autoplay: false,
-        paused: true
+        paused: true,
+        objectFit: 'cover',
+        objectPosition: '50% 50%'
       });
+      expect(layout.mediaDirection).toBe('ltr');
+      expect(layout.scrimTransform).toBe('none');
       expect(layout.media.left).toBeGreaterThanOrEqual(-1);
       expect(layout.media.right).toBeLessThanOrEqual(layout.viewportWidth + 1);
       expect(layout.media.top).toBeGreaterThanOrEqual(-1);
       expect(layout.media.bottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
       expect(layout.media.width).toBeCloseTo(layout.viewportWidth, 0);
       expect(layout.media.height).toBeCloseTo(layout.viewportHeight, 0);
-      expect(layout.position.bottom).toBeLessThan(layout.actions.top);
-      for (const target of layout.targets) {
-        expect(target.width).toBeGreaterThanOrEqual(44);
-        expect(target.height).toBeGreaterThanOrEqual(44);
-        expect(target.left).toBeGreaterThanOrEqual(-1);
-        expect(target.right).toBeLessThanOrEqual(layout.viewportWidth + 1);
-        expect(target.top).toBeGreaterThanOrEqual(-1);
-        expect(target.bottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
+      for (const element of [layout.statement, layout.position]) {
+        expect(element.left).toBeGreaterThanOrEqual(-1);
+        expect(element.right).toBeLessThanOrEqual(layout.viewportWidth + 1);
+        expect(element.top).toBeGreaterThanOrEqual(-1);
+        expect(element.bottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
       }
     }
+    expect(hebrewHero.planetRight).toBe(englishHero.planetRight);
 
     expect(englishHero.stage.left).toBeLessThanOrEqual(1);
     expect(englishHero.stage.right).toBeLessThan(englishHero.viewportWidth);
-    expect((englishHero.statement.left + englishHero.statement.right) / 2).toBeLessThan(englishHero.viewportWidth / 2);
-    expect((englishHero.aperture.left + englishHero.aperture.right) / 2).toBeGreaterThan(englishHero.viewportWidth / 2);
+    expect(englishHero.statement.right).toBeLessThanOrEqual(englishHero.viewportWidth / 2);
     expect(hebrewHero.stage.right).toBeGreaterThanOrEqual(hebrewHero.viewportWidth - 1);
     expect(hebrewHero.stage.left).toBeGreaterThan(0);
-    expect((hebrewHero.statement.left + hebrewHero.statement.right) / 2).toBeGreaterThan(hebrewHero.viewportWidth / 2);
-    expect((hebrewHero.aperture.left + hebrewHero.aperture.right) / 2).toBeLessThan(hebrewHero.viewportWidth / 2);
-
-    await page.locator('.hero-work-link').click();
-    await expect(page.locator('#ask')).not.toHaveClass(/open/);
-    await expect.poll(() => page.evaluate(() => {
-      const film = document.getElementById('film');
-      const header = document.getElementById('hdr');
-      return Math.abs(film.getBoundingClientRect().top - header.offsetHeight);
-    })).toBeLessThan(3);
+    expect(hebrewHero.statement.left).toBeGreaterThanOrEqual(hebrewHero.viewportWidth / 2);
 
     await page.setViewportSize({ width: 390, height: 844 });
     await page.evaluate(() => window.scrollTo(0, 0));
@@ -1123,8 +1104,8 @@ test.describe('responsive header and dynamic UI', () => {
         pageWidth: document.documentElement.scrollWidth,
         media: box(document.querySelector('.hero-media')),
         statement: box(document.querySelector('.hero-statement')),
-        actions: box(document.querySelector('.hero-actions')),
-        targets: [...document.querySelectorAll('.hero-actions button')].map(box)
+        kicker: box(document.querySelector('.hero-kicker')),
+        position: box(document.querySelector('.hero-position'))
       };
     });
     expect(mobileHero.ratio).toBeCloseTo(1, 2);
@@ -1132,18 +1113,12 @@ test.describe('responsive header and dynamic UI', () => {
     expect(mobileHero.pageWidth).toBeLessThanOrEqual(mobileHero.viewportWidth + 1);
     expect(mobileHero.media.width).toBeCloseTo(mobileHero.viewportWidth, 0);
     expect(mobileHero.media.height).toBeCloseTo(mobileHero.viewportHeight, 0);
-    for (const element of [mobileHero.statement, mobileHero.actions, ...mobileHero.targets]) {
+    for (const element of [mobileHero.statement, mobileHero.kicker, mobileHero.position]) {
       expect(element.left).toBeGreaterThanOrEqual(-1);
       expect(element.right).toBeLessThanOrEqual(mobileHero.viewportWidth + 1);
       expect(element.top).toBeGreaterThanOrEqual(-1);
       expect(element.bottom).toBeLessThanOrEqual(mobileHero.viewportHeight + 1);
     }
-    for (const target of mobileHero.targets) {
-      expect(target.width).toBeGreaterThanOrEqual(44);
-      expect(target.height).toBeGreaterThanOrEqual(44);
-    }
-    const [firstTarget, secondTarget] = mobileHero.targets.slice().sort((a, b) => a.left - b.left);
-    expect(firstTarget.right).toBeLessThanOrEqual(secondTarget.left);
 
     await page.setViewportSize({ width: 320, height: 568 });
     await page.evaluate(() => window.scrollTo(0, 0));
@@ -1157,17 +1132,19 @@ test.describe('responsive header and dynamic UI', () => {
         viewportHeight: innerHeight,
         pageWidth: document.documentElement.scrollWidth,
         hero: box(document.getElementById('hero-stick')),
-        aperture: box(document.querySelector('.hero-aperture')),
         kicker: box(document.querySelector('.hero-kicker')),
-        actions: box(document.querySelector('.hero-actions'))
+        statement: box(document.querySelector('.hero-statement')),
+        position: box(document.querySelector('.hero-position'))
       };
     });
     expect(narrowHero.pageWidth).toBeLessThanOrEqual(narrowHero.viewportWidth + 1);
     expect(narrowHero.hero.height).toBeCloseTo(narrowHero.viewportHeight, 0);
-    expect(narrowHero.kicker.top - narrowHero.aperture.bottom).toBeGreaterThanOrEqual(8);
-    expect(narrowHero.actions.left).toBeGreaterThanOrEqual(-1);
-    expect(narrowHero.actions.right).toBeLessThanOrEqual(narrowHero.viewportWidth + 1);
-    expect(narrowHero.actions.bottom).toBeLessThanOrEqual(narrowHero.viewportHeight + 1);
+    for (const element of [narrowHero.kicker, narrowHero.statement, narrowHero.position]) {
+      expect(element.left).toBeGreaterThanOrEqual(-1);
+      expect(element.right).toBeLessThanOrEqual(narrowHero.viewportWidth + 1);
+      expect(element.top).toBeGreaterThanOrEqual(-1);
+      expect(element.bottom).toBeLessThanOrEqual(narrowHero.viewportHeight + 1);
+    }
 
     const menuToggle = page.locator('[data-mobile-menu-toggle]');
     await expect(menuToggle).toBeVisible();
@@ -1188,9 +1165,6 @@ test.describe('responsive header and dynamic UI', () => {
     await expect(page.locator('#mobileMenu')).toBeHidden();
     await expect(menuToggle).toBeFocused();
     await expect(menuToggle).toHaveAttribute('aria-expanded', 'false');
-
-    await page.locator('.hero-project-cta').click();
-    await expect(page.locator('#ask')).toHaveClass(/open/);
   });
 
   test('validation and uploaded-file labels rerender without losing files', async ({ page }) => {
