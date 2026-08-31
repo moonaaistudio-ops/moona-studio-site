@@ -619,7 +619,7 @@ test.describe('responsive header and dynamic UI', () => {
       expect(layout.proofLabels.every(Boolean)).toBe(true);
       expect(layout.measurementTransform).toBe('none');
       expect(layout.images.map(image => image.file)).toEqual([
-        'dustline-world.webp',
+        'dustline-world-17.webp',
         'dustline-detail-a.webp',
         'dustline-detail-b.webp',
         'dustline-detail-c.webp',
