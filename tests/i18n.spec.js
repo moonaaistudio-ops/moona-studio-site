@@ -1145,6 +1145,30 @@ test.describe('responsive header and dynamic UI', () => {
     const [firstTarget, secondTarget] = mobileHero.targets.slice().sort((a, b) => a.left - b.left);
     expect(firstTarget.right).toBeLessThanOrEqual(secondTarget.left);
 
+    await page.setViewportSize({ width: 320, height: 568 });
+    await page.evaluate(() => window.scrollTo(0, 0));
+    const narrowHero = await page.evaluate(() => {
+      const box = element => {
+        const value = element.getBoundingClientRect();
+        return { left: value.left, right: value.right, top: value.top, bottom: value.bottom, width: value.width, height: value.height };
+      };
+      return {
+        viewportWidth: innerWidth,
+        viewportHeight: innerHeight,
+        pageWidth: document.documentElement.scrollWidth,
+        hero: box(document.getElementById('hero-stick')),
+        aperture: box(document.querySelector('.hero-aperture')),
+        kicker: box(document.querySelector('.hero-kicker')),
+        actions: box(document.querySelector('.hero-actions'))
+      };
+    });
+    expect(narrowHero.pageWidth).toBeLessThanOrEqual(narrowHero.viewportWidth + 1);
+    expect(narrowHero.hero.height).toBeCloseTo(narrowHero.viewportHeight, 0);
+    expect(narrowHero.kicker.top - narrowHero.aperture.bottom).toBeGreaterThanOrEqual(8);
+    expect(narrowHero.actions.left).toBeGreaterThanOrEqual(-1);
+    expect(narrowHero.actions.right).toBeLessThanOrEqual(narrowHero.viewportWidth + 1);
+    expect(narrowHero.actions.bottom).toBeLessThanOrEqual(narrowHero.viewportHeight + 1);
+
     const menuToggle = page.locator('[data-mobile-menu-toggle]');
     await expect(menuToggle).toBeVisible();
     await expect(menuToggle).toHaveAttribute('aria-expanded', 'false');

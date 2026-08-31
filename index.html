@@ -1244,6 +1244,34 @@ html[lang="he"] :is(.about-copy h2,.crew-head h2,.crew-transition h2,.crew-credi
   .q textarea{font-size:20px;min-height:120px}
 }
 
+@media(max-width:340px){
+  .hero-media-fallback::before{width:100vw;inset-inline-end:-27vw;top:24%}
+  .hero-media-fallback::after{width:98vw;inset-inline-end:-24vw;top:25%}
+  .hero-aperture{width:76vw;inset-inline-end:-22vw;top:24%}
+  .hero-brand-stage{padding-bottom:58px}
+  .hero-statement{font-size:46px}
+  .hero-actions{gap:10px}
+  .hero-project-cta,.hero-work-link{gap:8px;font-size:10.5px;letter-spacing:.05em}
+  .hero-project-cta{padding-inline:14px}
+  .hero-action-arrow{font-size:14px}
+  html[lang="he"] .hero-statement{font-size:45px}
+  html[lang="he"] :is(.hero-project-cta,.hero-work-link){font-size:13px}
+}
+
+@media(max-width:340px) and (max-height:650px){
+  #hero-track,#hero-stick{min-height:100svh}
+  .hero-media-fallback::before{width:88vw;inset-inline-end:-22vw;top:20%}
+  .hero-media-fallback::after{width:88vw;inset-inline-end:-20vw;top:21%}
+  .hero-aperture{width:70vw;inset-inline-end:-18vw;top:20%}
+  .hero-brand-stage{padding:82px 18px 24px}
+  html[dir="rtl"] .hero-brand-stage{padding-inline:18px}
+  .hero-kicker{margin-bottom:14px}
+  .hero-statement{font-size:44px}
+  .hero-position{margin-top:14px}
+  .hero-actions{margin-top:18px}
+  html[lang="he"] .hero-statement{font-size:43px}
+}
+
 @media(prefers-reduced-motion:reduce){
   .hero-media-fallback::before,.hero-aperture::before{animation:none}
   .hero-project-cta,.hero-work-link,.work-grid .piece .meta .concept{transition:none}
