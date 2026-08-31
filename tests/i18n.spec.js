@@ -179,11 +179,14 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await openHome(page, '/?lang=he');
 
     await expect(page.locator('#t1 h1')).toHaveText('סטודיו AI-native לסרטי מותג ופרסומות');
+    await expect(page.locator('#t1 h1')).toHaveAccessibleName('סטודיו AI-native לסרטי מותג ופרסומות');
     await expect(page.locator('.statement-sub')).toContainText('מקריאטיב ובימוי ועד הפקה ופוסט,');
     await expect(page.locator('.statement-sub')).toContainText('בשליטה מלאה על כל פריים.');
     await expect(page.locator('#t3')).toHaveCount(0);
     await expect(page.locator('.film-strip-head .film-eyebrow')).toHaveText('מאחורי הסרט');
     await expect(page.locator('.film-title')).toHaveText('המותג שלנו והחוויה שאנחנו יצרנו לו');
+    await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE הוא חטיף אנרגיה שאנחנו יצרנו מאפס.');
+    await expect(page.locator('.film-credit')).toHaveText('כל האלמנטים נוצרו ללא אולפן וללא מצלמה. הם 100% AI.');
     await expect(page.locator('.film-story .film-beat')).toHaveCount(3);
     await expect(page.locator('.film-story .film-beat h3')).toHaveText([
       'לוקיישן שאפשר להאמין בו.',
@@ -191,6 +194,11 @@ test.describe('dictionary and first-paint privacy contract', () => {
       'קריאייטיב שעובד.'
     ]);
     await expect(page.locator('.work-note')).toHaveText('סרטי הקונספט האלה נוצרו ביוזמתנו כדי להראות מה נוכל ליצור עבור המותג הבא. המותגים המוצגים אינם לקוחות של Moona.');
+    await expect(page.locator('[data-i18n="work.bullPadel.concept"]')).toHaveText('המחבט מחזיר חבטה.');
+    await expect(page.locator('[data-i18n="work.koda.tag"]')).toHaveText('זה מוצר שהמצאנו מאפס');
+    await expect(page.locator('.ctagal-h')).toHaveText('אנחנו מעדיפים להראות במקום לספר.');
+    await expect(page.locator('.sentence p')).toHaveText('Moona הוא סטודיו AI-native שיוצר סרטי מותג ופרסומות ברמה קולנועית, גם בלי מצלמה.');
+    await expect(page.locator('.contact-line')).toHaveText('עכשיו תורך.');
     await expect(page.locator('[data-i18n="nav.cta"]')).toHaveText('דברו איתנו');
     await expect(page.locator('.hero-cta [data-i18n="hero.workCta"]')).toHaveText('לצפייה בעבודות');
     await expect(page.locator('[data-i18n="hero.cta"]')).toHaveText(['דברו איתנו', 'דברו איתנו']);
@@ -218,6 +226,66 @@ test.describe('dictionary and first-paint privacy contract', () => {
       send: 'Send details',
       note: 'No cost, no commitment.'
     });
+
+    const bidiSpacing = await page.evaluate(() => {
+      const heroAi = document.querySelector('#t1 [data-i18n="hero.headline.aiTerm"]');
+      const statementAi = document.querySelector('.sentence bdi[lang="en"]:last-of-type');
+      const isSingleExternalSpace = node =>
+        node?.nodeType === Node.TEXT_NODE && node.textContent === ' ';
+      const trimmedKeys = [
+        'hero.headline.lead',
+        'hero.headline.aiTerm',
+        'studio.statement.afterBrand',
+        'studio.statement.afterAi'
+      ];
+      return {
+        heroBefore: isSingleExternalSpace(heroAi.previousSibling),
+        heroAfter: isSingleExternalSpace(heroAi.nextSibling),
+        statementBefore: isSingleExternalSpace(statementAi.previousSibling),
+        statementAfter: isSingleExternalSpace(statementAi.nextSibling),
+        dictionaryTrimmed: ['en', 'he'].every(locale => trimmedKeys.every(key => {
+          const value = window.MoonaI18n.t(key, {}, locale);
+          return value === value.trim();
+        }))
+      };
+    });
+    expect(bidiSpacing).toEqual({
+      heroBefore: true,
+      heroAfter: true,
+      statementBefore: true,
+      statementAfter: true,
+      dictionaryTrimmed: true
+    });
+
+    const heroGaps = await page.evaluate(() => {
+      const fixture = document.createElement('div');
+      fixture.className = 'htxt';
+      fixture.style.cssText = 'position:fixed;visibility:hidden;inset:0 auto auto 0;transform:none;width:max-content;';
+      const clone = document.querySelector('#t1 h1').cloneNode(true);
+      clone.removeAttribute('id');
+      clone.style.cssText = 'white-space:nowrap;width:max-content;max-width:none;transform:none;';
+      fixture.appendChild(clone);
+      document.body.appendChild(fixture);
+      const [lead, ai, emphasis] = clone.children;
+      const gap = (a, b) => {
+        const first = a.getBoundingClientRect();
+        const second = b.getBoundingClientRect();
+        return Math.max(first.left - second.right, second.left - first.right, 0);
+      };
+      const result = { before: gap(lead, ai), after: gap(ai, emphasis) };
+      fixture.remove();
+      return result;
+    });
+    expect(heroGaps.before).toBeGreaterThan(0);
+    expect(heroGaps.after).toBeGreaterThan(0);
+    expect(Math.abs(heroGaps.before - heroGaps.after)).toBeLessThanOrEqual(1.5);
+
+    await page.evaluate(() => window.MoonaI18n.setLocale('en', { source: 'programmatic' }));
+    await expect(page.locator('#t1 h1')).toHaveText('Cinematic ads, born without a camera');
+    await expect(page.locator('#t1 h1')).toHaveAccessibleName('Cinematic ads, born without a camera');
+    await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE is an energy bar you cannot buy.');
+    await expect(page.locator('.film-credit')).toHaveText('DUSTLINE · born without a camera');
+    await expect(page.locator('.sentence p')).toHaveText('Moona is an AI-native studio making cinematic motion for brands. The camera was optional.');
 
     const dictionarySource = fs.readFileSync(path.join(__dirname, '..', 'i18n.js'), 'utf8');
     const hebrewStart = dictionarySource.indexOf('\n    he: {');
