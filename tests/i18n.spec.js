@@ -183,6 +183,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.statement-sub')).toContainText('בשליטה מלאה על כל פריים.');
     await expect(page.locator('#t3')).toHaveCount(0);
     await expect(page.locator('.film-strip-head .film-eyebrow')).toHaveText('מאחורי הסרט');
+    await expect(page.locator('.film-title')).toHaveText('המותג שלנו והחוויה שאנחנו יצרנו לו');
     await expect(page.locator('.film-story .film-beat')).toHaveCount(3);
     await expect(page.locator('.film-story .film-beat h3')).toHaveText([
       'לוקיישן שאפשר להאמין בו.',

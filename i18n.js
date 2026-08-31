@@ -259,8 +259,8 @@
       'hero.scroll': 'לגלול',
 
       'film.eyebrow': 'סרט הדגל',
-      'film.title.lead': 'מותג שלנו, שאנחנו המצאנו ',
-      'film.title.emphasis': 'והחוויה שאנחנו יצרנו לו.',
+      'film.title.lead': 'המותג שלנו ',
+      'film.title.emphasis': 'והחוויה שאנחנו יצרנו לו',
       'film.note.tail': ' הוא חטיף אנרגיה שאי אפשר לקנות.',
       'film.frame.open': 'פתיחת DUSTLINE בתצוגה מוגדלת עם פקדים',
       'film.video.description': 'DUSTLINE. סיפור אהבה מדברי של לילה אחד, המסופר דרך חטיף אנרגיה. סרט של Moona.',
