@@ -771,7 +771,7 @@ main{position:relative;z-index:2;background:var(--void)}
   transition:opacity .65s var(--ease),transform .75s var(--ease),filter .55s var(--ease)}
 .beat-media:not(.beat-media--sequence)>img{position:absolute;inset:0}
 .beat-media--world img{object-position:50% 0}
-.beat-media--creative img{object-position:50% 47%}
+.beat-media--creative img{object-position:50% 0}
 .beat-media--sequence{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px}
 .beat-media--sequence img{min-width:0}
 .beat-media--sequence img:nth-child(1){object-position:66% 46%}
@@ -1244,7 +1244,10 @@ html.motion-paused .beat-line{opacity:.64!important}
           <figure class="beat-media beat-media--creative" role="img"
                   aria-label="The DUSTLINE lead characters facing each other at sunset in the desert festival."
                   data-i18n-aria-label="film.beat.cast.mediaLabel">
-            <img src="p/dustline-creative.webp" alt="" width="1280" height="720" loading="lazy" decoding="async">
+            <img src="p/dustline-creative-04300-1920.webp"
+                 srcset="p/dustline-creative-04300-960.webp 960w, p/dustline-creative-04300-1600.webp 1600w, p/dustline-creative-04300-1920.webp 1920w"
+                 sizes="(max-width:700px) calc(100vw - 44px), (max-width:1000px) 40vw, (max-width:1733px) 43vw, 732px"
+                 alt="" width="1920" height="1126" loading="lazy" decoding="async">
             <span class="beat-framecode" dir="ltr">DUSTLINE / 00:04</span>
           </figure>
           <div class="beat-copy">
