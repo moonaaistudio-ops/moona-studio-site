@@ -587,6 +587,7 @@ test.describe('responsive header and dynamic UI', () => {
             .map(figure => figure.getAttribute('aria-label')),
           worldMediaAspect: firstMedia.width / firstMedia.height,
           worldObjectPosition: getComputedStyle(cards[0].querySelector('.beat-media img')).objectPosition,
+          creativeObjectPosition: getComputedStyle(cards[2].querySelector('.beat-media img')).objectPosition,
           images: images.map(image => ({
             file: new URL(image.currentSrc || image.src).pathname.split('/').pop(),
             alt: image.getAttribute('alt'),
@@ -622,19 +623,20 @@ test.describe('responsive header and dynamic UI', () => {
       expect(layout.proofLabels.every(Boolean)).toBe(true);
       expect(layout.worldMediaAspect).toBeLessThanOrEqual(2.6);
       expect(layout.worldObjectPosition).toBe('50% 0px');
+      expect(layout.creativeObjectPosition).toBe('50% 0px');
       expect(layout.images[0].file).toMatch(/^dustline-world-crowd-(960|1600|2720)\.webp$/);
-      expect(layout.images.slice(1).map(image => image.file)).toEqual([
+      expect(layout.images.slice(1, 4).map(image => image.file)).toEqual([
         'dustline-detail-a.webp',
         'dustline-detail-b.webp',
-        'dustline-detail-male-12900.webp',
-        'dustline-creative.webp'
+        'dustline-detail-male-12900.webp'
       ]);
+      expect(layout.images[4].file).toMatch(/^dustline-creative-04300-(960|1600|1920)\.webp$/);
       const expectedDimensions = [
         ['2720', '1536'],
         ['1280', '720'],
         ['1280', '720'],
         ['1920', '1126'],
-        ['1280', '720']
+        ['1920', '1126']
       ];
       for (const [index, image] of layout.images.entries()) {
         expect(image).toMatchObject({
