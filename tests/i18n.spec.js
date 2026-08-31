@@ -205,10 +205,12 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(headerWordmark).toHaveAttribute('src', 'p/brand/moona-logo-lockup.svg');
     await expect(headerWordmark).toHaveAttribute('alt', '');
     await expect(page.locator('.hero-wordmark, .hero-chroma, .hero-aperture, #markSvg, #heroIris, .lockup-iris, [data-scramble]')).toHaveCount(0);
-    await expect(page.locator('.hero-kicker')).toHaveText('בהובלת המייסד · תל אביב');
-    await expect(page.locator('.hero-statement [data-i18n="hero.headline.lead"]')).toHaveText('קריאייטיב טכנולוגי.');
-    await expect(page.locator('.hero-statement-accent')).toHaveText('תחת בימוי.');
-    await expect(page.locator('.hero-position')).toHaveText('סרטים · תוכנה · מערכות AI');
+    await expect(page.locator('.hero-kicker')).toHaveText('בהובלת המייסד · קריאייטיב טכנולוגי · תל אביב');
+    await expect(page.locator('.hero-statement [data-i18n="hero.headline.lead"]')).toHaveText('MOONA STUDIO');
+    await expect(page.locator('.hero-statement img')).toHaveAttribute('src', 'p/brand/moona-logo-lockup.svg');
+    await expect(page.locator('.hero-statement')).toHaveAttribute('dir', 'ltr');
+    await expect(page.locator('.hero-statement-accent')).toHaveCount(0);
+    await expect(page.locator('.hero-position')).toHaveText('בימוי · פיתוח תוכנה · הפקת AI');
     await expect(page.locator('.film-head .film-eyebrow')).toHaveText('סרט הדגל');
     await expect(page.locator('.film-title')).toHaveText('יצרנו מותג. וצילמנו לו פרסומת.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE הוא חטיף אנרגיה שאנחנו יצרנו מאפס.');
@@ -286,10 +288,11 @@ test.describe('dictionary and first-paint privacy contract', () => {
     });
 
     await page.evaluate(() => window.MoonaI18n.setLocale('en', { source: 'programmatic' }));
-    await expect(page.locator('.hero-kicker')).toHaveText('Founder-led · Tel Aviv');
-    await expect(page.locator('.hero-statement [data-i18n="hero.headline.lead"]')).toHaveText('Creative technology.');
-    await expect(page.locator('.hero-statement-accent')).toHaveText('Directed.');
-    await expect(page.locator('.hero-position')).toHaveText('Film · Software · AI systems');
+    await expect(page.locator('.hero-kicker')).toHaveText('Founder-led · Creative technology · Tel Aviv');
+    await expect(page.locator('.hero-statement [data-i18n="hero.headline.lead"]')).toHaveText('MOONA STUDIO');
+    await expect(page.locator('.hero-statement img')).toHaveAttribute('src', 'p/brand/moona-logo-lockup.svg');
+    await expect(page.locator('.hero-statement-accent')).toHaveCount(0);
+    await expect(page.locator('.hero-position')).toHaveText('Direction · Software development · AI production');
     await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
     await expect(page.locator('.film-title')).toHaveText('We created a brand. Then we shot its ad.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE is an energy bar you cannot buy.');
@@ -515,7 +518,7 @@ test.describe('locale transitions and state preservation', () => {
     expect(result.heroMarker).toBe('hero-media');
     expect(result.headerAsset).toBe('p/brand/moona-logo-lockup.svg');
     expect(result.heroDirection).toBe('ltr');
-    expect(result.statement).toBe('קריאייטיב טכנולוגי. תחת בימוי.');
+    expect(result.statement).toBe('MOONA STUDIO');
     expect(result.retiredHeroLayers).toBe(0);
     expect(result.scrambleTargets).toBe(0);
     expect(result.irisTargets).toBe(0);
