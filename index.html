@@ -1310,6 +1310,15 @@ const localeRenderers = new Set();
 const onLocaleRender = renderer => { localeRenderers.add(renderer); return renderer };
 const renderLocaleState = () => localeRenderers.forEach(renderer=>renderer());
 const MOTION_KEY='moona.motionPaused';
+const pendingPieceStarts=new WeakMap();
+function cancelPieceStart(video){
+  const pending=pendingPieceStarts.get(video);
+  if(!pending) return;
+  video.removeEventListener('canplay',pending.onCanPlay);
+  video.removeEventListener('loadeddata',pending.onLoadedData);
+  clearTimeout(pending.revealTimer);
+  pendingPieceStarts.delete(video);
+}
 const motionControl=document.querySelector('[data-motion-toggle]');
 const motionReduced=()=>reduced||document.documentElement.classList.contains('motion-paused');
 function paintMotionControl(){
@@ -1327,15 +1336,29 @@ function setMotionPaused(paused,{persist=true,initial=false}={}){
   if(persist){try{localStorage.setItem(MOTION_KEY,paused?'1':'0')}catch(_){}}
   if(paused||reduced){
     document.querySelectorAll('video').forEach(video=>{
+      cancelPieceStart(video);
       if(!video.paused){video.dataset.motionWasPlaying='1';video.pause()}
     });
     if(!initial)cancelTextAnimations();
   }else{
+    const resumedPieces=new Set();
     document.querySelectorAll('video[data-motion-was-playing]').forEach(video=>{
       delete video.dataset.motionWasPlaying;
       const owner=video.closest('[data-piece]');
       const rect=video.getBoundingClientRect();
-      if(!owner?.dataset.userPaused&&rect.bottom>0&&rect.top<innerHeight)video.play().catch(()=>{});
+      if(owner){
+        if(!owner.dataset.userPaused&&rect.bottom>0&&rect.top<innerHeight){
+          resumedPieces.add(owner);
+          startPiece(owner);
+        }
+      }else if(rect.bottom>0&&rect.top<innerHeight)video.play().catch(()=>{});
+    });
+    if(!initial)document.querySelectorAll('[data-piece]').forEach(piece=>{
+      const video=piece.querySelector('video');
+      const rect=piece.getBoundingClientRect();
+      if(!resumedPieces.has(piece)&&video?.paused&&!piece.dataset.userPaused&&rect.bottom>0&&rect.top<innerHeight){
+        startPiece(piece);
+      }
     });
   }
   dispatchEvent(new CustomEvent('moona:motionchange',{detail:{paused:motionReduced()}}));
@@ -1856,22 +1879,30 @@ function startPiece(piece){
   if(!v){reveal();return}
   /* while the page is moving we only reveal; playback waits for the stop */
   const go=()=>{
-    if(travelling||motionReduced()){reveal();return}
+    cancelPieceStart(v);
+    const r=piece.getBoundingClientRect();
+    if(travelling||motionReduced()||piece.dataset.userPaused||r.bottom<=0||r.top>=innerHeight){
+      reveal();
+      return;
+    }
     v.play().then(reveal).catch(reveal);
   };
   if(v.readyState>=3) go();                       /* HAVE_FUTURE_DATA — safe to start */
-  else{
+  else if(!pendingPieceStarts.has(v)){
     v.preload='auto';
-    v.addEventListener('canplay',go,{once:true});
-    v.addEventListener('loadeddata',()=>{if(v.readyState>=2)go()},{once:true});
-    setTimeout(reveal,1800);                      /* poster still lands if the net is slow */
+    const onCanPlay=()=>go();
+    const onLoadedData=()=>{if(v.readyState>=2)go()};
+    const revealTimer=setTimeout(reveal,1800);    /* poster still lands if the net is slow */
+    pendingPieceStarts.set(v,{onCanPlay,onLoadedData,revealTimer});
+    v.addEventListener('canplay',onCanPlay);
+    v.addEventListener('loadeddata',onLoadedData);
     v.load();
   }
 }
 const io=new IntersectionObserver(es=>es.forEach(e=>{
   const v=e.target.querySelector('video');
   if(e.isIntersecting){ if(!e.target.dataset.userPaused) startPiece(e.target); }
-  else if(v){ delete v.dataset.wasPlaying; if(!v.paused) v.pause() }
+  else if(v){ cancelPieceStart(v); delete v.dataset.wasPlaying; if(!v.paused) v.pause() }
 }),{threshold:.01, rootMargin:'12% 0px 0px 0px'});
 document.querySelectorAll('[data-piece]').forEach(p=>{io.observe(p);ioLoad.observe(p)});
 
@@ -1883,12 +1914,12 @@ function setTravelling(on){
   travelling=on;
   document.querySelectorAll('[data-piece] video').forEach(v=>{
     if(on){ if(!v.paused){v.dataset.wasPlaying='1'; v.pause()} }
-    else if(v.dataset.wasPlaying&&!motionReduced()){
-      delete v.dataset.wasPlaying;
+    else{
       const p=v.closest('[data-piece]');
-      if(p.dataset.userPaused) return;      /* they chose to stop it */
+      delete v.dataset.wasPlaying;
+      if(motionReduced()||p.dataset.userPaused) return; /* motion preference and explicit pause win */
       const r=p.getBoundingClientRect();
-      if(r.bottom>0 && r.top<innerHeight) v.play().catch(()=>{});
+      if(r.bottom>0 && r.top<innerHeight && v.paused) startPiece(p);
     }
   });
 }
@@ -1959,6 +1990,7 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
 
   btn.addEventListener('click',e=>{
     e.stopPropagation();               /* the frame itself opens the lightbox */
+    cancelPieceStart(v);
     if(!v.paused){ piece.dataset.userPaused='1'; v.pause(); }
     else{
       delete piece.dataset.userPaused;

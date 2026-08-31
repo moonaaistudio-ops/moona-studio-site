@@ -545,6 +545,146 @@ test.describe('animation cancellation and state preservation', () => {
 });
 
 test.describe('responsive header and dynamic UI', () => {
+  test('a preloaded concept film starts automatically after scrolling settles', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('moona-analytics-consent', 'denied'));
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openHome(page, '/?lang=he');
+    const piece = page.locator('[data-piece]').first();
+    const video = piece.locator('video');
+
+    await page.waitForFunction(() => {
+      const first = document.querySelector('[data-piece] video');
+      return first && first.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA;
+    });
+    await piece.evaluate(element => element.scrollIntoView({ block: 'center' }));
+
+    await expect.poll(() => video.evaluate(element => element.paused), {
+      message: 'the visible muted concept film should resume once scrolling is idle',
+      timeout: 5_000
+    }).toBe(false);
+    await expect(video).toHaveJSProperty('muted', true);
+    const before = await video.evaluate(element => element.currentTime);
+    await page.waitForTimeout(450);
+    await expect.poll(() => video.evaluate(element => element.currentTime)).toBeGreaterThan(before);
+
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect.poll(() => video.evaluate(element => element.paused)).toBe(true);
+    await piece.evaluate(element => element.scrollIntoView({ block: 'center' }));
+    await expect.poll(() => video.evaluate(element => element.paused)).toBe(false);
+
+    await piece.locator('[data-media-play]').click();
+    await expect(piece).toHaveAttribute('data-user-paused', '1');
+    await expect.poll(() => video.evaluate(element => element.paused)).toBe(true);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await piece.evaluate(element => element.scrollIntoView({ block: 'center' }));
+    await page.waitForTimeout(350);
+    await expect.poll(() => video.evaluate(element => element.paused)).toBe(true);
+  });
+
+  test('deferred concept playback is deduplicated and rechecks pause and visibility', async ({ page }) => {
+    await openHome(page, '/?lang=en');
+    const result = await page.evaluate(async () => {
+      const piece = document.createElement('article');
+      piece.dataset.piece = '';
+      const video = document.createElement('video');
+      piece.appendChild(video);
+      document.body.appendChild(piece);
+
+      let readyState = 0;
+      let visible = true;
+      let playCalls = 0;
+      let readinessListeners = 0;
+      Object.defineProperty(video, 'readyState', { configurable: true, get: () => readyState });
+      video.load = () => {};
+      video.play = () => { playCalls += 1; return Promise.resolve(); };
+      const addEventListener = video.addEventListener;
+      video.addEventListener = function(type, listener, options) {
+        if (type === 'canplay' || type === 'loadeddata') readinessListeners += 1;
+        return addEventListener.call(this, type, listener, options);
+      };
+      piece.getBoundingClientRect = () => ({
+        top: visible ? 100 : innerHeight + 100,
+        bottom: visible ? 300 : innerHeight + 300
+      });
+
+      startPiece(piece);
+      startPiece(piece);
+      piece.dataset.userPaused = '1';
+      readyState = HTMLMediaElement.HAVE_FUTURE_DATA;
+      video.dispatchEvent(new Event('canplay'));
+      video.dispatchEvent(new Event('loadeddata'));
+      await Promise.resolve();
+      const afterExplicitPause = playCalls;
+
+      delete piece.dataset.userPaused;
+      readyState = 0;
+      startPiece(piece);
+      startPiece(piece);
+      visible = false;
+      readyState = HTMLMediaElement.HAVE_FUTURE_DATA;
+      video.dispatchEvent(new Event('canplay'));
+      video.dispatchEvent(new Event('loadeddata'));
+      await Promise.resolve();
+      const afterLeavingViewport = playCalls;
+
+      visible = true;
+      startPiece(piece);
+      await Promise.resolve();
+      video.dispatchEvent(new Event('canplay'));
+      video.dispatchEvent(new Event('loadeddata'));
+      await Promise.resolve();
+      const finalPlayCalls = playCalls;
+      cancelPieceStart(video);
+      piece.remove();
+      return { afterExplicitPause, afterLeavingViewport, finalPlayCalls, readinessListeners };
+    });
+
+    expect(result).toEqual({
+      afterExplicitPause: 0,
+      afterLeavingViewport: 0,
+      finalPlayCalls: 1,
+      readinessListeners: 4
+    });
+  });
+
+  test('resuming motion restores a visible concept film that was still loading', async ({ page }) => {
+    await openHome(page, '/?lang=en');
+    const result = await page.evaluate(async () => {
+      const piece = document.createElement('article');
+      piece.dataset.piece = '';
+      const video = document.createElement('video');
+      piece.appendChild(video);
+      document.body.appendChild(piece);
+
+      let readyState = 0;
+      let playCalls = 0;
+      let readinessListeners = 0;
+      Object.defineProperty(video, 'readyState', { configurable: true, get: () => readyState });
+      video.load = () => {};
+      video.play = () => { playCalls += 1; return Promise.resolve(); };
+      const addEventListener = video.addEventListener;
+      video.addEventListener = function(type, listener, options) {
+        if (type === 'canplay' || type === 'loadeddata') readinessListeners += 1;
+        return addEventListener.call(this, type, listener, options);
+      };
+      piece.getBoundingClientRect = () => ({ top: 100, bottom: 300 });
+
+      startPiece(piece);
+      setMotionPaused(true, { persist: false });
+      setMotionPaused(false, { persist: false });
+      readyState = HTMLMediaElement.HAVE_FUTURE_DATA;
+      video.dispatchEvent(new Event('canplay'));
+      await Promise.resolve();
+
+      const state = { playCalls, readinessListeners };
+      cancelPieceStart(video);
+      piece.remove();
+      return state;
+    });
+
+    expect(result).toEqual({ playCalls: 1, readinessListeners: 4 });
+  });
+
   test('header targets remain separated and contained at the approved widths', async ({ page }) => {
     const widths = [360, 375, 385, 386, 387, 390, 1440];
     for (const locale of ['en', 'he']) {
