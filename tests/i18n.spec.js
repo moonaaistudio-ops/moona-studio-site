@@ -622,16 +622,24 @@ test.describe('responsive header and dynamic UI', () => {
       expect(layout.proofLabels.every(Boolean)).toBe(true);
       expect(layout.worldMediaAspect).toBeLessThanOrEqual(2.6);
       expect(layout.worldObjectPosition).toBe('50% 0px');
-      expect(layout.images.map(image => image.file)).toEqual([
-        'dustline-world-17.webp',
+      expect(layout.images[0].file).toMatch(/^dustline-world-crowd-(960|1600|2720)\.webp$/);
+      expect(layout.images.slice(1).map(image => image.file)).toEqual([
         'dustline-detail-a.webp',
         'dustline-detail-b.webp',
-        'dustline-detail-c.webp',
+        'dustline-detail-male-12900.webp',
         'dustline-creative.webp'
       ]);
-      for (const image of layout.images) {
+      const expectedDimensions = [
+        ['2720', '1536'],
+        ['1280', '720'],
+        ['1280', '720'],
+        ['1920', '1126'],
+        ['1280', '720']
+      ];
+      for (const [index, image] of layout.images.entries()) {
         expect(image).toMatchObject({
-          alt: '', loading: 'lazy', decoding: 'async', width: '1280', height: '720', complete: true
+          alt: '', loading: 'lazy', decoding: 'async',
+          width: expectedDimensions[index][0], height: expectedDimensions[index][1], complete: true
         });
         expect(image.naturalWidth).toBeGreaterThan(0);
       }
