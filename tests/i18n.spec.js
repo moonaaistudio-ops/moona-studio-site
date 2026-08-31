@@ -545,6 +545,114 @@ test.describe('animation cancellation and state preservation', () => {
 });
 
 test.describe('responsive header and dynamic UI', () => {
+  test('DUSTLINE process is a responsive cinematic storyboard with accessible static frames', async ({ page }) => {
+    test.setTimeout(90_000);
+    for (const locale of ['he', 'en']) {
+      for (const width of [360, 390, 700, 701, 768, 1000, 1001, 1440]) {
+      await page.setViewportSize({ width, height: width >= 1001 ? 900 : 844 });
+      await openHome(page, `/?lang=${locale}`);
+      const story = page.locator('.film-story');
+      await story.scrollIntoViewIfNeeded();
+      await page.waitForFunction(() => [...document.querySelectorAll('.film-story img')]
+        .every(image => image.complete && image.naturalWidth > 0));
+
+      const layout = await story.evaluate(async section => {
+        await document.fonts.ready;
+        const rect = element => {
+          const value = element.getBoundingClientRect();
+          return {
+            top: value.top, right: value.right, bottom: value.bottom, left: value.left,
+            width: value.width, height: value.height
+          };
+        };
+        const cards = [...section.querySelectorAll(':scope > .film-beat')];
+        const images = [...section.querySelectorAll('.beat-media img')];
+        const cardRects = cards.map(rect);
+        const firstMedia = rect(cards[0].querySelector('.beat-media'));
+        const firstCopy = rect(cards[0].querySelector('.beat-copy'));
+        const bodyStyle = getComputedStyle(cards[0].querySelector('p'));
+        const horizontalOverlap = Math.min(firstMedia.right, firstCopy.right)
+          - Math.max(firstMedia.left, firstCopy.left);
+        return {
+          tags: cards.map(card => card.tagName),
+          labelsResolve: cards.every(card => {
+            const heading = card.querySelector('h3');
+            return heading?.id && card.getAttribute('aria-labelledby') === heading.id;
+          }),
+          interactiveCount: section.querySelectorAll('button,[role="button"],[tabindex]').length,
+          videoCount: section.querySelectorAll('video').length,
+          imageCount: images.length,
+          proofLabels: [...section.querySelectorAll('.beat-media[role="img"]')]
+            .map(figure => figure.getAttribute('aria-label')),
+          measurementTransform: getComputedStyle(section.querySelector('.beat-measure')).textTransform,
+          images: images.map(image => ({
+            file: new URL(image.currentSrc || image.src).pathname.split('/').pop(),
+            alt: image.getAttribute('alt'),
+            loading: image.loading,
+            decoding: image.decoding,
+            width: image.getAttribute('width'),
+            height: image.getAttribute('height'),
+            complete: image.complete,
+            naturalWidth: image.naturalWidth
+          })),
+          cards: cardRects,
+          media: firstMedia,
+          copy: firstCopy,
+          horizontalOverlap,
+          bodyFontSize: parseFloat(bodyStyle.fontSize),
+          bodyLineHeight: parseFloat(bodyStyle.lineHeight),
+          copyFits: cards.every(card => {
+            const copy = card.querySelector('.beat-copy');
+            return copy.scrollHeight <= copy.clientHeight + 1;
+          }),
+          overflow: document.documentElement.scrollWidth - innerWidth
+        };
+      });
+
+      expect(layout.tags).toEqual(['ARTICLE', 'ARTICLE', 'ARTICLE']);
+      expect(layout.labelsResolve).toBe(true);
+      expect(layout.interactiveCount).toBe(0);
+      expect(layout.videoCount).toBe(0);
+      expect(layout.imageCount).toBe(5);
+      expect(layout.proofLabels).toHaveLength(3);
+      expect(new Set(layout.proofLabels).size).toBe(3);
+      expect(layout.proofLabels.every(Boolean)).toBe(true);
+      expect(layout.measurementTransform).toBe('none');
+      expect(layout.images.map(image => image.file)).toEqual([
+        'dustline-world.webp',
+        'dustline-detail-a.webp',
+        'dustline-detail-b.webp',
+        'dustline-detail-c.webp',
+        'dustline-creative.webp'
+      ]);
+      for (const image of layout.images) {
+        expect(image).toMatchObject({
+          alt: '', loading: 'lazy', decoding: 'async', width: '1280', height: '720', complete: true
+        });
+        expect(image.naturalWidth).toBeGreaterThan(0);
+      }
+      expect(layout.bodyFontSize).toBeGreaterThanOrEqual(16);
+      expect(layout.bodyLineHeight / layout.bodyFontSize).toBeGreaterThanOrEqual(1.5);
+      expect(layout.copyFits).toBe(true);
+      expect(layout.overflow).toBeLessThanOrEqual(0);
+
+      if (width <= 700) {
+        expect(layout.cards[1].top).toBeGreaterThan(layout.cards[0].bottom);
+        expect(layout.cards[2].top).toBeGreaterThan(layout.cards[1].bottom);
+        expect(layout.copy.top).toBeGreaterThanOrEqual(layout.media.bottom - 1);
+      } else if (width <= 1000) {
+        expect(layout.cards[1].top).toBeGreaterThan(layout.cards[0].bottom);
+        expect(layout.cards[2].top).toBeGreaterThan(layout.cards[1].bottom);
+        expect(layout.horizontalOverlap).toBeLessThanOrEqual(1);
+      } else {
+        expect(layout.cards[0].width).toBeGreaterThan(layout.cards[1].width * 1.8);
+        expect(Math.abs(layout.cards[1].top - layout.cards[2].top)).toBeLessThanOrEqual(1);
+        expect(Math.abs(layout.cards[1].width - layout.cards[2].width)).toBeLessThanOrEqual(1);
+      }
+      }
+    }
+  });
+
   test('studio shows the work before its CTA in visual, DOM, and focus order', async ({ page }) => {
     const widths = [361, 390, 1440];
     for (const width of widths) {

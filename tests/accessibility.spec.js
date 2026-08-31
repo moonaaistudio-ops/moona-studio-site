@@ -276,6 +276,25 @@ test.describe('motion accessibility', () => {
     expect(await page.locator('video').evaluateAll(videos => videos.every(video => video.paused))).toBe(true);
     expect(await page.locator('.grain,.scrollcue i,.mq-track,.cta-btn').evaluateAll(elements =>
       elements.every(element => getComputedStyle(element).animationName === 'none'))).toBe(true);
+    await page.locator('.film-story').scrollIntoViewIfNeeded();
+    const storyMotion = await page.locator('.film-story').evaluate(section => ({
+      cards: [...section.querySelectorAll('.film-beat')].every(card => {
+        const style = getComputedStyle(card);
+        return style.opacity === '1' && style.transform === 'none'
+          && style.transitionDuration.split(',').every(value => parseFloat(value) === 0);
+      }),
+      images: [...section.querySelectorAll('.beat-media img')].every(image => {
+        const style = getComputedStyle(image);
+        return style.opacity === '1' && style.transform === 'none'
+          && style.transitionDuration.split(',').every(value => parseFloat(value) === 0);
+      }),
+      lines: [...section.querySelectorAll('.beat-line')].every(line => {
+        const style = getComputedStyle(line);
+        return style.transform === 'none'
+          && style.transitionDuration.split(',').every(value => parseFloat(value) === 0);
+      })
+    }));
+    expect(storyMotion).toEqual({ cards: true, images: true, lines: true });
 
     const before = await canvasSnapshots(page);
     await page.waitForTimeout(350);
