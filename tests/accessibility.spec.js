@@ -113,7 +113,7 @@ test('required fields have descriptions and expose an announced validation state
   await expect(page.locator('#ask')).toHaveClass(/open/);
   await expect(page.locator('#f-name')).toBeFocused();
 
-  for (const id of ['f-name', 'f-mail', 'f-site']) {
+  for (const id of ['f-name', 'f-mail', 'f-site', 'f-brief']) {
     const field = page.locator(`#${id}`);
     await expect(field).toHaveAttribute('required', '');
     await expect(field).toHaveAttribute('aria-required', 'true');
@@ -133,6 +133,26 @@ test('required fields have descriptions and expose an announced validation state
   await expect(page.locator('#f-name')).toHaveAttribute('aria-invalid', 'true');
   await expect(page.locator('#name-hint')).toHaveAttribute('role', 'alert');
   await expect(page.locator('#name-hint')).toHaveText('את זה צריך למלא.');
+
+  await page.locator('#f-name').fill('דנה כהן');
+  await page.locator('[data-step="0"] [data-next]').click();
+  await page.locator('#f-mail').fill('dana@example.com');
+  await page.locator('[data-step="1"] [data-next]').click();
+  await page.locator('#f-site').fill('example.com');
+  await page.locator('[data-step="2"] [data-next]').click();
+  await expect(page.locator('[data-step="3"]')).toHaveClass(/active/);
+  await expect(page.locator('#f-brief')).toBeFocused();
+
+  await page.locator('#askSubmit').click();
+  await expect(page.locator('#f-brief')).toBeFocused();
+  await expect(page.locator('#f-brief')).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.locator('#brief-hint')).toHaveAttribute('role', 'alert');
+  await expect(page.locator('#brief-hint')).toHaveText('את זה צריך למלא.');
+
+  await page.locator('#f-brief').fill('קצר מדי');
+  await page.locator('#askSubmit').click();
+  await expect(page.locator('#f-brief')).toBeFocused();
+  await expect(page.locator('#brief-hint')).toHaveText('נשמח לקצת יותר פרטים, בין 20 ל־1,200 תווים.');
   await expectNoAxeViolations(page, '#ask');
 
   await page.keyboard.press('Escape');
@@ -170,11 +190,10 @@ test('every reachable media opener has a localized, non-empty, unique accessible
     await openPage(page, `/?lang=${locale}`);
     const labels = await page.locator([
       '#film .film-frame[tabindex="0"]',
-      '[data-media-open]',
-      '.mq .mq-track:not([aria-hidden]) .mq-item[tabindex="0"]'
+      '#work [data-media-open]'
     ].join(',')).evaluateAll(elements => elements.map(element => element.getAttribute('aria-label')?.trim() || ''));
 
-    expect(labels.length).toBeGreaterThan(10);
+    expect(labels).toHaveLength(5);
     expect(labels.every(Boolean)).toBe(true);
     expect(new Set(labels).size, `duplicate ${locale} media labels: ${labels.join(' | ')}`).toBe(labels.length);
     if (locale === 'he') {
@@ -211,8 +230,8 @@ test('Hebrew content reflows at the supported narrow width with WCAG text spacin
       const rect = element.getBoundingClientRect();
       return rect.left >= -1 && rect.right <= innerWidth + 1;
     };
-    const headline = document.querySelector('.htxt h1');
-    const cta = document.querySelector('.hero-cta');
+    const headline = document.querySelector('.film-title');
+    const cta = document.querySelector('.hero-corner--project');
     const header = document.getElementById('hdr');
     const headlineRange = document.createRange();
     headlineRange.selectNodeContents(headline);
@@ -274,7 +293,7 @@ test.describe('motion accessibility', () => {
     await expect(control).toBeDisabled();
     await expect(control).toHaveAttribute('aria-label', 'התנועה הופחתה לפי הגדרת המערכת');
     expect(await page.locator('video').evaluateAll(videos => videos.every(video => video.paused))).toBe(true);
-    expect(await page.locator('.grain,.scrollcue i,.mq-track,.cta-btn').evaluateAll(elements =>
+    expect(await page.locator('.grain,.scrollcue i,.cta-btn').evaluateAll(elements =>
       elements.every(element => getComputedStyle(element).animationName === 'none'))).toBe(true);
     await page.locator('.film-story').scrollIntoViewIfNeeded();
     const storyMotion = await page.locator('.film-story').evaluate(section => ({

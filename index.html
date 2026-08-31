@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Moona | AI-native studio for cinematic brand films</title>
-<meta name="description" content="We build the world, then film the ad. An AI-native studio making cinematic brand films with uncompromising craft.">
+<title>Moona | Founder-led creative technology studio</title>
+<meta name="description" content="Cinematic campaigns built through creative direction, custom software and specialist AI agents.">
 <script>
 /* Resolve direction before CSS or analytics can paint the wrong locale. Keep this
    small map in lock-step with i18n.js; the E2E suite checks it for drift. */
@@ -22,8 +22,8 @@
     }catch(_){}
   }
   const metadata={
-    en:{title:'Moona | AI-native studio for cinematic brand films',description:'We build the world, then film the ad. An AI-native studio making cinematic brand films with uncompromising craft.'},
-    he:{title:'Moona | סטודיו AI-native לסרטי מותג קולנועיים',description:'סטודיו AI-native להפקת סרטי מותג ופרסומות ברמה קולנועית.'}
+    en:{title:'Moona | Founder-led creative technology studio',description:'Cinematic campaigns built through creative direction, custom software and specialist AI agents.'},
+    he:{title:'Moona | סטודיו קריאייטיב טכנולוגי בהובלת המייסד',description:'קמפיינים קולנועיים שנבנים באמצעות קריאייטיב, פיתוח תוכנה וסוכני AI מתמחים.'}
   };
   const root=document.documentElement;
   root.lang=locale;
@@ -49,15 +49,15 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Moona">
 <meta property="og:url" content="https://moona-studio-two.vercel.app/">
-<meta property="og:title" content="Moona | AI-native studio for cinematic brand films">
-<meta property="og:description" content="We build the world, then film the ad. An AI-native studio making cinematic brand films with uncompromising craft.">
+<meta property="og:title" content="Moona | Founder-led creative technology studio">
+<meta property="og:description" content="Cinematic campaigns built through creative direction, custom software and specialist AI agents.">
 <meta property="og:image" content="https://moona-studio-two.vercel.app/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Moona, an AI-native studio for film and motion ads">
+<meta property="og:image:alt" content="Moona, a founder-led creative technology studio">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Moona | AI-native studio for cinematic brand films">
-<meta name="twitter:description" content="We build the world, then film the ad. An AI-native studio making cinematic brand films with uncompromising craft.">
+<meta name="twitter:title" content="Moona | Founder-led creative technology studio">
+<meta name="twitter:description" content="Cinematic campaigns built through creative direction, custom software and specialist AI agents.">
 <meta name="twitter:image" content="https://moona-studio-two.vercel.app/og.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -363,7 +363,7 @@ html[dir="rtl"] #ask .ask-rail i{
 }
 @media(prefers-reduced-motion:reduce){.qnext.qsend{animation:none}}
 .qback{font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;
-  color:var(--ice-dim);padding:12px 4px;transition:color .3s}
+  color:var(--ice-dim);min-width:44px;min-height:44px;padding:12px 6px;transition:color .3s}
 .qback:hover{color:var(--ice-hot)}
 .qskip{margin-inline-start:auto;font-family:var(--mono);font-size:10px;letter-spacing:.28em;
   text-transform:uppercase;color:var(--ice-dim);padding:12px 4px;transition:color .3s}
@@ -412,7 +412,7 @@ html[dir="rtl"] #ask .ask-rail i{
 .filechip .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:22ch}
 .filechip b{color:var(--ice-dim);font-weight:400}
 /* a file added by mistake has to be removable without starting the form again */
-.filechip button{flex:none;display:grid;place-items:center;width:30px;height:30px;
+.filechip button{flex:none;display:grid;place-items:center;width:44px;height:44px;
   border-radius:var(--r-pill);color:var(--ice-dim);cursor:none;
   transition:background .25s,color .25s}
 .filechip button:hover{background:rgba(217,198,156,.2);color:var(--ice-hot)}
@@ -421,7 +421,7 @@ html[dir="rtl"] #ask .ask-rail i{
 .filechip.over b{color:rgba(232,160,154,.75)}
 .filenote{flex-basis:100%;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;
   color:#e8a09a;line-height:1.6}
-@media(pointer:coarse){.filechip button{width:38px;height:38px;cursor:auto}}
+@media(pointer:coarse){.filechip button{cursor:auto}}
 
 .qdone{text-align:center}
 .qdone .iris-done{width:74px;height:74px;margin:0 auto 30px;
@@ -1058,6 +1058,121 @@ html.motion-paused :is(.rv,.piece video,.beat-3d,.beat-media img,.beat-line,#lb,
 html.motion-paused :is(.beat-3d,.beat-media img,.beat-line,.mq-item:hover,.mq-item:focus-visible){transform:none!important}
 html.motion-paused .beat-media img{opacity:1!important}
 html.motion-paused .beat-line{opacity:.64!important}
+
+/* ═══════════════════ 2026 English-first brand rebuild ═══════════════════ */
+[hidden]{display:none!important}
+.section-kicker,.hero-kicker{font-family:var(--mono);font-size:10px;line-height:1.3;letter-spacing:.28em;text-transform:uppercase;color:var(--ice-dim)}
+
+/* The hero puts the brand itself at the centre. The existing sky remains the atmosphere. */
+#hero-track{height:100svh!important;min-height:620px}
+#hero-stick{position:relative!important;height:100svh;min-height:620px;overflow:hidden}
+.hero-brand-stage{position:absolute;inset:0;width:100%;max-width:none;padding:104px 8vw 96px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px}
+.hero-kicker{margin:0;color:rgba(222,236,252,.86)}
+.hero-wordmark{display:block;width:min(82vw,1120px);height:auto;overflow:visible;direction:ltr;unicode-bidi:isolate;filter:drop-shadow(0 18px 48px rgba(0,0,0,.36))}
+.hero-wordmark-letter,.hero-wordmark-letters{font-family:"Inter Tight",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:238px;font-weight:650;letter-spacing:-.065em;fill:var(--ice-hot)}
+.hero-wordmark-letters{letter-spacing:-.055em}
+.hero-position{margin:2px 0 0;font-family:var(--mono);font-size:clamp(9px,1vw,12px);line-height:1.5;letter-spacing:.32em;text-transform:uppercase;color:rgba(222,236,252,.82)}
+.hero-corner{position:absolute;z-index:5;bottom:34px;width:132px;height:132px;border:1px solid rgba(219,233,250,.62);border-radius:50%;background:rgba(5,7,12,.12);color:var(--ice-hot);font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;backdrop-filter:blur(10px);transition:background .3s var(--ease),border-color .3s var(--ease),transform .3s var(--ease)}
+.hero-corner::after{content:"";position:absolute;inset:-10px;border:1px solid rgba(219,233,250,.16);border-radius:inherit}
+.hero-corner:hover,.hero-corner:focus-visible{background:rgba(217,198,156,.14);border-color:var(--gold);transform:translateY(-4px)}
+.hero-corner:focus-visible{outline:2px solid #fff;outline-offset:5px}
+.hero-corner--work{inset-inline-start:38px}.hero-corner--project{inset-inline-end:38px}
+
+/* Founder */
+.about{position:relative;min-height:100svh;overflow:hidden;background:#05070c;isolation:isolate}
+.anchor-alias{position:absolute;inset:0 auto auto 0}
+.about-media,.about-media img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.about-media img{object-fit:cover;object-position:center}
+.about-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(5,7,12,.05) 34%,rgba(5,7,12,.56) 58%,rgba(5,7,12,.96) 100%)}
+.about-copy{position:relative;z-index:2;min-height:100svh;width:min(48%,700px);margin-left:auto;margin-right:0;padding:clamp(120px,15vh,190px) clamp(40px,7vw,120px) 90px clamp(36px,5vw,80px);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-align:start}
+.about-copy h2{margin:18px 0 8px;font-family:var(--serif);font-size:clamp(58px,7.5vw,124px);font-weight:400;line-height:.88;letter-spacing:-.055em;color:var(--ice-hot)}
+.about-role,.about-engine{font-family:var(--mono);font-size:10px;line-height:1.65;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.about-body{margin:clamp(30px,4vw,54px) 0 0;max-width:39ch;font-size:clamp(18px,1.55vw,23px);line-height:1.55;color:rgba(222,236,252,.9)}
+.about-engine{margin:34px 0 0;padding-top:25px;border-top:1px solid rgba(190,212,238,.2);max-width:54ch;color:rgba(222,236,252,.68)}
+
+.crew-transition{position:relative;min-height:100svh;overflow:hidden;background:#030509;isolation:isolate}
+.crew-transition picture,.crew-transition img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.crew-transition img{object-fit:cover;object-position:center}
+.crew-transition-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(3,5,9,.04) 35%,rgba(3,5,9,.82) 100%)}
+.crew-transition h2{position:absolute;z-index:2;inset-inline:8vw;bottom:9vh;margin:0;font-family:var(--serif);font-size:clamp(42px,7vw,110px);font-weight:400;line-height:.95;letter-spacing:-.045em;color:var(--ice-hot);text-align:center}
+
+/* AI crew: quiet empty portrait slots until the final cast photography lands. */
+.crew{padding:clamp(100px,13vw,190px) 0 clamp(110px,14vw,210px);background:#070a10;overflow:hidden}
+.crew-head{padding:0 5vw 58px;display:flex;align-items:flex-end;justify-content:space-between;gap:40px}
+.crew-head h2{margin:16px 0 0;font-family:var(--serif);font-size:clamp(48px,6vw,94px);font-weight:400;line-height:.94;letter-spacing:-.045em;color:var(--ice-hot)}
+.crew-head>p{margin:0 0 8px;max-width:27ch;font-size:16px;line-height:1.55;color:var(--ice-dim);text-align:end}
+.crew-rail{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(280px,calc((100vw - 13vw)/3.35));gap:16px;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:inline mandatory;scroll-padding-inline:5vw;padding:0 5vw 18px;outline:none;scrollbar-width:none}
+.crew-rail::-webkit-scrollbar{display:none}
+.crew-rail:focus-visible{outline:2px solid var(--ice-hot);outline-offset:-4px}
+.crew-card{scroll-snap-align:start;border:1px solid rgba(190,212,238,.16);background:#0a0e15;min-width:0}
+.crew-portrait{position:relative;aspect-ratio:5/7;background:#0d121b;border-bottom:1px solid rgba(190,212,238,.14);overflow:hidden}
+.crew-portrait::before{content:"";position:absolute;inset:14%;border:1px solid rgba(190,212,238,.13);border-radius:50%}
+.crew-portrait::after{content:"";position:absolute;left:50%;top:50%;width:1px;height:26%;background:rgba(217,198,156,.28);transform:translate(-50%,-50%)}
+.crew-credit{min-height:225px;padding:24px 22px 28px;text-align:start}
+.crew-credit>span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--ice-dim)}
+.crew-credit h3{margin:22px 0 6px;font-family:var(--serif);font-size:clamp(34px,3vw,48px);font-weight:400;line-height:1;color:var(--ice-hot)}
+.crew-credit p{margin:16px 0 0;font-size:15px;line-height:1.45;color:rgba(222,236,252,.72)}
+.crew-credit .crew-role{margin-top:0;font-family:var(--mono);font-size:9px;line-height:1.5;letter-spacing:.15em;text-transform:uppercase;color:var(--gold)}
+.crew-controls{display:flex;justify-content:flex-end;gap:10px;padding:22px 5vw 0}
+.crew-controls button{width:48px;height:48px;border:1px solid rgba(190,212,238,.28);border-radius:50%;background:transparent;color:var(--ice-hot);font-size:20px;transition:border-color .25s var(--ease),background .25s var(--ease)}
+.crew-controls button:hover,.crew-controls button:focus-visible{border-color:var(--gold);background:rgba(217,198,156,.1)}
+.crew-controls button:focus-visible{outline:2px solid #fff;outline-offset:3px}
+html[dir="rtl"] .crew-controls button span{display:inline-block;transform:scaleX(-1)}
+
+/* Selected work becomes one disciplined editorial grid. */
+.work{padding:clamp(110px,14vw,210px) 5vw!important}
+.work-head{width:100%!important;margin:0 0 48px!important;padding:0!important;display:flex;align-items:flex-end;justify-content:space-between;gap:30px}
+.work-head .idx{font-size:10px}.work-note{max-width:32ch;text-align:end}
+.work-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(30px,4vw,68px) clamp(18px,2.2vw,34px)}
+.work-grid .piece,.work-grid .piece.vert{width:auto!important;max-width:none!important;margin:0!important;padding:0!important;display:block!important}
+.work-grid .piece .frame,.work-grid .piece.vert .frame{width:100%!important;height:auto!important;aspect-ratio:16/10;margin:0!important;clip-path:none!important}
+.work-grid .piece .meta{display:grid!important;grid-template-columns:auto 1fr!important;gap:6px 15px!important;margin:18px 0 0!important;padding:0!important;width:auto!important}
+.work-grid .piece .meta .num{grid-row:1/3;padding-top:5px}
+.work-grid .piece .meta .brand{margin:0!important;font-size:clamp(28px,3vw,46px)!important;line-height:1!important}
+.work-grid .piece .meta .concept{grid-column:2;margin:0;min-height:1.5em;color:var(--ice-dim);opacity:0;transform:translateY(5px);transition:opacity .25s var(--ease),transform .25s var(--ease)}
+.work-grid .piece:is(:hover,:focus-within) .concept{opacity:1;transform:none}
+.work-grid .breakdown{display:none!important}
+
+.contact{min-height:86svh!important;padding:clamp(110px,14vw,180px) 6vw 60px!important}
+.contact .contact-line{font-size:clamp(48px,8vw,126px)!important;line-height:.92!important;letter-spacing:-.045em;max-width:12ch;margin-inline:auto}
+.contact .contact-body{max-width:42ch;margin:30px auto 46px;font-size:clamp(17px,1.7vw,22px);line-height:1.55;color:rgba(222,236,252,.78)}
+.contact .disc{margin-top:10vh}
+
+/* Fourth form step */
+.q textarea{width:100%;max-width:760px;min-height:150px;resize:vertical;border:0;border-bottom:1px solid rgba(190,212,238,.3);border-radius:0;background:transparent;color:var(--ice-hot);font-family:var(--sans);font-size:clamp(19px,2.1vw,29px);line-height:1.45;padding:8px 0 14px;outline:none;transition:border-color .25s}
+.q textarea::placeholder{color:rgba(168,198,232,.44)}
+.q textarea:focus{border-bottom-color:var(--gold)}
+.qbrief .drop{margin-top:20px}
+
+html[lang="he"] :is(.hero-kicker,.hero-position,.section-kicker,.about-role,.about-engine,.crew-credit>span,.crew-credit .crew-role){font-family:var(--sans);letter-spacing:0;text-transform:none}
+html[lang="he"] .hero-position{font-size:clamp(14px,1.4vw,18px)}
+html[lang="he"] .about-copy h2,html[lang="he"] .crew-head h2,html[lang="he"] .crew-transition h2{font-family:"Frank Ruhl Libre",var(--serif);letter-spacing:-.02em}
+
+@media(max-width:760px){
+  #hero-track,#hero-stick{min-height:580px}
+  .hero-brand-stage{padding:96px 18px 120px;gap:15px}
+  .hero-kicker{font-size:8px;letter-spacing:.19em}
+  .hero-wordmark{width:96vw}
+  .hero-position{max-width:31ch;font-size:8.5px;letter-spacing:.2em}
+  .hero-corner{bottom:24px;width:auto;height:50px;border-radius:999px;padding:0 23px;font-size:9px;letter-spacing:.17em;background:rgba(5,7,12,.56)}
+  .hero-corner::after{display:none}.hero-corner--work{inset-inline-start:18px}.hero-corner--project{inset-inline-end:18px}
+  .scrollcue{display:none}
+  .about{min-height:0;overflow:visible}.about-media{position:relative;height:auto;aspect-ratio:4/5}.about-media img{object-position:center}.about-scrim{display:none}
+  .about-copy{min-height:0;width:100%;margin:0;padding:58px 22px 96px;align-items:flex-start;background:#05070c}
+  .about-copy h2{font-size:64px}.about-body{font-size:18px}.about-role,.about-engine{font-size:9px}
+  .crew-transition{min-height:86svh}.crew-transition h2{inset-inline:22px;bottom:8vh;font-size:50px;text-align:start}.crew-transition img{object-position:center}
+  .crew{padding:92px 0 110px}.crew-head{padding:0 22px 42px;display:block}.crew-head h2{font-size:54px}.crew-head>p{margin:20px 0 0;text-align:start}
+  .crew-rail{grid-auto-columns:82vw;gap:12px;padding-inline:22px;scroll-padding-inline:22px}.crew-credit{min-height:205px}
+  .crew-controls{padding-inline:22px}
+  .work{padding:100px 22px!important}.work-head{display:block}.work-note{margin:16px 0 0;text-align:start}.work-grid{grid-template-columns:1fr;gap:56px}
+  .work-grid .piece .meta .concept{opacity:1;transform:none}
+  .contact{padding-inline:22px!important}.contact .contact-line{font-size:56px!important}.contact .contact-body{font-size:17px}
+  .q textarea{font-size:20px;min-height:120px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .hero-corner,.work-grid .piece .meta .concept{transition:none}
+}
 </style>
 </head>
 <body data-page="home">
@@ -1096,7 +1211,8 @@ html.motion-paused .beat-line{opacity:.64!important}
   <a class="lockup" href="#" id="homeLink" aria-label="Moona home" data-i18n-aria-label="header.home" dir="ltr"><svg class="lockup-iris" viewBox="0 0 100 100" id="markSvg" aria-hidden="true"></svg><span class="lockup-name" data-scramble>MOONA</span></a>
   <nav aria-label="Sections" data-i18n-aria-label="nav.sections">
     <button class="nav-section" type="button" data-goto="film" data-i18n="nav.work">Work</button>
-    <button class="nav-section" type="button" data-goto="studio" data-i18n="nav.studio">Studio</button>
+    <button class="nav-section" type="button" data-goto="about" data-i18n="nav.about">About</button>
+    <button class="nav-section" type="button" data-goto="crew" data-i18n="nav.crew">Crew</button>
     <button class="mobile-menu-toggle" type="button" data-mobile-menu-toggle
             aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu"
             data-i18n-aria-label="nav.menu.open">
@@ -1110,7 +1226,8 @@ html.motion-paused .beat-line{opacity:.64!important}
     <button class="cta-btn sm" data-ask><span data-i18n="nav.cta">Talk to us</span><i></i></button>
     <div class="mobile-menu" id="mobileMenu" hidden>
       <button class="nav-section" type="button" data-goto="film" data-i18n="nav.work">Work</button>
-      <button class="nav-section" type="button" data-goto="studio" data-i18n="nav.studio">Studio</button>
+      <button class="nav-section" type="button" data-goto="about" data-i18n="nav.about">About</button>
+      <button class="nav-section" type="button" data-goto="crew" data-i18n="nav.crew">Crew</button>
     </div>
   </nav>
 </header>
@@ -1123,14 +1240,19 @@ html.motion-paused .beat-line{opacity:.64!important}
     <canvas id="moon" aria-hidden="true"></canvas>
     <div class="vig"></div>
 
-    <div class="hud bl" id="hud-chapter">CH·01</div>
-    <div class="hud br" id="hud-progress">000</div>
-
-    <div class="htxt" id="t1">
-      <h1 class="statement"><span data-i18n="hero.headline.lead">Cinematic ads,</span> <bdi lang="en" dir="ltr" data-i18n="hero.headline.aiTerm"></bdi> <em data-i18n="hero.headline.emphasis">born without a camera</em></h1>
-      <p class="statement-sub"><span data-i18n="hero.subline.one">An AI-native studio for film and motion ads.</span><span data-i18n="hero.subline.two">Story, craft and taste first.</span></p>
-      <button class="cta-btn hero-cta" type="button" data-goto="film" data-hover><span data-i18n="hero.workCta">View our work</span><i></i></button>
+    <div class="htxt hero-brand-stage" id="t1">
+      <p class="hero-kicker" data-i18n="hero.eyebrow">Founder-led creative technology studio</p>
+      <h1 class="sr-only" data-i18n="hero.headline.lead">MOONA</h1>
+      <svg class="hero-wordmark" viewBox="0 0 1000 260" role="img" aria-label="Moona" dir="ltr">
+        <text x="16" y="212" class="hero-wordmark-letter">M</text>
+        <g id="heroIris" transform="translate(272 38) scale(1.84)" aria-hidden="true"></g>
+        <text x="482" y="212" class="hero-wordmark-letters">ONA</text>
+      </svg>
+      <p class="hero-position" data-i18n="hero.subline.one">Cinematic campaigns, built differently</p>
     </div>
+
+    <button class="hero-corner hero-corner--work" type="button" data-goto="film" data-hover><span data-i18n="hero.workCta">Work</span></button>
+    <button class="hero-corner hero-corner--project" type="button" data-ask data-hover aria-label="Start a project" data-i18n-aria-label="hero.projectCtaLabel"><span data-i18n="hero.projectCta">Project</span></button>
 
     <div class="scrollcue" id="cue"><span data-i18n="hero.scroll">Scroll</span><i></i></div>
   </div>
@@ -1145,7 +1267,7 @@ html.motion-paused .beat-line{opacity:.64!important}
   <section class="film" id="film" tabindex="-1">
     <div class="film-head">
       <span class="film-eyebrow rv" data-i18n="film.eyebrow">The flagship</span>
-      <h2 class="film-title rv"><span data-i18n="film.title.lead">We invented a brand. </span><em data-i18n="film.title.emphasis">Then we shot its ad.</em></h2>
+      <h2 class="film-title rv"><span data-i18n="film.title.lead">We created a brand. </span><em data-i18n="film.title.emphasis">Then we shot its ad.</em></h2>
       <p class="film-note rv"><bdi class="brand-ltr" dir="ltr">DUSTLINE</bdi> <span data-i18n="film.note.tail">is an energy bar you cannot buy.</span></p>
     </div>
 
@@ -1192,12 +1314,12 @@ html.motion-paused .beat-line{opacity:.64!important}
         </div>
       </div>
 
-      <p class="film-credit rv" dir="auto"><span data-i18n="film.credit.copy">DUSTLINE &middot; born without a camera</span> <bdi class="brand-ltr" lang="en" dir="ltr" data-i18n="film.credit.aiTerm"></bdi><span data-i18n="film.credit.end"></span></p>
+      <p class="film-credit rv" dir="auto"><span data-i18n="film.credit.copy">Made with AI. Directed to the final frame.</span> <bdi class="brand-ltr" lang="en" dir="ltr" data-i18n="film.credit.aiTerm"></bdi><span data-i18n="film.credit.end"></span></p>
     </div>
 
     <div class="film-strip-head">
       <span class="film-eyebrow rv" data-i18n="film.how.eyebrow">How we work</span>
-      <p class="film-note rv" data-i18n="film.how.body">Nothing here was left to the model. Days of retakes, and every frame decided, measured and graded before it existed. We work at the front of these tools, which only counts because someone made the decisions first.</p>
+      <p class="film-note rv" data-i18n="film.how.body">The world, cast and visual rules were built before motion began. The technology changed the production. It did not replace direction.</p>
     </div>
 
     <div class="film-story">
@@ -1214,8 +1336,8 @@ html.motion-paused .beat-line{opacity:.64!important}
           <div class="beat-copy">
             <span class="beat-num" aria-hidden="true" dir="ltr">01</span>
             <span class="beat-label" data-i18n="film.beat.experience.label">The experience</span>
-            <h3 id="film-beat-world-title" data-i18n="film.beat.experience.title">We don't find locations. We build experience.</h3>
-            <p data-i18n="film.beat.experience.body">A world you can believe, then measured to the metre: the gap between the stones at 0.90 m, the towers at 21, sky and ground lifted colour by colour. Get the place wrong and every shot standing in it is wrong.</p>
+            <h3 id="film-beat-world-title" data-i18n="film.beat.experience.title">A place that never existed.</h3>
+            <p data-i18n="film.beat.experience.body">Built before the first shot, so every frame belongs to the same world.</p>
           </div>
           <i class="beat-line" aria-hidden="true"></i>
         </div>
@@ -1233,8 +1355,8 @@ html.motion-paused .beat-line{opacity:.64!important}
           <div class="beat-copy">
             <span class="beat-num" aria-hidden="true" dir="ltr">02</span>
             <span class="beat-label" data-i18n="film.beat.shots.label">The shots</span>
-            <h3 id="film-beat-detail-title" data-i18n="film.beat.shots.title">The profession is in the details.</h3>
-            <p data-i18n="film.beat.shots.body">A mathematically frozen frame is the clearest tell that a shot was generated. Every camera here breathes, carries a footstep, drifts, and never moves without a reason inside the story. Nobody notices it. Everybody feels it.</p>
+            <h3 id="film-beat-detail-title" data-i18n="film.beat.shots.title">The cast stays the cast.</h3>
+            <p data-i18n="film.beat.shots.body">Faces, wardrobe and product lock before motion begins.</p>
           </div>
           <i class="beat-line" aria-hidden="true"></i>
         </div>
@@ -1253,8 +1375,8 @@ html.motion-paused .beat-line{opacity:.64!important}
           <div class="beat-copy">
             <span class="beat-num" aria-hidden="true" dir="ltr">03</span>
             <span class="beat-label" data-i18n="film.beat.cast.label">The cast</span>
-            <h3 id="film-beat-creative-title" data-i18n="film.beat.cast.title">The reference outranks the script.</h3>
-            <p data-i18n="film.beat.cast.body">Faces, wardrobe and packaging lock to approved plates before a frame is generated, and where the writing disagrees with the reference the writing changes. Drift between shots is the first failure we design against.</p>
+            <h3 id="film-beat-creative-title" data-i18n="film.beat.cast.title">Every frame has a reason.</h3>
+            <p data-i18n="film.beat.cast.body">Camera, edit and grade follow the story, not the model.</p>
           </div>
           <i class="beat-line" aria-hidden="true"></i>
         </div>
@@ -1262,135 +1384,131 @@ html.motion-paused .beat-line{opacity:.64!important}
     </div>
   </section>
 
+  <!-- ═══════════ FOUNDER ═══════════ -->
+  <section class="about" id="about" tabindex="-1">
+    <span class="anchor-alias" id="studio" aria-hidden="true"></span>
+    <picture class="about-media">
+      <source media="(max-width: 700px)" type="image/avif" srcset="p/tal/tal-cockpit-mobile-900.avif">
+      <source media="(max-width: 700px)" type="image/webp" srcset="p/tal/tal-cockpit-mobile-900.webp">
+      <source type="image/avif" srcset="p/tal/tal-cockpit-1920.avif">
+      <img src="p/tal/tal-cockpit-1920.webp" width="1920" height="1140" loading="lazy" decoding="async"
+           alt="Tal Tzur inside a cinematic orbital cockpit" data-i18n-alt="about.imageAlt">
+    </picture>
+    <div class="about-scrim" aria-hidden="true"></div>
+    <div class="about-copy rv">
+      <p class="section-kicker" data-i18n="about.eyebrow">About</p>
+      <h2 data-i18n="about.name">Tal Tzur</h2>
+      <p class="about-role" data-i18n="about.role">Founder · Creative Director · Developer</p>
+      <p class="about-body" data-i18n="about.body">I built Moona where creative direction and software development meet. I direct every project, build the systems behind the work and make the final creative call.</p>
+      <p class="about-engine" data-i18n="about.engine">Custom software · Continuous R&amp;D · Specialist AI agents</p>
+    </div>
+  </section>
+
+  <section class="crew-transition" aria-labelledby="crew-transition-title">
+    <picture>
+      <source media="(max-width: 700px)" type="image/avif" srcset="p/tal/tal-lunar-mobile-900.avif">
+      <source media="(max-width: 700px)" type="image/webp" srcset="p/tal/tal-lunar-mobile-900.webp">
+      <source type="image/avif" srcset="p/tal/tal-lunar-1920.avif">
+      <img src="p/tal/tal-lunar-1920.webp" width="1920" height="1211" loading="lazy" decoding="async"
+           alt="Tal Tzur standing on a lunar landscape" data-i18n-alt="crew.transitionAlt">
+    </picture>
+    <div class="crew-transition-shade" aria-hidden="true"></div>
+    <h2 id="crew-transition-title" class="rv" data-i18n="crew.transition">Six AI agents. Directed by Tal.</h2>
+  </section>
+
+  <!-- Crew portraits are intentionally empty slots until the final cast photography is supplied. -->
+  <section class="crew" id="crew" tabindex="-1" aria-labelledby="crew-title">
+    <header class="crew-head rv">
+      <div>
+        <p class="section-kicker" data-i18n="crew.eyebrow">AI Crew</p>
+        <h2 id="crew-title" data-i18n="crew.heading">Specialists behind the work.</h2>
+      </div>
+      <p data-i18n="crew.intro">Built into the studio. Directed by Tal.</p>
+    </header>
+    <div class="crew-rail" data-crew-rail tabindex="0">
+      <article class="crew-card">
+        <div class="crew-portrait" aria-hidden="true"></div>
+        <div class="crew-credit"><span dir="ltr">AI CREW / 01</span><h3><bdi lang="en" dir="ltr">Alma</bdi></h3><p class="crew-role" data-i18n="crew.alma.role">Story &amp; Strategy</p><p data-i18n="crew.alma.line">Finds the human tension inside every brief.</p></div>
+      </article>
+      <article class="crew-card">
+        <div class="crew-portrait" aria-hidden="true"></div>
+        <div class="crew-credit"><span dir="ltr">AI CREW / 02</span><h3><bdi lang="en" dir="ltr">Nara</bdi></h3><p class="crew-role" data-i18n="crew.nara.role">Visual Development</p><p data-i18n="crew.nara.line">Builds worlds. Removes what does not belong.</p></div>
+      </article>
+      <article class="crew-card">
+        <div class="crew-portrait" aria-hidden="true"></div>
+        <div class="crew-credit"><span dir="ltr">AI CREW / 03</span><h3><bdi lang="en" dir="ltr">Luc</bdi></h3><p class="crew-role" data-i18n="crew.luc.role">Cinematography</p><p data-i18n="crew.luc.line">Chases the frame that feels impossible to shoot.</p></div>
+      </article>
+      <article class="crew-card">
+        <div class="crew-portrait" aria-hidden="true"></div>
+        <div class="crew-credit"><span dir="ltr">AI CREW / 04</span><h3><bdi lang="en" dir="ltr">Vera</bdi></h3><p class="crew-role" data-i18n="crew.vera.role">Editorial</p><p data-i18n="crew.vera.line">Cuts until every beat feels inevitable.</p></div>
+      </article>
+      <article class="crew-card">
+        <div class="crew-portrait" aria-hidden="true"></div>
+        <div class="crew-credit"><span dir="ltr">AI CREW / 05</span><h3><bdi lang="en" dir="ltr">Sona</bdi></h3><p class="crew-role" data-i18n="crew.sona.role">Sound &amp; Voice</p><p data-i18n="crew.sona.line">Hears the film before the first cut.</p></div>
+      </article>
+      <article class="crew-card">
+        <div class="crew-portrait" aria-hidden="true"></div>
+        <div class="crew-credit"><span dir="ltr">AI CREW / 06</span><h3><bdi lang="en" dir="ltr">Ivo</bdi></h3><p class="crew-role" data-i18n="crew.ivo.role">Production Systems</p><p data-i18n="crew.ivo.line">Keeps the technology invisible and the work moving.</p></div>
+      </article>
+    </div>
+    <div class="crew-controls rv">
+      <button type="button" data-crew-prev aria-label="Previous crew members" data-i18n-aria-label="crew.previous"><span aria-hidden="true">&#8592;</span></button>
+      <button type="button" data-crew-next aria-label="Next crew members" data-i18n-aria-label="crew.next"><span aria-hidden="true">&#8594;</span></button>
+    </div>
+  </section>
+
   <section class="work" id="work" tabindex="-1">
     <h2 class="sr-only" data-i18n="work.heading">Selected concept films</h2>
     <div class="work-head rv">
-      <span class="idx" data-i18n="work.eyebrow">Spec work &middot; nobody asked for these</span>
-      <p class="work-note" data-i18n="work.note">Four brands we don't work for. We made these anyway, the same way we'll make yours.</p>
+      <span class="idx" data-i18n="work.eyebrow">Selected work</span>
+      <p class="work-note" data-i18n="work.note">Four self-initiated concept films.</p>
     </div>
 
+    <div class="work-grid">
     <article class="piece rv" data-piece>
-      <div class="frame"><video src="v/mcdonalds.mp4" poster="p/mcdonalds.jpg" muted loop playsinline preload="none" aria-label="McDonald's self-initiated spec film by Moona" data-i18n-aria-label="work.mcdonalds.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the McDonald's concept film larger" data-i18n-aria-label="work.mcdonalds.open"></button><span class="specbadge" data-i18n="work.specBadge" dir="auto">Moona original &middot; Spec</span><span class="vbadge">00:08</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
+      <div class="frame"><video src="v/mcdonalds.mp4" poster="p/mcdonalds.jpg" muted loop playsinline preload="none" aria-label="McDonald's self-initiated spec film by Moona" data-i18n-aria-label="work.mcdonalds.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the McDonald's concept film larger" data-i18n-aria-label="work.mcdonalds.open"></button><span class="vbadge">00:08</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
       <div class="meta">
         <span class="num">01</span><h3 class="brand" dir="ltr">McDonald's</h3>
         <p class="concept" data-i18n="work.mcdonalds.concept">You already know the taste. Now watch it move.</p>
-        <p class="tag" data-i18n="work.mcdonalds.tag" dir="auto">from one product photo &middot; 3 days &middot; appetite pacing &middot; single continuous move</p>
       </div>
       <div class="breakdown"></div>
     </article>
 
     <article class="piece rv" data-piece>
-      <div class="frame"><video src="v/strava.mp4" poster="p/strava.jpg" muted loop playsinline preload="none" aria-label="Strava self-initiated spec film by Moona" data-i18n-aria-label="work.strava.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the Strava concept film larger" data-i18n-aria-label="work.strava.open"></button><span class="specbadge" data-i18n="work.specBadge" dir="auto">Moona original &middot; Spec</span><span class="vbadge">00:14</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
+      <div class="frame"><video src="v/strava.mp4" poster="p/strava.jpg" muted loop playsinline preload="none" aria-label="Strava self-initiated spec film by Moona" data-i18n-aria-label="work.strava.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the Strava concept film larger" data-i18n-aria-label="work.strava.open"></button><span class="vbadge">00:14</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
       <div class="meta">
         <span class="num">02</span><h3 class="brand" dir="ltr">Strava</h3>
         <p class="concept" data-i18n="work.strava.concept">Every run already has a soundtrack. We cut to it.</p>
-        <p class="tag" data-i18n="work.strava.tag" dir="auto">from their own site &middot; 3 days &middot; beat-matched cut &middot; product-locked colour</p>
       </div>
       <div class="breakdown"><!-- breakdown slot — content later --></div>
     </article>
 
     <article class="piece rv" data-piece>
-      <div class="frame"><video src="v/bull-padel.mp4" poster="p/bull-padel.jpg" muted loop playsinline preload="none" aria-label="Bull Padel self-initiated spec film by Moona" data-i18n-aria-label="work.bullPadel.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the Bull Padel concept film larger" data-i18n-aria-label="work.bullPadel.open"></button><span class="specbadge" data-i18n="work.specBadge" dir="auto">Moona original &middot; Spec</span><span class="vbadge">00:15</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
+      <div class="frame"><video src="v/bull-padel.mp4" poster="p/bull-padel.jpg" muted loop playsinline preload="none" aria-label="Bull Padel self-initiated spec film by Moona" data-i18n-aria-label="work.bullPadel.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the Bull Padel concept film larger" data-i18n-aria-label="work.bullPadel.open"></button><span class="vbadge">00:15</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
       <div class="meta">
         <span class="num">03</span><h3 class="brand" dir="ltr">Bull Padel</h3>
         <p class="concept" data-i18n="work.bullPadel.concept">The court hits back.</p>
-        <p class="tag" data-i18n="work.bullPadel.tag" dir="auto">from one product photo &middot; 3 days &middot; 3-beat cut &middot; frame-accurate brand colour</p>
       </div>
       <div class="breakdown"></div>
     </article>
 
     <article class="piece vert rv" data-piece>
-      <div class="frame"><video src="v/koda.mp4" poster="p/koda.jpg" muted loop playsinline preload="none" aria-label="Koda self-initiated spec film by Moona" data-i18n-aria-label="work.koda.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the Koda concept film larger" data-i18n-aria-label="work.koda.open"></button><span class="specbadge" data-i18n="work.specBadge" dir="auto">Moona original &middot; Spec</span><span class="vbadge">00:10</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
+      <div class="frame"><video src="v/koda.mp4" poster="p/koda.jpg" muted loop playsinline preload="none" aria-label="Koda self-initiated spec film by Moona" data-i18n-aria-label="work.koda.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the Koda concept film larger" data-i18n-aria-label="work.koda.open"></button><span class="vbadge">00:10</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
       <div class="meta">
         <span class="num">04</span><h3 class="brand" dir="ltr">Koda</h3>
         <p class="concept" data-i18n="work.koda.concept">Built for the feed it lives in.</p>
-        <p class="tag" data-i18n="work.koda.tag" dir="auto">from their own site &middot; 3 days &middot; loop-safe edit &middot; legibility at 0.4s</p>
       </div>
       <div class="breakdown"></div>
     </article>
-  </section>
-
-  <section class="ctagal" id="studio" tabindex="-1">
-    <div class="ctagal-text">
-      <p class="ctagal-label rv" data-i18n="studio.eyebrow">No pitch</p>
-      <h2 class="ctagal-h rv"><span data-i18n="studio.title.lead">We'd rather </span><em data-i18n="studio.title.emphasis">show</em><span data-i18n="studio.title.tail"> you than tell you.</span></h2>
-    </div>
-
-    <!-- two marquee rows, opposite directions; the film takes a double slot.
-         Each row carries its own set — no product repeats inside a row, and the
-         two shots of a brand are split across rows. The track is duplicated
-         only because a seamless loop needs a second copy of itself. -->
-    <div class="mqwrap rv">
-      <div class="mq" aria-hidden="true">
-        <div class="mq-track">
-          <figure class="mq-item"><img src="p/loccitane-flat.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item w2"><video src="v/protein-bar.mp4" poster="p/protein-bar.jpg" muted loop playsinline preload="none"></video></figure>
-          <figure class="mq-item"><img src="p/btan.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item w2"><img src="p/koda-cans.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item w2"><video src="v/acoustic.mp4" muted loop playsinline preload="none"></video></figure>
-          <figure class="mq-item"><img src="p/forgeskin-studio.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item"><img src="p/sanmiguel-can.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item"><img src="p/joseon.jpg" alt="" loading="lazy"></figure>
-        </div>
-        <div class="mq-track">
-          <figure class="mq-item"><img src="p/loccitane-flat.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item w2"><video src="v/protein-bar.mp4" poster="p/protein-bar.jpg" muted loop playsinline preload="none"></video></figure>
-          <figure class="mq-item"><img src="p/btan.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item w2"><img src="p/koda-cans.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item w2"><video src="v/acoustic.mp4" muted loop playsinline preload="none"></video></figure>
-          <figure class="mq-item"><img src="p/forgeskin-studio.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item"><img src="p/sanmiguel-can.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item"><img src="p/joseon.jpg" alt="" loading="lazy"></figure>
-        </div>
-        </div>
-
-      <div class="mq rev" aria-hidden="true">
-        <div class="mq-track">
-          <figure class="mq-item"><img src="p/medix.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item w2"><video src="v/koda-yuzu.mp4" muted loop playsinline preload="none"></video></figure>
-          <figure class="mq-item"><img src="p/innisfree.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item w2"><video src="v/aerial.mp4" muted loop playsinline preload="none"></video></figure>
-          <figure class="mq-item"><img src="p/forgeskin-bag.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item"><img src="p/loccitane-duo.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item"><img src="p/sanmiguel-sun.jpg" alt="" loading="lazy"></figure>
-        </div>
-        <div class="mq-track">
-          <figure class="mq-item"><img src="p/medix.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item w2"><video src="v/koda-yuzu.mp4" muted loop playsinline preload="none"></video></figure>
-          <figure class="mq-item"><img src="p/innisfree.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item w2"><video src="v/aerial.mp4" muted loop playsinline preload="none"></video></figure>
-          <figure class="mq-item"><img src="p/forgeskin-bag.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item"><img src="p/loccitane-duo.jpg" alt="" loading="lazy"></figure>
-          <figure class="mq-item"><img src="p/sanmiguel-sun.jpg" alt="" loading="lazy"></figure>
-        </div>
-        </div>
-    </div>
-
-    <div class="ctagal-actions">
-      <button class="cta-btn lg rv" data-ask data-hover><span data-i18n="hero.cta">Talk to us</span><i></i></button>
-      <p class="ctagal-note rv" data-i18n="studio.note">No commitment</p>
     </div>
   </section>
 
-  <section class="sentence">
-    <p class="rv"><bdi lang="en" dir="ltr">Moona</bdi> <span data-i18n="studio.statement.afterBrand">is an</span> <bdi lang="en" dir="ltr">AI-native</bdi> <span data-i18n="studio.statement.afterAi">studio making cinematic motion for brands.</span> <em data-i18n="studio.statement.emphasis">The camera was optional.</em></p>
-  </section>
 </main>
 
-  <footer class="contact">
-    <p class="contact-line rv" data-i18n="contact.line">Your product, next.</p>
-    <button class="cta-btn lg rv" data-ask data-hover><span data-i18n="hero.cta">Talk to us</span><i></i></button>
-    <p class="cta-sub rv" data-i18n="studio.note">No commitment</p>
-    <p class="or rv"><span data-i18n="contact.or">or</span></p>
-    <a class="mail rv" href="mailto:moona.ai.studio@gmail.com" data-hover>
-      <svg class="mail-ico" viewBox="0 0 20 20" width="15" height="15" fill="none"
-           stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-        <rect x="2" y="4" width="16" height="12" rx="2.5"/>
-        <path d="M2.8 5.6 10 11l7.2-5.4" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <span class="mail-label" data-i18n="contact.email">Email the studio</span>
-      <i aria-hidden="true"></i>
-    </a>
+  <footer class="contact" id="contact" tabindex="-1">
+    <p class="contact-line rv" data-i18n="contact.line">Have a project worth making?</p>
+    <p class="contact-body rv" data-i18n="contact.body">Tell us what you are building. We reply within two business days.</p>
+    <button class="cta-btn lg rv" data-ask data-hover><span data-i18n="hero.cta">Start a project</span><i></i></button>
     <p class="disc rv" data-i18n="contact.disclaimer">All work self-initiated. Brands are shown for demonstration only and are not clients. No client relationship implied.</p>
     <nav class="legal-nav" aria-label="Legal and accessibility" data-i18n-aria-label="footer.nav">
       <a href="/privacy.html" data-locale-link data-i18n="footer.privacy">Privacy notice</a>
@@ -1403,34 +1521,41 @@ html.motion-paused .beat-line{opacity:.64!important}
 <!-- ═══════════ REQUEST FLOW ═══════════ -->
 <div id="ask" role="dialog" aria-modal="true" aria-labelledby="askTitle">
   <div class="ask-top">
-    <span class="ask-step"><b id="askNum">01</b> / 03</span>
-    <span class="ask-title" id="askTitle" data-i18n="form.dialog">Tell us about your brand</span>
+    <span class="ask-step"><b id="askNum">01</b> / 04</span>
+    <span class="ask-title" id="askTitle" data-i18n="form.dialog">Start a project</span>
     <button class="ask-close" id="askClose" type="button" data-hover data-i18n="common.close">Close</button>
   </div>
 
   <form class="qwrap" id="askForm" autocomplete="on" data-clarity-mask="true" novalidate>
     <div class="q" data-step="0">
-      <p class="qlab" data-i18n="form.step.name.label">01 / Who we're speaking with</p>
-      <h2 class="qtitle" id="q-name" data-i18n="form.step.name.title">What's your name?</h2>
+      <p class="qlab" data-i18n="form.step.name.label">01 / Introduction</p>
+      <h2 class="qtitle" id="q-name" data-i18n="form.step.name.title">Who are we speaking with?</h2>
       <input type="text" name="name" id="f-name" aria-labelledby="q-name" aria-describedby="name-hint" aria-required="true" aria-invalid="false" required placeholder="Jane Cohen" data-i18n-placeholder="form.step.name.placeholder" autocomplete="name" dir="auto" data-hover>
       <p class="qhint" id="name-hint" aria-live="polite" aria-atomic="true" data-hint-key="form.step.name.hint" data-i18n="form.step.name.hint">Press Enter to continue</p>
       <div class="qnav"><button type="button" class="qnext" data-next data-hover><span data-i18n="form.next">Next</span><span class="ring"><i></i></span></button></div>
     </div>
 
     <div class="q" data-step="1">
-      <p class="qlab" data-i18n="form.step.email.label">02 / Where it lands</p>
-      <h2 class="qtitle" id="q-mail" data-i18n="form.step.email.title">Where should we send the work?</h2>
+      <p class="qlab" data-i18n="form.step.email.label">02 / Reply</p>
+      <h2 class="qtitle" id="q-mail" data-i18n="form.step.email.title">Where should we reply?</h2>
       <input type="email" name="email" id="f-mail" aria-labelledby="q-mail" aria-describedby="email-hint" aria-required="true" aria-invalid="false" required placeholder="you@yourbrand.com" data-i18n-placeholder="form.step.email.placeholder" autocomplete="email" inputmode="email" dir="ltr" data-hover>
-      <p class="qhint" id="email-hint" aria-live="polite" aria-atomic="true" data-hint-key="form.step.email.hint" data-i18n="form.step.email.hint">Used for the work and nothing else.</p>
+      <p class="qhint" id="email-hint" aria-live="polite" aria-atomic="true" data-hint-key="form.step.email.hint" data-i18n="form.step.email.hint">Used only to reply to this project inquiry.</p>
       <div class="qnav"><button type="button" class="qback" data-back data-hover data-i18n="form.back">Back</button><button type="button" class="qnext" data-next data-hover><span data-i18n="form.next">Next</span><span class="ring"><i></i></span></button></div>
     </div>
 
     <div class="q" data-step="2">
-      <p class="qlab" data-i18n="form.step.site.label">03 / The product</p>
-      <h2 class="qtitle" id="q-site" data-i18n="form.step.site.title">Where can we see it?</h2>
+      <p class="qlab" data-i18n="form.step.site.label">03 / The brand</p>
+      <h2 class="qtitle" id="q-site" data-i18n="form.step.site.title">Where can we see the brand?</h2>
       <input type="url" name="website" id="f-site" aria-labelledby="q-site" aria-describedby="site-hint" aria-required="true" aria-invalid="false" required placeholder="yourbrand.com" data-i18n-placeholder="form.step.site.placeholder" inputmode="url" dir="ltr" data-hover>
-      <p class="qhint" id="site-hint" aria-live="polite" aria-atomic="true" data-hint-key="form.step.site.hint" data-i18n="form.step.site.hint">A site or a product page. We pull the rest ourselves.</p>
+      <p class="qhint" id="site-hint" aria-live="polite" aria-atomic="true" data-hint-key="form.step.site.hint" data-i18n="form.step.site.hint">A website or product page.</p>
+      <div class="qnav"><button type="button" class="qback" data-back data-hover data-i18n="form.back">Back</button><button type="button" class="qnext" data-next data-hover><span data-i18n="form.next">Next</span><span class="ring"><i></i></span></button></div>
+    </div>
 
+    <div class="q qbrief" data-step="3">
+      <p class="qlab" data-i18n="form.step.brief.label">04 / The project</p>
+      <h2 class="qtitle" id="q-brief" data-i18n="form.step.brief.title">What are you looking to make?</h2>
+      <textarea name="brief" id="f-brief" aria-labelledby="q-brief" aria-describedby="brief-hint" aria-required="true" aria-invalid="false" required minlength="20" maxlength="1200" rows="4" placeholder="Tell us about the brand, the film and what success should feel like." data-i18n-placeholder="form.step.brief.placeholder" dir="auto" data-hover></textarea>
+      <p class="qhint" id="brief-hint" aria-live="polite" aria-atomic="true" data-hint-key="form.step.brief.hint" data-i18n="form.step.brief.hint">20 to 1,200 characters.</p>
       <label class="drop" id="drop" for="f-files" data-hover>
         <input type="file" name="attachments" id="f-files" multiple aria-describedby="upload-detail" accept="image/*,video/*,.pdf,.ai,.psd,.zip">
         <span class="drop-ico" aria-hidden="true">
@@ -1454,10 +1579,10 @@ html.motion-paused .beat-line{opacity:.64!important}
       </div>
     </div>
 
-    <div class="q qdone" data-step="3" role="status" aria-live="polite" aria-atomic="true">
+    <div class="q qdone" data-step="4" role="status" aria-live="polite" aria-atomic="true">
       <svg class="iris-done" viewBox="0 0 100 100" id="doneIris" aria-hidden="true"></svg>
-      <h2 class="qtitle" id="doneTitle" tabindex="-1" data-i18n="form.done.title">We're on it.</h2>
-      <p class="qhint" id="doneMsg" data-i18n="form.done.body">Your work lands in your inbox within a few days.</p>
+      <h2 class="qtitle" id="doneTitle" tabindex="-1" data-i18n="form.done.title">Received.</h2>
+      <p class="qhint" id="doneMsg" data-i18n="form.done.body">We will review the project and reply within two business days.</p>
       <div class="qnav" style="justify-content:center"><button type="button" class="qback" id="askDone" data-hover data-i18n="common.close">Close</button></div>
     </div>
 
@@ -1594,6 +1719,9 @@ function irisSVG(d,uid,fill,rim){
 }
 document.getElementById('markSvg').innerHTML =
   '<circle cx="50" cy="50" r="48" fill="#100D07"/>' + irisSVG(.34,'m',true,48);
+const heroIris=document.getElementById('heroIris');
+if(heroIris) heroIris.innerHTML =
+  '<circle cx="50" cy="50" r="48" fill="#100D07"/>' + irisSVG(.34,'h',true,48);
 
 /* ═══════════════════ preload (starfield only, quick) ═══════════════════ */
 const store = {ready:false};
@@ -1941,7 +2069,7 @@ function loop(t){
     }
     textWindow(t1,shown,-.45,.95);
     const pr=String(Math.round(shown*100)).padStart(3,'0');
-    if(pr!==lastHudPr){lastHudPr=pr; hudPr.textContent=pr}
+    if(pr!==lastHudPr){lastHudPr=pr; if(hudPr)hudPr.textContent=pr}
     const cueOp=(shown<.02 && v<.06)?1:0;
     if(cueOp!==lastCue){lastCue=cueOp; cue.style.opacity=cueOp}
   }
@@ -2352,8 +2480,8 @@ setTimeout(()=>document.querySelectorAll('.rv:not(.seen)').forEach(el=>{
 const ask=document.getElementById('ask'), askForm=document.getElementById('askForm');
 const qs=[...askForm.querySelectorAll('.q')];
 const askNum=document.getElementById('askNum'), askRail=document.getElementById('askRail');
-const LAST=2, DONE=3;
-let step=0, lastFocus=null;
+const LAST=3, DONE=4;
+let step=0, lastFocus=null, focusRun=0;
 
 document.getElementById('doneIris').innerHTML =
   '<circle cx="50" cy="50" r="48" fill="#100D07"/>' + irisSVG(.34,'d',true,48);
@@ -2377,6 +2505,24 @@ qs.forEach(q=>{
   steppers.push(el);
 });
 
+function focusStepTarget(target,n){
+  const run=++focusRun;
+  let tries=0;
+  const attempt=()=>{
+    if(run!==focusRun || step!==n || !ask.classList.contains('open') || !target) return;
+    const current=qs[n];
+    /* Do not steal focus after the visitor has already moved somewhere useful
+       inside the newly visible step. */
+    if(current.contains(document.activeElement) && document.activeElement!==document.body) return;
+    target.focus({preventScroll:true});
+    if(document.activeElement!==target && tries++<10) setTimeout(attempt,80);
+  };
+  requestAnimationFrame(()=>requestAnimationFrame(attempt));
+  /* A loaded page can delay animation frames beyond the visibility crossfade.
+     This fallback keeps the dialog focus contract deterministic under load. */
+  setTimeout(attempt,620);
+}
+
 function showStep(n){
   step=n;
   qs.forEach(q=>q.classList.toggle('active',+q.dataset.step===n));
@@ -2393,17 +2539,9 @@ function showStep(n){
     [...el.querySelectorAll('.qs-seg')].forEach((g,i)=>g.classList.toggle('done', i<n));
   });
   document.querySelector('.ask-step').style.opacity = n===DONE?0:1;
-  const inp=qs[n].querySelector('input:not([type=file]):not([type=hidden])');
-  if(inp) setTimeout(()=>inp.focus({preventScroll:true}),340);
-  else if(n===DONE){
-    const doneTitle=document.getElementById('doneTitle');
-    const focusDone=()=>doneTitle?.focus({preventScroll:true});
-    requestAnimationFrame(()=>requestAnimationFrame(focusDone));
-    /* Some browsers keep focus on the submitting control until its click
-       lifecycle has finished. Retry after the crossfade, but never steal
-       focus if the visitor has already moved within the completion step. */
-    setTimeout(()=>{if(!qs[DONE].contains(document.activeElement))focusDone()},360);
-  }
+  const inp=qs[n].querySelector('input:not([type=file]):not([type=hidden]),textarea');
+  if(inp) focusStepTarget(inp,n);
+  else if(n===DONE) focusStepTarget(document.getElementById('doneTitle'),n);
 }
 function openAsk(event){
   const trigger=event&&event.currentTarget;
@@ -2448,7 +2586,7 @@ ask.addEventListener('keydown',e=>{
   /* scope to the step being answered — reading visibility mid-transition finds nothing */
   const q=ask.querySelector('.q.active');
   const f=[document.getElementById('askClose'),
-    ...(q?q.querySelectorAll('a[href],button:not([disabled]),input:not([type=hidden])'):[])]
+    ...(q?q.querySelectorAll('a[href],button:not([disabled]),input:not([type=hidden]),textarea'):[])]
     .filter(Boolean);
   if(f.length<2) return;
   const first=f[0], last=f[f.length-1];
@@ -2466,7 +2604,7 @@ addEventListener('keydown',e=>{if(e.key==='Escape'&&ask.classList.contains('open
 function hint(q,key,isErr){
   const h=q.querySelector('.qhint');
   if(!h) return;
-  const inp=q.querySelector('input:not([type=file]):not([type=hidden])');
+  const inp=q.querySelector('input:not([type=file]):not([type=hidden]),textarea');
   const nextKey=key || h.dataset.hintKey || h.dataset.i18n;
   if(!nextKey) return;
   h.dataset.i18nCurrent=nextKey;
@@ -2481,7 +2619,7 @@ const renderHints=onLocaleRender(()=>{
   });
 });
 function valid(n){
-  const q=qs[n], inp=q.querySelector('input:not([type=file]):not([type=hidden])');
+  const q=qs[n], inp=q.querySelector('input:not([type=file]):not([type=hidden]),textarea');
   if(!inp) return true;
   const v=inp.value.trim();
   if(!v){hint(q,'form.validation.required',true);inp.focus();return false}
@@ -2492,6 +2630,8 @@ function valid(n){
     if(!/^https?:\/\/[^\s.]+\.[^\s]{2,}$/i.test(u)){hint(q,'form.validation.url',true);inp.focus();return false}
     inp.value=u;
   }
+  if(inp.name==='brief' && (v.length<20 || v.length>1200)){
+    hint(q,'form.validation.brief',true);inp.focus();return false}
   hint(q,null,false);
   return true;
 }
@@ -2628,6 +2768,7 @@ async function viaFallback(p){
   const fd=new FormData();
   fd.append('name',p.name); fd.append('company',p.company);
   fd.append('website',p.website); fd.append('email',p.email);
+  fd.append('brief',p.brief);
   fd.append('files', p.files.length ? p.files.map(f=>f.name).join(', ') : 'none');
   for(const f of p.files){
     const bin=atob(f.data), buf=new Uint8Array(bin.length);
@@ -2655,7 +2796,7 @@ function brandFromSite(v){
 function openMailFallback(url){ location.href=url }
 
 async function submitAsk(){
-  for(let i=0;i<=2;i++) if(!valid(i)){showStep(i);return}
+  for(let i=0;i<=LAST;i++) if(!valid(i)){showStep(i);return}
   const btn=document.getElementById('askSubmit');
   btn.style.opacity='.45'; btn.disabled=true;
   const q=qs[LAST];
@@ -2667,6 +2808,7 @@ async function submitAsk(){
       company: brandFromSite(askForm.elements.website.value),
       website: askForm.elements.website.value.trim(),
       email:   askForm.elements.email.value.trim(),
+      brief:   askForm.elements.brief.value.trim(),
       'bot-field': (askForm.elements['bot-field']||{}).value||'',
       files:   await packFiles(document.getElementById('f-files').files)
     };
@@ -2689,7 +2831,10 @@ async function submitAsk(){
     const body=[`${tr('form.mailto.name')}: ${value('name')}`,
                 `${tr('form.mailto.company')}: ${brand}`,
                 `${tr('form.mailto.website')}: ${value('website')}`,
-                `${tr('form.mailto.email')}: ${value('email')}`].join('\n');
+                `${tr('form.mailto.email')}: ${value('email')}`,
+                '',
+                `${tr('form.mailto.brief')}:`,
+                value('brief')].join('\n');
     openMailFallback('mailto:moona.ai.studio@gmail.com'
       +'?subject='+encodeURIComponent(tr('form.mailto.subject',{brand}))
       +'&body='+encodeURIComponent(body));
@@ -2912,6 +3057,20 @@ document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',(
   if(t) scrollToY(t.getBoundingClientRect().top+scrollY-(document.getElementById('hdr')?.offsetHeight||0),
     ()=>t.focus?.({preventScroll:true}));
 }));
+
+const crewRail=document.querySelector('[data-crew-rail]');
+function moveCrew(direction){
+  if(!crewRail) return;
+  const inlineDirection=document.documentElement.dir==='rtl'?-1:1;
+  crewRail.scrollBy({left:direction*inlineDirection*Math.max(280,crewRail.clientWidth*.78),behavior:motionReduced()?'auto':'smooth'});
+}
+document.querySelector('[data-crew-prev]')?.addEventListener('click',()=>moveCrew(-1));
+document.querySelector('[data-crew-next]')?.addEventListener('click',()=>moveCrew(1));
+crewRail?.addEventListener('keydown',event=>{
+  if(event.key!=='ArrowLeft'&&event.key!=='ArrowRight') return;
+  event.preventDefault();
+  moveCrew(event.key==='ArrowRight'?1:-1);
+});
 document.getElementById('yr').textContent=new Date().getFullYear();
 document.getElementById('homeLink').addEventListener('click',e=>{
   e.preventDefault(); scrollToY(0);

@@ -11,6 +11,8 @@
 const nodemailer = require('nodemailer');
 
 const MAX_FIELD = 400;          /* chars per text field                */
+const MIN_BRIEF = 20;
+const MAX_BRIEF = 1200;
 const MAX_FILES = 6;
 const MAX_BYTES = 3.5 * 1024 * 1024;   /* total attachments, decoded    */
 
@@ -42,12 +44,25 @@ module.exports = async (req, res) => {
   const name    = clean(body.name);
   const website = clean(body.website);
   const email   = clean(body.email);
+  const brief   = String(body.brief == null ? '' : body.brief).trim();
   /* the form stopped asking for a company name once it had the site; fall back
      to the domain so the subject line still says who this is */
   const company = clean(body.company) || website.replace(/^https?:\/\//i, '').replace(/^www\./i, '').split('/')[0];
 
   if (!name || !website || !email) return res.status(422).json({ ok: false, error: 'missing' });
+  if (brief.length < MIN_BRIEF || brief.length > MAX_BRIEF) {
+    return res.status(422).json({ ok: false, error: 'brief' });
+  }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return res.status(422).json({ ok: false, error: 'email' });
+  let site;
+  try {
+    const candidate = /^https?:\/\//i.test(website) ? website : 'https://' + website;
+    const parsed = new URL(candidate);
+    if (!/^https?:$/.test(parsed.protocol) || !parsed.hostname) throw new Error('unsupported URL');
+    site = parsed.href;
+  } catch (_) {
+    return res.status(422).json({ ok: false, error: 'website' });
+  }
 
   /* attachments arrive base64 in JSON, so there is no multipart to parse */
   const attachments = [];
@@ -80,8 +95,6 @@ module.exports = async (req, res) => {
     `letter-spacing:.08em;text-transform:uppercase;vertical-align:top">${k}</td>` +
     `<td style="padding:6px 0;font:15px -apple-system,Segoe UI,sans-serif;color:#111">${esc(v)}</td></tr>`;
 
-  const site = new URL(website.startsWith('http') ? website : 'https://' + website).href;
-
   const html =
     `<div style="max-width:560px;font:15px -apple-system,Segoe UI,sans-serif">` +
     `<p style="font:12px ui-monospace,monospace;letter-spacing:.22em;text-transform:uppercase;color:#8a8a8a">New ad request</p>` +
@@ -91,6 +104,8 @@ module.exports = async (req, res) => {
       `<td style="padding:6px 0"><a href="${esc(site)}">${esc(website)}</a></td></tr>` +
       `<tr><td style="padding:6px 18px 6px 0;color:#8a8a8a;font:12px ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase">Email</td>` +
       `<td style="padding:6px 0"><a href="mailto:${esc(email)}">${esc(email)}</a></td></tr>` +
+      `<tr><td style="padding:6px 18px 6px 0;color:#8a8a8a;font:12px ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;vertical-align:top">Brief</td>` +
+      `<td style="padding:6px 0;font:15px -apple-system,Segoe UI,sans-serif;color:#111;white-space:pre-wrap">${esc(brief)}</td></tr>` +
       row('Files', attachments.length
         ? attachments.map(a => a.filename).join(', ') + (skipped > 0 ? ` (+${skipped} too large to attach)` : '')
         : 'none') +
@@ -102,6 +117,8 @@ module.exports = async (req, res) => {
     'Company: ' + company,
     'Website: ' + website,
     'Email:   ' + email,
+    '', 'Brief:', brief,
+    '',
     'Files:   ' + (attachments.map(a => a.filename).join(', ') || 'none')
   ].join('\n');
 
