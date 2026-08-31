@@ -8,6 +8,7 @@ const HOME_EN_DESCRIPTION = 'Cinematic campaigns built through creative directio
 const HOME_HE_TITLE = 'Moona | סטודיו קריאייטיב טכנולוגי בהובלת המייסד';
 const HOME_HE_DESCRIPTION = 'קמפיינים קולנועיים שנבנים באמצעות קריאייטיב, פיתוח תוכנה וסוכני AI מתמחים.';
 const LEAD_BRIEF = 'We need a cinematic launch film for a new energy-bar brand.';
+const PROJECT_ROOT = path.resolve(__dirname, '..');
 
 const errorsByPage = new WeakMap();
 
@@ -60,6 +61,24 @@ async function fillLeadForm(page, { brief = LEAD_BRIEF } = {}) {
   await expect(page.locator('[data-step="3"]')).toHaveClass(/active/);
   if (brief !== null) await page.locator('#f-brief').fill(brief);
 }
+
+test('critical assets and legal links remain compatible with a direct-file preview', () => {
+  const home = fs.readFileSync(path.join(PROJECT_ROOT, 'index.html'), 'utf8');
+  const privacy = fs.readFileSync(path.join(PROJECT_ROOT, 'privacy.html'), 'utf8');
+  const accessibility = fs.readFileSync(path.join(PROJECT_ROOT, 'accessibility.html'), 'utf8');
+
+  expect(home).toContain('<script src="i18n.js"></script>');
+  expect(home).toContain('<script defer src="analytics.js"></script>');
+  expect(home).toContain("location.protocol!=='file:'");
+  expect(home).toContain('window.__MOONA_BOOT_FAILSAFE__');
+  expect(home).not.toContain('<script src="/i18n.js"></script>');
+  for (const document of [home, privacy, accessibility]) {
+    expect(document).not.toMatch(/(?:href|src)="\/(?:i18n\.js|privacy\.html|accessibility\.html|analytics\.js)"/);
+  }
+  for (const asset of ['moona-logo-lockup.svg', 'moona-logo-mark.svg']) {
+    expect(fs.existsSync(path.join(PROJECT_ROOT, 'p', 'brand', asset))).toBe(true);
+  }
+});
 
 function metadata(page) {
   return page.evaluate(() => ({
@@ -187,8 +206,8 @@ test.describe('dictionary and first-paint privacy contract', () => {
     const heroWordmarkImage = heroWordmark.locator('img');
     await expect(heroWordmark).toHaveText('MOONA');
     await expect(heroWordmark).toHaveAccessibleName('MOONA');
-    await expect(headerWordmark).toHaveAttribute('src', 'p/brand/moona-wordmark.svg');
-    await expect(heroWordmarkImage).toHaveAttribute('src', 'p/brand/moona-wordmark.svg');
+    await expect(headerWordmark).toHaveAttribute('src', 'p/brand/moona-logo-lockup.svg');
+    await expect(heroWordmarkImage).toHaveAttribute('src', 'p/brand/moona-logo-lockup.svg');
     await expect(headerWordmark).toHaveAttribute('alt', '');
     await expect(heroWordmarkImage).toHaveAttribute('alt', '');
     await expect(page.locator('#markSvg, #heroIris, .lockup-iris, [data-scramble]')).toHaveCount(0);
@@ -422,7 +441,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('html')).not.toHaveClass(/i18n-pending/);
     await expect(page.locator('body')).toBeVisible();
     await expect(page.locator('h1')).toHaveText('הודעת פרטיות');
-    await expect(page.locator('.back')).toHaveAttribute('href', '/?lang=he');
+    await expect(page.locator('.back')).toHaveAttribute('href', '/index.html?lang=he');
   });
 
   test('accessibility statement hides delayed Hebrew copy and keeps bootstrap metadata in sync', async ({ context, page }) => {
@@ -770,7 +789,13 @@ test.describe('responsive header and dynamic UI', () => {
     await piece.evaluate(element => element.scrollIntoView({ block: 'center' }));
     await expect.poll(() => video.evaluate(element => element.paused)).toBe(false);
 
-    await piece.locator('[data-media-play]').click();
+    /* Keep the playback state and the click in one task. Playwright's actionability
+       wait can otherwise overlap the scroll-idle observer and invert the button. */
+    await piece.evaluate(async element => {
+      const media = element.querySelector('video');
+      if (media.paused) await media.play();
+      element.querySelector('[data-media-play]').click();
+    });
     await expect(piece).toHaveAttribute('data-user-paused', '1');
     await expect.poll(() => video.evaluate(element => element.paused)).toBe(true);
     await page.evaluate(() => window.scrollTo(0, 0));
@@ -946,7 +971,7 @@ test.describe('responsive header and dynamic UI', () => {
         expect(layout.lockup.width).toBeGreaterThanOrEqual(44);
         expect(layout.lockup.height).toBeGreaterThanOrEqual(44);
         expect(layout.wordmarkDisplay).not.toBe('none');
-        expect(layout.wordmarkSrc).toBe('p/brand/moona-wordmark.svg');
+        expect(layout.wordmarkSrc).toBe('p/brand/moona-logo-lockup.svg');
         for (const target of layout.visibleTargets) {
           expect(target.width).toBeGreaterThanOrEqual(44);
           expect(target.height).toBeGreaterThanOrEqual(target.minimumHeight);
@@ -979,7 +1004,7 @@ test.describe('responsive header and dynamic UI', () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await openHome(page, '/?lang=he');
     await expect(page.locator('.hero-wordmark')).toBeVisible();
-    await expect(page.locator('.hero-wordmark img')).toHaveAttribute('src', 'p/brand/moona-wordmark.svg');
+    await expect(page.locator('.hero-wordmark img')).toHaveAttribute('src', 'p/brand/moona-logo-lockup.svg');
     await expect(page.locator('.hero-corner--work')).toBeVisible();
     await expect(page.locator('.hero-corner--project')).toBeVisible();
     await expect(page.locator('[data-mobile-menu-toggle]')).toBeHidden();

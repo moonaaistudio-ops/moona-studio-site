@@ -63,10 +63,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%23100D07'/%3E%3Ccircle cx='16' cy='16' r='6.5' fill='none' stroke='%23D9C69C' stroke-width='2.2'/%3E%3C/svg%3E">
-<!-- Public analytics identifiers are served by Vercel. No tracker loads before consent. -->
-<script src="/api/analytics-config.js"></script>
-<script defer src="/analytics.js"></script>
+<link rel="icon" href="p/brand/moona-logo-mark.svg" type="image/svg+xml">
+<!-- Public analytics identifiers are served by Vercel. Direct file previews
+     deliberately skip that endpoint; analytics stays disabled there. -->
+<script>
+window.MOONA_ANALYTICS_CONFIG={};
+if(location.protocol!=='file:'){
+  document.write('<script src="/api/analytics-config.js"><\/script>');
+}
+</script>
+<script defer src="analytics.js"></script>
 <style>
 /* ————————————————————— tokens ————————————————————— */
 /* @moona-tokens:start */
@@ -531,7 +537,7 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
   background:linear-gradient(rgba(5,7,12,.34),rgba(5,7,12,0));pointer-events:none}
 #hdr>*{pointer-events:auto}
 .lockup{display:flex;align-items:center;justify-self:start;min-width:120px;min-height:44px;color:#fff;text-decoration:none}
-.lockup-wordmark{width:118px;height:auto}
+.lockup-wordmark{display:block;width:150px;height:auto}
 #hdr nav{display:contents}
 .header-links{grid-column:2;display:flex;align-items:center;gap:clamp(20px,2.2vw,34px)}
 .header-actions{grid-column:3;justify-self:end;display:flex;align-items:center;gap:14px}
@@ -562,7 +568,7 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
 .mobile-menu{display:none}
 @media(max-width:700px){
   #hdr{padding:18px 18px 10px}
-  .lockup{min-width:0}.lockup-wordmark{width:104px}
+  .lockup{min-width:0}.lockup-wordmark{width:132px}
   .header-links{display:none}
   .header-actions{gap:8px}
   .header-actions .cta-btn.sm{display:none}
@@ -1090,7 +1096,7 @@ html.motion-paused .beat-line{opacity:.64!important}
 .hero-brand-stage{position:absolute;z-index:3;inset:0;width:100%;max-width:none;padding:108px 8vw 110px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:20px}
 .hero-kicker{display:inline-flex;align-items:center;justify-content:center;gap:14px;margin:0;color:rgba(255,255,255,.9);white-space:nowrap;text-shadow:0 2px 18px rgba(0,0,0,.28)}
 .hero-kicker-dot{display:block;width:6px;height:6px;flex:none;border-radius:50%;background:#fff;box-shadow:0 0 12px rgba(255,255,255,.9)}
-.hero-wordmark{display:block;width:clamp(340px,52vw,760px);height:auto;margin:2px 0 0;direction:ltr;unicode-bidi:isolate;filter:drop-shadow(0 20px 50px rgba(15,0,24,.18))}
+.hero-wordmark{display:block;width:clamp(420px,57vw,820px);height:auto;margin:2px 0 0;direction:ltr;unicode-bidi:isolate}
 .hero-wordmark img{display:block;width:100%;height:auto}
 .hero-position{margin:0;font-family:var(--mono);font-size:clamp(9px,.77vw,11px);line-height:1.5;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.86);white-space:nowrap;text-shadow:0 2px 18px rgba(0,0,0,.28)}
 .hero-corner{position:absolute;z-index:5;bottom:44px;width:96px;height:96px;border:1px solid rgba(255,255,255,.78);border-radius:50%;background:rgba(14,0,22,.08);color:#fff;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;backdrop-filter:blur(8px);transition:background .3s var(--ease),border-color .3s var(--ease),transform .3s var(--ease)}
@@ -1178,7 +1184,7 @@ html[lang="he"] .about-copy h2,html[lang="he"] .crew-head h2,html[lang="he"] .cr
   .hero-brand-stage{padding:92px 18px 116px;gap:16px}
   .hero-kicker{max-width:90vw;font-size:7.5px;letter-spacing:.17em;white-space:normal;line-height:1.55}
   .hero-kicker-dot{width:5px;height:5px}
-  .hero-wordmark{width:min(74vw,320px)}
+  .hero-wordmark{width:min(84vw,330px)}
   .hero-position{max-width:88vw;font-size:7.5px;letter-spacing:.17em;white-space:normal;line-height:1.55}
   html[lang="he"] .hero-kicker,html[lang="he"] .hero-position{max-width:84vw;font-size:10px;line-height:1.45}
   .hero-corner{bottom:24px;width:80px;height:80px;padding:0;border-radius:50%;font-size:8px;letter-spacing:.13em;background:rgba(12,0,19,.16)}
@@ -1214,7 +1220,7 @@ html[lang="he"] .about-copy h2,html[lang="he"] .crew-head h2,html[lang="he"] .cr
 <div class="grain"></div>
 <div class="cur ring"></div>
 <aside class="analytics-consent" id="analyticsConsent" aria-label="Analytics preferences" data-i18n-aria-label="consent.label" hidden>
-  <p><span data-i18n="consent.text">We use analytics to see how the site performs.</span> <a href="/privacy.html" data-locale-link data-i18n="consent.privacy">Privacy notice</a></p>
+  <p><span data-i18n="consent.text">We use analytics to see how the site performs.</span> <a href="privacy.html" data-locale-link data-i18n="consent.privacy">Privacy notice</a></p>
   <div class="analytics-consent__actions">
     <button class="analytics-consent__accept" type="button" id="analyticsAccept" data-i18n="consent.accept">Accept analytics</button>
     <button class="analytics-consent__reject" type="button" id="analyticsReject" data-i18n="consent.decline">Decline</button>
@@ -1233,10 +1239,18 @@ html[lang="he"] .about-copy h2,html[lang="he"] .crew-head h2,html[lang="he"] .cr
   <div class="bar"><i></i></div>
   <div class="pct">00</div>
 </div>
+<script>
+/* The curtain must never become a dead end if a local asset or browser API fails. */
+window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
+  document.getElementById('loader')?.classList.add('done');
+  const hero=document.getElementById('t1');
+  if(hero&&!hero.style.opacity){hero.style.opacity='1';hero.style.transform='none'}
+},3500);
+</script>
 
 <!-- ═══════════ HEADER ═══════════ -->
 <header id="hdr">
-  <a class="lockup" href="#" id="homeLink" aria-label="Moona home" data-i18n-aria-label="header.home" dir="ltr"><img class="lockup-wordmark" src="p/brand/moona-wordmark.svg" alt="" width="970" height="200"></a>
+  <a class="lockup" href="#" id="homeLink" aria-label="Moona home" data-i18n-aria-label="header.home" dir="ltr"><img class="lockup-wordmark" src="p/brand/moona-logo-lockup.svg" alt="" width="566" height="100"></a>
   <nav aria-label="Sections" data-i18n-aria-label="nav.sections">
     <div class="header-links">
       <button class="nav-section" type="button" data-goto="film" data-i18n="nav.work">Work</button>
@@ -1275,7 +1289,7 @@ html[lang="he"] .about-copy h2,html[lang="he"] .crew-head h2,html[lang="he"] .cr
 
     <div class="htxt hero-brand-stage" id="t1">
       <p class="hero-kicker"><span class="hero-kicker-dot" aria-hidden="true"></span><span data-i18n="hero.eyebrow">Founder-led · Creative technology · Tel Aviv</span></p>
-      <h1 class="hero-wordmark" dir="ltr"><span class="sr-only" data-i18n="hero.headline.lead">MOONA</span><img src="p/brand/moona-wordmark.svg" alt="" width="970" height="200"></h1>
+      <h1 class="hero-wordmark" dir="ltr"><span class="sr-only" data-i18n="hero.headline.lead">MOONA</span><img src="p/brand/moona-logo-lockup.svg" alt="" width="566" height="100"></h1>
       <p class="hero-position" data-i18n="hero.subline.one">Direction · Software development · AI production</p>
     </div>
 
@@ -1539,8 +1553,8 @@ html[lang="he"] .about-copy h2,html[lang="he"] .crew-head h2,html[lang="he"] .cr
     <button class="cta-btn lg rv" data-ask data-hover><span data-i18n="hero.cta">Start a project</span><i></i></button>
     <p class="disc rv" data-i18n="contact.disclaimer">All work self-initiated. Brands are shown for demonstration only and are not clients. No client relationship implied.</p>
     <nav class="legal-nav" aria-label="Legal and accessibility" data-i18n-aria-label="footer.nav">
-      <a href="/privacy.html" data-locale-link data-i18n="footer.privacy">Privacy notice</a>
-      <a href="/accessibility.html" data-locale-link data-i18n="footer.accessibility">Accessibility statement</a>
+      <a href="privacy.html" data-locale-link data-i18n="footer.privacy">Privacy notice</a>
+      <a href="accessibility.html" data-locale-link data-i18n="footer.accessibility">Accessibility statement</a>
       <button type="button" data-motion-toggle><span data-motion-label>Pause motion</span></button>
     </nav>
     <p class="copy rv" dir="auto">&copy; <span id="yr" dir="ltr">2026</span> <bdi dir="ltr">Moona.</bdi> <span data-i18n="contact.rights">All rights reserved.</span></p>
@@ -1618,7 +1632,7 @@ html[lang="he"] .about-copy h2,html[lang="he"] .crew-head h2,html[lang="he"] .cr
   </form>
   <div class="ask-rail"><i id="askRail"></i></div>
 </div>
-<script src="/i18n.js"></script>
+<script src="i18n.js"></script>
 <script>
 /* ═══════════════════ config ═══════════════════ */
 const isMobile = matchMedia('(max-width:760px)').matches;
@@ -2149,6 +2163,7 @@ preload(p=>{
   pct.textContent=String(Math.round(p*100)).padStart(2,'0');
 }).then(()=>{
   clearInterval(morseIv);
+  clearTimeout(window.__MOONA_BOOT_FAILSAFE__);
   /* lift the curtain immediately — rAF never fires in a background tab */
   loader.classList.add('done');
   scramble(document.querySelector('[data-scramble]'));
