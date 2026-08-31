@@ -202,17 +202,16 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await openHome(page, '/?lang=he');
 
     const headerWordmark = page.locator('.lockup-wordmark');
-    const heroWordmark = page.locator('.hero-wordmark');
-    const heroWordmarkImage = heroWordmark.locator('img');
-    await expect(heroWordmark).toHaveText('MOONA');
-    await expect(heroWordmark).toHaveAccessibleName('MOONA');
+    const heroMark = page.locator('.hero-aperture img');
     await expect(headerWordmark).toHaveAttribute('src', 'p/brand/moona-logo-lockup.svg');
-    await expect(heroWordmarkImage).toHaveAttribute('src', 'p/brand/moona-logo-lockup.svg');
+    await expect(heroMark).toHaveAttribute('src', 'p/brand/moona-logo-mark.svg');
     await expect(headerWordmark).toHaveAttribute('alt', '');
-    await expect(heroWordmarkImage).toHaveAttribute('alt', '');
-    await expect(page.locator('#markSvg, #heroIris, .lockup-iris, [data-scramble]')).toHaveCount(0);
-    await expect(page.locator('.hero-kicker')).toHaveText('בהובלת המייסד · קריאייטיב טכנולוגי · תל אביב');
-    await expect(page.locator('.hero-position')).toHaveText('בימוי · פיתוח תוכנה · הפקת AI');
+    await expect(heroMark).toHaveAttribute('alt', '');
+    await expect(page.locator('.hero-wordmark, .hero-chroma, #markSvg, #heroIris, .lockup-iris, [data-scramble]')).toHaveCount(0);
+    await expect(page.locator('.hero-kicker')).toHaveText('בהובלת המייסד · תל אביב');
+    await expect(page.locator('.hero-statement [data-i18n="hero.headline.lead"]')).toHaveText('קריאייטיב טכנולוגי.');
+    await expect(page.locator('.hero-statement-accent')).toHaveText('תחת בימוי.');
+    await expect(page.locator('.hero-position')).toHaveText('סרטים · תוכנה · מערכות AI');
     await expect(page.locator('.film-head .film-eyebrow')).toHaveText('סרט הדגל');
     await expect(page.locator('.film-title')).toHaveText('יצרנו מותג. וצילמנו לו פרסומת.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE הוא חטיף אנרגיה שאנחנו יצרנו מאפס.');
@@ -244,9 +243,9 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.contact-line')).toHaveText('יש לכם פרויקט ששווה ליצור?');
     await expect(page.locator('.contact-body')).toHaveText('ספרו לנו מה אתם בונים. נחזור אליכם בתוך שני ימי עסקים.');
     await expect(page.locator('[data-i18n="nav.cta"]')).toHaveText('מתחילים פרויקט');
-    await expect(page.locator('.hero-corner--work')).toHaveText('עבודות');
-    await expect(page.locator('.hero-corner--project')).toHaveText('פנייה');
-    await expect(page.locator('.hero-corner--project')).toHaveAccessibleName(/פנייה/);
+    await expect(page.locator('.hero-work-link')).toContainText('לעבודות');
+    await expect(page.locator('.hero-project-cta')).toContainText('מתחילים פרויקט');
+    await expect(page.locator('.hero-project-cta')).toHaveAccessibleName('מתחילים פרויקט עם Moona');
     await expect(page.locator('.contact [data-i18n="hero.cta"]')).toHaveText('מתחילים פרויקט');
     await expect(page.locator('#askTitle')).toHaveText('מתחילים פרויקט');
     await expect(page.locator('#ask')).toHaveAttribute('aria-labelledby', 'askTitle');
@@ -265,8 +264,8 @@ test.describe('dictionary and first-paint privacy contract', () => {
     }))).toEqual({
       nav: 'Start a project',
       hero: 'Start a project',
-      work: 'Work',
-      contact: 'Contact',
+      work: 'View work',
+      contact: 'Start a project',
       dialog: 'Start a project',
       send: 'Send details',
       note: 'Reply within two business days'
@@ -292,11 +291,13 @@ test.describe('dictionary and first-paint privacy contract', () => {
     });
 
     await page.evaluate(() => window.MoonaI18n.setLocale('en', { source: 'programmatic' }));
-    await expect(heroWordmark).toHaveText('MOONA');
-    await expect(page.locator('.hero-kicker')).toHaveText('Founder-led · Creative technology · Tel Aviv');
-    await expect(page.locator('.hero-position')).toHaveText('Direction · Software development · AI production');
-    await expect(page.locator('.hero-corner--project')).toHaveText('Contact');
-    await expect(page.locator('.hero-corner--project')).toHaveAccessibleName(/Contact/);
+    await expect(page.locator('.hero-kicker')).toHaveText('Founder-led · Tel Aviv');
+    await expect(page.locator('.hero-statement [data-i18n="hero.headline.lead"]')).toHaveText('Creative technology.');
+    await expect(page.locator('.hero-statement-accent')).toHaveText('Directed.');
+    await expect(page.locator('.hero-position')).toHaveText('Film · Software · AI systems');
+    await expect(page.locator('.hero-work-link')).toContainText('View work');
+    await expect(page.locator('.hero-project-cta')).toContainText('Start a project');
+    await expect(page.locator('.hero-project-cta')).toHaveAccessibleName('Start a project with Moona');
     await expect(page.locator('.film-title')).toHaveText('We created a brand. Then we shot its ad.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE is an energy bar you cannot buy.');
     await expect(page.locator('.film-credit')).toHaveText('Made with AI. Directed to the final frame.');
@@ -494,19 +495,21 @@ test.describe('dictionary and first-paint privacy contract', () => {
 });
 
 test.describe('locale transitions and state preservation', () => {
-  test('switching locale preserves the stable wordmark assets after iris and scramble were retired', async ({ page }) => {
+  test('switching locale preserves the stable official logo assets after iris and scramble were retired', async ({ page }) => {
     await openHome(page, '/?lang=en');
     const result = await page.evaluate(() => {
       const headerWordmark = document.querySelector('.lockup-wordmark');
-      const heroWordmark = document.querySelector('.hero-wordmark img');
+      const heroMark = document.querySelector('.hero-aperture img');
       headerWordmark.dataset.e2eMarker = 'header-wordmark';
-      heroWordmark.dataset.e2eMarker = 'hero-wordmark';
+      heroMark.dataset.e2eMarker = 'hero-mark';
       window.MoonaI18n.setLocale('he', { source: 'programmatic' });
       return {
         headerMarker: headerWordmark.dataset.e2eMarker,
-        heroMarker: heroWordmark.dataset.e2eMarker,
-        sameAsset: headerWordmark.getAttribute('src') === heroWordmark.getAttribute('src'),
-        wordmark: document.querySelector('.hero-wordmark').textContent.trim(),
+        heroMarker: heroMark.dataset.e2eMarker,
+        headerAsset: headerWordmark.getAttribute('src'),
+        heroAsset: heroMark.getAttribute('src'),
+        statement: document.querySelector('.hero-statement').textContent.replace(/\s+/g, ' ').trim(),
+        retiredHeroLayers: document.querySelectorAll('.hero-wordmark, .hero-chroma').length,
         scrambleTargets: document.querySelectorAll('[data-scramble]').length,
         irisTargets: document.querySelectorAll('#markSvg, #heroIris, .lockup-iris').length,
         workTags: document.querySelectorAll('#work .tag').length,
@@ -516,9 +519,11 @@ test.describe('locale transitions and state preservation', () => {
     });
 
     expect(result.headerMarker).toBe('header-wordmark');
-    expect(result.heroMarker).toBe('hero-wordmark');
-    expect(result.sameAsset).toBe(true);
-    expect(result.wordmark).toBe('MOONA');
+    expect(result.heroMarker).toBe('hero-mark');
+    expect(result.headerAsset).toBe('p/brand/moona-logo-lockup.svg');
+    expect(result.heroAsset).toBe('p/brand/moona-logo-mark.svg');
+    expect(result.statement).toBe('קריאייטיב טכנולוגי. תחת בימוי.');
+    expect(result.retiredHeroLayers).toBe(0);
     expect(result.scrambleTargets).toBe(0);
     expect(result.irisTargets).toBe(0);
     expect(result.workTags).toBe(0);
@@ -1000,52 +1005,102 @@ test.describe('responsive header and dynamic UI', () => {
     }
   });
 
-  test('brand-first hero fills one viewport, leads to the flagship, and keeps mobile navigation accessible', async ({ page }) => {
+  test('asymmetric media hero mirrors by locale, leads to the flagship, and keeps mobile actions accessible', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await openHome(page, '/?lang=he');
-    await expect(page.locator('.hero-wordmark')).toBeVisible();
-    await expect(page.locator('.hero-wordmark img')).toHaveAttribute('src', 'p/brand/moona-logo-lockup.svg');
-    await expect(page.locator('.hero-corner--work')).toBeVisible();
-    await expect(page.locator('.hero-corner--project')).toBeVisible();
+    await openHome(page, '/?lang=en');
+
+    const heroVideo = page.locator('.hero-media-video');
+    await expect(page.locator('.hero-media')).toBeVisible();
+    await expect(page.locator('.hero-aperture img')).toHaveAttribute('src', 'p/brand/moona-logo-mark.svg');
+    await expect(page.locator('.hero-statement')).toBeVisible();
+    await expect(page.locator('.hero-actions')).toBeVisible();
+    await expect(page.locator('.hero-work-link')).toBeVisible();
+    await expect(page.locator('.hero-project-cta')).toBeVisible();
+    await expect(page.locator('.hero-wordmark, .hero-chroma, .hero-corner')).toHaveCount(0);
+    await expect(heroVideo).toHaveAttribute('hidden', '');
+    await expect(heroVideo).toHaveAttribute('muted', '');
+    await expect(heroVideo).toHaveAttribute('loop', '');
+    await expect(heroVideo).toHaveAttribute('playsinline', '');
+    await expect(heroVideo).toHaveAttribute('preload', 'none');
+    await expect(heroVideo).not.toHaveAttribute('autoplay', /.+/);
     await expect(page.locator('[data-mobile-menu-toggle]')).toBeHidden();
-    const desktopHero = await page.evaluate(async () => {
+
+    const inspectDesktopHero = () => page.evaluate(async () => {
       const box = element => {
         const value = element.getBoundingClientRect();
         return { left: value.left, right: value.right, top: value.top, bottom: value.bottom, width: value.width, height: value.height };
       };
-      const wordmark = document.querySelector('.hero-wordmark');
-      const image = wordmark.querySelector('img');
-      try { await image.decode(); } catch (_) {}
+      const apertureImage = document.querySelector('.hero-aperture img');
+      try { await apertureImage.decode(); } catch (_) {}
+      const video = document.querySelector('.hero-media-video');
       return {
         ratio: document.getElementById('hero-track').offsetHeight / innerHeight,
         viewportWidth: innerWidth,
         viewportHeight: innerHeight,
-        wordmark: box(wordmark),
-        image: box(image),
-        direction: getComputedStyle(wordmark).direction,
-        naturalWidth: image.naturalWidth,
-        kicker: box(document.querySelector('.hero-kicker')),
+        media: box(document.querySelector('.hero-media')),
+        stage: box(document.querySelector('.hero-brand-stage')),
+        statement: box(document.querySelector('.hero-statement')),
         position: box(document.querySelector('.hero-position')),
-        work: box(document.querySelector('.hero-corner--work')),
-        contact: box(document.querySelector('.hero-corner--project'))
+        actions: box(document.querySelector('.hero-actions')),
+        aperture: box(document.querySelector('.hero-aperture')),
+        apertureNaturalWidth: apertureImage.naturalWidth,
+        targets: [...document.querySelectorAll('.hero-actions button')].map(box),
+        videoPolicy: {
+          hidden: video.hidden,
+          muted: video.muted,
+          loop: video.loop,
+          playsInline: video.playsInline,
+          preload: video.preload,
+          autoplay: video.autoplay,
+          paused: video.paused
+        }
       };
     });
-    expect(desktopHero.ratio).toBeCloseTo(1, 2);
-    expect(desktopHero.direction).toBe('ltr');
-    expect(desktopHero.naturalWidth).toBeGreaterThan(0);
-    expect(desktopHero.wordmark.width / desktopHero.viewportWidth).toBeGreaterThanOrEqual(0.42);
-    expect(desktopHero.wordmark.width / desktopHero.viewportWidth).toBeLessThanOrEqual(0.68);
-    expect(Math.abs((desktopHero.wordmark.left + desktopHero.wordmark.right) / 2 - desktopHero.viewportWidth / 2)).toBeLessThanOrEqual(2);
-    expect(desktopHero.image.left).toBeGreaterThanOrEqual(desktopHero.wordmark.left - 1);
-    expect(desktopHero.image.right).toBeLessThanOrEqual(desktopHero.wordmark.right + 1);
-    for (const element of [desktopHero.wordmark, desktopHero.kicker, desktopHero.position, desktopHero.work, desktopHero.contact]) {
-      expect(element.left).toBeGreaterThanOrEqual(-1);
-      expect(element.right).toBeLessThanOrEqual(desktopHero.viewportWidth + 1);
-      expect(element.top).toBeGreaterThanOrEqual(-1);
-      expect(element.bottom).toBeLessThanOrEqual(desktopHero.viewportHeight + 1);
+
+    const englishHero = await inspectDesktopHero();
+    await page.evaluate(() => window.MoonaI18n.setLocale('he', { source: 'programmatic' }));
+    await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+    const hebrewHero = await inspectDesktopHero();
+
+    for (const layout of [englishHero, hebrewHero]) {
+      expect(layout.ratio).toBeCloseTo(1, 2);
+      expect(layout.apertureNaturalWidth).toBeGreaterThan(0);
+      expect(layout.videoPolicy).toEqual({
+        hidden: true,
+        muted: true,
+        loop: true,
+        playsInline: true,
+        preload: 'none',
+        autoplay: false,
+        paused: true
+      });
+      expect(layout.media.left).toBeGreaterThanOrEqual(-1);
+      expect(layout.media.right).toBeLessThanOrEqual(layout.viewportWidth + 1);
+      expect(layout.media.top).toBeGreaterThanOrEqual(-1);
+      expect(layout.media.bottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
+      expect(layout.media.width).toBeCloseTo(layout.viewportWidth, 0);
+      expect(layout.media.height).toBeCloseTo(layout.viewportHeight, 0);
+      expect(layout.position.bottom).toBeLessThan(layout.actions.top);
+      for (const target of layout.targets) {
+        expect(target.width).toBeGreaterThanOrEqual(44);
+        expect(target.height).toBeGreaterThanOrEqual(44);
+        expect(target.left).toBeGreaterThanOrEqual(-1);
+        expect(target.right).toBeLessThanOrEqual(layout.viewportWidth + 1);
+        expect(target.top).toBeGreaterThanOrEqual(-1);
+        expect(target.bottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
+      }
     }
 
-    await page.locator('.hero-corner--work').click();
+    expect(englishHero.stage.left).toBeLessThanOrEqual(1);
+    expect(englishHero.stage.right).toBeLessThan(englishHero.viewportWidth);
+    expect((englishHero.statement.left + englishHero.statement.right) / 2).toBeLessThan(englishHero.viewportWidth / 2);
+    expect((englishHero.aperture.left + englishHero.aperture.right) / 2).toBeGreaterThan(englishHero.viewportWidth / 2);
+    expect(hebrewHero.stage.right).toBeGreaterThanOrEqual(hebrewHero.viewportWidth - 1);
+    expect(hebrewHero.stage.left).toBeGreaterThan(0);
+    expect((hebrewHero.statement.left + hebrewHero.statement.right) / 2).toBeGreaterThan(hebrewHero.viewportWidth / 2);
+    expect((hebrewHero.aperture.left + hebrewHero.aperture.right) / 2).toBeLessThan(hebrewHero.viewportWidth / 2);
+
+    await page.locator('.hero-work-link').click();
     await expect(page.locator('#ask')).not.toHaveClass(/open/);
     await expect.poll(() => page.evaluate(() => {
       const film = document.getElementById('film');
@@ -1055,42 +1110,40 @@ test.describe('responsive header and dynamic UI', () => {
 
     await page.setViewportSize({ width: 390, height: 844 });
     await page.evaluate(() => window.scrollTo(0, 0));
-    const mobileHero = await page.evaluate(async () => {
+    const mobileHero = await page.evaluate(() => {
       const box = element => {
         const value = element.getBoundingClientRect();
         return { left: value.left, right: value.right, top: value.top, bottom: value.bottom, width: value.width, height: value.height };
       };
-      const wordmark = document.querySelector('.hero-wordmark');
-      const image = wordmark.querySelector('img');
-      try { await image.decode(); } catch (_) {}
-      const corners = [document.querySelector('.hero-corner--work'), document.querySelector('.hero-corner--project')]
-        .map(box).sort((a, b) => a.left - b.left);
       return {
         ratio: document.getElementById('hero-track').offsetHeight / innerHeight,
         filmTop: document.getElementById('film').getBoundingClientRect().top,
-        viewport: innerHeight,
-        wordmark: box(wordmark),
-        image: box(image),
-        direction: getComputedStyle(wordmark).direction,
-        naturalWidth: image.naturalWidth,
-        corners,
-        viewportWidth: innerWidth
+        viewportWidth: innerWidth,
+        viewportHeight: innerHeight,
+        pageWidth: document.documentElement.scrollWidth,
+        media: box(document.querySelector('.hero-media')),
+        statement: box(document.querySelector('.hero-statement')),
+        actions: box(document.querySelector('.hero-actions')),
+        targets: [...document.querySelectorAll('.hero-actions button')].map(box)
       };
     });
     expect(mobileHero.ratio).toBeCloseTo(1, 2);
-    expect(mobileHero.filmTop).toBeLessThanOrEqual(mobileHero.viewport + 1);
-    expect(mobileHero.direction).toBe('ltr');
-    expect(mobileHero.naturalWidth).toBeGreaterThan(0);
-    expect(mobileHero.wordmark.width / mobileHero.viewportWidth).toBeGreaterThanOrEqual(0.72);
-    expect(mobileHero.wordmark.width / mobileHero.viewportWidth).toBeLessThanOrEqual(0.97);
-    expect(mobileHero.wordmark.left).toBeGreaterThanOrEqual(-1);
-    expect(mobileHero.wordmark.right).toBeLessThanOrEqual(mobileHero.viewportWidth + 1);
-    expect(mobileHero.image.left).toBeGreaterThanOrEqual(mobileHero.wordmark.left - 1);
-    expect(mobileHero.image.right).toBeLessThanOrEqual(mobileHero.wordmark.right + 1);
-    expect(mobileHero.wordmark.bottom).toBeLessThan(mobileHero.corners[0].top - 20);
-    expect(mobileHero.corners[0].left).toBeGreaterThanOrEqual(-1);
-    expect(mobileHero.corners[1].right).toBeLessThanOrEqual(mobileHero.viewportWidth + 1);
-    expect(mobileHero.corners[1].left - mobileHero.corners[0].right).toBeGreaterThanOrEqual(8);
+    expect(mobileHero.filmTop).toBeLessThanOrEqual(mobileHero.viewportHeight + 1);
+    expect(mobileHero.pageWidth).toBeLessThanOrEqual(mobileHero.viewportWidth + 1);
+    expect(mobileHero.media.width).toBeCloseTo(mobileHero.viewportWidth, 0);
+    expect(mobileHero.media.height).toBeCloseTo(mobileHero.viewportHeight, 0);
+    for (const element of [mobileHero.statement, mobileHero.actions, ...mobileHero.targets]) {
+      expect(element.left).toBeGreaterThanOrEqual(-1);
+      expect(element.right).toBeLessThanOrEqual(mobileHero.viewportWidth + 1);
+      expect(element.top).toBeGreaterThanOrEqual(-1);
+      expect(element.bottom).toBeLessThanOrEqual(mobileHero.viewportHeight + 1);
+    }
+    for (const target of mobileHero.targets) {
+      expect(target.width).toBeGreaterThanOrEqual(44);
+      expect(target.height).toBeGreaterThanOrEqual(44);
+    }
+    const [firstTarget, secondTarget] = mobileHero.targets.slice().sort((a, b) => a.left - b.left);
+    expect(firstTarget.right).toBeLessThanOrEqual(secondTarget.left);
 
     const menuToggle = page.locator('[data-mobile-menu-toggle]');
     await expect(menuToggle).toBeVisible();
@@ -1112,7 +1165,7 @@ test.describe('responsive header and dynamic UI', () => {
     await expect(menuToggle).toBeFocused();
     await expect(menuToggle).toHaveAttribute('aria-expanded', 'false');
 
-    await page.locator('.hero-corner--project').click();
+    await page.locator('.hero-project-cta').click();
     await expect(page.locator('#ask')).toHaveClass(/open/);
   });
 

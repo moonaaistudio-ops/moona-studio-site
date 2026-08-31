@@ -42,6 +42,7 @@
 
   /* ───── type families ───── */
   --moona-mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  --moona-display:"Space Grotesk","Arial Narrow",Arial,sans-serif;
   --moona-sans:"Inter Tight",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --moona-serif:"Instrument Serif",Georgia,serif;
   --moona-sans-latin:"Inter Tight",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -53,11 +54,11 @@
   --moona-fs-quote:clamp(28px,4.6vw,52px);    /* studio sentence      */
   --moona-fs-card:clamp(21px,1.9vw,27px);     /* card headline        */
   --moona-fs-lead:clamp(15px,1.7vw,19px);     /* section body copy    */
-  --moona-fs-body:15px;                       /* base                 */
-  --moona-fs-body-sm:14.5px;
-  --moona-fs-label:10px;                      /* mono label           */
-  --moona-fs-label-lg:11px;
-  --moona-fs-label-sm:9px;
+  --moona-fs-body:16px;                       /* base                 */
+  --moona-fs-body-sm:15px;
+  --moona-fs-label:11px;                      /* compact label        */
+  --moona-fs-label-lg:12px;
+  --moona-fs-label-sm:10px;
 
   --moona-lh-display:1.08;
   --moona-lh-title:1.15;
@@ -65,10 +66,10 @@
   --moona-lh-loose:1.65;
 
   /* ───── tracking — the mono label idiom ───── */
-  --moona-track-label:.28em;
-  --moona-track-label-wide:.32em;
-  --moona-track-label-tight:.14em;
-  --moona-track-cta:.22em;
+  --moona-track-label:.16em;
+  --moona-track-label-wide:.2em;
+  --moona-track-label-tight:.08em;
+  --moona-track-cta:.08em;
   --moona-track-lockup:.34em;
   --moona-track-serif:.005em;
 
@@ -106,6 +107,7 @@
 
 /* Hebrew swaps the two text faces; the mono HUD stays Latin on purpose. */
 html[lang="he"]{
+  --moona-display:Assistant,Arial,sans-serif;
   --moona-sans:Assistant,Arial,sans-serif;
   --moona-serif:"Frank Ruhl Libre","Times New Roman",serif;
 }
@@ -119,7 +121,10 @@ html[lang="he"]{
   --ice-dim:var(--moona-ice-dim);
   --ice-faint:var(--moona-ice-faint);
   --line:var(--moona-line);
+  --gold:var(--moona-gold);
+  --gold-hot:var(--moona-gold-hot);
   --mono:var(--moona-mono);
+  --display:var(--moona-display);
   --sans:var(--moona-sans);
   --serif:var(--moona-serif);
 }
