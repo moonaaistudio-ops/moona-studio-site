@@ -69,29 +69,135 @@
 <script defer src="/analytics.js"></script>
 <style>
 /* ————————————————————— tokens ————————————————————— */
+/* @moona-tokens:start */
+/* Generated from design-system/src/tokens/tokens.css — do not edit here.
+   Change the token there, then: node design-system/scripts/sync-tokens.mjs */
+/* ═════════════════════════════════════════════════════════════
+   Moona Studio — design tokens. THIS FILE IS THE SOURCE OF TRUTH.
+   index.html carries a generated copy between the @moona-tokens
+   markers; change a value here, then run
+     node design-system/scripts/sync-tokens.mjs
+   The E2E suite runs the --check mode, so the two cannot drift.
+   ═════════════════════════════════════════════════════════════ */
+
 :root{
-  --void:#05070c;          /* deep space */
-  --void-2:#080b13;
-  --ice:#a8c6e8;           /* pale ice blue */
-  --ice-hot:#dcecff;       /* brightest text */
-  --ice-dim:rgba(168,198,232,.66);
-  --ice-faint:rgba(168,198,232,.22);
-  --line:rgba(168,198,232,.14);
-  --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
-  --sans:"Inter Tight",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  --serif:"Instrument Serif",Georgia,serif;
-  --he-emphasis-weight:600;
-  --he-emphasis-color:#f3e9d2;
-  --ease:cubic-bezier(.16,1,.3,1);
-  /* radius scale — the CTA pill is the extreme of a rounded family, not an outlier */
+  /* ───── palette: ground ───── */
+  --moona-void:#05070c;                       /* deep space — page ground */
+  --moona-void-2:#080b13;                     /* raised surface — panels, frames */
+  --moona-scrim:rgba(5,7,12,.72);             /* over media: badges, controls */
+  --moona-overlay:rgba(3,5,9,.9);             /* lightbox backdrop */
+
+  /* ───── palette: ice (voice of the interface) ───── */
+  --moona-ice:#a8c6e8;                        /* pale ice blue — accents, rules */
+  --moona-ice-hot:#dcecff;                    /* brightest text */
+  --moona-ice-dim:rgba(168,198,232,.66);      /* secondary text, labels */
+  --moona-ice-faint:rgba(168,198,232,.22);    /* inactive borders */
+  --moona-line:rgba(168,198,232,.14);         /* hairline dividers */
+  --moona-body-dim:rgba(190,212,238,.72);     /* long-form body copy */
+
+  /* ───── palette: gold (the accent that acts) ───── */
+  --moona-gold:#d9c69c;                       /* the one accent — CTA, focus, rails */
+  --moona-gold-hot:#f3e9d2;                   /* emphasis inside serif headlines */
+  --moona-gold-ink:#0d0b07;                   /* text ON gold */
+  --moona-gold-line:rgba(217,198,156,.5);     /* gold hairline border */
+  --moona-gold-wash:rgba(217,198,156,.1);     /* gold tint fill */
+  --moona-gold-wash-hot:rgba(217,198,156,.16);/* gold tint on hover */
+
+  /* ───── palette: status ───── */
+  --moona-danger:#e8a09a;                     /* form errors, destructive hover */
+
+  /* ───── rainbow ramp — warm-gold retint of Magic UI's Rainbow Button ───── */
+  --color-1:oklch(66% 0.135 48);              /* deep amber  */
+  --color-2:oklch(60% 0.120 38);              /* dark copper */
+  --color-3:oklch(81% 0.125 82);              /* gold        */
+  --color-4:oklch(94% 0.055 98);              /* champagne   */
+  --color-5:oklch(87% 0.145 74);              /* honey       */
+  --speed:2s;                                 /* ramp cycle; halves on hover */
+
+  /* ───── type families ───── */
+  --moona-mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  --moona-sans:"Inter Tight",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --moona-serif:"Instrument Serif",Georgia,serif;
+  --moona-sans-latin:"Inter Tight",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+  /* ───── type scale — fluid, mapped to the roles the site actually uses ───── */
+  --moona-fs-display:clamp(34px,6vw,82px);    /* hero statement       */
+  --moona-fs-title:clamp(30px,4.4vw,58px);    /* section headline     */
+  --moona-fs-question:clamp(30px,5.4vw,62px); /* request-flow question*/
+  --moona-fs-quote:clamp(28px,4.6vw,52px);    /* studio sentence      */
+  --moona-fs-card:clamp(21px,1.9vw,27px);     /* card headline        */
+  --moona-fs-lead:clamp(15px,1.7vw,19px);     /* section body copy    */
+  --moona-fs-body:15px;                       /* base                 */
+  --moona-fs-body-sm:14.5px;
+  --moona-fs-label:10px;                      /* mono label           */
+  --moona-fs-label-lg:11px;
+  --moona-fs-label-sm:9px;
+
+  --moona-lh-display:1.08;
+  --moona-lh-title:1.15;
+  --moona-lh-body:1.55;
+  --moona-lh-loose:1.65;
+
+  /* ───── tracking — the mono label idiom ───── */
+  --moona-track-label:.28em;
+  --moona-track-label-wide:.32em;
+  --moona-track-label-tight:.14em;
+  --moona-track-cta:.22em;
+  --moona-track-lockup:.34em;
+  --moona-track-serif:.005em;
+
+  /* ───── radii — the CTA pill is the extreme of one rounded family ───── */
   --r-pill:999px;   /* buttons, chips  */
   --r-lg:20px;      /* media surfaces  */
   --r-md:14px;      /* panels          */
+  --r-sm:11px;      /* menu rows       */
+
+  /* ───── motion ───── */
+  --ease:cubic-bezier(.16,1,.3,1);
+  --moona-dur-fast:.3s;
+  --moona-dur:.45s;
+  --moona-dur-slow:1s;
+  --moona-dur-reveal:1.05s;
+
+  /* ───── elevation ───── */
+  --moona-shadow-panel:0 30px 80px -30px rgba(0,0,0,.8);
+  --moona-shadow-frame:0 40px 120px -40px rgba(0,0,0,.8);
+  --moona-shadow-stage:0 60px 160px -50px rgba(0,0,0,.9);
+  --moona-shadow-menu:0 22px 70px -28px rgba(0,0,0,.95);
+  --moona-glow-gold:0 0 34px -8px rgba(217,198,156,.45);
+
+  /* ───── layout ───── */
+  --moona-max:1200px;                         /* work grid            */
+  --moona-max-wide:1560px;                    /* flagship film        */
+  --moona-gutter:clamp(22px,5vw,72px);
+  --moona-gutter-wide:clamp(22px,6vw,80px);
+  --moona-tap:44px;                           /* minimum touch target */
+
+  /* ───── Hebrew emphasis (serif italic has no Hebrew equivalent) ───── */
+  --he-emphasis-weight:600;
+  --he-emphasis-color:#f3e9d2;
 }
+
+/* Hebrew swaps the two text faces; the mono HUD stays Latin on purpose. */
 html[lang="he"]{
-  --sans:Assistant,Arial,sans-serif;
-  --serif:"Frank Ruhl Libre","Times New Roman",serif;
+  --moona-sans:Assistant,Arial,sans-serif;
+  --moona-serif:"Frank Ruhl Libre","Times New Roman",serif;
 }
+
+/* Back-compat aliases — the live site's short names still resolve. */
+:root{
+  --void:var(--moona-void);
+  --void-2:var(--moona-void-2);
+  --ice:var(--moona-ice);
+  --ice-hot:var(--moona-ice-hot);
+  --ice-dim:var(--moona-ice-dim);
+  --ice-faint:var(--moona-ice-faint);
+  --line:var(--moona-line);
+  --mono:var(--moona-mono);
+  --sans:var(--moona-sans);
+  --serif:var(--moona-serif);
+}
+/* @moona-tokens:end */
 *{box-sizing:border-box;margin:0;padding:0}
 .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;
   margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;
@@ -125,15 +231,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:none}
    Rainbow Button — Magic UI (Dillion Verma), dark variant,
    ported verbatim to vanilla CSS. Source:
    https://magicui.design/r/rainbow-button.json                      */
-:root{
-  /* warm-gold retint of the Rainbow Button ramp (Moona palette) */
-  --color-1:oklch(66% 0.135 48);   /* deep amber   */
-  --color-2:oklch(60% 0.120 38);   /* dark copper  */
-  --color-3:oklch(81% 0.125 82);   /* gold         */
-  --color-4:oklch(94% 0.055 98);   /* champagne    */
-  --color-5:oklch(87% 0.145 74);   /* honey        */
-  --speed:2s;
-}
 @property --speed{syntax:"<time>";inherits:true;initial-value:2s}
 .cta-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;
   flex-shrink:0;white-space:normal;min-height:44px;line-height:1.4;text-align:center;text-decoration:none;cursor:none;
