@@ -23,7 +23,7 @@
 
   /* ───── palette: gold (the accent that acts) ───── */
   --moona-gold:#d9c69c;                       /* the one accent — CTA, focus, rails */
-  --moona-gold-hot:#f3e9d2;                   /* emphasis inside serif headlines */
+  --moona-gold-hot:#f3e9d2;                   /* emphasis inside display headlines */
   --moona-gold-ink:#0d0b07;                   /* text ON gold */
   --moona-gold-line:rgba(217,198,156,.5);     /* gold hairline border */
   --moona-gold-wash:rgba(217,198,156,.1);     /* gold tint fill */
@@ -71,7 +71,8 @@
   --moona-track-label-tight:.08em;
   --moona-track-cta:.08em;
   --moona-track-lockup:.34em;
-  --moona-track-serif:.005em;
+  --moona-track-display:-.045em;
+  --moona-track-serif:.005em;                 /* restored production hero only */
 
   /* ───── radii — the CTA pill is the extreme of one rounded family ───── */
   --r-pill:999px;   /* buttons, chips  */
@@ -100,7 +101,7 @@
   --moona-gutter-wide:clamp(22px,6vw,80px);
   --moona-tap:44px;                           /* minimum touch target */
 
-  /* ───── Hebrew emphasis (serif italic has no Hebrew equivalent) ───── */
+  /* ───── Hebrew emphasis in the restored production hero ───── */
   --he-emphasis-weight:600;
   --he-emphasis-color:#f3e9d2;
 }

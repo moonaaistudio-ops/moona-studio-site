@@ -30,7 +30,7 @@ export const color = {
 
   /** The one accent that acts: CTA, focus rings, progress rails. */
   gold: '#d9c69c',
-  /** Emphasis inside a serif headline (the `em` colour). */
+  /** Emphasis inside a display headline (the `em` colour). */
   goldHot: '#f3e9d2',
   /** Text on a gold fill. */
   goldInk: '#0d0b07',
@@ -54,13 +54,16 @@ export const rainbow = [
 export const font = {
   /** HUD, labels, timestamps, brand lockup. Stays Latin in Hebrew. */
   mono: '"SF Mono",ui-monospace,Menlo,Consolas,monospace',
+  /** Brand headlines. Swaps to Assistant under html[lang="he"]. */
+  display: '"Space Grotesk","Arial Narrow",Arial,sans-serif',
   /** Interface and body. Swaps to Assistant under html[lang="he"]. */
   sans: '"Inter Tight",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
-  /** Headlines. Swaps to Frank Ruhl Libre under html[lang="he"]. */
+  /** Legacy editorial face reserved for the restored production hero. */
   serif: '"Instrument Serif",Georgia,serif',
 } as const;
 
 export const fontHe = {
+  display: 'Assistant,Arial,sans-serif',
   sans: 'Assistant,Arial,sans-serif',
   serif: '"Frank Ruhl Libre","Times New Roman",serif',
 } as const;
@@ -85,6 +88,8 @@ export const tracking = {
   labelTight: '.14em',
   cta: '.22em',
   lockup: '.34em',
+  display: '-.045em',
+  /** Restored production hero only. */
   serif: '.005em',
 } as const;
 

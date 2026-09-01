@@ -10,7 +10,7 @@ export interface SectionHeadingProps
    * Use it for "01 / WORK", keep the default gold for a named eyebrow.
    */
   eyebrowVariant?: 'accent' | 'index';
-  /** The serif headline. Wrap a phrase in `<em>` for the gold emphasis. */
+  /** The strong display headline. Wrap a phrase in `<em>` for gold emphasis. */
   title: React.ReactNode;
   /** One paragraph under the title. Capped near 44ch — it is a note, not a page. */
   note?: React.ReactNode;
@@ -19,13 +19,12 @@ export interface SectionHeadingProps
 }
 
 /**
- * Eyebrow, serif headline, note — the three-part section opener used by
+ * Eyebrow, display headline, note — the three-part section opener used by
  * every section on the site.
  *
- * The `em` inside the title renders italic gold in Latin. Instrument Serif's
- * Hebrew fallback has no italic, so under `html[lang="he"]` the emphasis
- * switches to weight and colour instead. That rule lives in components.css;
- * you only ever write `<em>`.
+ * The `em` inside the title keeps the same display face and weight, using gold
+ * for emphasis in both languages. That rule lives in components.css; you only
+ * ever write `<em>`.
  */
 export function SectionHeading({
   eyebrow,

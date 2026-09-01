@@ -54,9 +54,11 @@ voice of the interface: text, rules, HUD. **Gold** (`#d9c69c`) is the only
 colour that acts — CTA, focus rings, progress, emphasis. There is no third
 accent, and no semantic palette beyond one danger tone for form errors.
 
-Three faces: **Instrument Serif** for headlines, **Inter Tight** for body,
-**SF Mono** for every label, badge, timestamp and the brand lockup. The mono
-idiom — 10px, uppercase, `.28em` tracking — is what makes a label a label.
+The primary headline face is **Space Grotesk**, with **Inter Tight** for body
+and **SF Mono** for every label, badge, timestamp and the brand lockup.
+**Instrument Serif** is reserved for the restored production hero and is not a
+general section-heading style. The mono idiom — 10px, uppercase, `.28em`
+tracking — is what makes a label a label.
 
 One rounded family: `--r-pill` (999px) for buttons and chips, `--r-lg` (20px)
 for media, `--r-md` (14px) for panels. The CTA pill is the extreme of that
@@ -70,12 +72,13 @@ that lies.
 
 The system is bilingual. Under `html[lang="he"]`:
 
-- `--moona-sans` becomes Assistant, `--moona-serif` becomes Frank Ruhl Libre.
+- `--moona-display` and `--moona-sans` become Assistant. The hero-only
+  `--moona-serif` becomes Frank Ruhl Libre.
 - Mono stays Latin on purpose — the HUD, timestamps and brand marks are Latin
   in both languages.
-- Instrument Serif's Hebrew fallback has no italic, so `<em>` inside a headline
-  switches from italic-gold to weight-plus-colour (`--he-emphasis-weight`,
-  `--he-emphasis-color`). You still only write `<em>`.
+- `<em>` inside a standard display headline keeps the same face and weight and
+  uses gold. The restored hero retains its production-specific Hebrew emphasis
+  rule (`--he-emphasis-weight`, `--he-emphasis-color`).
 - Labels drop their letter-spacing. Hebrew nav labels are wider than the Latin
   ones, and `letter-spacing:0` is what keeps the header row fitting a 375px
   phone.
@@ -90,7 +93,7 @@ The system is bilingual. Under `html[lang="he"]`:
 | `MailButton` | The second door. Dark with a gold hairline, so it never competes with the primary. |
 | `IconButton` | 44px round control over video: gold hairline on a void scrim. |
 | `Chip` | One pill, three voices — `spec` (gold outline), `plain` (ice on scrim), `file` (removable, with a danger state). |
-| `SectionHeading` | Eyebrow, serif headline, note. The opener every section shares. |
+| `SectionHeading` | Eyebrow, strong display headline, note. The opener every section shares. |
 | `Frame` | The media surface and the signature aperture reveal. Declares its ratio so nothing reflows when the video arrives. |
 | `Card` | A story beat: void glass, ember glow from the floor, lit bottom edge, optional tilt. |
 | `Steps` | Joined dots — "three, and you are here", sitting with the question. |

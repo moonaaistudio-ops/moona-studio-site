@@ -393,6 +393,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
         const style = getComputedStyle(element);
         return {
           text: element.textContent,
+          hero: Boolean(element.closest('#hero-stick')),
           fontStyle: style.fontStyle,
           fontWeight: style.fontWeight,
           color: style.color
@@ -413,8 +414,55 @@ test.describe('dictionary and first-paint privacy contract', () => {
     expect(emphasis.hebrew.map(item => item.text)).not.toEqual(emphasis.english);
     for (const item of emphasis.hebrew) {
       expect(item.fontStyle).toBe('normal');
-      expect(item.fontWeight).toBe('600');
+      expect(item.fontWeight).toBe(item.hero ? '600' : '700');
       expect(item.color).toBe('rgb(243, 233, 210)');
+    }
+  });
+
+  test('the restored hero is the only serif typography on the site', async ({ page }) => {
+    const displaySelectors = [
+      '.film-title', '.film-title em', '.film-beat h3', '.about-copy h2',
+      '.crew-transition h2', '.crew-head h2', '.crew-credit h3',
+      '.contact .contact-line', '.q .qtitle'
+    ];
+
+    for (const locale of ['en', 'he']) {
+      await openHome(page, `/?lang=${locale}`);
+      const typography = await page.evaluate(selectors => {
+        const family = element => getComputedStyle(element).fontFamily;
+        const serifPattern = /Instrument Serif|Frank Ruhl Libre/i;
+        const outsideHero = [...document.querySelectorAll('body *')]
+          .filter(element => element.getClientRects().length > 0)
+          .filter(element => !element.closest('#hero-stick'))
+          .filter(element => serifPattern.test(family(element)))
+          .map(element => `${element.tagName.toLowerCase()}.${element.className}`);
+        return {
+          heroFamily: family(document.querySelector('.htxt h1.statement')),
+          display: selectors.flatMap(selector => [...document.querySelectorAll(selector)]
+            .map(element => ({ selector, family: family(element) }))),
+          filmEmStyle: getComputedStyle(document.querySelector('.film-title em')).fontStyle,
+          filmWeight: getComputedStyle(document.querySelector('.film-title')).fontWeight,
+          outsideHero
+        };
+      }, displaySelectors);
+
+      expect(typography.heroFamily).toContain(locale === 'he' ? 'Frank Ruhl Libre' : 'Instrument Serif');
+      expect(typography.display.length).toBeGreaterThanOrEqual(displaySelectors.length);
+      for (const item of typography.display) {
+        expect(item.family, `${locale} ${item.selector}`).toContain(locale === 'he' ? 'Assistant' : 'Space Grotesk');
+      }
+      expect(typography.filmEmStyle).toBe('normal');
+      expect(typography.filmWeight).toBe(locale === 'he' ? '700' : '600');
+      expect(typography.outsideHero).toEqual([]);
+
+      for (const legalPage of ['privacy.html', 'accessibility.html']) {
+        await page.goto(`/${legalPage}?lang=${locale}`);
+        await waitForI18n(page);
+        await expect(page.locator('h1')).toHaveCSS(
+          'font-family',
+          new RegExp(locale === 'he' ? 'Assistant' : 'Space Grotesk')
+        );
+      }
     }
   });
 

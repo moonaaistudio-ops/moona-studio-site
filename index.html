@@ -103,7 +103,7 @@ if(location.protocol!=='file:'){
 
   /* ───── palette: gold (the accent that acts) ───── */
   --moona-gold:#d9c69c;                       /* the one accent — CTA, focus, rails */
-  --moona-gold-hot:#f3e9d2;                   /* emphasis inside serif headlines */
+  --moona-gold-hot:#f3e9d2;                   /* emphasis inside display headlines */
   --moona-gold-ink:#0d0b07;                   /* text ON gold */
   --moona-gold-line:rgba(217,198,156,.5);     /* gold hairline border */
   --moona-gold-wash:rgba(217,198,156,.1);     /* gold tint fill */
@@ -151,7 +151,8 @@ if(location.protocol!=='file:'){
   --moona-track-label-tight:.08em;
   --moona-track-cta:.08em;
   --moona-track-lockup:.34em;
-  --moona-track-serif:.005em;
+  --moona-track-display:-.045em;
+  --moona-track-serif:.005em;                 /* restored production hero only */
 
   /* ───── radii — the CTA pill is the extreme of one rounded family ───── */
   --r-pill:999px;   /* buttons, chips  */
@@ -180,7 +181,7 @@ if(location.protocol!=='file:'){
   --moona-gutter-wide:clamp(22px,6vw,80px);
   --moona-tap:44px;                           /* minimum touch target */
 
-  /* ───── Hebrew emphasis (serif italic has no Hebrew equivalent) ───── */
+  /* ───── Hebrew emphasis in the restored production hero ───── */
   --he-emphasis-weight:600;
   --he-emphasis-color:#f3e9d2;
 }
@@ -277,8 +278,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:none}
 }
 
 /* ————————————————————— request flow ————————————————————— */
-.contact .contact-line{font-family:var(--serif);font-size:clamp(28px,4.4vw,52px);
-  color:var(--ice-hot);letter-spacing:.005em;line-height:1.15;margin-bottom:34px;text-wrap:balance}
+.contact .contact-line{font-family:var(--display);font-size:clamp(28px,4.4vw,52px);font-weight:600;
+  color:var(--ice-hot);letter-spacing:-.045em;line-height:1.15;margin-bottom:34px;text-wrap:balance}
 .contact .cta-sub{margin-top:34px;font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;
   text-transform:uppercase;color:var(--ice-dim)}
 .contact .mail{margin-top:24px}
@@ -333,8 +334,8 @@ html[dir="rtl"] #ask .ask-rail i{
 #ask:not(.open) .q,#ask:not(.open) .q.active{visibility:hidden;pointer-events:none}
 .q .qlab{font-family:var(--mono);font-size:10px;letter-spacing:.32em;text-transform:uppercase;
   color:var(--ice-dim);margin-bottom:20px}
-.q .qtitle{font-family:var(--serif);font-size:clamp(30px,5.4vw,62px);font-weight:400;
-  line-height:1.1;letter-spacing:.005em;color:var(--ice-hot);margin-bottom:34px;text-wrap:balance}
+.q .qtitle{font-family:var(--display);font-size:clamp(30px,5.4vw,62px);font-weight:600;
+  line-height:1.05;letter-spacing:-.045em;color:var(--ice-hot);margin-bottom:34px;text-wrap:balance}
 .q input[type=text],.q input[type=email],.q input[type=url]{
   width:100%;background:none;border:0;border-bottom:1px solid var(--ice-faint);
   font-family:var(--sans);font-size:clamp(19px,2.6vw,28px);font-weight:400;
@@ -674,9 +675,9 @@ main{position:relative;z-index:2;background:var(--void)}
 .film-head{max-width:1560px;margin:0 auto 6vh;padding:0 clamp(22px,5vw,72px)}
 .film-eyebrow{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.32em;
   text-transform:uppercase;color:#d9c69c;margin-bottom:22px}
-.film-title{font-family:var(--serif);font-size:clamp(30px,4.4vw,58px);font-weight:400;
-  line-height:1.08;letter-spacing:.005em;color:var(--ice-hot);max-width:20ch;text-wrap:balance}
-.film-title em{font-style:italic;color:#f3e9d2}
+.film-title{font-family:var(--display);font-size:clamp(30px,4.4vw,58px);font-weight:600;
+  line-height:1;letter-spacing:-.045em;color:var(--ice-hot);max-width:20ch;text-wrap:balance}
+.film-title em{font-family:inherit;font-style:normal;font-weight:inherit;color:#f3e9d2}
 .film-note{margin-top:22px;font-size:clamp(15px,1.7vw,19px);color:rgba(190,212,238,.72);
   max-width:44ch;line-height:1.55}
 .film-wrap{max-width:1560px;margin:0 auto;padding:0 clamp(22px,5vw,72px)}
@@ -803,9 +804,9 @@ main{position:relative;z-index:2;background:var(--void)}
 html[dir="rtl"] .beat-num{right:auto;left:24px}
 .beat-label{position:relative;z-index:1;display:block;margin-bottom:18px;font-family:var(--mono);
   font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#d9c69c}
-/* the hook: each chapter leads with one line in the hero's own voice */
-.film-beat h3{position:relative;z-index:1;font-family:var(--serif);font-size:clamp(24px,2.25vw,34px);
-  font-weight:400;line-height:1.16;letter-spacing:.005em;color:var(--ice-hot);text-wrap:balance}
+/* the hook: each chapter leads with one strong line in the studio's display voice */
+.film-beat h3{position:relative;z-index:1;font-family:var(--display);font-size:clamp(24px,2.25vw,34px);
+  font-weight:600;line-height:1.08;letter-spacing:-.035em;color:var(--ice-hot);text-wrap:balance}
 .film-beat p{position:relative;z-index:1;margin-top:16px;max-width:65ch;font-size:16px;
   line-height:1.65;color:rgba(190,212,238,.82)}
 .beat-line{position:absolute;z-index:4;left:8%;right:8%;bottom:0;height:1px;pointer-events:none;
@@ -877,8 +878,8 @@ html[dir="rtl"] .beat-line{transform-origin:right}
 /* studio sentence */
 .sentence{min-height:70vh;display:flex;align-items:center;justify-content:center;text-align:center;
   padding:10vh clamp(22px,6vw,80px)}
-.sentence p{font-family:var(--serif);font-size:clamp(28px,4.6vw,52px);font-weight:400;
-  letter-spacing:.005em;line-height:1.22;max-width:24ch;color:var(--ice-hot)}
+.sentence p{font-family:var(--display);font-size:clamp(28px,4.6vw,52px);font-weight:600;
+  letter-spacing:-.045em;line-height:1.08;max-width:24ch;color:var(--ice-hot)}
 .sentence p em{font-style:normal;color:var(--ice-dim)}
 
 .ctagal{display:grid;grid-template-columns:0.8fr 1.2fr;
@@ -889,9 +890,9 @@ html[dir="rtl"] .beat-line{transform-origin:right}
 .ctagal-text{grid-area:intro}
 .ctagal-label{font-family:var(--mono);font-size:10px;letter-spacing:.32em;text-transform:uppercase;
   color:#d9c69c;margin-bottom:22px}
-.ctagal-h{font-family:var(--serif);font-size:clamp(30px,4.4vw,58px);font-weight:400;
-  line-height:1.08;letter-spacing:.005em;color:var(--ice-hot);max-width:16ch;text-wrap:balance}
-.ctagal-h em{font-style:italic;color:#f3e9d2}
+.ctagal-h{font-family:var(--display);font-size:clamp(30px,4.4vw,58px);font-weight:600;
+  line-height:1;letter-spacing:-.045em;color:var(--ice-hot);max-width:16ch;text-wrap:balance}
+.ctagal-h em{font-family:inherit;font-style:normal;font-weight:inherit;color:#f3e9d2}
 .ctagal-actions{grid-area:actions;display:flex;flex-direction:column;align-items:center;text-align:center}
 .ctagal .cta-btn{margin-top:0}
 .ctagal-note{margin-top:24px;font-family:var(--mono);font-size:10px;letter-spacing:.24em;
@@ -1019,7 +1020,7 @@ html[dir="rtl"] .beat-line{transform-origin:right}
 /* Hebrew uses its own readable interface face without changing the Latin HUD,
    brand marks, timestamps or AI terminology. */
 html[lang="he"] body{font-synthesis:none}
-html[lang="he"] :is(.htxt h1.statement,.film-title,.ctagal-h,.sentence p) em{
+html[lang="he"] .htxt h1.statement em{
   font-family:var(--serif);font-style:normal;font-weight:var(--he-emphasis-weight);
   color:var(--he-emphasis-color);font-synthesis:none}
 html[lang="he"] :is(.cta-btn,.q .qlab,.q .qhint,.qnext,.qback,.qskip,.ask-title,.ask-close,
@@ -1079,14 +1080,14 @@ html.motion-paused .beat-line{opacity:.64!important}
 body{font-size:16px;font-synthesis:none}
 .section-kicker{font-family:var(--sans);font-size:12px;line-height:1.3;letter-spacing:.14em;text-transform:uppercase;color:var(--ice-dim);font-weight:600}
 
-/* A heavyweight grotesk carries the brand system; serif is now an editorial
-   accent instead of the default voice of every headline. */
+/* A heavyweight grotesk carries the brand system. The restored production
+   hero above is the sole editorial-serif exception. */
 #hdr button[data-goto]{font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:.08em}
 .header-actions .cta-btn.sm{border-radius:2px;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.06em;background:var(--gold-hot);border-color:var(--gold-hot);color:#100d07}
 .header-actions .cta-btn.sm i{border-color:#100d07}
 .language-toggle{width:auto;min-width:44px;border:0;border-bottom:1px solid rgba(255,255,255,.38);border-radius:0;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.04em}
 .language-toggle:hover{border-color:#fff;background:transparent}
-:is(.about-copy h2,.crew-transition h2,.crew-head h2,.crew-credit h3,.ctagal-h,.contact .contact-line,.q .qtitle){font-family:var(--display);font-weight:600;letter-spacing:-.05em}
+:is(.about-copy h2,.crew-transition h2,.crew-head h2,.crew-credit h3,.ctagal-h,.contact .contact-line,.q .qtitle){font-family:var(--display);font-weight:600;letter-spacing:-.045em}
 .work-grid .piece .meta .brand{font-family:var(--display);font-weight:600;letter-spacing:-.04em}
 
 /* Founder */
@@ -1096,7 +1097,7 @@ body{font-size:16px;font-synthesis:none}
 .about-media img{object-fit:cover;object-position:center}
 .about-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(5,7,12,.05) 34%,rgba(5,7,12,.56) 58%,rgba(5,7,12,.96) 100%)}
 .about-copy{position:relative;z-index:2;min-height:100svh;width:min(48%,700px);margin-left:auto;margin-right:0;padding:clamp(120px,15vh,190px) clamp(40px,7vw,120px) 90px clamp(36px,5vw,80px);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-align:start}
-.about-copy h2{margin:18px 0 8px;font-family:var(--serif);font-size:clamp(58px,7.5vw,124px);font-weight:400;line-height:.88;letter-spacing:-.055em;color:var(--ice-hot)}
+.about-copy h2{margin:18px 0 8px;font-family:var(--display);font-size:clamp(58px,7.5vw,124px);font-weight:600;line-height:.88;letter-spacing:-.055em;color:var(--ice-hot)}
 .about-role,.about-engine{font-family:var(--mono);font-size:10px;line-height:1.65;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
 .about-body{margin:clamp(30px,4vw,54px) 0 0;max-width:39ch;font-size:clamp(18px,1.55vw,23px);line-height:1.55;color:rgba(222,236,252,.9)}
 .about-engine{margin:34px 0 0;padding-top:25px;border-top:1px solid rgba(190,212,238,.2);max-width:54ch;color:rgba(222,236,252,.68)}
@@ -1105,12 +1106,12 @@ body{font-size:16px;font-synthesis:none}
 .crew-transition picture,.crew-transition img{position:absolute;inset:0;width:100%;height:100%;display:block}
 .crew-transition img{object-fit:cover;object-position:center}
 .crew-transition-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(3,5,9,.04) 35%,rgba(3,5,9,.82) 100%)}
-.crew-transition h2{position:absolute;z-index:2;inset-inline:8vw;bottom:9vh;margin:0;font-family:var(--serif);font-size:clamp(42px,7vw,110px);font-weight:400;line-height:.95;letter-spacing:-.045em;color:var(--ice-hot);text-align:center}
+.crew-transition h2{position:absolute;z-index:2;inset-inline:8vw;bottom:9vh;margin:0;font-family:var(--display);font-size:clamp(42px,7vw,110px);font-weight:600;line-height:.95;letter-spacing:-.045em;color:var(--ice-hot);text-align:center}
 
 /* AI crew: quiet empty portrait slots until the final cast photography lands. */
 .crew{padding:clamp(100px,13vw,190px) 0 clamp(110px,14vw,210px);background:#070a10;overflow:hidden}
 .crew-head{padding:0 5vw 58px;display:flex;align-items:flex-end;justify-content:space-between;gap:40px}
-.crew-head h2{margin:16px 0 0;font-family:var(--serif);font-size:clamp(48px,6vw,94px);font-weight:400;line-height:.94;letter-spacing:-.045em;color:var(--ice-hot)}
+.crew-head h2{margin:16px 0 0;font-family:var(--display);font-size:clamp(48px,6vw,94px);font-weight:600;line-height:.94;letter-spacing:-.045em;color:var(--ice-hot)}
 .crew-head>p{margin:0 0 8px;max-width:27ch;font-size:16px;line-height:1.55;color:var(--ice-dim);text-align:end}
 .crew-rail{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(280px,calc((100vw - 13vw)/3.35));gap:16px;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:inline mandatory;scroll-padding-inline:5vw;padding:0 5vw 18px;outline:none;scrollbar-width:none}
 .crew-rail::-webkit-scrollbar{display:none}
@@ -1121,7 +1122,7 @@ body{font-size:16px;font-synthesis:none}
 .crew-portrait::after{content:"";position:absolute;left:50%;top:50%;width:1px;height:26%;background:rgba(217,198,156,.28);transform:translate(-50%,-50%)}
 .crew-credit{min-height:225px;padding:24px 22px 28px;text-align:start}
 .crew-credit>span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--ice-dim)}
-.crew-credit h3{margin:22px 0 6px;font-family:var(--serif);font-size:clamp(34px,3vw,48px);font-weight:400;line-height:1;color:var(--ice-hot)}
+.crew-credit h3{margin:22px 0 6px;font-family:var(--display);font-size:clamp(34px,3vw,48px);font-weight:600;line-height:1;letter-spacing:-.04em;color:var(--ice-hot)}
 .crew-credit p{margin:16px 0 0;font-size:15px;line-height:1.45;color:rgba(222,236,252,.72)}
 .crew-credit .crew-role{margin-top:0;font-family:var(--mono);font-size:9px;line-height:1.5;letter-spacing:.15em;text-transform:uppercase;color:var(--gold)}
 .crew-controls{display:flex;justify-content:flex-end;gap:10px;padding:22px 5vw 0}
@@ -1156,7 +1157,7 @@ html[dir="rtl"] .crew-controls button span{display:inline-block;transform:scaleX
 .qbrief .drop{margin-top:20px}
 
 html[lang="he"] :is(.section-kicker,.about-role,.about-engine,.crew-credit>span,.crew-credit .crew-role){font-family:var(--sans);letter-spacing:0;text-transform:none}
-html[lang="he"] :is(.about-copy h2,.crew-head h2,.crew-transition h2,.crew-credit h3,.ctagal-h,.contact .contact-line,.q .qtitle){font-family:var(--display);font-weight:700;letter-spacing:-.025em}
+html[lang="he"] :is(.film-title,.film-beat h3,.sentence p,.about-copy h2,.crew-head h2,.crew-transition h2,.crew-credit h3,.ctagal-h,.contact .contact-line,.q .qtitle){font-family:var(--display);font-weight:700;letter-spacing:-.025em}
 
 @media(max-width:760px){
   .about{min-height:0;overflow:visible}.about-media{position:relative;height:auto;aspect-ratio:4/5}.about-media img{object-position:center}.about-scrim{display:none}

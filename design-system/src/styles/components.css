@@ -114,12 +114,11 @@ html[dir="rtl"] .mn-mail:hover .mn-caret{transform:rotate(-135deg) translate(3px
   letter-spacing:var(--moona-track-label-wide);text-transform:uppercase;
   color:var(--moona-gold);margin-bottom:22px}
 .mn-heading__eyebrow--index{letter-spacing:.4em;color:var(--moona-ice-dim);margin-bottom:14px}
-.mn-heading__title{font-family:var(--moona-serif);font-size:var(--moona-fs-title);font-weight:400;
-  line-height:var(--moona-lh-display);letter-spacing:var(--moona-track-serif);
+.mn-heading__title{font-family:var(--moona-display);font-size:var(--moona-fs-title);font-weight:600;
+  line-height:1;letter-spacing:var(--moona-track-display);
   color:var(--moona-ice-hot);max-width:20ch;text-wrap:balance}
-.mn-heading__title em{font-style:italic;color:var(--moona-gold-hot)}
-html[lang="he"] .mn-heading__title em{font-style:normal;
-  font-weight:var(--he-emphasis-weight);color:var(--he-emphasis-color);font-synthesis:none}
+.mn-heading__title em{font-family:inherit;font-style:normal;font-weight:inherit;color:var(--moona-gold-hot)}
+html[lang="he"] .mn-heading__title{font-weight:700;letter-spacing:-.025em}
 .mn-heading__note{margin-top:22px;font-size:var(--moona-fs-lead);color:var(--moona-body-dim);
   max-width:44ch;line-height:var(--moona-lh-body)}
 
@@ -190,9 +189,10 @@ html[lang="he"] .mn-heading__title em{font-style:normal;
 .mn-card:hover .mn-card__num{box-shadow:0 8px 16px -2px rgba(0,0,0,.5),inset 2px 2px 5px rgba(255,255,255,.14),inset -2px -2px 5px rgba(0,0,0,.7),0 0 18px -4px rgba(217,198,156,.5)}
 .mn-card__label{font-family:var(--moona-mono);font-size:var(--moona-fs-label);
   letter-spacing:var(--moona-track-label);text-transform:uppercase;color:var(--moona-gold)}
-.mn-card__title{position:relative;z-index:1;font-family:var(--moona-serif);
-  font-size:var(--moona-fs-card);font-weight:400;line-height:1.18;
-  letter-spacing:var(--moona-track-serif);color:var(--moona-ice-hot);text-wrap:balance}
+.mn-card__title{position:relative;z-index:1;font-family:var(--moona-display);
+  font-size:var(--moona-fs-card);font-weight:600;line-height:1.08;
+  letter-spacing:-.035em;color:var(--moona-ice-hot);text-wrap:balance}
+html[lang="he"] .mn-card__title{font-weight:700;letter-spacing:-.025em}
 .mn-card__body{position:relative;z-index:1;margin-top:14px;font-size:var(--moona-fs-body-sm);
   line-height:var(--moona-lh-loose);color:rgba(190,212,238,.78)}
 @media(prefers-reduced-motion:reduce){.mn-card__inner{transform:none;transition:none}}
