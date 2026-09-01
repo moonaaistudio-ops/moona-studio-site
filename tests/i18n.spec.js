@@ -205,12 +205,14 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(headerWordmark).toHaveAttribute('src', 'p/brand/moona-logo-lockup.svg');
     await expect(headerWordmark).toHaveAttribute('alt', '');
     await expect(page.locator('.hero-wordmark, .hero-chroma, .hero-aperture, #markSvg, #heroIris, .lockup-iris, [data-scramble]')).toHaveCount(0);
-    await expect(page.locator('.hero-kicker')).toHaveText('בהובלת המייסד · קריאייטיב טכנולוגי · תל אביב');
-    await expect(page.locator('.hero-statement [data-i18n="hero.headline.lead"]')).toHaveText('MOONA STUDIO');
-    await expect(page.locator('.hero-statement img')).toHaveAttribute('src', 'p/brand/moona-logo-lockup.svg');
-    await expect(page.locator('.hero-statement')).toHaveAttribute('dir', 'ltr');
-    await expect(page.locator('.hero-statement-accent')).toHaveCount(0);
-    await expect(page.locator('.hero-position')).toHaveText('בימוי · פיתוח תוכנה · הפקת AI');
+    await expect(page.locator('#sky')).toBeVisible();
+    await expect(page.locator('#moon')).toBeVisible();
+    await expect(page.locator('.statement')).toHaveText('סטודיו AI-native לסרטי מותג ופרסומות');
+    await expect(page.locator('.statement-sub span')).toHaveText([
+      'מקריאטיב ובימוי ועד הפקה ופוסט,',
+      'בשליטה מלאה על כל פריים.'
+    ]);
+    await expect(page.locator('.hero-cta [data-i18n="hero.workCta"]')).toHaveText('לצפייה בעבודות');
     await expect(page.locator('.film-head .film-eyebrow')).toHaveText('סרט הדגל');
     await expect(page.locator('.film-title')).toHaveText('יצרנו מותג. וצילמנו לו פרסומת.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE הוא חטיף אנרגיה שאנחנו יצרנו מאפס.');
@@ -261,7 +263,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     }))).toEqual({
       nav: 'Start a project',
       hero: 'Start a project',
-      work: 'View work',
+      work: 'View our work',
       contact: 'Start a project',
       dialog: 'Start a project',
       send: 'Send details',
@@ -288,11 +290,12 @@ test.describe('dictionary and first-paint privacy contract', () => {
     });
 
     await page.evaluate(() => window.MoonaI18n.setLocale('en', { source: 'programmatic' }));
-    await expect(page.locator('.hero-kicker')).toHaveText('Founder-led · Creative technology · Tel Aviv');
-    await expect(page.locator('.hero-statement [data-i18n="hero.headline.lead"]')).toHaveText('MOONA STUDIO');
-    await expect(page.locator('.hero-statement img')).toHaveAttribute('src', 'p/brand/moona-logo-lockup.svg');
-    await expect(page.locator('.hero-statement-accent')).toHaveCount(0);
-    await expect(page.locator('.hero-position')).toHaveText('Direction · Software development · AI production');
+    await expect(page.locator('.statement')).toHaveText('Cinematic ads, born without a camera');
+    await expect(page.locator('.statement-sub span')).toHaveText([
+      'An AI-native studio for film and motion ads.',
+      'Story, craft and taste first.'
+    ]);
+    await expect(page.locator('.hero-cta [data-i18n="hero.workCta"]')).toHaveText('View our work');
     await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
     await expect(page.locator('.film-title')).toHaveText('We created a brand. Then we shot its ad.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE is an energy bar you cannot buy.');
@@ -404,9 +407,9 @@ test.describe('dictionary and first-paint privacy contract', () => {
         english: elements.map(element => element.textContent)
       };
     });
-    expect(emphasis.count).toBe(1);
+    expect(emphasis.count).toBe(2);
     expect(emphasis.sameNodes).toBe(true);
-    expect(emphasis.tags).toEqual(['EM']);
+    expect(emphasis.tags).toEqual(['EM', 'EM']);
     expect(emphasis.hebrew.map(item => item.text)).not.toEqual(emphasis.english);
     for (const item of emphasis.hebrew) {
       expect(item.fontStyle).toBe('normal');
@@ -491,21 +494,24 @@ test.describe('dictionary and first-paint privacy contract', () => {
 });
 
 test.describe('locale transitions and state preservation', () => {
-  test('switching locale preserves the official header logo and physical hero media stage', async ({ page }) => {
+  test('switching locale preserves the official header logo and production canvas hero', async ({ page }) => {
     await openHome(page, '/?lang=en');
     const result = await page.evaluate(() => {
       const headerWordmark = document.querySelector('.lockup-wordmark');
-      const heroMedia = document.querySelector('.hero-media');
+      const sky = document.getElementById('sky');
+      const moon = document.getElementById('moon');
       headerWordmark.dataset.e2eMarker = 'header-wordmark';
-      heroMedia.dataset.e2eMarker = 'hero-media';
+      sky.dataset.e2eMarker = 'hero-sky';
+      moon.dataset.e2eMarker = 'hero-moon';
       window.MoonaI18n.setLocale('he', { source: 'programmatic' });
       return {
         headerMarker: headerWordmark.dataset.e2eMarker,
-        heroMarker: heroMedia.dataset.e2eMarker,
+        skyMarker: sky.dataset.e2eMarker,
+        moonMarker: moon.dataset.e2eMarker,
         headerAsset: headerWordmark.getAttribute('src'),
-        heroDirection: getComputedStyle(heroMedia).direction,
-        statement: document.querySelector('.hero-statement').textContent.replace(/\s+/g, ' ').trim(),
-        retiredHeroLayers: document.querySelectorAll('.hero-wordmark, .hero-chroma, .hero-aperture, .hero-actions').length,
+        statement: document.querySelector('.statement').textContent.replace(/\s+/g, ' ').trim(),
+        canvasSizes: [sky, moon].map(canvas => ({ width: canvas.width, height: canvas.height })),
+        retiredHeroLayers: document.querySelectorAll('.hero-media, .hero-media-video, .hero-media-fallback, .hero-brand-stage, .hero-wordmark, .hero-chroma, .hero-aperture, .hero-actions').length,
         scrambleTargets: document.querySelectorAll('[data-scramble]').length,
         irisTargets: document.querySelectorAll('#markSvg, #heroIris, .lockup-iris').length,
         workTags: document.querySelectorAll('#work .tag').length,
@@ -515,10 +521,11 @@ test.describe('locale transitions and state preservation', () => {
     });
 
     expect(result.headerMarker).toBe('header-wordmark');
-    expect(result.heroMarker).toBe('hero-media');
+    expect(result.skyMarker).toBe('hero-sky');
+    expect(result.moonMarker).toBe('hero-moon');
     expect(result.headerAsset).toBe('p/brand/moona-logo-lockup.svg');
-    expect(result.heroDirection).toBe('ltr');
-    expect(result.statement).toBe('MOONA STUDIO');
+    expect(result.statement).toBe('סטודיו AI-native לסרטי מותג ופרסומות');
+    expect(result.canvasSizes.every(size => size.width > 0 && size.height > 0)).toBe(true);
     expect(result.retiredHeroLayers).toBe(0);
     expect(result.scrambleTargets).toBe(0);
     expect(result.irisTargets).toBe(0);
@@ -1001,153 +1008,48 @@ test.describe('responsive header and dynamic UI', () => {
     }
   });
 
-  test('future-video hero keeps media physical across locales and leaves the film unobstructed', async ({ page }) => {
+  test('production canvas hero leads to the work and mobile navigation stays accessible', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await openHome(page, '/?lang=en');
+    await openHome(page, '/?lang=he');
 
-    const heroVideo = page.locator('.hero-media-video');
-    await expect(page.locator('.hero-media')).toBeVisible();
-    await expect(page.locator('.hero-statement')).toBeVisible();
-    await expect(page.locator('.hero-actions, .hero-corner, .hero-corner--work, .hero-corner--project, .hero-project-cta, .hero-work-link, .hero-aperture')).toHaveCount(0);
-    await expect(heroVideo).toHaveAttribute('hidden', '');
-    await expect(heroVideo).toHaveAttribute('muted', '');
-    await expect(heroVideo).toHaveAttribute('loop', '');
-    await expect(heroVideo).toHaveAttribute('playsinline', '');
-    await expect(heroVideo).toHaveAttribute('preload', 'none');
-    await expect(heroVideo).not.toHaveAttribute('autoplay', /.+/);
+    await expect(page.locator('#sky')).toBeVisible();
+    await expect(page.locator('#moon')).toBeVisible();
+    await expect(page.locator('.statement')).toHaveText('סטודיו AI-native לסרטי מותג ופרסומות');
+    await expect(page.locator('.statement-sub span')).toHaveText([
+      'מקריאטיב ובימוי ועד הפקה ופוסט,',
+      'בשליטה מלאה על כל פריים.'
+    ]);
+    await expect(page.locator('.hero-cta')).toHaveText('לצפייה בעבודות');
+    await expect(page.locator('#hud-chapter')).toHaveText('CH·01');
+    await expect(page.locator('#hud-progress')).toHaveText(/\d{3}/);
+    await expect(page.locator('.hero-media, .hero-media-video, .hero-media-fallback, .hero-brand-stage')).toHaveCount(0);
+
+    const desktopHeroRatio = await page.locator('#hero-track').evaluate(element => element.offsetHeight / innerHeight);
+    expect(desktopHeroRatio).toBeGreaterThanOrEqual(1.69);
+    expect(desktopHeroRatio).toBeLessThanOrEqual(1.71);
     await expect(page.locator('[data-mobile-menu-toggle]')).toBeHidden();
 
-    const inspectDesktopHero = () => page.evaluate(() => {
-      const box = element => {
-        const value = element.getBoundingClientRect();
-        return { left: value.left, right: value.right, top: value.top, bottom: value.bottom, width: value.width, height: value.height };
-      };
-      const media = document.querySelector('.hero-media');
-      const fallback = document.querySelector('.hero-media-fallback');
-      const video = document.querySelector('.hero-media-video');
-      return {
-        ratio: document.getElementById('hero-track').offsetHeight / innerHeight,
-        viewportWidth: innerWidth,
-        viewportHeight: innerHeight,
-        media: box(media),
-        stage: box(document.querySelector('.hero-brand-stage')),
-        statement: box(document.querySelector('.hero-statement')),
-        position: box(document.querySelector('.hero-position')),
-        mediaDirection: getComputedStyle(media).direction,
-        scrimTransform: getComputedStyle(media, '::after').transform,
-        planetRight: getComputedStyle(fallback, '::after').right,
-        videoPolicy: {
-          hidden: video.hidden,
-          muted: video.muted,
-          loop: video.loop,
-          playsInline: video.playsInline,
-          preload: video.preload,
-          autoplay: video.autoplay,
-          paused: video.paused,
-          objectFit: getComputedStyle(video).objectFit,
-          objectPosition: getComputedStyle(video).objectPosition
-        }
-      };
-    });
-
-    const englishHero = await inspectDesktopHero();
-    await page.evaluate(() => window.MoonaI18n.setLocale('he', { source: 'programmatic' }));
-    await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
-    const hebrewHero = await inspectDesktopHero();
-
-    for (const layout of [englishHero, hebrewHero]) {
-      expect(layout.ratio).toBeCloseTo(1, 2);
-      expect(layout.videoPolicy).toEqual({
-        hidden: true,
-        muted: true,
-        loop: true,
-        playsInline: true,
-        preload: 'none',
-        autoplay: false,
-        paused: true,
-        objectFit: 'cover',
-        objectPosition: '50% 50%'
-      });
-      expect(layout.mediaDirection).toBe('ltr');
-      expect(layout.scrimTransform).toBe('none');
-      expect(layout.media.left).toBeGreaterThanOrEqual(-1);
-      expect(layout.media.right).toBeLessThanOrEqual(layout.viewportWidth + 1);
-      expect(layout.media.top).toBeGreaterThanOrEqual(-1);
-      expect(layout.media.bottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
-      expect(layout.media.width).toBeCloseTo(layout.viewportWidth, 0);
-      expect(layout.media.height).toBeCloseTo(layout.viewportHeight, 0);
-      for (const element of [layout.statement, layout.position]) {
-        expect(element.left).toBeGreaterThanOrEqual(-1);
-        expect(element.right).toBeLessThanOrEqual(layout.viewportWidth + 1);
-        expect(element.top).toBeGreaterThanOrEqual(-1);
-        expect(element.bottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
-      }
-    }
-    expect(hebrewHero.planetRight).toBe(englishHero.planetRight);
-
-    expect(englishHero.stage.left).toBeLessThanOrEqual(1);
-    expect(englishHero.stage.right).toBeLessThan(englishHero.viewportWidth);
-    expect(englishHero.statement.right).toBeLessThanOrEqual(englishHero.viewportWidth / 2);
-    expect(hebrewHero.stage.right).toBeGreaterThanOrEqual(hebrewHero.viewportWidth - 1);
-    expect(hebrewHero.stage.left).toBeGreaterThan(0);
-    expect(hebrewHero.statement.left).toBeGreaterThanOrEqual(hebrewHero.viewportWidth / 2);
+    await page.locator('.hero-cta').click();
+    await expect(page.locator('#ask')).not.toHaveClass(/open/);
+    await expect.poll(() => page.evaluate(() => {
+      const film = document.getElementById('film');
+      const header = document.getElementById('hdr');
+      return Math.abs(film.getBoundingClientRect().top - header.offsetHeight);
+    })).toBeLessThan(3);
 
     await page.setViewportSize({ width: 390, height: 844 });
     await page.evaluate(() => window.scrollTo(0, 0));
-    const mobileHero = await page.evaluate(() => {
-      const box = element => {
-        const value = element.getBoundingClientRect();
-        return { left: value.left, right: value.right, top: value.top, bottom: value.bottom, width: value.width, height: value.height };
-      };
-      return {
-        ratio: document.getElementById('hero-track').offsetHeight / innerHeight,
-        filmTop: document.getElementById('film').getBoundingClientRect().top,
-        viewportWidth: innerWidth,
-        viewportHeight: innerHeight,
-        pageWidth: document.documentElement.scrollWidth,
-        media: box(document.querySelector('.hero-media')),
-        statement: box(document.querySelector('.hero-statement')),
-        kicker: box(document.querySelector('.hero-kicker')),
-        position: box(document.querySelector('.hero-position'))
-      };
-    });
-    expect(mobileHero.ratio).toBeCloseTo(1, 2);
-    expect(mobileHero.filmTop).toBeLessThanOrEqual(mobileHero.viewportHeight + 1);
+    const mobileHero = await page.evaluate(() => ({
+      ratio: document.getElementById('hero-track').offsetHeight / innerHeight,
+      filmTop: document.getElementById('film').getBoundingClientRect().top,
+      viewport: innerHeight,
+      pageWidth: document.documentElement.scrollWidth,
+      viewportWidth: innerWidth
+    }));
+    expect(mobileHero.ratio).toBeGreaterThanOrEqual(.95);
+    expect(mobileHero.ratio).toBeLessThanOrEqual(.97);
+    expect(mobileHero.filmTop).toBeLessThan(mobileHero.viewport);
     expect(mobileHero.pageWidth).toBeLessThanOrEqual(mobileHero.viewportWidth + 1);
-    expect(mobileHero.media.width).toBeCloseTo(mobileHero.viewportWidth, 0);
-    expect(mobileHero.media.height).toBeCloseTo(mobileHero.viewportHeight, 0);
-    for (const element of [mobileHero.statement, mobileHero.kicker, mobileHero.position]) {
-      expect(element.left).toBeGreaterThanOrEqual(-1);
-      expect(element.right).toBeLessThanOrEqual(mobileHero.viewportWidth + 1);
-      expect(element.top).toBeGreaterThanOrEqual(-1);
-      expect(element.bottom).toBeLessThanOrEqual(mobileHero.viewportHeight + 1);
-    }
-
-    await page.setViewportSize({ width: 320, height: 568 });
-    await page.evaluate(() => window.scrollTo(0, 0));
-    const narrowHero = await page.evaluate(() => {
-      const box = element => {
-        const value = element.getBoundingClientRect();
-        return { left: value.left, right: value.right, top: value.top, bottom: value.bottom, width: value.width, height: value.height };
-      };
-      return {
-        viewportWidth: innerWidth,
-        viewportHeight: innerHeight,
-        pageWidth: document.documentElement.scrollWidth,
-        hero: box(document.getElementById('hero-stick')),
-        kicker: box(document.querySelector('.hero-kicker')),
-        statement: box(document.querySelector('.hero-statement')),
-        position: box(document.querySelector('.hero-position'))
-      };
-    });
-    expect(narrowHero.pageWidth).toBeLessThanOrEqual(narrowHero.viewportWidth + 1);
-    expect(narrowHero.hero.height).toBeCloseTo(narrowHero.viewportHeight, 0);
-    for (const element of [narrowHero.kicker, narrowHero.statement, narrowHero.position]) {
-      expect(element.left).toBeGreaterThanOrEqual(-1);
-      expect(element.right).toBeLessThanOrEqual(narrowHero.viewportWidth + 1);
-      expect(element.top).toBeGreaterThanOrEqual(-1);
-      expect(element.bottom).toBeLessThanOrEqual(narrowHero.viewportHeight + 1);
-    }
 
     const menuToggle = page.locator('[data-mobile-menu-toggle]');
     await expect(menuToggle).toBeVisible();

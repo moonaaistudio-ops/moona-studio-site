@@ -47,21 +47,11 @@ async function expectNoAxeViolations(page, include) {
   expect(summary, 'axe WCAG A/AA violations').toEqual([]);
 }
 
-async function heroMotionState(page) {
-  return page.evaluate(() => {
-    const read = (selector, pseudo) => {
-      const style = getComputedStyle(document.querySelector(selector), pseudo);
-      return {
-        animationName: style.animationName,
-        animationPlayState: style.animationPlayState,
-        transform: style.transform
-      };
-    };
-    return {
-      signal: read('.hero-media-fallback', '::before'),
-      planet: read('.hero-media-fallback', '::after')
-    };
-  });
+async function canvasSnapshots(page) {
+  return Promise.all([
+    page.locator('#sky').screenshot(),
+    page.locator('#moon').screenshot()
+  ]);
 }
 
 for (const locale of ['en', 'he']) {
@@ -287,7 +277,7 @@ for (const locale of ['en', 'he']) {
 }
 
 test.describe('motion accessibility', () => {
-  test('system reduced motion freezes hero media, CSS animation, and autoplay media', async ({ browser }) => {
+  test('system reduced motion freezes canvases, CSS animation, and autoplay media', async ({ browser }) => {
     const context = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1280, height: 800 } });
     const page = await context.newPage();
     const errors = [];
@@ -303,19 +293,8 @@ test.describe('motion accessibility', () => {
     await expect(control).toBeDisabled();
     await expect(control).toHaveAttribute('aria-label', 'התנועה הופחתה לפי הגדרת המערכת');
     expect(await page.locator('video').evaluateAll(videos => videos.every(video => video.paused))).toBe(true);
-    expect(await page.locator('.hero-media-video').evaluate(video => ({
-      hidden: video.hidden,
-      muted: video.muted,
-      autoplay: video.autoplay,
-      paused: video.paused
-    }))).toEqual({ hidden: true, muted: true, autoplay: false, paused: true });
     expect(await page.locator('.grain,.scrollcue i,.cta-btn').evaluateAll(elements =>
       elements.every(element => getComputedStyle(element).animationName === 'none'))).toBe(true);
-    expect(await page.evaluate(() => ({
-      fallback: getComputedStyle(document.querySelector('.hero-media-fallback'), '::before').animationName,
-      planet: getComputedStyle(document.querySelector('.hero-media-fallback'), '::after').animationName,
-      scrimTransform: getComputedStyle(document.querySelector('.hero-media'), '::after').transform
-    }))).toEqual({ fallback: 'none', planet: 'none', scrimTransform: 'none' });
     await page.locator('.film-story').scrollIntoViewIfNeeded();
     const storyMotion = await page.locator('.film-story').evaluate(section => ({
       cards: [...section.querySelectorAll('.film-beat')].every(card => {
@@ -336,6 +315,11 @@ test.describe('motion accessibility', () => {
     }));
     expect(storyMotion).toEqual({ cards: true, images: true, lines: true });
 
+    const before = await canvasSnapshots(page);
+    await page.waitForTimeout(350);
+    const after = await canvasSnapshots(page);
+    expect(after[0].equals(before[0])).toBe(true);
+    expect(after[1].equals(before[1])).toBe(true);
     expect(errors).toEqual([]);
     await context.close();
   });
@@ -349,8 +333,11 @@ test.describe('motion accessibility', () => {
     await expect(control).toHaveAttribute('aria-label', 'Resume motion');
     expect(await page.evaluate(() => localStorage.getItem('moona.motionPaused'))).toBe('1');
     expect(await page.locator('video').evaluateAll(videos => videos.every(video => video.paused))).toBe(true);
-    const pausedHeroMotion = await heroMotionState(page);
-    expect(Object.values(pausedHeroMotion).map(state => state.animationPlayState)).toEqual(['paused', 'paused']);
+    const before = await canvasSnapshots(page);
+    await page.waitForTimeout(350);
+    const after = await canvasSnapshots(page);
+    expect(after[0].equals(before[0])).toBe(true);
+    expect(after[1].equals(before[1])).toBe(true);
 
     await page.reload();
     await page.waitForFunction(() => Boolean(window.MoonaI18n));
