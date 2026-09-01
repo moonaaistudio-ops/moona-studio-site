@@ -765,7 +765,9 @@ test.describe('responsive header and dynamic UI', () => {
             imageAlt: document.querySelector('#about img')?.alt,
             imageSrc: document.querySelector('#about img')?.getAttribute('src'),
             sourceSrcsets: [...document.querySelectorAll('#about source')]
-              .map(source => source.getAttribute('srcset'))
+              .map(source => source.getAttribute('srcset')),
+            sourceMedia: [...document.querySelectorAll('#about source')]
+              .map(source => source.getAttribute('media'))
           },
           sectionAfterAbout: document.querySelector('#about')?.nextElementSibling?.id,
           crewNames: cards.map(card => card.querySelector('h3')?.textContent),
@@ -803,7 +805,8 @@ test.describe('responsive header and dynamic UI', () => {
           'p/tal/tal-lunar-mobile-900.avif',
           'p/tal/tal-lunar-mobile-900.webp',
           'p/tal/tal-lunar-1920.avif'
-        ]
+        ],
+        sourceMedia: ['(max-width: 760px)', '(max-width: 760px)', null]
       });
       expect(layout.sectionAfterAbout).toBe('crew');
       expect(layout.crewNames).toEqual(['Alma', 'Nara', 'Luc', 'Vera', 'Sona', 'Ivo']);
@@ -827,6 +830,122 @@ test.describe('responsive header and dynamic UI', () => {
       });
       expect(layout.staleRenderedCopy).toBe(false);
       expect(layout.overflow).toBeLessThanOrEqual(0);
+    }
+  });
+
+  test('page rhythm and heading hierarchy stay stable across responsive sizes', async ({ page }) => {
+    const viewports = [
+      { width: 390, height: 844, baseline: 'mobile' },
+      { width: 768, height: 1024 },
+      { width: 1024, height: 768 },
+      { width: 844, height: 390 },
+      { width: 1440, height: 900, baseline: 'desktop' }
+    ];
+
+    for (const viewport of viewports) {
+      await page.setViewportSize({ width: viewport.width, height: viewport.height });
+      await openHome(page, '/?lang=en');
+      const layout = await page.evaluate(async () => {
+        await document.fonts.ready;
+        const px = value => Number.parseFloat(value);
+        const style = selector => getComputedStyle(document.querySelector(selector));
+        const rect = selector => document.querySelector(selector).getBoundingClientRect();
+        const levels = [...document.querySelectorAll('body h1, body h2, body h3')]
+          .map(heading => Number(heading.tagName.slice(1)));
+        const labelledSections = ['film', 'about', 'crew', 'work', 'contact'].map(id => {
+          const section = document.getElementById(id);
+          const labelId = section.getAttribute('aria-labelledby');
+          return {
+            id,
+            labelId,
+            labelTag: document.getElementById(labelId)?.tagName || null
+          };
+        });
+        const junction = (before, after) => Math.abs(rect(after).top - rect(before).bottom);
+
+        return {
+          overflow: document.documentElement.scrollWidth - innerWidth,
+          h1Count: document.querySelectorAll('body h1').length,
+          headingSkip: levels.some((level, index) => index > 0 && level > levels[index - 1] + 1),
+          labelledSections,
+          junctions: {
+            aboutCrew: junction('#about', '#crew'),
+            crewWork: junction('#crew', '#work'),
+            workContact: junction('#work', '#contact')
+          },
+          spacing: {
+            aboutCopyTop: px(style('.about-copy').paddingTop),
+            aboutCopyBottom: px(style('.about-copy').paddingBottom),
+            crewTop: px(style('#crew').paddingTop),
+            crewBottom: px(style('#crew').paddingBottom),
+            workTop: px(style('#work').paddingTop),
+            workBottom: px(style('#work').paddingBottom),
+            contactTop: px(style('#contact').paddingTop),
+            contactBottom: px(style('#contact').paddingBottom)
+          },
+          type: {
+            hero: px(style('.statement').fontSize),
+            film: px(style('.film-title').fontSize),
+            about: px(style('.about-copy h2').fontSize),
+            crew: px(style('.crew-head h2').fontSize),
+            contact: px(style('.contact-line').fontSize)
+          },
+          editorialGrid: {
+            workHeadLeft: rect('.work-head').left,
+            workHeadRight: rect('.work-head').right,
+            workGridLeft: rect('.work-grid').left,
+            workGridRight: rect('.work-grid').right,
+            crewCardWidth: rect('.crew-card').width
+          }
+        };
+      });
+
+      expect(layout.overflow).toBeLessThanOrEqual(1);
+      expect(layout.h1Count).toBe(1);
+      expect(layout.headingSkip).toBe(false);
+      expect(layout.labelledSections).toEqual([
+        { id: 'film', labelId: 'film-title', labelTag: 'H2' },
+        { id: 'about', labelId: 'about-title', labelTag: 'H2' },
+        { id: 'crew', labelId: 'crew-title', labelTag: 'H2' },
+        { id: 'work', labelId: 'work-title', labelTag: 'H2' },
+        { id: 'contact', labelId: 'contact-title', labelTag: 'H2' }
+      ]);
+      Object.values(layout.junctions).forEach(gap => expect(gap).toBeLessThanOrEqual(1));
+
+      if (viewport.baseline === 'mobile') {
+        expect(layout.spacing).toEqual({
+          aboutCopyTop: 58,
+          aboutCopyBottom: 96,
+          crewTop: 92,
+          crewBottom: 110,
+          workTop: 100,
+          workBottom: 100,
+          contactTop: 110,
+          contactBottom: 60
+        });
+        expect(layout.type).toEqual({ hero: 34, film: 30, about: 64, crew: 54, contact: 56 });
+        expect(layout.editorialGrid.crewCardWidth).toBeCloseTo(viewport.width * .82, 1);
+      }
+
+      if (viewport.baseline === 'desktop') {
+        expect(layout.spacing.aboutCopyTop).toBeCloseTo(135, 1);
+        expect(layout.spacing.aboutCopyBottom).toBeCloseTo(90, 1);
+        expect(layout.spacing.crewTop).toBeCloseTo(187.2, 1);
+        expect(layout.spacing.crewBottom).toBeCloseTo(201.6, 1);
+        expect(layout.spacing.workTop).toBeCloseTo(201.6, 1);
+        expect(layout.spacing.workBottom).toBeCloseTo(201.6, 1);
+        expect(layout.spacing.contactTop).toBeCloseTo(180, 1);
+        expect(layout.spacing.contactBottom).toBeCloseTo(60, 1);
+        expect(layout.type.hero).toBeCloseTo(82, 1);
+        expect(layout.type.film).toBeCloseTo(58, 1);
+        expect(layout.type.about).toBeCloseTo(108, 1);
+        expect(layout.type.crew).toBeCloseTo(86.4, 1);
+        expect(layout.type.contact).toBeCloseTo(115.2, 1);
+        expect(layout.editorialGrid.workHeadLeft).toBeCloseTo(layout.editorialGrid.workGridLeft, 1);
+        expect(layout.editorialGrid.workHeadRight).toBeCloseTo(layout.editorialGrid.workGridRight, 1);
+        expect(layout.editorialGrid.crewCardWidth).toBeGreaterThan(360);
+        expect(layout.editorialGrid.crewCardWidth).toBeLessThan(390);
+      }
     }
   });
 

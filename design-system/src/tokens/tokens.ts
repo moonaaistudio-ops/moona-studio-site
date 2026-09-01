@@ -125,6 +125,12 @@ export const layout = {
   maxWide: '1560px',
   gutter: 'clamp(22px,5vw,72px)',
   gutterWide: 'clamp(22px,6vw,80px)',
+  /** Spacious editorial rhythm for primary page sections. */
+  sectionSpace: 'clamp(110px,14vw,210px)',
+  /** Entry space where a content section follows full-bleed media. */
+  sectionSpaceIntro: 'clamp(100px,13vw,190px)',
+  /** Slightly tighter cap for the final conversion section. */
+  sectionSpaceEnd: 'clamp(110px,14vw,180px)',
   /** Every interactive target clears this. The custom cursor lags; small targets miss. */
   tap: '44px',
 } as const;

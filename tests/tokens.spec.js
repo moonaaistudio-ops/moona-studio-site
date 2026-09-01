@@ -32,7 +32,8 @@ test('the generated block defines every token the stylesheet consumes', async ({
     '--mono', '--display', '--sans', '--serif', '--ease', '--r-pill', '--r-lg', '--r-md',
     '--color-1', '--color-5', '--speed',
     '--he-emphasis-weight', '--he-emphasis-color',
-    '--moona-gold', '--moona-gold-ink', '--moona-danger', '--moona-track-display'
+    '--moona-gold', '--moona-gold-ink', '--moona-danger', '--moona-track-display',
+    '--moona-section-space', '--moona-section-space-intro', '--moona-section-space-end'
   ])(page);
 
   for (const [name, value] of Object.entries(vars)) {
@@ -48,6 +49,9 @@ test('the generated block defines every token the stylesheet consumes', async ({
   expect(vars['--sans']).toContain('Inter Tight');
   expect(vars['--serif']).toContain('Instrument Serif');
   expect(vars['--moona-track-display']).toBe('-.045em');
+  expect(vars['--moona-section-space']).toBe('clamp(110px,14vw,210px)');
+  expect(vars['--moona-section-space-intro']).toBe('clamp(100px,13vw,190px)');
+  expect(vars['--moona-section-space-end']).toBe('clamp(110px,14vw,180px)');
 });
 
 test('Hebrew swaps the display and body faces and leaves mono alone', async ({ page }) => {
