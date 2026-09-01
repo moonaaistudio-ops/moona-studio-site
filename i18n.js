@@ -85,10 +85,8 @@
       'about.role': 'Founder · Creative Director · Developer',
       'about.body': 'I built Moona where creative direction and software development meet. I direct every project, build the systems behind the work and make the final creative call.',
       'about.engine': 'Custom software · Continuous R&D · Specialist AI agents',
-      'about.imageAlt': 'Tal Tzur inside a cinematic orbital cockpit',
+      'about.imageAlt': 'Tal Tzur standing in a spacesuit on a lunar landscape',
 
-      'crew.transition': 'Six AI agents. Directed by Tal.',
-      'crew.transitionAlt': 'Tal Tzur standing on a lunar landscape',
       'crew.eyebrow': 'AI Crew',
       'crew.heading': 'Specialists behind the work.',
       'crew.intro': 'Built into the studio. Directed by Tal.',
@@ -337,10 +335,8 @@
       'about.role': 'מייסד · מנהל קריאייטיב · מפתח',
       'about.body': 'הקמתי את Moona בנקודת המפגש בין קריאייטיב לפיתוח תוכנה. אני מוביל כל פרויקט, בונה את המערכות שמאחורי העבודה ומקבל את ההחלטה היצירתית הסופית.',
       'about.engine': 'פיתוח תוכנה מותאם · מחקר ופיתוח מתמשך · סוכני AI מתמחים',
-      'about.imageAlt': 'טל צור בתוך תא טייס קולנועי בחלל',
+      'about.imageAlt': 'טל צור עומד בחליפת חלל על נוף ירחי',
 
-      'crew.transition': 'שישה סוכני AI. בהובלת טל.',
-      'crew.transitionAlt': 'טל צור עומד בנוף ירחי',
       'crew.eyebrow': 'צוות AI',
       'crew.heading': 'המומחים שמאחורי העבודה.',
       'crew.intro': 'בנויים בתוך הסטודיו. בהובלת טל.',

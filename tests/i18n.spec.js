@@ -235,7 +235,6 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.about-role')).toHaveText('מייסד · מנהל קריאייטיב · מפתח');
     await expect(page.locator('.about-body')).toHaveText('הקמתי את Moona בנקודת המפגש בין קריאייטיב לפיתוח תוכנה. אני מוביל כל פרויקט, בונה את המערכות שמאחורי העבודה ומקבל את ההחלטה היצירתית הסופית.');
     await expect(page.locator('.about-engine')).toHaveText('פיתוח תוכנה מותאם · מחקר ופיתוח מתמשך · סוכני AI מתמחים');
-    await expect(page.locator('#crew-transition-title')).toHaveText('שישה סוכני AI. בהובלת טל.');
     await expect(page.locator('#crew-title')).toHaveText('המומחים שמאחורי העבודה.');
     await expect(page.locator('.crew-head > p')).toHaveText('בנויים בתוך הסטודיו. בהובלת טל.');
     await expect(page.locator('.work-note')).toHaveText('סרטי הקונספט האלה נוצרו ביוזמתנו כדי להראות מה נוכל ליצור עבור המותג הבא. המותגים המוצגים אינם לקוחות של Moona.');
@@ -303,7 +302,6 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.film-strip-head .film-note')).toHaveText('The world, cast and visual rules were built before motion began. The technology changed the production. It did not replace direction.');
     await expect(page.locator('#about h2')).toHaveText('Tal Tzur');
     await expect(page.locator('.about-role')).toHaveText('Founder · Creative Director · Developer');
-    await expect(page.locator('#crew-transition-title')).toHaveText('Six AI agents. Directed by Tal.');
     await expect(page.locator('#crew-title')).toHaveText('Specialists behind the work.');
 
     const dictionarySource = fs.readFileSync(path.join(__dirname, '..', 'i18n.js'), 'utf8');
@@ -422,7 +420,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
   test('the restored hero is the only serif typography on the site', async ({ page }) => {
     const displaySelectors = [
       '.film-title', '.film-title em', '.film-beat h3', '.about-copy h2',
-      '.crew-transition h2', '.crew-head h2', '.crew-credit h3',
+      '.crew-head h2', '.crew-credit h3',
       '.contact .contact-line', '.q .qtitle'
     ];
 
@@ -764,8 +762,12 @@ test.describe('responsive header and dynamic UI', () => {
           },
           about: {
             name: document.querySelector('#about h2')?.textContent,
-            imageAlt: document.querySelector('#about img')?.alt
+            imageAlt: document.querySelector('#about img')?.alt,
+            imageSrc: document.querySelector('#about img')?.getAttribute('src'),
+            sourceSrcsets: [...document.querySelectorAll('#about source')]
+              .map(source => source.getAttribute('srcset'))
           },
+          sectionAfterAbout: document.querySelector('#about')?.nextElementSibling?.id,
           crewNames: cards.map(card => card.querySelector('h3')?.textContent),
           portraitSlots: portraits.map(portrait => {
             const rect = portrait.getBoundingClientRect();
@@ -793,7 +795,17 @@ test.describe('responsive header and dynamic UI', () => {
       expect(layout.idCounts).toEqual([1, 1, 1, 1, 1]);
       expect(layout.ordered).toBe(true);
       expect(layout.studioAlias).toEqual({ parent: 'about', ariaHidden: 'true' });
-      expect(layout.about).toEqual({ name: 'טל צור', imageAlt: 'טל צור בתוך תא טייס קולנועי בחלל' });
+      expect(layout.about).toEqual({
+        name: 'טל צור',
+        imageAlt: 'טל צור עומד בחליפת חלל על נוף ירחי',
+        imageSrc: 'p/tal/tal-lunar-1920.webp',
+        sourceSrcsets: [
+          'p/tal/tal-lunar-mobile-900.avif',
+          'p/tal/tal-lunar-mobile-900.webp',
+          'p/tal/tal-lunar-1920.avif'
+        ]
+      });
+      expect(layout.sectionAfterAbout).toBe('crew');
       expect(layout.crewNames).toEqual(['Alma', 'Nara', 'Luc', 'Vera', 'Sona', 'Ivo']);
       expect(layout.portraitSlots).toHaveLength(6);
       for (const portrait of layout.portraitSlots) {

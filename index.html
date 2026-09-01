@@ -1087,7 +1087,7 @@ body{font-size:16px;font-synthesis:none}
 .header-actions .cta-btn.sm i{border-color:#100d07}
 .language-toggle{width:auto;min-width:44px;border:0;border-bottom:1px solid rgba(255,255,255,.38);border-radius:0;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.04em}
 .language-toggle:hover{border-color:#fff;background:transparent}
-:is(.about-copy h2,.crew-transition h2,.crew-head h2,.crew-credit h3,.ctagal-h,.contact .contact-line,.q .qtitle){font-family:var(--display);font-weight:600;letter-spacing:-.045em}
+:is(.about-copy h2,.crew-head h2,.crew-credit h3,.ctagal-h,.contact .contact-line,.q .qtitle){font-family:var(--display);font-weight:600;letter-spacing:-.045em}
 .work-grid .piece .meta .brand{font-family:var(--display);font-weight:600;letter-spacing:-.04em}
 
 /* Founder */
@@ -1101,12 +1101,6 @@ body{font-size:16px;font-synthesis:none}
 .about-role,.about-engine{font-family:var(--mono);font-size:10px;line-height:1.65;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
 .about-body{margin:clamp(30px,4vw,54px) 0 0;max-width:39ch;font-size:clamp(18px,1.55vw,23px);line-height:1.55;color:rgba(222,236,252,.9)}
 .about-engine{margin:34px 0 0;padding-top:25px;border-top:1px solid rgba(190,212,238,.2);max-width:54ch;color:rgba(222,236,252,.68)}
-
-.crew-transition{position:relative;min-height:100svh;overflow:hidden;background:#030509;isolation:isolate}
-.crew-transition picture,.crew-transition img{position:absolute;inset:0;width:100%;height:100%;display:block}
-.crew-transition img{object-fit:cover;object-position:center}
-.crew-transition-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(3,5,9,.04) 35%,rgba(3,5,9,.82) 100%)}
-.crew-transition h2{position:absolute;z-index:2;inset-inline:8vw;bottom:9vh;margin:0;font-family:var(--display);font-size:clamp(42px,7vw,110px);font-weight:600;line-height:.95;letter-spacing:-.045em;color:var(--ice-hot);text-align:center}
 
 /* AI crew: quiet empty portrait slots until the final cast photography lands. */
 .crew{padding:clamp(100px,13vw,190px) 0 clamp(110px,14vw,210px);background:#070a10;overflow:hidden}
@@ -1157,13 +1151,12 @@ html[dir="rtl"] .crew-controls button span{display:inline-block;transform:scaleX
 .qbrief .drop{margin-top:20px}
 
 html[lang="he"] :is(.section-kicker,.about-role,.about-engine,.crew-credit>span,.crew-credit .crew-role){font-family:var(--sans);letter-spacing:0;text-transform:none}
-html[lang="he"] :is(.film-title,.film-beat h3,.sentence p,.about-copy h2,.crew-head h2,.crew-transition h2,.crew-credit h3,.ctagal-h,.contact .contact-line,.q .qtitle){font-family:var(--display);font-weight:700;letter-spacing:-.025em}
+html[lang="he"] :is(.film-title,.film-beat h3,.sentence p,.about-copy h2,.crew-head h2,.crew-credit h3,.ctagal-h,.contact .contact-line,.q .qtitle){font-family:var(--display);font-weight:700;letter-spacing:-.025em}
 
 @media(max-width:760px){
   .about{min-height:0;overflow:visible}.about-media{position:relative;height:auto;aspect-ratio:4/5}.about-media img{object-position:center}.about-scrim{display:none}
   .about-copy{min-height:0;width:100%;margin:0;padding:58px 22px 96px;align-items:flex-start;background:#05070c}
   .about-copy h2{font-size:64px}.about-body{font-size:18px}.about-role,.about-engine{font-size:9px}
-  .crew-transition{min-height:86svh}.crew-transition h2{inset-inline:22px;bottom:8vh;font-size:50px;text-align:start}.crew-transition img{object-position:center}
   .crew{padding:92px 0 110px}.crew-head{padding:0 22px 42px;display:block}.crew-head h2{font-size:54px}.crew-head>p{margin:20px 0 0;text-align:start}
   .crew-rail{grid-auto-columns:82vw;gap:12px;padding-inline:22px;scroll-padding-inline:22px}.crew-credit{min-height:205px}
   .crew-controls{padding-inline:22px}
@@ -1398,11 +1391,11 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
   <section class="about" id="about" tabindex="-1">
     <span class="anchor-alias" id="studio" aria-hidden="true"></span>
     <picture class="about-media">
-      <source media="(max-width: 700px)" type="image/avif" srcset="p/tal/tal-cockpit-mobile-900.avif">
-      <source media="(max-width: 700px)" type="image/webp" srcset="p/tal/tal-cockpit-mobile-900.webp">
-      <source type="image/avif" srcset="p/tal/tal-cockpit-1920.avif">
-      <img src="p/tal/tal-cockpit-1920.webp" width="1920" height="1140" loading="lazy" decoding="async"
-           alt="Tal Tzur inside a cinematic orbital cockpit" data-i18n-alt="about.imageAlt">
+      <source media="(max-width: 700px)" type="image/avif" srcset="p/tal/tal-lunar-mobile-900.avif">
+      <source media="(max-width: 700px)" type="image/webp" srcset="p/tal/tal-lunar-mobile-900.webp">
+      <source type="image/avif" srcset="p/tal/tal-lunar-1920.avif">
+      <img src="p/tal/tal-lunar-1920.webp" width="1920" height="1211" loading="lazy" decoding="async"
+           alt="Tal Tzur standing in a spacesuit on a lunar landscape" data-i18n-alt="about.imageAlt">
     </picture>
     <div class="about-scrim" aria-hidden="true"></div>
     <div class="about-copy rv">
@@ -1412,18 +1405,6 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
       <p class="about-body" data-i18n="about.body">I built Moona where creative direction and software development meet. I direct every project, build the systems behind the work and make the final creative call.</p>
       <p class="about-engine" data-i18n="about.engine">Custom software · Continuous R&amp;D · Specialist AI agents</p>
     </div>
-  </section>
-
-  <section class="crew-transition" aria-labelledby="crew-transition-title">
-    <picture>
-      <source media="(max-width: 700px)" type="image/avif" srcset="p/tal/tal-lunar-mobile-900.avif">
-      <source media="(max-width: 700px)" type="image/webp" srcset="p/tal/tal-lunar-mobile-900.webp">
-      <source type="image/avif" srcset="p/tal/tal-lunar-1920.avif">
-      <img src="p/tal/tal-lunar-1920.webp" width="1920" height="1211" loading="lazy" decoding="async"
-           alt="Tal Tzur standing on a lunar landscape" data-i18n-alt="crew.transitionAlt">
-    </picture>
-    <div class="crew-transition-shade" aria-hidden="true"></div>
-    <h2 id="crew-transition-title" class="rv" data-i18n="crew.transition">Six AI agents. Directed by Tal.</h2>
   </section>
 
   <!-- Crew portraits are intentionally empty slots until the final cast photography is supplied. -->
