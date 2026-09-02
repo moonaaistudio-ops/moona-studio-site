@@ -1105,15 +1105,14 @@ body{font-size:16px;font-synthesis:none}
 .about-body{margin:clamp(30px,4vw,54px) 0 0;max-width:39ch;font-size:clamp(18px,1.55vw,23px);line-height:1.55;color:rgba(222,236,252,.9)}
 .about-engine{margin:34px 0 0;padding-top:25px;border-top:1px solid rgba(190,212,238,.2);max-width:54ch;color:rgba(222,236,252,.68)}
 
-/* Founder-to-system transition: the supplied cockpit portrait introduces the
-   operating model before the individual agents appear. */
-.crew-transition{position:relative;min-height:100svh;overflow:hidden;background:#030509;isolation:isolate}
-.crew-transition picture,.crew-transition picture img{position:absolute;inset:0;width:100%;height:100%;display:block}
-.crew-transition picture img{object-fit:cover;object-position:center}
-.crew-transition-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(3,5,9,.03) 26%,rgba(3,5,9,.34) 52%,rgba(3,5,9,.9) 100%),linear-gradient(180deg,rgba(3,5,9,.08) 40%,rgba(3,5,9,.76) 100%)}
-.crew-transition-copy{position:relative;z-index:2;min-height:100svh;width:min(46%,690px);margin-left:auto;margin-right:5vw;padding:clamp(120px,15vh,190px) 0 clamp(80px,10vh,120px);display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;text-align:start}
+/* Founder-to-system transition: a purely typographic chapter break before the
+   individual agent credits. */
+.crew-transition{position:relative;min-height:78svh;overflow:hidden;background:radial-gradient(circle at 82% 28%,rgba(131,158,190,.1),transparent 34%),linear-gradient(135deg,#030509 0%,#070a11 100%);border-block:1px solid rgba(190,212,238,.1);isolation:isolate}
+.crew-transition::before{content:"";position:absolute;z-index:-1;right:-10vw;top:50%;width:min(52vw,760px);aspect-ratio:1;border:1px solid rgba(190,212,238,.08);border-radius:50%;box-shadow:0 0 0 8vw rgba(190,212,238,.018),0 0 0 16vw rgba(190,212,238,.012);transform:translateY(-50%)}
+.crew-transition-copy{position:relative;min-height:78svh;width:min(var(--moona-max-wide),90vw);margin-inline:auto;padding:clamp(120px,15vh,190px) 0 clamp(80px,10vh,120px);display:grid;grid-template-columns:minmax(140px,.42fr) minmax(0,1fr);grid-template-rows:auto auto;align-content:center;column-gap:clamp(36px,6vw,110px);text-align:start}
 .crew-transition-copy .section-kicker{color:var(--gold)}
-.crew-transition h2{max-width:11ch;margin:18px 0 0;font-family:var(--display);font-size:clamp(48px,6.3vw,100px);font-weight:600;line-height:.92;letter-spacing:-.052em;color:var(--ice-hot)}
+.crew-transition-copy .section-kicker{grid-row:1/3;padding-top:12px}
+.crew-transition h2{max-width:11ch;margin:0;font-family:var(--display);font-size:clamp(48px,6.3vw,100px);font-weight:600;line-height:.92;letter-spacing:-.052em;color:var(--ice-hot)}
 .crew-transition-body{max-width:38ch;margin:clamp(28px,3vw,42px) 0 0;font-size:clamp(17px,1.45vw,21px);line-height:1.55;color:rgba(222,236,252,.82)}
 
 /* AI crew: a compact credits ledger with quiet empty portrait slots until the
@@ -1171,8 +1170,8 @@ html[lang="he"] :is(.film-title,.film-beat h3,.sentence p,.about-copy h2,.crew-t
   .about{min-height:0;overflow:visible}.about-media{position:relative;height:auto;aspect-ratio:4/5}.about-media img{object-position:center}.about-scrim{display:none}
   .about-copy{min-height:0;width:100%;margin:0;padding:58px 22px 96px;align-items:flex-start;background:#05070c}
   .about-copy h2{font-size:64px}.about-body{font-size:18px}.about-role,.about-engine{font-size:9px}
-  .crew-transition{min-height:0}.crew-transition picture{position:relative;inset:auto;height:auto;aspect-ratio:4/5}.crew-transition picture img{object-position:center}.crew-transition-shade{display:none}
-  .crew-transition-copy{min-height:0;width:100%;margin:0;padding:58px 22px 84px;background:#030509;justify-content:flex-start}.crew-transition h2{max-width:11ch;font-size:50px}.crew-transition-body{font-size:17px}
+  .crew-transition{min-height:0}.crew-transition::before{right:-44vw;width:122vw}
+  .crew-transition-copy{min-height:0;width:100%;margin:0;padding:82px 22px 92px;display:flex;flex-direction:column;align-items:flex-start}.crew-transition-copy .section-kicker{padding-top:0}.crew-transition h2{max-width:11ch;margin-top:18px;font-size:50px}.crew-transition-body{font-size:17px}
   .crew{padding:92px 0 110px}.crew-head{width:auto;margin:0 22px 42px;display:block}.crew-head h2{font-size:54px}.crew-head>p{margin:20px 0 0;text-align:start}
   .crew-grid{width:auto;margin-inline:22px;grid-template-columns:1fr;border-inline-start:0}
   .crew-card{grid-template-columns:88px minmax(0,1fr);gap:20px;padding:20px 0;border-inline-end:0;background:transparent}
@@ -1425,16 +1424,6 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
   </section>
 
   <section class="crew-transition" id="crew-intro" tabindex="-1" aria-labelledby="crew-transition-title">
-    <picture>
-      <source media="(max-width: 760px)" type="image/avif" srcset="p/tal/tal-cockpit-v2-mobile-768.avif">
-      <source media="(max-width: 760px)" type="image/webp" srcset="p/tal/tal-cockpit-v2-mobile-768.webp">
-      <source type="image/avif" srcset="p/tal/tal-cockpit-v2-960.avif 960w, p/tal/tal-cockpit-v2-1628.avif 1628w" sizes="100vw">
-      <img src="p/tal/tal-cockpit-v2-1628.webp"
-           srcset="p/tal/tal-cockpit-v2-960.webp 960w, p/tal/tal-cockpit-v2-1628.webp 1628w"
-           sizes="100vw" width="1628" height="966" loading="lazy" decoding="async"
-           alt="Tal Tzur inside a cinematic orbital cockpit" data-i18n-alt="crew.transitionAlt">
-    </picture>
-    <div class="crew-transition-shade" aria-hidden="true"></div>
     <div class="crew-transition-copy rv">
       <p class="section-kicker" data-i18n="crew.transitionEyebrow">The crew</p>
       <h2 id="crew-transition-title" data-i18n="crew.transition">Six AI agents. Directed by Tal.</h2>

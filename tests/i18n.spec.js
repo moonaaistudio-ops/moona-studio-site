@@ -78,16 +78,6 @@ test('critical assets and legal links remain compatible with a direct-file previ
   for (const asset of ['moona-logo-lockup.svg', 'moona-logo-mark.svg']) {
     expect(fs.existsSync(path.join(PROJECT_ROOT, 'p', 'brand', asset))).toBe(true);
   }
-  for (const asset of [
-    'tal-cockpit-v2-1628.avif',
-    'tal-cockpit-v2-1628.webp',
-    'tal-cockpit-v2-960.avif',
-    'tal-cockpit-v2-960.webp',
-    'tal-cockpit-v2-mobile-768.avif',
-    'tal-cockpit-v2-mobile-768.webp'
-  ]) {
-    expect(fs.existsSync(path.join(PROJECT_ROOT, 'p', 'tal', asset))).toBe(true);
-  }
 });
 
 function metadata(page) {
@@ -787,12 +777,7 @@ test.describe('responsive header and dynamic UI', () => {
           crewTransition: {
             heading: document.querySelector('#crew-transition-title')?.textContent,
             body: document.querySelector('.crew-transition-body')?.textContent,
-            imageAlt: document.querySelector('#crew-intro img')?.alt,
-            imageSrc: document.querySelector('#crew-intro img')?.getAttribute('src'),
-            sourceSrcsets: [...document.querySelectorAll('#crew-intro source')]
-              .map(source => source.getAttribute('srcset')),
-            sourceMedia: [...document.querySelectorAll('#crew-intro source')]
-              .map(source => source.getAttribute('media'))
+            mediaCount: document.querySelectorAll('#crew-intro :is(picture, img, source)').length
           },
           sectionAfterAbout: document.querySelector('#about')?.nextElementSibling?.id,
           crewNames: cards.map(card => card.querySelector('h3')?.textContent),
@@ -839,14 +824,7 @@ test.describe('responsive header and dynamic UI', () => {
       expect(layout.crewTransition).toEqual({
         heading: 'שישה סוכני AI. בהובלת טל.',
         body: 'כל אנשי הצוות ב־Moona הם סוכני AI מתמחים שנבנו בתוך הסטודיו.',
-        imageAlt: 'טל צור בתוך תא טייס קולנועי בחלל',
-        imageSrc: 'p/tal/tal-cockpit-v2-1628.webp',
-        sourceSrcsets: [
-          'p/tal/tal-cockpit-v2-mobile-768.avif',
-          'p/tal/tal-cockpit-v2-mobile-768.webp',
-          'p/tal/tal-cockpit-v2-960.avif 960w, p/tal/tal-cockpit-v2-1628.avif 1628w'
-        ],
-        sourceMedia: ['(max-width: 760px)', '(max-width: 760px)', null]
+        mediaCount: 0
       });
       expect(layout.sectionAfterAbout).toBe('crew-intro');
       expect(layout.crewNames).toEqual(['Alma', 'Nara', 'Luc', 'Vera', 'Sona', 'Ivo']);
@@ -965,8 +943,8 @@ test.describe('responsive header and dynamic UI', () => {
         expect(layout.spacing).toEqual({
           aboutCopyTop: 58,
           aboutCopyBottom: 96,
-          crewIntroCopyTop: 58,
-          crewIntroCopyBottom: 84,
+          crewIntroCopyTop: 82,
+          crewIntroCopyBottom: 92,
           crewTop: 92,
           crewBottom: 110,
           workTop: 100,
