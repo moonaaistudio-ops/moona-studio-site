@@ -78,6 +78,16 @@ test('critical assets and legal links remain compatible with a direct-file previ
   for (const asset of ['moona-logo-lockup.svg', 'moona-logo-mark.svg']) {
     expect(fs.existsSync(path.join(PROJECT_ROOT, 'p', 'brand', asset))).toBe(true);
   }
+  for (const asset of [
+    'crew-placeholder-640.avif',
+    'crew-placeholder-640.webp',
+    'crew-placeholder-960.avif',
+    'crew-placeholder-960.webp',
+    'crew-placeholder-1600.avif',
+    'crew-placeholder-1600.webp'
+  ]) {
+    expect(fs.existsSync(path.join(PROJECT_ROOT, 'p', 'crew', asset))).toBe(true);
+  }
 });
 
 function metadata(page) {
@@ -749,6 +759,9 @@ test.describe('responsive header and dynamic UI', () => {
     for (const width of widths) {
       await page.setViewportSize({ width, height: width === 1440 ? 900 : 844 });
       await openHome(page, '/?lang=he');
+      const firstCrewImage = page.locator('#crew img').first();
+      await firstCrewImage.scrollIntoViewIfNeeded();
+      await expect.poll(() => firstCrewImage.evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
       const layout = await page.evaluate(async () => {
         await document.fonts.ready;
         const ids = ['film', 'about', 'crew-intro', 'crew', 'work', 'contact'];
@@ -786,12 +799,26 @@ test.describe('responsive header and dynamic UI', () => {
           legacyCrewNavigation: document.querySelectorAll('[data-crew-rail], [data-crew-prev], [data-crew-next]').length,
           portraitSlots: portraits.map(portrait => {
             const rect = portrait.getBoundingClientRect();
+            const image = portrait.querySelector('img');
+            const source = portrait.querySelector('source[type="image/avif"]');
             return {
               ariaHidden: portrait.getAttribute('aria-hidden'),
               childCount: portrait.childElementCount,
-              text: portrait.textContent,
+              number: portrait.querySelector('.crew-number')?.textContent,
               aspectRatio: getComputedStyle(portrait).aspectRatio,
-              renderedRatio: rect.width / rect.height
+              renderedRatio: rect.width / rect.height,
+              image: {
+                alt: image.alt,
+                src: image.getAttribute('src'),
+                srcset: image.getAttribute('srcset'),
+                sizes: image.getAttribute('sizes'),
+                width: image.getAttribute('width'),
+                height: image.getAttribute('height'),
+                loading: image.getAttribute('loading'),
+                decoding: image.getAttribute('decoding'),
+                objectFit: getComputedStyle(image).objectFit
+              },
+              avifSrcset: source?.getAttribute('srcset')
             };
           }),
           workCards: workGrid.querySelectorAll(':scope > [data-piece]').length,
@@ -828,17 +855,29 @@ test.describe('responsive header and dynamic UI', () => {
       });
       expect(layout.sectionAfterAbout).toBe('crew-intro');
       expect(layout.crewNames).toEqual(['Alma', 'Nara', 'Luc', 'Vera', 'Sona', 'Ivo']);
-      expect(layout.crewColumns).toBe(width > 980 ? 2 : 1);
+      expect(layout.crewColumns).toBe(width > 980 ? 3 : 1);
       expect(layout.legacyCrewNavigation).toBe(0);
       expect(layout.portraitSlots).toHaveLength(6);
-      for (const portrait of layout.portraitSlots) {
+      for (const [index, portrait] of layout.portraitSlots.entries()) {
         expect(portrait).toMatchObject({
           ariaHidden: 'true',
-          childCount: 0,
-          text: '',
-          aspectRatio: '5 / 7'
+          childCount: 2,
+          number: String(index + 1).padStart(2, '0'),
+          aspectRatio: '4 / 5',
+          image: {
+            alt: '',
+            src: 'p/crew/crew-placeholder-960.webp',
+            width: '960',
+            height: '1200',
+            loading: 'lazy',
+            decoding: 'async',
+            objectFit: 'cover'
+          }
         });
-        expect(portrait.renderedRatio).toBeCloseTo(5 / 7, 2);
+        expect(portrait.image.srcset).toContain('crew-placeholder-1600.webp 1600w');
+        expect(portrait.image.sizes).toContain('(max-width:760px)');
+        expect(portrait.avifSrcset).toContain('crew-placeholder-1600.avif 1600w');
+        expect(portrait.renderedRatio).toBeCloseTo(4 / 5, 2);
       }
       expect(layout.workCards).toBe(4);
       expect(layout.workColumns).toBe(width > 760 ? 2 : 1);
@@ -921,7 +960,8 @@ test.describe('responsive header and dynamic UI', () => {
             workGridRight: rect('.work-grid').right,
             crewGridWidth: rect('.crew-grid').width,
             crewColumns: style('.crew-grid').gridTemplateColumns.split(/\s+/).filter(Boolean).length,
-            crewCardWidth: rect('.crew-card').width
+            crewCardWidth: rect('.crew-card').width,
+            crewColumnGap: px(style('.crew-grid').columnGap)
           }
         };
       });
@@ -938,6 +978,12 @@ test.describe('responsive header and dynamic UI', () => {
         { id: 'contact', labelId: 'contact-title', labelTag: 'H2' }
       ]);
       Object.values(layout.junctions).forEach(gap => expect(gap).toBeLessThanOrEqual(1));
+      const expectedCrewColumns = viewport.width <= 760 ? 1 : viewport.width <= 980 ? 2 : 3;
+      expect(layout.editorialGrid.crewColumns).toBe(expectedCrewColumns);
+      expect(layout.editorialGrid.crewCardWidth).toBeCloseTo(
+        (layout.editorialGrid.crewGridWidth - layout.editorialGrid.crewColumnGap * (expectedCrewColumns - 1)) / expectedCrewColumns,
+        1
+      );
 
       if (viewport.baseline === 'mobile') {
         expect(layout.spacing).toEqual({
@@ -953,7 +999,6 @@ test.describe('responsive header and dynamic UI', () => {
           contactBottom: 60
         });
         expect(layout.type).toEqual({ hero: 34, film: 30, about: 64, crewIntro: 50, crew: 54, contact: 56 });
-        expect(layout.editorialGrid.crewColumns).toBe(1);
         expect(layout.editorialGrid.crewGridWidth).toBeCloseTo(viewport.width - 44, 1);
         expect(layout.editorialGrid.crewCardWidth).toBeCloseTo(viewport.width - 44, 1);
       }
@@ -977,9 +1022,7 @@ test.describe('responsive header and dynamic UI', () => {
         expect(layout.type.contact).toBeCloseTo(115.2, 1);
         expect(layout.editorialGrid.workHeadLeft).toBeCloseTo(layout.editorialGrid.workGridLeft, 1);
         expect(layout.editorialGrid.workHeadRight).toBeCloseTo(layout.editorialGrid.workGridRight, 1);
-        expect(layout.editorialGrid.crewColumns).toBe(2);
         expect(layout.editorialGrid.crewGridWidth).toBeCloseTo(viewport.width * .9, 1);
-        expect(layout.editorialGrid.crewCardWidth).toBeCloseTo(layout.editorialGrid.crewGridWidth / 2 - .5, 1);
       }
     }
   });

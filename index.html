@@ -1115,22 +1115,25 @@ body{font-size:16px;font-synthesis:none}
 .crew-transition h2{max-width:11ch;margin:0;font-family:var(--display);font-size:clamp(48px,6.3vw,100px);font-weight:600;line-height:.92;letter-spacing:-.052em;color:var(--ice-hot)}
 .crew-transition-body{max-width:38ch;margin:clamp(28px,3vw,42px) 0 0;font-size:clamp(17px,1.45vw,21px);line-height:1.55;color:rgba(222,236,252,.82)}
 
-/* AI crew: a compact credits ledger with quiet empty portrait slots until the
-   final agent photography lands. */
+/* AI crew: a portrait-led roster. One shared prototype image establishes the
+   scale now; each picture can later be replaced by an individual image or
+   muted inline video without changing the card structure. */
 .crew{padding:var(--moona-section-space-intro) 0 var(--moona-section-space);background:#070a10;overflow:hidden}
 .crew-head{width:min(var(--moona-max-wide),90vw);margin:0 auto 58px;display:flex;align-items:flex-end;justify-content:space-between;gap:40px}
 .crew-head h2{margin:16px 0 0;font-family:var(--display);font-size:clamp(48px,6vw,94px);font-weight:600;line-height:.94;letter-spacing:-.045em;color:var(--ice-hot)}
 .crew-head>p{margin:0 0 8px;max-width:27ch;font-size:16px;line-height:1.55;color:var(--ice-dim);text-align:end}
-.crew-grid{width:min(var(--moona-max-wide),90vw);margin-inline:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-block-start:1px solid rgba(190,212,238,.16);border-inline-start:1px solid rgba(190,212,238,.16)}
-.crew-card{display:grid;grid-template-columns:clamp(108px,9vw,142px) minmax(0,1fr);gap:clamp(22px,2.6vw,38px);min-width:0;padding:clamp(22px,2.2vw,32px);border-block-end:1px solid rgba(190,212,238,.16);border-inline-end:1px solid rgba(190,212,238,.16);background:rgba(10,14,21,.34)}
-.crew-portrait{position:relative;width:100%;aspect-ratio:5/7;align-self:center;background:#0d121b;border:1px solid rgba(190,212,238,.14);overflow:hidden}
-.crew-portrait::before{content:"";position:absolute;inset:14%;border:1px solid rgba(190,212,238,.13);border-radius:50%}
-.crew-portrait::after{content:"";position:absolute;left:50%;top:50%;width:1px;height:26%;background:rgba(217,198,156,.28);transform:translate(-50%,-50%)}
-.crew-portrait img{width:100%;height:100%;display:block;object-fit:cover}
-.crew-credit{min-width:0;align-self:center;padding:2px 0;text-align:start}
+.crew-grid{width:min(var(--moona-max-wide),90vw);margin-inline:auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2vw,32px)}
+.crew-card{min-width:0;display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(190,212,238,.16);border-radius:var(--r-lg);background:rgba(10,14,21,.58)}
+.crew-portrait{position:relative;width:100%;aspect-ratio:4/5;margin:0;overflow:hidden;background:#0d121b;border-block-end:1px solid rgba(190,212,238,.14)}
+.crew-portrait picture,.crew-portrait :is(img,video){position:absolute;inset:0;width:100%;height:100%;display:block}
+.crew-portrait :is(img,video){object-fit:cover;object-position:var(--portrait-position,50% 50%)}
+.crew-portrait::after{content:"";position:absolute;z-index:1;inset:55% 0 0;background:linear-gradient(180deg,transparent,rgba(3,5,9,.34));pointer-events:none}
+.crew-number{position:absolute;z-index:2;inset-block-start:18px;inset-inline-start:18px;min-width:46px;height:46px;padding-inline:12px;display:grid;place-items:center;border:1px solid rgba(240,224,184,.56);border-radius:999px;background:rgba(3,5,9,.58);backdrop-filter:blur(9px);font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--gold-hot)}
+.crew-credit{min-width:0;flex:1;padding:clamp(24px,2.2vw,34px);display:flex;flex-direction:column;align-items:flex-start;text-align:start}
 .crew-credit>span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--ice-dim)}
-.crew-credit h3{margin:18px 0 6px;font-family:var(--display);font-size:clamp(32px,3vw,46px);font-weight:600;line-height:1;letter-spacing:-.04em;color:var(--ice-hot)}
-.crew-credit p{margin:14px 0 0;max-width:30ch;font-size:15px;line-height:1.5;color:rgba(222,236,252,.72)}
+.crew-credit h3{margin:20px 0 8px;font-family:var(--display);font-size:clamp(42px,4vw,62px);font-weight:600;line-height:.94;letter-spacing:-.045em;color:var(--ice-hot)}
+.crew-credit p{margin:14px 0 0;max-width:31ch;font-size:15px;line-height:1.5;color:rgba(222,236,252,.72)}
+.crew-credit>p:not(.crew-role){margin-top:auto;padding-top:26px}
 .crew-credit .crew-role{margin-top:0;font-family:var(--mono);font-size:9px;line-height:1.5;letter-spacing:.15em;text-transform:uppercase;color:var(--gold)}
 
 /* Selected work becomes one disciplined editorial grid. */
@@ -1162,8 +1165,7 @@ html[lang="he"] :is(.section-kicker,.about-role,.about-engine,.crew-credit>span,
 html[lang="he"] :is(.film-title,.film-beat h3,.sentence p,.about-copy h2,.crew-transition h2,.crew-head h2,.crew-credit h3,.ctagal-h,.contact .contact-line,.q .qtitle){font-family:var(--display);font-weight:700;letter-spacing:-.025em}
 
 @media(max-width:980px) and (min-width:761px){
-  .crew-grid{grid-template-columns:1fr}
-  .crew-card{grid-template-columns:142px minmax(0,1fr)}
+  .crew-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
 @media(max-width:760px){
@@ -1173,9 +1175,8 @@ html[lang="he"] :is(.film-title,.film-beat h3,.sentence p,.about-copy h2,.crew-t
   .crew-transition{min-height:0}.crew-transition::before{right:-44vw;width:122vw}
   .crew-transition-copy{min-height:0;width:100%;margin:0;padding:82px 22px 92px;display:flex;flex-direction:column;align-items:flex-start}.crew-transition-copy .section-kicker{padding-top:0}.crew-transition h2{max-width:11ch;margin-top:18px;font-size:50px}.crew-transition-body{font-size:17px}
   .crew{padding:92px 0 110px}.crew-head{width:auto;margin:0 22px 42px;display:block}.crew-head h2{font-size:54px}.crew-head>p{margin:20px 0 0;text-align:start}
-  .crew-grid{width:auto;margin-inline:22px;grid-template-columns:1fr;border-inline-start:0}
-  .crew-card{grid-template-columns:88px minmax(0,1fr);gap:20px;padding:20px 0;border-inline-end:0;background:transparent}
-  .crew-credit h3{font-size:32px}.crew-credit p{font-size:15px}
+  .crew-grid{width:auto;margin-inline:22px;grid-template-columns:1fr;gap:28px}
+  .crew-credit{padding:24px}.crew-credit h3{font-size:46px}.crew-credit p{font-size:15px}
   .work{padding:100px 22px!important}.work-head{display:block}.work-note{margin:16px 0 0;text-align:start}.work-grid{grid-template-columns:1fr;gap:56px}
   .work-grid .piece .meta .concept{opacity:1;transform:none}
   .contact{padding-inline:22px!important}.contact .contact-line{font-size:56px!important}.contact .contact-body{font-size:17px}
@@ -1431,7 +1432,7 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
     </div>
   </section>
 
-  <!-- Crew portraits are intentionally empty slots until the final cast photography is supplied. -->
+  <!-- Prototype roster: the shared still is replaced per agent when the final cast is ready. -->
   <section class="crew" id="crew" tabindex="-1" aria-labelledby="crew-title">
     <header class="crew-head rv">
       <div>
@@ -1441,29 +1442,47 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
       <p data-i18n="crew.intro">Six specialists across story, image, film, sound and systems.</p>
     </header>
     <div class="crew-grid">
-      <article class="crew-card">
-        <div class="crew-portrait" aria-hidden="true"></div>
-        <div class="crew-credit"><span dir="ltr">AI CREW / 01</span><h3><bdi lang="en" dir="ltr">Alma</bdi></h3><p class="crew-role" data-i18n="crew.alma.role">Story &amp; Strategy</p><p data-i18n="crew.alma.line">Finds the human tension inside every brief.</p></div>
+      <article class="crew-card" aria-labelledby="crew-alma">
+        <figure class="crew-portrait" aria-hidden="true">
+          <picture><source type="image/avif" srcset="p/crew/crew-placeholder-640.avif 640w, p/crew/crew-placeholder-960.avif 960w, p/crew/crew-placeholder-1600.avif 1600w" sizes="(max-width:760px) calc(100vw - 44px), (max-width:980px) calc((90vw - 24px)/2), calc((90vw - 64px)/3)"><img src="p/crew/crew-placeholder-960.webp" srcset="p/crew/crew-placeholder-640.webp 640w, p/crew/crew-placeholder-960.webp 960w, p/crew/crew-placeholder-1600.webp 1600w" sizes="(max-width:760px) calc(100vw - 44px), (max-width:980px) calc((90vw - 24px)/2), calc((90vw - 64px)/3)" width="960" height="1200" loading="lazy" decoding="async" alt=""></picture>
+          <span class="crew-number" dir="ltr">01</span>
+        </figure>
+        <div class="crew-credit"><span dir="ltr">AI CREW / 01</span><h3 id="crew-alma"><bdi lang="en" dir="ltr">Alma</bdi></h3><p class="crew-role" data-i18n="crew.alma.role">Story &amp; Strategy</p><p data-i18n="crew.alma.line">Finds the human tension inside every brief.</p></div>
       </article>
-      <article class="crew-card">
-        <div class="crew-portrait" aria-hidden="true"></div>
-        <div class="crew-credit"><span dir="ltr">AI CREW / 02</span><h3><bdi lang="en" dir="ltr">Nara</bdi></h3><p class="crew-role" data-i18n="crew.nara.role">Visual Development</p><p data-i18n="crew.nara.line">Builds worlds. Removes what does not belong.</p></div>
+      <article class="crew-card" aria-labelledby="crew-nara">
+        <figure class="crew-portrait" aria-hidden="true">
+          <picture><source type="image/avif" srcset="p/crew/crew-placeholder-640.avif 640w, p/crew/crew-placeholder-960.avif 960w, p/crew/crew-placeholder-1600.avif 1600w" sizes="(max-width:760px) calc(100vw - 44px), (max-width:980px) calc((90vw - 24px)/2), calc((90vw - 64px)/3)"><img src="p/crew/crew-placeholder-960.webp" srcset="p/crew/crew-placeholder-640.webp 640w, p/crew/crew-placeholder-960.webp 960w, p/crew/crew-placeholder-1600.webp 1600w" sizes="(max-width:760px) calc(100vw - 44px), (max-width:980px) calc((90vw - 24px)/2), calc((90vw - 64px)/3)" width="960" height="1200" loading="lazy" decoding="async" alt=""></picture>
+          <span class="crew-number" dir="ltr">02</span>
+        </figure>
+        <div class="crew-credit"><span dir="ltr">AI CREW / 02</span><h3 id="crew-nara"><bdi lang="en" dir="ltr">Nara</bdi></h3><p class="crew-role" data-i18n="crew.nara.role">Visual Development</p><p data-i18n="crew.nara.line">Builds worlds. Removes what does not belong.</p></div>
       </article>
-      <article class="crew-card">
-        <div class="crew-portrait" aria-hidden="true"></div>
-        <div class="crew-credit"><span dir="ltr">AI CREW / 03</span><h3><bdi lang="en" dir="ltr">Luc</bdi></h3><p class="crew-role" data-i18n="crew.luc.role">Cinematography</p><p data-i18n="crew.luc.line">Chases the frame that feels impossible to shoot.</p></div>
+      <article class="crew-card" aria-labelledby="crew-luc">
+        <figure class="crew-portrait" aria-hidden="true">
+          <picture><source type="image/avif" srcset="p/crew/crew-placeholder-640.avif 640w, p/crew/crew-placeholder-960.avif 960w, p/crew/crew-placeholder-1600.avif 1600w" sizes="(max-width:760px) calc(100vw - 44px), (max-width:980px) calc((90vw - 24px)/2), calc((90vw - 64px)/3)"><img src="p/crew/crew-placeholder-960.webp" srcset="p/crew/crew-placeholder-640.webp 640w, p/crew/crew-placeholder-960.webp 960w, p/crew/crew-placeholder-1600.webp 1600w" sizes="(max-width:760px) calc(100vw - 44px), (max-width:980px) calc((90vw - 24px)/2), calc((90vw - 64px)/3)" width="960" height="1200" loading="lazy" decoding="async" alt=""></picture>
+          <span class="crew-number" dir="ltr">03</span>
+        </figure>
+        <div class="crew-credit"><span dir="ltr">AI CREW / 03</span><h3 id="crew-luc"><bdi lang="en" dir="ltr">Luc</bdi></h3><p class="crew-role" data-i18n="crew.luc.role">Cinematography</p><p data-i18n="crew.luc.line">Chases the frame that feels impossible to shoot.</p></div>
       </article>
-      <article class="crew-card">
-        <div class="crew-portrait" aria-hidden="true"></div>
-        <div class="crew-credit"><span dir="ltr">AI CREW / 04</span><h3><bdi lang="en" dir="ltr">Vera</bdi></h3><p class="crew-role" data-i18n="crew.vera.role">Editorial</p><p data-i18n="crew.vera.line">Cuts until every beat feels inevitable.</p></div>
+      <article class="crew-card" aria-labelledby="crew-vera">
+        <figure class="crew-portrait" aria-hidden="true">
+          <picture><source type="image/avif" srcset="p/crew/crew-placeholder-640.avif 640w, p/crew/crew-placeholder-960.avif 960w, p/crew/crew-placeholder-1600.avif 1600w" sizes="(max-width:760px) calc(100vw - 44px), (max-width:980px) calc((90vw - 24px)/2), calc((90vw - 64px)/3)"><img src="p/crew/crew-placeholder-960.webp" srcset="p/crew/crew-placeholder-640.webp 640w, p/crew/crew-placeholder-960.webp 960w, p/crew/crew-placeholder-1600.webp 1600w" sizes="(max-width:760px) calc(100vw - 44px), (max-width:980px) calc((90vw - 24px)/2), calc((90vw - 64px)/3)" width="960" height="1200" loading="lazy" decoding="async" alt=""></picture>
+          <span class="crew-number" dir="ltr">04</span>
+        </figure>
+        <div class="crew-credit"><span dir="ltr">AI CREW / 04</span><h3 id="crew-vera"><bdi lang="en" dir="ltr">Vera</bdi></h3><p class="crew-role" data-i18n="crew.vera.role">Editorial</p><p data-i18n="crew.vera.line">Cuts until every beat feels inevitable.</p></div>
       </article>
-      <article class="crew-card">
-        <div class="crew-portrait" aria-hidden="true"></div>
-        <div class="crew-credit"><span dir="ltr">AI CREW / 05</span><h3><bdi lang="en" dir="ltr">Sona</bdi></h3><p class="crew-role" data-i18n="crew.sona.role">Sound &amp; Voice</p><p data-i18n="crew.sona.line">Hears the film before the first cut.</p></div>
+      <article class="crew-card" aria-labelledby="crew-sona">
+        <figure class="crew-portrait" aria-hidden="true">
+          <picture><source type="image/avif" srcset="p/crew/crew-placeholder-640.avif 640w, p/crew/crew-placeholder-960.avif 960w, p/crew/crew-placeholder-1600.avif 1600w" sizes="(max-width:760px) calc(100vw - 44px), (max-width:980px) calc((90vw - 24px)/2), calc((90vw - 64px)/3)"><img src="p/crew/crew-placeholder-960.webp" srcset="p/crew/crew-placeholder-640.webp 640w, p/crew/crew-placeholder-960.webp 960w, p/crew/crew-placeholder-1600.webp 1600w" sizes="(max-width:760px) calc(100vw - 44px), (max-width:980px) calc((90vw - 24px)/2), calc((90vw - 64px)/3)" width="960" height="1200" loading="lazy" decoding="async" alt=""></picture>
+          <span class="crew-number" dir="ltr">05</span>
+        </figure>
+        <div class="crew-credit"><span dir="ltr">AI CREW / 05</span><h3 id="crew-sona"><bdi lang="en" dir="ltr">Sona</bdi></h3><p class="crew-role" data-i18n="crew.sona.role">Sound &amp; Voice</p><p data-i18n="crew.sona.line">Hears the film before the first cut.</p></div>
       </article>
-      <article class="crew-card">
-        <div class="crew-portrait" aria-hidden="true"></div>
-        <div class="crew-credit"><span dir="ltr">AI CREW / 06</span><h3><bdi lang="en" dir="ltr">Ivo</bdi></h3><p class="crew-role" data-i18n="crew.ivo.role">Production Systems</p><p data-i18n="crew.ivo.line">Keeps the technology invisible and the work moving.</p></div>
+      <article class="crew-card" aria-labelledby="crew-ivo">
+        <figure class="crew-portrait" aria-hidden="true">
+          <picture><source type="image/avif" srcset="p/crew/crew-placeholder-640.avif 640w, p/crew/crew-placeholder-960.avif 960w, p/crew/crew-placeholder-1600.avif 1600w" sizes="(max-width:760px) calc(100vw - 44px), (max-width:980px) calc((90vw - 24px)/2), calc((90vw - 64px)/3)"><img src="p/crew/crew-placeholder-960.webp" srcset="p/crew/crew-placeholder-640.webp 640w, p/crew/crew-placeholder-960.webp 960w, p/crew/crew-placeholder-1600.webp 1600w" sizes="(max-width:760px) calc(100vw - 44px), (max-width:980px) calc((90vw - 24px)/2), calc((90vw - 64px)/3)" width="960" height="1200" loading="lazy" decoding="async" alt=""></picture>
+          <span class="crew-number" dir="ltr">06</span>
+        </figure>
+        <div class="crew-credit"><span dir="ltr">AI CREW / 06</span><h3 id="crew-ivo"><bdi lang="en" dir="ltr">Ivo</bdi></h3><p class="crew-role" data-i18n="crew.ivo.role">Production Systems</p><p data-i18n="crew.ivo.line">Keeps the technology invisible and the work moving.</p></div>
       </article>
     </div>
   </section>
