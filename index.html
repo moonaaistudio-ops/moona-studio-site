@@ -1109,7 +1109,7 @@ body{font-size:16px;font-synthesis:none}
 .about-body{margin:clamp(26px,3vw,42px) 0 0;max-width:39ch;font-size:clamp(17px,1.45vw,21px);line-height:1.55;color:rgba(222,236,252,.92)}
 .about-engine{margin:30px 0 0;padding-top:22px;border-top:1px solid rgba(190,212,238,.22);max-width:54ch;color:rgba(222,236,252,.72)}
 
-/* Founder-to-system transition: a purely typographic chapter break before the
+/* Work-to-system transition: a purely typographic chapter break before the
    individual agent credits. */
 .crew-transition{position:relative;min-height:78svh;overflow:hidden;background:radial-gradient(circle at 82% 28%,rgba(131,158,190,.1),transparent 34%),linear-gradient(135deg,#030509 0%,#070a11 100%);border-block:1px solid rgba(190,212,238,.1);isolation:isolate}
 .crew-transition::before{content:"";position:absolute;z-index:-1;right:-10vw;top:50%;width:min(52vw,760px);aspect-ratio:1;border:1px solid rgba(190,212,238,.08);border-radius:50%;box-shadow:0 0 0 8vw rgba(190,212,238,.018),0 0 0 16vw rgba(190,212,238,.012);transform:translateY(-50%)}
@@ -1444,6 +1444,52 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
     </div>
   </section>
 
+  <section class="work" id="work" tabindex="-1" aria-labelledby="work-title">
+    <h2 class="sr-only" id="work-title" data-i18n="work.heading">Selected concept films</h2>
+    <div class="work-head rv">
+      <span class="idx" data-i18n="work.eyebrow">Selected work</span>
+      <p class="work-note" data-i18n="work.note">Four self-initiated concept films.</p>
+    </div>
+
+    <div class="work-grid">
+    <article class="piece rv" data-piece>
+      <div class="frame"><video src="v/mcdonalds.mp4" poster="p/mcdonalds.jpg" muted loop playsinline preload="none" aria-label="McDonald's self-initiated spec film by Moona" data-i18n-aria-label="work.mcdonalds.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the McDonald's concept film larger" data-i18n-aria-label="work.mcdonalds.open"></button><span class="vbadge">00:08</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
+      <div class="meta">
+        <span class="num">01</span><h3 class="brand" dir="ltr">McDonald's</h3>
+        <p class="concept" data-i18n="work.mcdonalds.concept">You already know the taste. Now watch it move.</p>
+      </div>
+      <div class="breakdown"></div>
+    </article>
+
+    <article class="piece rv" data-piece>
+      <div class="frame"><video src="v/strava.mp4" poster="p/strava.jpg" muted loop playsinline preload="none" aria-label="Strava self-initiated spec film by Moona" data-i18n-aria-label="work.strava.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the Strava concept film larger" data-i18n-aria-label="work.strava.open"></button><span class="vbadge">00:14</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
+      <div class="meta">
+        <span class="num">02</span><h3 class="brand" dir="ltr">Strava</h3>
+        <p class="concept" data-i18n="work.strava.concept">Every run already has a soundtrack. We cut to it.</p>
+      </div>
+      <div class="breakdown"><!-- breakdown slot — content later --></div>
+    </article>
+
+    <article class="piece rv" data-piece>
+      <div class="frame"><video src="v/bull-padel.mp4" poster="p/bull-padel.jpg" muted loop playsinline preload="none" aria-label="Bull Padel self-initiated spec film by Moona" data-i18n-aria-label="work.bullPadel.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the Bull Padel concept film larger" data-i18n-aria-label="work.bullPadel.open"></button><span class="vbadge">00:15</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
+      <div class="meta">
+        <span class="num">03</span><h3 class="brand" dir="ltr">Bull Padel</h3>
+        <p class="concept" data-i18n="work.bullPadel.concept">The court hits back.</p>
+      </div>
+      <div class="breakdown"></div>
+    </article>
+
+    <article class="piece vert rv" data-piece>
+      <div class="frame"><video src="v/koda.mp4" poster="p/koda.jpg" muted loop playsinline preload="none" aria-label="Koda self-initiated spec film by Moona" data-i18n-aria-label="work.koda.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the Koda concept film larger" data-i18n-aria-label="work.koda.open"></button><span class="vbadge">00:10</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
+      <div class="meta">
+        <span class="num">04</span><h3 class="brand" dir="ltr">Koda</h3>
+        <p class="concept" data-i18n="work.koda.concept">Built for the feed it lives in.</p>
+      </div>
+      <div class="breakdown"></div>
+    </article>
+    </div>
+  </section>
+
   <section class="crew-transition" id="crew-intro" tabindex="-1" aria-labelledby="crew-transition-title">
     <div class="crew-transition-copy rv">
       <p class="section-kicker" data-i18n="crew.transitionEyebrow">The crew</p>
@@ -1504,52 +1550,6 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
         </figure>
         <div class="crew-credit"><span dir="ltr">AI CREW / 06</span><h3 id="crew-ivo"><bdi lang="en" dir="ltr">Ivo</bdi></h3><p class="crew-role" data-i18n="crew.ivo.role">Production Systems</p><p data-i18n="crew.ivo.line">Keeps the technology invisible and the work moving.</p></div>
       </article>
-    </div>
-  </section>
-
-  <section class="work" id="work" tabindex="-1" aria-labelledby="work-title">
-    <h2 class="sr-only" id="work-title" data-i18n="work.heading">Selected concept films</h2>
-    <div class="work-head rv">
-      <span class="idx" data-i18n="work.eyebrow">Selected work</span>
-      <p class="work-note" data-i18n="work.note">Four self-initiated concept films.</p>
-    </div>
-
-    <div class="work-grid">
-    <article class="piece rv" data-piece>
-      <div class="frame"><video src="v/mcdonalds.mp4" poster="p/mcdonalds.jpg" muted loop playsinline preload="none" aria-label="McDonald's self-initiated spec film by Moona" data-i18n-aria-label="work.mcdonalds.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the McDonald's concept film larger" data-i18n-aria-label="work.mcdonalds.open"></button><span class="vbadge">00:08</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
-      <div class="meta">
-        <span class="num">01</span><h3 class="brand" dir="ltr">McDonald's</h3>
-        <p class="concept" data-i18n="work.mcdonalds.concept">You already know the taste. Now watch it move.</p>
-      </div>
-      <div class="breakdown"></div>
-    </article>
-
-    <article class="piece rv" data-piece>
-      <div class="frame"><video src="v/strava.mp4" poster="p/strava.jpg" muted loop playsinline preload="none" aria-label="Strava self-initiated spec film by Moona" data-i18n-aria-label="work.strava.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the Strava concept film larger" data-i18n-aria-label="work.strava.open"></button><span class="vbadge">00:14</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
-      <div class="meta">
-        <span class="num">02</span><h3 class="brand" dir="ltr">Strava</h3>
-        <p class="concept" data-i18n="work.strava.concept">Every run already has a soundtrack. We cut to it.</p>
-      </div>
-      <div class="breakdown"><!-- breakdown slot — content later --></div>
-    </article>
-
-    <article class="piece rv" data-piece>
-      <div class="frame"><video src="v/bull-padel.mp4" poster="p/bull-padel.jpg" muted loop playsinline preload="none" aria-label="Bull Padel self-initiated spec film by Moona" data-i18n-aria-label="work.bullPadel.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the Bull Padel concept film larger" data-i18n-aria-label="work.bullPadel.open"></button><span class="vbadge">00:15</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
-      <div class="meta">
-        <span class="num">03</span><h3 class="brand" dir="ltr">Bull Padel</h3>
-        <p class="concept" data-i18n="work.bullPadel.concept">The court hits back.</p>
-      </div>
-      <div class="breakdown"></div>
-    </article>
-
-    <article class="piece vert rv" data-piece>
-      <div class="frame"><video src="v/koda.mp4" poster="p/koda.jpg" muted loop playsinline preload="none" aria-label="Koda self-initiated spec film by Moona" data-i18n-aria-label="work.koda.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the Koda concept film larger" data-i18n-aria-label="work.koda.open"></button><span class="vbadge">00:10</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
-      <div class="meta">
-        <span class="num">04</span><h3 class="brand" dir="ltr">Koda</h3>
-        <p class="concept" data-i18n="work.koda.concept">Built for the feed it lives in.</p>
-      </div>
-      <div class="breakdown"></div>
-    </article>
     </div>
   </section>
 

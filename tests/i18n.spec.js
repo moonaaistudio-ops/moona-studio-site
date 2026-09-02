@@ -764,7 +764,7 @@ test.describe('responsive header and dynamic UI', () => {
       await expect.poll(() => firstCrewImage.evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
       const layout = await page.evaluate(async () => {
         await document.fonts.ready;
-        const ids = ['film', 'about', 'crew-intro', 'crew', 'work', 'contact'];
+        const ids = ['film', 'about', 'work', 'crew-intro', 'crew', 'contact'];
         const sections = ids.map(id => document.getElementById(id));
         const portraits = [...document.querySelectorAll('#crew .crew-portrait')];
         const cards = [...document.querySelectorAll('#crew .crew-card')];
@@ -793,6 +793,7 @@ test.describe('responsive header and dynamic UI', () => {
             mediaCount: document.querySelectorAll('#crew-intro :is(picture, img, source)').length
           },
           sectionAfterAbout: document.querySelector('#about')?.nextElementSibling?.id,
+          sectionAfterWork: document.querySelector('#work')?.nextElementSibling?.id,
           crewNames: cards.map(card => card.querySelector('h3')?.textContent),
           crewColumns: getComputedStyle(document.querySelector('#crew .crew-grid'))
             .gridTemplateColumns.split(/\s+/).filter(Boolean).length,
@@ -857,7 +858,8 @@ test.describe('responsive header and dynamic UI', () => {
         body: 'כל אנשי הצוות ב־Moona הם סוכני AI מתמחים שנבנו בתוך הסטודיו.',
         mediaCount: 0
       });
-      expect(layout.sectionAfterAbout).toBe('crew-intro');
+      expect(layout.sectionAfterAbout).toBe('work');
+      expect(layout.sectionAfterWork).toBe('crew-intro');
       expect(layout.crewNames).toEqual(['Alma', 'Nara', 'Luc', 'Vera', 'Sona', 'Ivo']);
       expect(layout.crewColumns).toBe(width > 980 ? 3 : 1);
       expect(layout.legacyCrewNavigation).toBe(0);
@@ -918,7 +920,7 @@ test.describe('responsive header and dynamic UI', () => {
         const rect = selector => document.querySelector(selector).getBoundingClientRect();
         const levels = [...document.querySelectorAll('body h1, body h2, body h3')]
           .map(heading => Number(heading.tagName.slice(1)));
-        const labelledSections = ['film', 'about', 'crew-intro', 'crew', 'work', 'contact'].map(id => {
+        const labelledSections = ['film', 'about', 'work', 'crew-intro', 'crew', 'contact'].map(id => {
           const section = document.getElementById(id);
           const labelId = section.getAttribute('aria-labelledby');
           return {
@@ -944,10 +946,10 @@ test.describe('responsive header and dynamic UI', () => {
           headingSkip: levels.some((level, index) => index > 0 && level > levels[index - 1] + 1),
           labelledSections,
           junctions: {
-            aboutCrewIntro: junction('#about', '#crew-intro'),
+            aboutWork: junction('#about', '#work'),
+            workCrewIntro: junction('#work', '#crew-intro'),
             crewIntroCrew: junction('#crew-intro', '#crew'),
-            crewWork: junction('#crew', '#work'),
-            workContact: junction('#work', '#contact')
+            crewContact: junction('#crew', '#contact')
           },
           spacing: {
             crewIntroCopyTop: px(style('.crew-transition-copy').paddingTop),
@@ -1017,9 +1019,9 @@ test.describe('responsive header and dynamic UI', () => {
       expect(layout.labelledSections).toEqual([
         { id: 'film', labelId: 'film-title', labelTag: 'H2' },
         { id: 'about', labelId: 'about-title', labelTag: 'H2' },
+        { id: 'work', labelId: 'work-title', labelTag: 'H2' },
         { id: 'crew-intro', labelId: 'crew-transition-title', labelTag: 'H2' },
         { id: 'crew', labelId: 'crew-title', labelTag: 'H2' },
-        { id: 'work', labelId: 'work-title', labelTag: 'H2' },
         { id: 'contact', labelId: 'contact-title', labelTag: 'H2' }
       ]);
       Object.values(layout.junctions).forEach(gap => expect(gap).toBeLessThanOrEqual(1));
