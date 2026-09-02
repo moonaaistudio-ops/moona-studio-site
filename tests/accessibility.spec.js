@@ -48,10 +48,10 @@ async function expectNoAxeViolations(page, include) {
 }
 
 async function canvasSnapshots(page) {
-  return Promise.all([
-    page.locator('#sky').screenshot(),
-    page.locator('#moon').screenshot()
-  ]);
+  const dataUrls = await page.locator('#sky,#moon').evaluateAll(canvases =>
+    canvases.map(canvas => canvas.toDataURL('image/png'))
+  );
+  return dataUrls.map(dataUrl => Buffer.from(dataUrl));
 }
 
 for (const locale of ['en', 'he']) {
@@ -119,7 +119,7 @@ test('mobile menu is keyboard operated, focuses its content, and restores focus'
 
 test('required fields have descriptions and expose an announced validation state', async ({ page }) => {
   await openPage(page, '/?lang=he');
-  const opener = page.locator('#hdr [data-ask]');
+  const opener = page.locator('[data-hero-contact-cta]');
   await opener.click();
   await expect(page.locator('#ask')).toHaveClass(/open/);
   await expect(page.locator('#f-name')).toBeFocused();

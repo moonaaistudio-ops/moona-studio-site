@@ -547,6 +547,7 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
 #hdr>*{pointer-events:auto}
 .lockup{display:flex;align-items:center;justify-self:start;min-width:120px;min-height:44px;color:#fff;text-decoration:none}
 .lockup-wordmark{display:block;width:150px;height:auto}
+.lockup-mark{display:none;width:40px;height:40px}
 #hdr nav{display:contents}
 .header-links{grid-column:2;display:flex;align-items:center;gap:clamp(20px,2.2vw,34px)}
 .header-actions{grid-column:3;justify-self:end;display:flex;align-items:center;gap:14px}
@@ -554,7 +555,7 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
   min-width:44px;min-height:44px;text-transform:uppercase;color:rgba(255,255,255,.88);padding:9px 2px;
   border-bottom:1px solid transparent;transition:color .3s,border-color .3s}
 #hdr button[data-goto]:hover{color:#fff;border-color:#fff}
-.header-actions .cta-btn.sm{min-height:40px;padding:10px 20px;border:1px solid rgba(255,255,255,.9);
+.header-actions .cta-btn.sm{min-height:44px;padding:10px 20px;border:1px solid rgba(255,255,255,.9);
   background:none;color:#fff;font-size:10px;letter-spacing:.16em}
 .header-actions .cta-btn.sm::before{display:none}
 .header-actions .cta-btn.sm i{border-color:#fff}
@@ -581,6 +582,12 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
   .header-links{display:none}
   .header-actions{gap:8px}
   .header-actions .cta-btn.sm{display:none}
+  #hdr.has-header-cta{grid-template-columns:auto 1fr;gap:8px}
+  #hdr.has-header-cta .lockup{width:44px;min-width:44px;justify-content:center}
+  #hdr.has-header-cta .lockup-wordmark{display:none}
+  #hdr.has-header-cta .lockup-mark{display:block;width:40px;height:40px}
+  #hdr.has-header-cta .header-actions{grid-column:2;gap:6px}
+  #hdr.has-header-cta .header-actions .cta-btn.sm{display:inline-flex;min-height:44px;padding:9px 12px;gap:7px;font-size:11px;letter-spacing:.02em}
   .mobile-menu-toggle{display:grid}
   .mobile-menu{position:absolute;top:72px;inset-inline-end:18px;z-index:2;
     display:grid;min-width:164px;padding:8px;border:1px solid rgba(217,198,156,.28);
@@ -1262,7 +1269,7 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
 
 <!-- ═══════════ HEADER ═══════════ -->
 <header id="hdr">
-  <a class="lockup" href="#" id="homeLink" aria-label="Moona home" data-i18n-aria-label="header.home" dir="ltr"><img class="lockup-wordmark" src="p/brand/moona-logo-lockup.svg" alt="" width="566" height="100"></a>
+  <a class="lockup" href="#" id="homeLink" aria-label="Moona home" data-i18n-aria-label="header.home" dir="ltr"><img class="lockup-wordmark" src="p/brand/moona-logo-lockup.svg" alt="" width="566" height="100"><img class="lockup-mark" src="p/brand/moona-logo-mark.svg" alt="" width="100" height="100"></a>
   <nav aria-label="Sections" data-i18n-aria-label="nav.sections">
     <div class="header-links">
       <button class="nav-section" type="button" data-goto="film" data-i18n="nav.work">Work</button>
@@ -1271,7 +1278,7 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
     </div>
     <div class="header-actions">
       <button class="language-toggle" type="button" data-language-toggle aria-label="Switch to Hebrew">HE</button>
-      <button class="cta-btn sm" data-ask><span data-i18n="nav.cta">Start a project</span><i></i></button>
+      <button class="cta-btn sm" type="button" data-ask data-header-contact-cta hidden><span data-i18n="nav.cta">Contact us</span><i></i></button>
       <button class="mobile-menu-toggle" type="button" data-mobile-menu-toggle
               aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu"
               data-i18n-aria-label="nav.menu.open">
@@ -1304,7 +1311,7 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
     <div class="htxt" id="t1">
       <h1 class="statement"><span data-i18n="hero.headline.lead">Cinematic ads,</span> <bdi lang="en" dir="ltr" data-i18n="hero.headline.aiTerm"></bdi> <em data-i18n="hero.headline.emphasis">born without a camera</em></h1>
       <p class="statement-sub"><span data-i18n="hero.subline.one">An AI-native studio for film and motion ads.</span><span data-i18n="hero.subline.two">Story, craft and taste first.</span></p>
-      <button class="cta-btn hero-cta" type="button" data-goto="film" data-hover><span data-i18n="hero.workCta">View our work</span><i></i></button>
+      <button class="cta-btn hero-cta" type="button" data-ask data-hero-contact-cta data-hover><span data-i18n="hero.workCta">Contact us</span><i></i></button>
     </div>
 
     <div class="scrollcue" id="cue"><span data-i18n="hero.scroll">Scroll</span><i></i></div>
@@ -2099,7 +2106,22 @@ const fogEl=document.querySelector('#hero-stick .vig');
 /* the aurora only costs anything while it is actually on screen */
 let heroOnScreen=true;
 let filmCovering=false;   /* the flagship owns the screen; the aurora can rest */
-new IntersectionObserver(([e])=>{heroOnScreen=e.isIntersecting},{threshold:0})
+const hdr=document.getElementById('hdr');
+const headerContactCta=document.querySelector('[data-header-contact-cta]');
+function setHeaderContactCta(show){
+  if(!headerContactCta||!hdr) return;
+  if(show){
+    hdr.classList.add('has-header-cta');
+    headerContactCta.hidden=false;
+  }else{
+    headerContactCta.hidden=true;
+    hdr.classList.remove('has-header-cta');
+  }
+}
+new IntersectionObserver(([e])=>{
+  heroOnScreen=e.isIntersecting;
+  setHeaderContactCta(!e.isIntersecting);
+},{threshold:0})
   .observe(document.getElementById('hero-stick'));
 
 let lastHudPr='', lastHudOp=-1, lastCue=-1, lastPxs=999;

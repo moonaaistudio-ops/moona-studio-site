@@ -50,7 +50,7 @@ async function seedLocaleOnce(page, locale) {
 }
 
 async function fillLeadForm(page, { brief = LEAD_BRIEF } = {}) {
-  await page.evaluate(() => document.querySelector('[data-ask]').click());
+  await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
   await expect(page.locator('#ask')).toHaveClass(/open/);
   await page.locator('#f-name').fill('Dana Cohen');
   await page.locator('[data-step="0"] [data-next]').click();
@@ -222,7 +222,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
       'מקריאטיב ובימוי ועד הפקה ופוסט,',
       'בשליטה מלאה על כל פריים.'
     ]);
-    await expect(page.locator('.hero-cta [data-i18n="hero.workCta"]')).toHaveText('לצפייה בעבודות');
+    await expect(page.locator('.hero-cta [data-i18n="hero.workCta"]')).toHaveText('צור איתנו קשר');
     await expect(page.locator('.film-head .film-eyebrow')).toHaveText('סרט הדגל');
     await expect(page.locator('.film-title')).toHaveText('יצרנו מותג. וצילמנו לו פרסומת.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE הוא חטיף אנרגיה שאנחנו יצרנו מאפס.');
@@ -254,7 +254,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('[data-i18n="work.koda.concept"]')).toHaveText('נבנה לפיד שבו הוא חי.');
     await expect(page.locator('.contact-line')).toHaveText('יש לכם פרויקט ששווה ליצור?');
     await expect(page.locator('.contact-body')).toHaveText('ספרו לנו מה אתם בונים. נחזור אליכם בתוך שני ימי עסקים.');
-    await expect(page.locator('[data-i18n="nav.cta"]')).toHaveText('מתחילים פרויקט');
+    await expect(page.locator('[data-i18n="nav.cta"]')).toHaveText('צור איתנו קשר');
     await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
     await expect(page.locator('.contact [data-i18n="hero.cta"]')).toHaveText('מתחילים פרויקט');
     await expect(page.locator('#askTitle')).toHaveText('מתחילים פרויקט');
@@ -272,9 +272,9 @@ test.describe('dictionary and first-paint privacy contract', () => {
       send: window.MoonaI18n.t('form.send', {}, 'en'),
       note: window.MoonaI18n.t('studio.note', {}, 'en')
     }))).toEqual({
-      nav: 'Start a project',
+      nav: 'Contact us',
       hero: 'Start a project',
-      work: 'View our work',
+      work: 'Contact us',
       contact: 'Start a project',
       dialog: 'Start a project',
       send: 'Send details',
@@ -306,7 +306,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
       'An AI-native studio for film and motion ads.',
       'Story, craft and taste first.'
     ]);
-    await expect(page.locator('.hero-cta [data-i18n="hero.workCta"]')).toHaveText('View our work');
+    await expect(page.locator('.hero-cta [data-i18n="hero.workCta"]')).toHaveText('Contact us');
     await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
     await expect(page.locator('.film-title')).toHaveText('We created a brand. Then we shot its ad.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE is an energy bar you cannot buy.');
@@ -602,7 +602,7 @@ test.describe('locale transitions and state preservation', () => {
     await page.locator('[data-language-toggle]').click();
     await expect.poll(() => page.evaluate(() => scrollY)).toBe(beforeScroll);
 
-    await page.evaluate(() => document.querySelector('[data-ask]').click());
+    await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
     await expect(page.locator('#ask')).toHaveClass(/open/);
     await page.locator('#f-name').fill('Tal Zur');
     await page.locator('[data-step="0"] [data-next]').click();
@@ -1341,99 +1341,150 @@ test.describe('responsive header and dynamic UI', () => {
     expect(result).toEqual({ playCalls: 1, readinessListeners: 4 });
   });
 
-  test('header targets remain separated and contained at the approved widths', async ({ page }) => {
-    const widths = [360, 375, 385, 386, 387, 390, 1440];
+  test('header contact CTA follows the hero without crowding the approved widths', async ({ page }) => {
+    test.setTimeout(90_000);
+    const widths = [320, 360, 375, 385, 386, 387, 390, 768, 1440];
+    const readLayout = () => page.evaluate(async () => {
+      await document.fonts.ready;
+      const rect = element => {
+        const value = element.getBoundingClientRect();
+        return { left: value.left, right: value.right, top: value.top, bottom: value.bottom, width: value.width, height: value.height };
+      };
+      const header = document.getElementById('hdr');
+      const lockup = header.querySelector('.lockup');
+      const headerLinks = header.querySelector('.header-links');
+      const headerActions = header.querySelector('.header-actions');
+      const language = header.querySelector('[data-language-toggle]');
+      const contactCta = header.querySelector('[data-header-contact-cta]');
+      const isVisible = element => {
+        const style = getComputedStyle(element);
+        return style.display !== 'none' && style.visibility !== 'hidden' && element.getClientRects().length > 0;
+      };
+      const visibleTargets = [...header.querySelectorAll('a, button')]
+        .filter(isVisible).map(rect).sort((a, b) => a.left - b.left);
+      const visibleLinkTargets = [...headerLinks.querySelectorAll('button')]
+        .filter(isVisible).map(rect).sort((a, b) => a.left - b.left);
+      const visibleActionTargets = [...headerActions.querySelectorAll('button')]
+        .filter(isVisible).map(rect).sort((a, b) => a.left - b.left);
+      const visibleGroups = [lockup, headerLinks, headerActions]
+        .filter(isVisible).map(rect).sort((a, b) => a.left - b.left);
+      const wordmark = lockup.querySelector('.lockup-wordmark');
+      const mark = lockup.querySelector('.lockup-mark');
+      return {
+        viewport: innerWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+        header: rect(header),
+        headerPosition: getComputedStyle(header).position,
+        headerHasCta: header.classList.contains('has-header-cta'),
+        lockup: rect(lockup),
+        wordmark: rect(wordmark),
+        wordmarkDisplay: getComputedStyle(wordmark).display,
+        wordmarkSrc: wordmark.getAttribute('src'),
+        mark: rect(mark),
+        markDisplay: getComputedStyle(mark).display,
+        markSrc: mark.getAttribute('src'),
+        headerLinks: rect(headerLinks),
+        headerActions: rect(headerActions),
+        language: rect(language),
+        contactCta: rect(contactCta),
+        contactCtaVisible: isVisible(contactCta),
+        visibleTargets,
+        visibleLinkTargets,
+        visibleActionTargets,
+        visibleGroups,
+        headerLinksDisplay: getComputedStyle(headerLinks).display,
+        menuToggleDisplay: getComputedStyle(headerActions.querySelector('[data-mobile-menu-toggle]')).display,
+        sectionRendered: [...headerLinks.querySelectorAll('.nav-section')].map(isVisible),
+        navLetterSpacing: getComputedStyle(headerLinks.querySelector('[data-goto]')).letterSpacing,
+        containerType: getComputedStyle(header).containerType
+      };
+    });
+    const assertContained = (layout, label) => {
+      expect(layout.scrollWidth, `${label} horizontal overflow`).toBeLessThanOrEqual(layout.viewport);
+      expect(layout.headerPosition).toBe('fixed');
+      expect(layout.containerType).toBe('inline-size');
+      expect(layout.lockup.width).toBeGreaterThanOrEqual(44);
+      expect(layout.lockup.height).toBeGreaterThanOrEqual(44);
+      for (const target of layout.visibleTargets) {
+        expect(target.width, `${label} target width`).toBeGreaterThanOrEqual(44);
+        expect(target.height, `${label} target height`).toBeGreaterThanOrEqual(44);
+      }
+      for (const target of [layout.lockup, layout.headerActions]) {
+        expect(target.left, `${label} left containment`).toBeGreaterThanOrEqual(-0.5);
+        expect(target.right, `${label} right containment`).toBeLessThanOrEqual(layout.viewport + 0.5);
+      }
+      for (let index = 1; index < layout.visibleGroups.length; index += 1) {
+        expect(layout.visibleGroups[index].left - layout.visibleGroups[index - 1].right, `${label} group spacing`).toBeGreaterThanOrEqual(6);
+      }
+      for (const targets of [layout.visibleLinkTargets, layout.visibleActionTargets]) {
+        for (let index = 1; index < targets.length; index += 1) {
+          expect(targets[index].left - targets[index - 1].right, `${label} target spacing`).toBeGreaterThanOrEqual(6);
+        }
+      }
+    };
+
     for (const locale of ['en', 'he']) {
       for (const width of widths) {
+        const mobile = width <= 700;
         await page.setViewportSize({ width, height: width === 1440 ? 900 : 844 });
         await page.goto(`/?lang=${locale}`);
         await waitForI18n(page);
-        const layout = await page.evaluate(async () => {
-          await document.fonts.ready;
-          const rect = element => {
-            const value = element.getBoundingClientRect();
-            return { left: value.left, right: value.right, top: value.top, bottom: value.bottom, width: value.width, height: value.height };
-          };
-          const header = document.getElementById('hdr');
-          const lockup = header.querySelector('.lockup');
-          const headerLinks = header.querySelector('.header-links');
-          const headerActions = header.querySelector('.header-actions');
-          const isVisible = element => {
-            const style = getComputedStyle(element);
-            return style.display !== 'none' && style.visibility !== 'hidden' && element.getClientRects().length > 0;
-          };
-          const visibleTargets = [...header.querySelectorAll('a, button')]
-            .filter(isVisible)
-            .map(element => ({ ...rect(element), minimumHeight: element.matches('.cta-btn.sm') ? 40 : 44 }))
-            .sort((a, b) => a.left - b.left);
-          const visibleLinkTargets = [...headerLinks.querySelectorAll('button')]
-            .filter(isVisible)
-            .map(rect).sort((a, b) => a.left - b.left);
-          const visibleActionTargets = [...headerActions.querySelectorAll('button')]
-            .filter(isVisible)
-            .map(rect).sort((a, b) => a.left - b.left);
-          const visibleGroups = [lockup, headerLinks, headerActions]
-            .filter(isVisible)
-            .map(rect).sort((a, b) => a.left - b.left);
-          const wordmark = lockup.querySelector('.lockup-wordmark');
-          return {
-            viewport: innerWidth,
-            scrollWidth: document.documentElement.scrollWidth,
-            header: rect(header),
-            lockup: rect(lockup),
-            wordmark: rect(wordmark),
-            wordmarkDisplay: getComputedStyle(wordmark).display,
-            wordmarkSrc: wordmark.getAttribute('src'),
-            headerLinks: rect(headerLinks),
-            headerActions: rect(headerActions),
-            visibleTargets,
-            visibleLinkTargets,
-            visibleActionTargets,
-            visibleGroups,
-            headerLinksDisplay: getComputedStyle(headerLinks).display,
-            menuToggleDisplay: getComputedStyle(headerActions.querySelector('[data-mobile-menu-toggle]')).display,
-            desktopCtaDisplay: getComputedStyle(headerActions.querySelector('.cta-btn.sm')).display,
-            sectionRendered: [...headerLinks.querySelectorAll('.nav-section')].map(isVisible),
-            navLetterSpacing: getComputedStyle(headerLinks.querySelector('[data-goto]')).letterSpacing,
-            containerType: getComputedStyle(header).containerType
-          };
-        });
+        const headerCta = page.locator('[data-header-contact-cta]');
+        await expect(headerCta).toBeHidden();
 
-        expect(layout.scrollWidth, `${locale} ${width}px horizontal overflow`).toBeLessThanOrEqual(layout.viewport);
-        expect(layout.containerType).toBe('inline-size');
-        expect(layout.lockup.width).toBeGreaterThanOrEqual(44);
-        expect(layout.lockup.height).toBeGreaterThanOrEqual(44);
-        expect(layout.wordmarkDisplay).not.toBe('none');
-        expect(layout.wordmarkSrc).toBe('p/brand/moona-logo-lockup.svg');
-        for (const target of layout.visibleTargets) {
-          expect(target.width).toBeGreaterThanOrEqual(44);
-          expect(target.height).toBeGreaterThanOrEqual(target.minimumHeight);
+        const atHero = await readLayout();
+        assertContained(atHero, `${locale} ${width}px hero`);
+        expect(atHero.headerHasCta).toBe(false);
+        expect(atHero.contactCtaVisible).toBe(false);
+        expect(atHero.wordmarkDisplay).not.toBe('none');
+        expect(atHero.markDisplay).toBe('none');
+        expect(atHero.wordmarkSrc).toBe('p/brand/moona-logo-lockup.svg');
+        expect(atHero.markSrc).toBe('p/brand/moona-logo-mark.svg');
+
+        await page.evaluate(() => {
+          const hero = document.getElementById('hero-track');
+          window.scrollTo(0, hero.offsetTop + hero.offsetHeight - innerHeight / 2);
+        });
+        await expect(headerCta).toBeHidden();
+
+        await page.evaluate(() => {
+          const hero = document.getElementById('hero-track');
+          window.scrollTo(0, hero.offsetTop + hero.offsetHeight + 2);
+        });
+        await expect(headerCta).toBeVisible();
+        await expect(headerCta).toHaveText(locale === 'he' ? 'צור איתנו קשר' : 'Contact us');
+
+        const belowHero = await readLayout();
+        assertContained(belowHero, `${locale} ${width}px below hero`);
+        expect(belowHero.headerHasCta).toBe(true);
+        expect(belowHero.contactCtaVisible).toBe(true);
+        expect(belowHero.header.height).toBeCloseTo(atHero.header.height, 0);
+        const languageCtaGap = Math.max(
+          belowHero.language.left - belowHero.contactCta.right,
+          belowHero.contactCta.left - belowHero.language.right
+        );
+        expect(languageCtaGap, `${locale} ${width}px language/CTA adjacency`).toBeGreaterThanOrEqual(6);
+        expect(languageCtaGap, `${locale} ${width}px language/CTA adjacency`).toBeLessThanOrEqual(14);
+
+        expect(belowHero.menuToggleDisplay === 'none').toBe(!mobile);
+        expect(belowHero.headerLinksDisplay === 'none').toBe(mobile);
+        expect(belowHero.sectionRendered.every(Boolean)).toBe(!mobile);
+        expect(belowHero.wordmarkDisplay === 'none').toBe(mobile);
+        expect(belowHero.markDisplay === 'none').toBe(!mobile);
+        if (!mobile) {
+          expect(Math.abs((belowHero.headerLinks.left + belowHero.headerLinks.right) / 2 - belowHero.viewport / 2)).toBeLessThanOrEqual(2);
         }
-        for (const target of [layout.lockup, layout.wordmark, layout.headerActions]) {
-          expect(target.left).toBeGreaterThanOrEqual(-0.5);
-          expect(target.right).toBeLessThanOrEqual(layout.viewport + 0.5);
-        }
-        for (let index = 1; index < layout.visibleGroups.length; index += 1) {
-          expect(layout.visibleGroups[index].left - layout.visibleGroups[index - 1].right).toBeGreaterThanOrEqual(6);
-        }
-        for (const targets of [layout.visibleLinkTargets, layout.visibleActionTargets]) {
-          for (let index = 1; index < targets.length; index += 1) {
-            expect(targets[index].left - targets[index - 1].right).toBeGreaterThanOrEqual(6);
-          }
-        }
-        expect(layout.menuToggleDisplay === 'none').toBe(width > 700);
-        expect(layout.desktopCtaDisplay === 'none').toBe(width <= 700);
-        expect(layout.headerLinksDisplay === 'none').toBe(width <= 700);
-        expect(layout.sectionRendered.every(Boolean)).toBe(width > 700);
-        if (width > 700) {
-          expect(Math.abs((layout.headerLinks.left + layout.headerLinks.right) / 2 - layout.viewport / 2)).toBeLessThanOrEqual(2);
-        }
-        if (locale === 'he') expect(['0px', 'normal']).toContain(layout.navLetterSpacing);
+        if (locale === 'he') expect(['0px', 'normal']).toContain(belowHero.navLetterSpacing);
+
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await expect(headerCta).toBeHidden();
+        await expect(page.locator('#hdr')).not.toHaveClass(/has-header-cta/);
+        await expect(page.locator('.lockup-wordmark')).toBeVisible();
       }
     }
   });
 
-  test('production canvas hero leads to the work and mobile navigation stays accessible', async ({ page }) => {
+  test('production canvas hero opens contact and mobile navigation stays accessible', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await openHome(page, '/?lang=he');
 
@@ -1444,7 +1495,7 @@ test.describe('responsive header and dynamic UI', () => {
       'מקריאטיב ובימוי ועד הפקה ופוסט,',
       'בשליטה מלאה על כל פריים.'
     ]);
-    await expect(page.locator('.hero-cta')).toHaveText('לצפייה בעבודות');
+    await expect(page.locator('.hero-cta')).toHaveText('צור איתנו קשר');
     await expect(page.locator('#hud-chapter')).toHaveText('CH·01');
     await expect(page.locator('#hud-progress')).toHaveText(/\d{3}/);
     await expect(page.locator('.hero-media, .hero-media-video, .hero-media-fallback, .hero-brand-stage')).toHaveCount(0);
@@ -1455,12 +1506,11 @@ test.describe('responsive header and dynamic UI', () => {
     await expect(page.locator('[data-mobile-menu-toggle]')).toBeHidden();
 
     await page.locator('.hero-cta').click();
+    await expect(page.locator('#ask')).toHaveClass(/open/);
+    await expect(page.locator('#f-name')).toBeFocused();
+    await page.locator('#askClose').click();
     await expect(page.locator('#ask')).not.toHaveClass(/open/);
-    await expect.poll(() => page.evaluate(() => {
-      const film = document.getElementById('film');
-      const header = document.getElementById('hdr');
-      return Math.abs(film.getBoundingClientRect().top - header.offsetHeight);
-    })).toBeLessThan(3);
+    await expect(page.locator('.hero-cta')).toBeFocused();
 
     await page.locator('.header-links [data-goto="crew-intro"]').click();
     await expect.poll(() => page.evaluate(() => {
@@ -1470,6 +1520,12 @@ test.describe('responsive header and dynamic UI', () => {
     })).toBeLessThan(3);
     await expect(page.locator('#crew-intro')).toBeFocused();
     await expect(page.locator('#crew-intro')).toHaveCSS('outline-style', 'none');
+    const headerContactCta = page.locator('[data-header-contact-cta]');
+    await expect(headerContactCta).toBeVisible();
+    await headerContactCta.click();
+    await expect(page.locator('#ask')).toHaveClass(/open/);
+    await page.locator('#askClose').click();
+    await expect(headerContactCta).toBeFocused();
 
     await page.setViewportSize({ width: 390, height: 844 });
     await page.evaluate(() => window.scrollTo(0, 0));
@@ -1521,7 +1577,7 @@ test.describe('responsive header and dynamic UI', () => {
 
   test('validation and uploaded-file labels rerender without losing files', async ({ page }) => {
     await openHome(page, '/?lang=en');
-    await page.evaluate(() => document.querySelector('[data-ask]').click());
+    await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
     await page.locator('[data-step="0"] [data-next]').click();
     await expect(page.locator('[data-step="0"] .qhint')).toHaveText('This one we need.');
     await page.evaluate(() => window.MoonaI18n.setLocale('he', { source: 'programmatic' }));
