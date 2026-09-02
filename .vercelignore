@@ -2,3 +2,4 @@ tests
 playwright.config.js
 test-server.js
 design-system
+.media/
