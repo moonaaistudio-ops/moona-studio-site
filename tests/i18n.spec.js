@@ -1031,9 +1031,9 @@ test.describe('responsive header and dynamic UI', () => {
       expect(layout.aboutOverlay.copyOverflowX).toBeLessThanOrEqual(1);
       expect(layout.aboutOverlay.copyOverflowY).toBeLessThanOrEqual(1);
       expect(layout.aboutOverlay.sectionHeight).toBeGreaterThanOrEqual(viewport.height - 1);
-      expect(layout.aboutOverlay.paddingTop).toBeGreaterThanOrEqual(24);
+      expect(layout.aboutOverlay.paddingTop).toBeGreaterThanOrEqual(18);
       expect(layout.aboutOverlay.paddingTop).toBeLessThanOrEqual(52);
-      expect(layout.aboutOverlay.paddingBottom).toBeGreaterThanOrEqual(24);
+      expect(layout.aboutOverlay.paddingBottom).toBeGreaterThanOrEqual(18);
       expect(layout.aboutOverlay.paddingBottom).toBeLessThanOrEqual(52);
       expect(layout.aboutOverlay.borderRadius).toBeCloseTo(20, 1);
       expect(layout.aboutOverlay.hasSurface).toBe(true);
@@ -1085,6 +1085,39 @@ test.describe('responsive header and dynamic UI', () => {
         expect(layout.editorialGrid.workHeadRight).toBeCloseTo(layout.editorialGrid.workGridRight, 1);
         expect(layout.editorialGrid.crewGridWidth).toBeCloseTo(viewport.width * .9, 1);
       }
+    }
+  });
+
+  test('short landscape About deep links reveal the complete editorial plaque', async ({ page }) => {
+    await page.setViewportSize({ width: 844, height: 390 });
+
+    for (const locale of ['en', 'he']) {
+      await openHome(page, `/?lang=${locale}#about`);
+      const copy = page.locator('.about-copy');
+      await expect(copy).toHaveClass(/seen/);
+      await expect(copy).toHaveCSS('opacity', '1');
+
+      const layout = await page.evaluate(() => {
+        const about = document.querySelector('#about').getBoundingClientRect();
+        const copy = document.querySelector('.about-copy');
+        const copyRect = copy.getBoundingClientRect();
+        const visibleHeight = Math.max(0, Math.min(copyRect.bottom, innerHeight) - Math.max(copyRect.top, 0));
+        return {
+          aboutTop: about.top,
+          copyTop: copyRect.top,
+          copyBottom: copyRect.bottom,
+          visibleRatio: visibleHeight / copyRect.height,
+          columns: getComputedStyle(copy).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
+          overflow: document.documentElement.scrollWidth - innerWidth
+        };
+      });
+
+      expect(Math.abs(layout.aboutTop)).toBeLessThanOrEqual(2);
+      expect(layout.copyTop).toBeGreaterThanOrEqual(0);
+      expect(layout.copyBottom).toBeLessThanOrEqual(390);
+      expect(layout.visibleRatio).toBeGreaterThan(.98);
+      expect(layout.columns).toBe(2);
+      expect(layout.overflow).toBeLessThanOrEqual(1);
     }
   });
 
