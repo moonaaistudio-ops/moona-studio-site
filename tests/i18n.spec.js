@@ -78,6 +78,16 @@ test('critical assets and legal links remain compatible with a direct-file previ
   for (const asset of ['moona-logo-lockup.svg', 'moona-logo-mark.svg']) {
     expect(fs.existsSync(path.join(PROJECT_ROOT, 'p', 'brand', asset))).toBe(true);
   }
+  for (const asset of [
+    'tal-cockpit-v2-1628.avif',
+    'tal-cockpit-v2-1628.webp',
+    'tal-cockpit-v2-960.avif',
+    'tal-cockpit-v2-960.webp',
+    'tal-cockpit-v2-mobile-768.avif',
+    'tal-cockpit-v2-mobile-768.webp'
+  ]) {
+    expect(fs.existsSync(path.join(PROJECT_ROOT, 'p', 'tal', asset))).toBe(true);
+  }
 });
 
 function metadata(page) {
@@ -235,8 +245,10 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.about-role')).toHaveText('מייסד · מנהל קריאייטיב · מפתח');
     await expect(page.locator('.about-body')).toHaveText('הקמתי את Moona בנקודת המפגש בין קריאייטיב לפיתוח תוכנה. אני מוביל כל פרויקט, בונה את המערכות שמאחורי העבודה ומקבל את ההחלטה היצירתית הסופית.');
     await expect(page.locator('.about-engine')).toHaveText('פיתוח תוכנה מותאם · מחקר ופיתוח מתמשך · סוכני AI מתמחים');
+    await expect(page.locator('#crew-transition-title')).toHaveText('שישה סוכני AI. בהובלת טל.');
+    await expect(page.locator('.crew-transition-body')).toHaveText('כל אנשי הצוות ב־Moona הם סוכני AI מתמחים שנבנו בתוך הסטודיו.');
     await expect(page.locator('#crew-title')).toHaveText('המומחים שמאחורי העבודה.');
-    await expect(page.locator('.crew-head > p')).toHaveText('בנויים בתוך הסטודיו. בהובלת טל.');
+    await expect(page.locator('.crew-head > p')).toHaveText('שישה מומחים לסיפור, תמונה, קולנוע, סאונד ומערכות.');
     await expect(page.locator('.work-note')).toHaveText('סרטי הקונספט האלה נוצרו ביוזמתנו כדי להראות מה נוכל ליצור עבור המותג הבא. המותגים המוצגים אינם לקוחות של Moona.');
     await expect(page.locator('[data-i18n="work.bullPadel.concept"]')).toHaveText('המחבט מחזיר חבטה.');
     await expect(page.locator('[data-i18n="work.koda.concept"]')).toHaveText('נבנה לפיד שבו הוא חי.');
@@ -302,7 +314,10 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.film-strip-head .film-note')).toHaveText('The world, cast and visual rules were built before motion began. The technology changed the production. It did not replace direction.');
     await expect(page.locator('#about h2')).toHaveText('Tal Tzur');
     await expect(page.locator('.about-role')).toHaveText('Founder · Creative Director · Developer');
+    await expect(page.locator('#crew-transition-title')).toHaveText('Six AI agents. Directed by Tal.');
+    await expect(page.locator('.crew-transition-body')).toHaveText('Every member of the Moona crew is a specialist AI agent, built inside the studio.');
     await expect(page.locator('#crew-title')).toHaveText('Specialists behind the work.');
+    await expect(page.locator('.crew-head > p')).toHaveText('Six specialists across story, image, film, sound and systems.');
 
     const dictionarySource = fs.readFileSync(path.join(__dirname, '..', 'i18n.js'), 'utf8');
     const hebrewStart = dictionarySource.indexOf('\n    he: {');
@@ -420,7 +435,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
   test('the restored hero is the only serif typography on the site', async ({ page }) => {
     const displaySelectors = [
       '.film-title', '.film-title em', '.film-beat h3', '.about-copy h2',
-      '.crew-head h2', '.crew-credit h3',
+      '.crew-transition h2', '.crew-head h2', '.crew-credit h3',
       '.contact .contact-line', '.q .qtitle'
     ];
 
@@ -739,14 +754,14 @@ test.describe('responsive header and dynamic UI', () => {
     }
   });
 
-  test('founder, crew placeholders, and the selected-work grid expose the rebuilt section contract', async ({ page }) => {
+  test('founder, AI-team introduction, credits grid, and selected work expose the rebuilt section contract', async ({ page }) => {
     const widths = [390, 1440];
     for (const width of widths) {
       await page.setViewportSize({ width, height: width === 1440 ? 900 : 844 });
       await openHome(page, '/?lang=he');
       const layout = await page.evaluate(async () => {
         await document.fonts.ready;
-        const ids = ['film', 'about', 'crew', 'work', 'contact'];
+        const ids = ['film', 'about', 'crew-intro', 'crew', 'work', 'contact'];
         const sections = ids.map(id => document.getElementById(id));
         const portraits = [...document.querySelectorAll('#crew .crew-portrait')];
         const cards = [...document.querySelectorAll('#crew .crew-card')];
@@ -769,8 +784,21 @@ test.describe('responsive header and dynamic UI', () => {
             sourceMedia: [...document.querySelectorAll('#about source')]
               .map(source => source.getAttribute('media'))
           },
+          crewTransition: {
+            heading: document.querySelector('#crew-transition-title')?.textContent,
+            body: document.querySelector('.crew-transition-body')?.textContent,
+            imageAlt: document.querySelector('#crew-intro img')?.alt,
+            imageSrc: document.querySelector('#crew-intro img')?.getAttribute('src'),
+            sourceSrcsets: [...document.querySelectorAll('#crew-intro source')]
+              .map(source => source.getAttribute('srcset')),
+            sourceMedia: [...document.querySelectorAll('#crew-intro source')]
+              .map(source => source.getAttribute('media'))
+          },
           sectionAfterAbout: document.querySelector('#about')?.nextElementSibling?.id,
           crewNames: cards.map(card => card.querySelector('h3')?.textContent),
+          crewColumns: getComputedStyle(document.querySelector('#crew .crew-grid'))
+            .gridTemplateColumns.split(/\s+/).filter(Boolean).length,
+          legacyCrewNavigation: document.querySelectorAll('[data-crew-rail], [data-crew-prev], [data-crew-next]').length,
           portraitSlots: portraits.map(portrait => {
             const rect = portrait.getBoundingClientRect();
             return {
@@ -794,7 +822,7 @@ test.describe('responsive header and dynamic UI', () => {
         };
       });
 
-      expect(layout.idCounts).toEqual([1, 1, 1, 1, 1]);
+      expect(layout.idCounts).toEqual([1, 1, 1, 1, 1, 1]);
       expect(layout.ordered).toBe(true);
       expect(layout.studioAlias).toEqual({ parent: 'about', ariaHidden: 'true' });
       expect(layout.about).toEqual({
@@ -808,8 +836,22 @@ test.describe('responsive header and dynamic UI', () => {
         ],
         sourceMedia: ['(max-width: 760px)', '(max-width: 760px)', null]
       });
-      expect(layout.sectionAfterAbout).toBe('crew');
+      expect(layout.crewTransition).toEqual({
+        heading: 'שישה סוכני AI. בהובלת טל.',
+        body: 'כל אנשי הצוות ב־Moona הם סוכני AI מתמחים שנבנו בתוך הסטודיו.',
+        imageAlt: 'טל צור בתוך תא טייס קולנועי בחלל',
+        imageSrc: 'p/tal/tal-cockpit-v2-1628.webp',
+        sourceSrcsets: [
+          'p/tal/tal-cockpit-v2-mobile-768.avif',
+          'p/tal/tal-cockpit-v2-mobile-768.webp',
+          'p/tal/tal-cockpit-v2-960.avif 960w, p/tal/tal-cockpit-v2-1628.avif 1628w'
+        ],
+        sourceMedia: ['(max-width: 760px)', '(max-width: 760px)', null]
+      });
+      expect(layout.sectionAfterAbout).toBe('crew-intro');
       expect(layout.crewNames).toEqual(['Alma', 'Nara', 'Luc', 'Vera', 'Sona', 'Ivo']);
+      expect(layout.crewColumns).toBe(width > 980 ? 2 : 1);
+      expect(layout.legacyCrewNavigation).toBe(0);
       expect(layout.portraitSlots).toHaveLength(6);
       for (const portrait of layout.portraitSlots) {
         expect(portrait).toMatchObject({
@@ -852,7 +894,7 @@ test.describe('responsive header and dynamic UI', () => {
         const rect = selector => document.querySelector(selector).getBoundingClientRect();
         const levels = [...document.querySelectorAll('body h1, body h2, body h3')]
           .map(heading => Number(heading.tagName.slice(1)));
-        const labelledSections = ['film', 'about', 'crew', 'work', 'contact'].map(id => {
+        const labelledSections = ['film', 'about', 'crew-intro', 'crew', 'work', 'contact'].map(id => {
           const section = document.getElementById(id);
           const labelId = section.getAttribute('aria-labelledby');
           return {
@@ -869,13 +911,16 @@ test.describe('responsive header and dynamic UI', () => {
           headingSkip: levels.some((level, index) => index > 0 && level > levels[index - 1] + 1),
           labelledSections,
           junctions: {
-            aboutCrew: junction('#about', '#crew'),
+            aboutCrewIntro: junction('#about', '#crew-intro'),
+            crewIntroCrew: junction('#crew-intro', '#crew'),
             crewWork: junction('#crew', '#work'),
             workContact: junction('#work', '#contact')
           },
           spacing: {
             aboutCopyTop: px(style('.about-copy').paddingTop),
             aboutCopyBottom: px(style('.about-copy').paddingBottom),
+            crewIntroCopyTop: px(style('.crew-transition-copy').paddingTop),
+            crewIntroCopyBottom: px(style('.crew-transition-copy').paddingBottom),
             crewTop: px(style('#crew').paddingTop),
             crewBottom: px(style('#crew').paddingBottom),
             workTop: px(style('#work').paddingTop),
@@ -887,6 +932,7 @@ test.describe('responsive header and dynamic UI', () => {
             hero: px(style('.statement').fontSize),
             film: px(style('.film-title').fontSize),
             about: px(style('.about-copy h2').fontSize),
+            crewIntro: px(style('.crew-transition h2').fontSize),
             crew: px(style('.crew-head h2').fontSize),
             contact: px(style('.contact-line').fontSize)
           },
@@ -895,6 +941,8 @@ test.describe('responsive header and dynamic UI', () => {
             workHeadRight: rect('.work-head').right,
             workGridLeft: rect('.work-grid').left,
             workGridRight: rect('.work-grid').right,
+            crewGridWidth: rect('.crew-grid').width,
+            crewColumns: style('.crew-grid').gridTemplateColumns.split(/\s+/).filter(Boolean).length,
             crewCardWidth: rect('.crew-card').width
           }
         };
@@ -906,6 +954,7 @@ test.describe('responsive header and dynamic UI', () => {
       expect(layout.labelledSections).toEqual([
         { id: 'film', labelId: 'film-title', labelTag: 'H2' },
         { id: 'about', labelId: 'about-title', labelTag: 'H2' },
+        { id: 'crew-intro', labelId: 'crew-transition-title', labelTag: 'H2' },
         { id: 'crew', labelId: 'crew-title', labelTag: 'H2' },
         { id: 'work', labelId: 'work-title', labelTag: 'H2' },
         { id: 'contact', labelId: 'contact-title', labelTag: 'H2' }
@@ -916,6 +965,8 @@ test.describe('responsive header and dynamic UI', () => {
         expect(layout.spacing).toEqual({
           aboutCopyTop: 58,
           aboutCopyBottom: 96,
+          crewIntroCopyTop: 58,
+          crewIntroCopyBottom: 84,
           crewTop: 92,
           crewBottom: 110,
           workTop: 100,
@@ -923,13 +974,17 @@ test.describe('responsive header and dynamic UI', () => {
           contactTop: 110,
           contactBottom: 60
         });
-        expect(layout.type).toEqual({ hero: 34, film: 30, about: 64, crew: 54, contact: 56 });
-        expect(layout.editorialGrid.crewCardWidth).toBeCloseTo(viewport.width * .82, 1);
+        expect(layout.type).toEqual({ hero: 34, film: 30, about: 64, crewIntro: 50, crew: 54, contact: 56 });
+        expect(layout.editorialGrid.crewColumns).toBe(1);
+        expect(layout.editorialGrid.crewGridWidth).toBeCloseTo(viewport.width - 44, 1);
+        expect(layout.editorialGrid.crewCardWidth).toBeCloseTo(viewport.width - 44, 1);
       }
 
       if (viewport.baseline === 'desktop') {
         expect(layout.spacing.aboutCopyTop).toBeCloseTo(135, 1);
         expect(layout.spacing.aboutCopyBottom).toBeCloseTo(90, 1);
+        expect(layout.spacing.crewIntroCopyTop).toBeCloseTo(135, 1);
+        expect(layout.spacing.crewIntroCopyBottom).toBeCloseTo(90, 1);
         expect(layout.spacing.crewTop).toBeCloseTo(187.2, 1);
         expect(layout.spacing.crewBottom).toBeCloseTo(201.6, 1);
         expect(layout.spacing.workTop).toBeCloseTo(201.6, 1);
@@ -939,12 +994,14 @@ test.describe('responsive header and dynamic UI', () => {
         expect(layout.type.hero).toBeCloseTo(82, 1);
         expect(layout.type.film).toBeCloseTo(58, 1);
         expect(layout.type.about).toBeCloseTo(108, 1);
+        expect(layout.type.crewIntro).toBeCloseTo(90.72, 1);
         expect(layout.type.crew).toBeCloseTo(86.4, 1);
         expect(layout.type.contact).toBeCloseTo(115.2, 1);
         expect(layout.editorialGrid.workHeadLeft).toBeCloseTo(layout.editorialGrid.workGridLeft, 1);
         expect(layout.editorialGrid.workHeadRight).toBeCloseTo(layout.editorialGrid.workGridRight, 1);
-        expect(layout.editorialGrid.crewCardWidth).toBeGreaterThan(360);
-        expect(layout.editorialGrid.crewCardWidth).toBeLessThan(390);
+        expect(layout.editorialGrid.crewColumns).toBe(2);
+        expect(layout.editorialGrid.crewGridWidth).toBeCloseTo(viewport.width * .9, 1);
+        expect(layout.editorialGrid.crewCardWidth).toBeCloseTo(layout.editorialGrid.crewGridWidth / 2 - .5, 1);
       }
     }
   });
@@ -1216,6 +1273,15 @@ test.describe('responsive header and dynamic UI', () => {
       return Math.abs(film.getBoundingClientRect().top - header.offsetHeight);
     })).toBeLessThan(3);
 
+    await page.locator('.header-links [data-goto="crew-intro"]').click();
+    await expect.poll(() => page.evaluate(() => {
+      const intro = document.getElementById('crew-intro');
+      const header = document.getElementById('hdr');
+      return Math.abs(intro.getBoundingClientRect().top - header.offsetHeight);
+    })).toBeLessThan(3);
+    await expect(page.locator('#crew-intro')).toBeFocused();
+    await expect(page.locator('#crew-intro')).toHaveCSS('outline-style', 'none');
+
     await page.setViewportSize({ width: 390, height: 844 });
     await page.evaluate(() => window.scrollTo(0, 0));
     const mobileHero = await page.evaluate(() => ({
@@ -1352,43 +1418,23 @@ test.describe('responsive header and dynamic UI', () => {
     await expect(page.locator('#lb .lb-stage > *')).toHaveAttribute('src', stageSource);
   });
 
-  test('crew rail is keyboard-scrollable and its controls localize and mirror in RTL', async ({ page }) => {
+  test('crew credits remain static, complete, and localized without nested horizontal scrolling', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await openHome(page, '/?lang=he');
-    const rail = page.locator('[data-crew-rail]');
-    const previous = page.locator('[data-crew-prev]');
-    const next = page.locator('[data-crew-next]');
+    const grid = page.locator('#crew .crew-grid');
 
-    await expect(rail).toHaveAttribute('tabindex', '0');
-    await expect(previous).toHaveAttribute('aria-label', 'חברי הצוות הקודמים');
-    await expect(next).toHaveAttribute('aria-label', 'חברי הצוות הבאים');
-    const rtlControls = await page.locator('.crew-controls button').evaluateAll(buttons => buttons.map(button => {
-      const rect = button.getBoundingClientRect();
-      return {
-        width: rect.width,
-        height: rect.height,
-        arrowTransform: getComputedStyle(button.querySelector('span')).transform
-      };
-    }));
-    for (const control of rtlControls) {
-      expect(control.width).toBeGreaterThanOrEqual(44);
-      expect(control.height).toBeGreaterThanOrEqual(44);
-      expect(control.arrowTransform).not.toBe('none');
-    }
+    await expect(grid).not.toHaveAttribute('tabindex', /.+/);
+    await expect(page.locator('[data-crew-rail], [data-crew-prev], [data-crew-next]')).toHaveCount(0);
+    await expect(grid.locator('.crew-card')).toHaveCount(6);
+    await expect(page.locator('#crew-transition-title')).toHaveText('שישה סוכני AI. בהובלת טל.');
+    expect(await grid.evaluate(element => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(1);
 
-    await rail.evaluate(element => { element.dataset.e2eMarker = 'preserved'; });
-    const before = await rail.evaluate(element => element.scrollLeft);
-    await rail.focus();
-    await page.keyboard.press('ArrowRight');
-    await expect.poll(() => rail.evaluate((element, start) => Math.abs(element.scrollLeft - start), before)).toBeGreaterThan(1);
-
+    await grid.evaluate(element => { element.dataset.e2eMarker = 'preserved'; });
     await page.evaluate(() => window.MoonaI18n.setLocale('en', { source: 'programmatic' }));
-    await expect(rail).toHaveAttribute('data-e2e-marker', 'preserved');
-    await expect(previous).toHaveAttribute('aria-label', 'Previous crew members');
-    await expect(next).toHaveAttribute('aria-label', 'Next crew members');
-    const ltrTransforms = await page.locator('.crew-controls button span').evaluateAll(spans =>
-      spans.map(span => getComputedStyle(span).transform));
-    expect(ltrTransforms).toEqual(['none', 'none']);
+    await expect(grid).toHaveAttribute('data-e2e-marker', 'preserved');
+    await expect(page.locator('#crew-transition-title')).toHaveText('Six AI agents. Directed by Tal.');
+    await expect(page.locator('.crew-transition-body')).toHaveText('Every member of the Moona crew is a specialist AI agent, built inside the studio.');
+    expect(await grid.evaluate(element => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(1);
   });
 
   test('language control is keyboard operable, labelled, and is not a pressed-state toggle', async ({ page }) => {
