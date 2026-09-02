@@ -1093,17 +1093,21 @@ body{font-size:16px;font-synthesis:none}
 :is(.about-copy h2,.crew-transition h2,.crew-head h2,.crew-credit h3,.ctagal-h,.contact .contact-line,.q .qtitle){font-family:var(--display);font-weight:600;letter-spacing:-.045em}
 .work-grid .piece .meta .brand{font-family:var(--display);font-weight:600;letter-spacing:-.04em}
 
-/* Founder */
-.about{position:relative;min-height:100svh;overflow:hidden;background:#05070c;isolation:isolate}
+/* Founder: one cinematic frame. The biography lives inside the image as an
+   editorial plaque, while the physical left side preserves the astronaut and
+   Earth composition in both LTR and RTL. */
+.about{position:relative;min-height:max(100svh,720px);padding:clamp(108px,13vh,154px) 0 clamp(32px,5vw,72px);display:flex;align-items:flex-end;overflow:hidden;background:#05070c;isolation:isolate}
 .anchor-alias{position:absolute;inset:0 auto auto 0}
 .about-media,.about-media img{position:absolute;inset:0;width:100%;height:100%;display:block}
 .about-media img{object-fit:cover;object-position:center}
-.about-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(5,7,12,.05) 34%,rgba(5,7,12,.56) 58%,rgba(5,7,12,.96) 100%)}
-.about-copy{position:relative;z-index:2;min-height:100svh;width:min(48%,700px);margin-left:auto;margin-right:0;padding:clamp(120px,15vh,190px) clamp(40px,7vw,120px) 90px clamp(36px,5vw,80px);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-align:start}
-.about-copy h2{margin:18px 0 8px;font-family:var(--display);font-size:clamp(58px,7.5vw,124px);font-weight:600;line-height:.88;letter-spacing:-.055em;color:var(--ice-hot)}
+.about-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(3,5,9,.16) 0%,transparent 38%,rgba(3,5,9,.46) 100%),linear-gradient(90deg,rgba(3,5,9,.5) 0%,rgba(3,5,9,.12) 47%,transparent 68%)}
+.about-copy{position:relative;z-index:2;width:min(40vw,600px);margin-left:clamp(22px,5vw,76px);margin-right:auto;padding:clamp(30px,3.2vw,50px);display:flex;flex-direction:column;align-items:stretch;overflow:hidden;border:1px solid rgba(222,236,252,.2);border-radius:var(--r-lg);background:linear-gradient(135deg,rgba(8,11,17,.88),rgba(4,6,10,.72));box-shadow:0 28px 90px -32px rgba(0,0,0,.9);-webkit-backdrop-filter:blur(18px) saturate(.82);backdrop-filter:blur(18px) saturate(.82);text-align:start}
+.about-copy::before{content:"";position:absolute;inset-block-start:0;inset-inline-start:0;width:clamp(72px,8vw,118px);height:2px;background:var(--gold-hot)}
+.about-copy .section-kicker{color:var(--gold)}
+.about-copy h2{margin:16px 0 8px;font-family:var(--display);font-size:clamp(58px,7.5vw,108px);font-weight:600;line-height:.88;letter-spacing:-.055em;color:var(--ice-hot)}
 .about-role,.about-engine{font-family:var(--mono);font-size:10px;line-height:1.65;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
-.about-body{margin:clamp(30px,4vw,54px) 0 0;max-width:39ch;font-size:clamp(18px,1.55vw,23px);line-height:1.55;color:rgba(222,236,252,.9)}
-.about-engine{margin:34px 0 0;padding-top:25px;border-top:1px solid rgba(190,212,238,.2);max-width:54ch;color:rgba(222,236,252,.68)}
+.about-body{margin:clamp(26px,3vw,42px) 0 0;max-width:39ch;font-size:clamp(17px,1.45vw,21px);line-height:1.55;color:rgba(222,236,252,.92)}
+.about-engine{margin:30px 0 0;padding-top:22px;border-top:1px solid rgba(190,212,238,.22);max-width:54ch;color:rgba(222,236,252,.72)}
 
 /* Founder-to-system transition: a purely typographic chapter break before the
    individual agent credits. */
@@ -1165,13 +1169,16 @@ html[lang="he"] :is(.section-kicker,.about-role,.about-engine,.crew-credit>span,
 html[lang="he"] :is(.film-title,.film-beat h3,.sentence p,.about-copy h2,.crew-transition h2,.crew-head h2,.crew-credit h3,.ctagal-h,.contact .contact-line,.q .qtitle){font-family:var(--display);font-weight:700;letter-spacing:-.025em}
 
 @media(max-width:980px) and (min-width:761px){
+  .about{min-height:max(100svh,760px);padding-bottom:32px}
+  .about-copy{width:min(58vw,520px);margin-left:4vw;padding:34px}
   .crew-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
 @media(max-width:760px){
-  .about{min-height:0;overflow:visible}.about-media{position:relative;height:auto;aspect-ratio:4/5}.about-media img{object-position:center}.about-scrim{display:none}
-  .about-copy{min-height:0;width:100%;margin:0;padding:58px 22px 96px;align-items:flex-start;background:#05070c}
-  .about-copy h2{font-size:64px}.about-body{font-size:18px}.about-role,.about-engine{font-size:9px}
+  .about{min-height:max(100svh,760px);padding:104px 0 max(16px,env(safe-area-inset-bottom));align-items:flex-end;overflow:hidden}.about-media{position:absolute;height:100%;aspect-ratio:auto}.about-media img{object-position:center}.about-scrim{display:block;background:linear-gradient(180deg,rgba(3,5,9,.08) 0%,rgba(3,5,9,.02) 28%,rgba(3,5,9,.76) 76%,rgba(3,5,9,.92) 100%)}
+  .about-copy{width:calc(100% - 32px);margin:clamp(250px,31svh,330px) 16px 0;padding:26px 22px 28px;border-color:rgba(222,236,252,.22);background:linear-gradient(145deg,rgba(8,11,17,.88),rgba(4,6,10,.8));-webkit-backdrop-filter:blur(14px) saturate(.82);backdrop-filter:blur(14px) saturate(.82)}
+  .about-copy h2{margin-top:14px;font-size:clamp(54px,16.5vw,64px)}.about-body{margin-top:24px;font-size:17px}.about-engine{margin-top:24px;padding-top:20px}.about-role,.about-engine{font-size:10.5px}
+  html[lang="he"] .about-role,html[lang="he"] .about-engine{font-size:11px}
   .crew-transition{min-height:0}.crew-transition::before{right:-44vw;width:122vw}
   .crew-transition-copy{min-height:0;width:100%;margin:0;padding:82px 22px 92px;display:flex;flex-direction:column;align-items:flex-start}.crew-transition-copy .section-kicker{padding-top:0}.crew-transition h2{max-width:11ch;margin-top:18px;font-size:50px}.crew-transition-body{font-size:17px}
   .crew{padding:92px 0 110px}.crew-head{width:auto;margin:0 22px 42px;display:block}.crew-head h2{font-size:54px}.crew-head>p{margin:20px 0 0;text-align:start}
@@ -1408,8 +1415,8 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
   <section class="about" id="about" tabindex="-1" aria-labelledby="about-title">
     <span class="anchor-alias" id="studio" aria-hidden="true"></span>
     <picture class="about-media">
-      <source media="(max-width: 760px)" type="image/avif" srcset="p/tal/tal-lunar-mobile-900.avif">
-      <source media="(max-width: 760px)" type="image/webp" srcset="p/tal/tal-lunar-mobile-900.webp">
+      <source media="(max-width: 980px) and (orientation: portrait)" type="image/avif" srcset="p/tal/tal-lunar-mobile-900.avif">
+      <source media="(max-width: 980px) and (orientation: portrait)" type="image/webp" srcset="p/tal/tal-lunar-mobile-900.webp">
       <source type="image/avif" srcset="p/tal/tal-lunar-1920.avif">
       <img src="p/tal/tal-lunar-1920.webp" width="1920" height="1211" loading="lazy" decoding="async"
            alt="Tal Tzur standing in a spacesuit on a lunar landscape" data-i18n-alt="about.imageAlt">

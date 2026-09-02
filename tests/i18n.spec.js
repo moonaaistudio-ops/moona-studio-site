@@ -846,7 +846,11 @@ test.describe('responsive header and dynamic UI', () => {
           'p/tal/tal-lunar-mobile-900.webp',
           'p/tal/tal-lunar-1920.avif'
         ],
-        sourceMedia: ['(max-width: 760px)', '(max-width: 760px)', null]
+        sourceMedia: [
+          '(max-width: 980px) and (orientation: portrait)',
+          '(max-width: 980px) and (orientation: portrait)',
+          null
+        ]
       });
       expect(layout.crewTransition).toEqual({
         heading: 'שישה סוכני AI. בהובלת טל.',
@@ -904,6 +908,9 @@ test.describe('responsive header and dynamic UI', () => {
     for (const viewport of viewports) {
       await page.setViewportSize({ width: viewport.width, height: viewport.height });
       await openHome(page, '/?lang=en');
+      await page.locator('#about').scrollIntoViewIfNeeded();
+      await expect(page.locator('.about-copy')).toHaveClass(/seen/);
+      await expect(page.locator('.about-copy')).toHaveCSS('transform', 'none');
       const layout = await page.evaluate(async () => {
         await document.fonts.ready;
         const px = value => Number.parseFloat(value);
@@ -921,6 +928,15 @@ test.describe('responsive header and dynamic UI', () => {
           };
         });
         const junction = (before, after) => Math.abs(rect(after).top - rect(before).bottom);
+        const about = document.querySelector('#about');
+        const aboutCopy = document.querySelector('.about-copy');
+        const aboutMedia = document.querySelector('.about-media');
+        const aboutRect = about.getBoundingClientRect();
+        const aboutCopyRect = aboutCopy.getBoundingClientRect();
+        const aboutMediaRect = aboutMedia.getBoundingClientRect();
+        const aboutCopyStyle = getComputedStyle(aboutCopy);
+        const intersectionWidth = Math.max(0, Math.min(aboutCopyRect.right, aboutMediaRect.right) - Math.max(aboutCopyRect.left, aboutMediaRect.left));
+        const intersectionHeight = Math.max(0, Math.min(aboutCopyRect.bottom, aboutMediaRect.bottom) - Math.max(aboutCopyRect.top, aboutMediaRect.top));
 
         return {
           overflow: document.documentElement.scrollWidth - innerWidth,
@@ -934,8 +950,6 @@ test.describe('responsive header and dynamic UI', () => {
             workContact: junction('#work', '#contact')
           },
           spacing: {
-            aboutCopyTop: px(style('.about-copy').paddingTop),
-            aboutCopyBottom: px(style('.about-copy').paddingBottom),
             crewIntroCopyTop: px(style('.crew-transition-copy').paddingTop),
             crewIntroCopyBottom: px(style('.crew-transition-copy').paddingBottom),
             crewTop: px(style('#crew').paddingTop),
@@ -944,6 +958,37 @@ test.describe('responsive header and dynamic UI', () => {
             workBottom: px(style('#work').paddingBottom),
             contactTop: px(style('#contact').paddingTop),
             contactBottom: px(style('#contact').paddingBottom)
+          },
+          aboutOverlay: {
+            mediaPosition: style('.about-media').position,
+            scrimDisplay: style('.about-scrim').display,
+            mediaCoversSection:
+              Math.abs(aboutMediaRect.left - aboutRect.left) <= 1 &&
+              Math.abs(aboutMediaRect.top - aboutRect.top) <= 1 &&
+              Math.abs(aboutMediaRect.right - aboutRect.right) <= 1 &&
+              Math.abs(aboutMediaRect.bottom - aboutRect.bottom) <= 1,
+            copyInsideSection:
+              aboutCopyRect.left >= aboutRect.left - 1 &&
+              aboutCopyRect.top >= aboutRect.top - 1 &&
+              aboutCopyRect.right <= aboutRect.right + 1 &&
+              aboutCopyRect.bottom <= aboutRect.bottom + 1,
+            copyMediaOverlapRatio:
+              (intersectionWidth * intersectionHeight) / (aboutCopyRect.width * aboutCopyRect.height),
+            copyOverflowX: aboutCopy.scrollWidth - aboutCopy.clientWidth,
+            copyOverflowY: aboutCopy.scrollHeight - aboutCopy.clientHeight,
+            sectionHeight: aboutRect.height,
+            copyWidthRatio: aboutCopyRect.width / aboutRect.width,
+            copyHeightRatio: aboutCopyRect.height / aboutRect.height,
+            leftInset: aboutCopyRect.left - aboutRect.left,
+            bottomInset: aboutRect.bottom - aboutCopyRect.bottom,
+            paddingTop: px(aboutCopyStyle.paddingTop),
+            paddingBottom: px(aboutCopyStyle.paddingBottom),
+            borderRadius: px(aboutCopyStyle.borderTopLeftRadius),
+            hasSurface: aboutCopyStyle.backgroundImage !== 'none',
+            hasDepth:
+              aboutCopyStyle.boxShadow !== 'none' ||
+              aboutCopyStyle.backdropFilter !== 'none' ||
+              aboutCopyStyle.webkitBackdropFilter !== 'none'
           },
           type: {
             hero: px(style('.statement').fontSize),
@@ -978,6 +1023,21 @@ test.describe('responsive header and dynamic UI', () => {
         { id: 'contact', labelId: 'contact-title', labelTag: 'H2' }
       ]);
       Object.values(layout.junctions).forEach(gap => expect(gap).toBeLessThanOrEqual(1));
+      expect(layout.aboutOverlay.mediaPosition).toBe('absolute');
+      expect(layout.aboutOverlay.scrimDisplay).not.toBe('none');
+      expect(layout.aboutOverlay.mediaCoversSection).toBe(true);
+      expect(layout.aboutOverlay.copyInsideSection).toBe(true);
+      expect(layout.aboutOverlay.copyMediaOverlapRatio).toBeGreaterThan(.98);
+      expect(layout.aboutOverlay.copyOverflowX).toBeLessThanOrEqual(1);
+      expect(layout.aboutOverlay.copyOverflowY).toBeLessThanOrEqual(1);
+      expect(layout.aboutOverlay.sectionHeight).toBeGreaterThanOrEqual(viewport.height - 1);
+      expect(layout.aboutOverlay.paddingTop).toBeGreaterThanOrEqual(24);
+      expect(layout.aboutOverlay.paddingTop).toBeLessThanOrEqual(52);
+      expect(layout.aboutOverlay.paddingBottom).toBeGreaterThanOrEqual(24);
+      expect(layout.aboutOverlay.paddingBottom).toBeLessThanOrEqual(52);
+      expect(layout.aboutOverlay.borderRadius).toBeCloseTo(20, 1);
+      expect(layout.aboutOverlay.hasSurface).toBe(true);
+      expect(layout.aboutOverlay.hasDepth).toBe(true);
       const expectedCrewColumns = viewport.width <= 760 ? 1 : viewport.width <= 980 ? 2 : 3;
       expect(layout.editorialGrid.crewColumns).toBe(expectedCrewColumns);
       expect(layout.editorialGrid.crewCardWidth).toBeCloseTo(
@@ -987,8 +1047,6 @@ test.describe('responsive header and dynamic UI', () => {
 
       if (viewport.baseline === 'mobile') {
         expect(layout.spacing).toEqual({
-          aboutCopyTop: 58,
-          aboutCopyBottom: 96,
           crewIntroCopyTop: 82,
           crewIntroCopyBottom: 92,
           crewTop: 92,
@@ -999,13 +1057,16 @@ test.describe('responsive header and dynamic UI', () => {
           contactBottom: 60
         });
         expect(layout.type).toEqual({ hero: 34, film: 30, about: 64, crewIntro: 50, crew: 54, contact: 56 });
+        expect(layout.aboutOverlay.leftInset).toBeCloseTo(16, 1);
+        expect(layout.aboutOverlay.bottomInset).toBeCloseTo(16, 1);
         expect(layout.editorialGrid.crewGridWidth).toBeCloseTo(viewport.width - 44, 1);
         expect(layout.editorialGrid.crewCardWidth).toBeCloseTo(viewport.width - 44, 1);
       }
 
       if (viewport.baseline === 'desktop') {
-        expect(layout.spacing.aboutCopyTop).toBeCloseTo(135, 1);
-        expect(layout.spacing.aboutCopyBottom).toBeCloseTo(90, 1);
+        expect(layout.aboutOverlay.copyWidthRatio).toBeLessThanOrEqual(.55);
+        expect(layout.aboutOverlay.copyHeightRatio).toBeLessThan(.9);
+        expect(layout.aboutOverlay.leftInset).toBeGreaterThanOrEqual(40);
         expect(layout.spacing.crewIntroCopyTop).toBeCloseTo(135, 1);
         expect(layout.spacing.crewIntroCopyBottom).toBeCloseTo(90, 1);
         expect(layout.spacing.crewTop).toBeCloseTo(187.2, 1);

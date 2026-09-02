@@ -77,6 +77,16 @@ for (const locale of ['en', 'he']) {
   });
 }
 
+for (const locale of ['en', 'he']) {
+  test(`founder image overlay passes mobile axe in ${locale.toUpperCase()}`, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openPage(page, `/?lang=${locale}`);
+    await page.locator('#about').scrollIntoViewIfNeeded();
+    await expect(page.locator('.about-copy')).toHaveClass(/seen/);
+    await expectNoAxeViolations(page, '#about');
+  });
+}
+
 test('mobile menu is keyboard operated, focuses its content, and restores focus', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openPage(page, '/?lang=he');
@@ -215,6 +225,9 @@ test('action-labelled media and motion controls do not expose a contradictory pr
 test('Hebrew content reflows at the supported narrow width with WCAG text spacing', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 800 });
   await openPage(page, '/?lang=he');
+  await page.locator('#about').scrollIntoViewIfNeeded();
+  await expect(page.locator('.about-copy')).toHaveClass(/seen/);
+  await expect(page.locator('.about-copy')).toHaveCSS('transform', 'none');
   await page.addStyleTag({ content: `
     :where(h1,h2,h3,p,li,a,button,label,input,span){
       line-height:1.5!important;
@@ -236,14 +249,40 @@ test('Hebrew content reflows at the supported narrow width with WCAG text spacin
     const headlineRange = document.createRange();
     headlineRange.selectNodeContents(headline);
     const headlineText = headlineRange.getBoundingClientRect();
+    const about = document.querySelector('#about');
+    const aboutCopy = about.querySelector('.about-copy');
+    const aboutMedia = about.querySelector('.about-media');
+    const aboutRect = about.getBoundingClientRect();
+    const aboutCopyRect = aboutCopy.getBoundingClientRect();
+    const aboutMediaRect = aboutMedia.getBoundingClientRect();
     return {
       pageFits: document.documentElement.scrollWidth <= innerWidth + 1,
       headlineFits: withinViewport(headline) && headlineText.left >= -1 && headlineText.right <= innerWidth + 1,
       ctaFits: withinViewport(cta) && cta.scrollWidth <= cta.clientWidth + 1,
-      headerFits: withinViewport(header)
+      headerFits: withinViewport(header),
+      aboutCopyFits:
+        withinViewport(aboutCopy) &&
+        aboutCopy.scrollWidth <= aboutCopy.clientWidth + 1 &&
+        aboutCopy.scrollHeight <= aboutCopy.clientHeight + 1,
+      aboutCopyContained:
+        aboutCopyRect.top >= aboutRect.top - 1 &&
+        aboutCopyRect.bottom <= aboutRect.bottom + 1,
+      aboutImageCoversSection:
+        Math.abs(aboutMediaRect.left - aboutRect.left) <= 1 &&
+        Math.abs(aboutMediaRect.top - aboutRect.top) <= 1 &&
+        Math.abs(aboutMediaRect.right - aboutRect.right) <= 1 &&
+        Math.abs(aboutMediaRect.bottom - aboutRect.bottom) <= 1
     };
   });
-  expect(layout).toEqual({ pageFits: true, headlineFits: true, ctaFits: true, headerFits: true });
+  expect(layout).toEqual({
+    pageFits: true,
+    headlineFits: true,
+    ctaFits: true,
+    headerFits: true,
+    aboutCopyFits: true,
+    aboutCopyContained: true,
+    aboutImageCoversSection: true
+  });
 });
 
 test('privacy notice is localized, linked, and passes axe', async ({ page }) => {
