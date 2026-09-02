@@ -78,11 +78,12 @@ for (const locale of ['en', 'he']) {
 }
 
 for (const locale of ['en', 'he']) {
-  test(`founder image overlay passes mobile axe in ${locale.toUpperCase()}`, async ({ page }) => {
+  test(`founder split section passes mobile axe in ${locale.toUpperCase()}`, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await openPage(page, `/?lang=${locale}`);
     await page.locator('#about').scrollIntoViewIfNeeded();
     await expect(page.locator('.about-copy')).toHaveClass(/seen/);
+    await expect(page.locator('.about-copy')).toHaveCSS('opacity', '1');
     await expectNoAxeViolations(page, '#about');
   });
 }
@@ -252,9 +253,12 @@ test('Hebrew content reflows at the supported narrow width with WCAG text spacin
     const about = document.querySelector('#about');
     const aboutCopy = about.querySelector('.about-copy');
     const aboutMedia = about.querySelector('.about-media');
+    const aboutImage = aboutMedia.querySelector('img');
     const aboutRect = about.getBoundingClientRect();
     const aboutCopyRect = aboutCopy.getBoundingClientRect();
     const aboutMediaRect = aboutMedia.getBoundingClientRect();
+    const overlapWidth = Math.max(0, Math.min(aboutCopyRect.right, aboutMediaRect.right) - Math.max(aboutCopyRect.left, aboutMediaRect.left));
+    const overlapHeight = Math.max(0, Math.min(aboutCopyRect.bottom, aboutMediaRect.bottom) - Math.max(aboutCopyRect.top, aboutMediaRect.top));
     return {
       pageFits: document.documentElement.scrollWidth <= innerWidth + 1,
       headlineFits: withinViewport(headline) && headlineText.left >= -1 && headlineText.right <= innerWidth + 1,
@@ -267,11 +271,20 @@ test('Hebrew content reflows at the supported narrow width with WCAG text spacin
       aboutCopyContained:
         aboutCopyRect.top >= aboutRect.top - 1 &&
         aboutCopyRect.bottom <= aboutRect.bottom + 1,
-      aboutImageCoversSection:
-        Math.abs(aboutMediaRect.left - aboutRect.left) <= 1 &&
-        Math.abs(aboutMediaRect.top - aboutRect.top) <= 1 &&
-        Math.abs(aboutMediaRect.right - aboutRect.right) <= 1 &&
-        Math.abs(aboutMediaRect.bottom - aboutRect.bottom) <= 1
+      aboutMediaContained:
+        aboutMediaRect.left >= aboutRect.left - 1 &&
+        aboutMediaRect.top >= aboutRect.top - 1 &&
+        aboutMediaRect.right <= aboutRect.right + 1 &&
+        aboutMediaRect.bottom <= aboutRect.bottom + 1,
+      aboutImageLoaded: aboutImage.complete && aboutImage.naturalWidth > 0,
+      aboutImageVisible: aboutImage.getClientRects().length > 0,
+      aboutCopyAfterMedia: aboutCopyRect.top >= aboutMediaRect.bottom - 1,
+      aboutCopyMediaDisjoint: overlapWidth * overlapHeight === 0,
+      aboutTextChildrenFit: [...aboutCopy.children].every(child => {
+        const rect = child.getBoundingClientRect();
+        return rect.left >= aboutCopyRect.left - 1 && rect.right <= aboutCopyRect.right + 1;
+      }),
+      aboutDirection: getComputedStyle(aboutCopy).direction
     };
   });
   expect(layout).toEqual({
@@ -281,7 +294,13 @@ test('Hebrew content reflows at the supported narrow width with WCAG text spacin
     headerFits: true,
     aboutCopyFits: true,
     aboutCopyContained: true,
-    aboutImageCoversSection: true
+    aboutMediaContained: true,
+    aboutImageLoaded: true,
+    aboutImageVisible: true,
+    aboutCopyAfterMedia: true,
+    aboutCopyMediaDisjoint: true,
+    aboutTextChildrenFit: true,
+    aboutDirection: 'rtl'
   });
 });
 

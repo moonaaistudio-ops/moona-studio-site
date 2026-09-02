@@ -764,7 +764,7 @@ test.describe('responsive header and dynamic UI', () => {
       await expect.poll(() => firstCrewImage.evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
       const layout = await page.evaluate(async () => {
         await document.fonts.ready;
-        const ids = ['film', 'about', 'work', 'crew-intro', 'crew', 'contact'];
+        const ids = ['film', 'work', 'about', 'crew-intro', 'crew', 'contact'];
         const sections = ids.map(id => document.getElementById(id));
         const portraits = [...document.querySelectorAll('#crew .crew-portrait')];
         const cards = [...document.querySelectorAll('#crew .crew-card')];
@@ -792,8 +792,9 @@ test.describe('responsive header and dynamic UI', () => {
             body: document.querySelector('.crew-transition-body')?.textContent,
             mediaCount: document.querySelectorAll('#crew-intro :is(picture, img, source)').length
           },
-          sectionAfterAbout: document.querySelector('#about')?.nextElementSibling?.id,
+          sectionAfterFilm: document.querySelector('#film')?.nextElementSibling?.id,
           sectionAfterWork: document.querySelector('#work')?.nextElementSibling?.id,
+          sectionAfterAbout: document.querySelector('#about')?.nextElementSibling?.id,
           crewNames: cards.map(card => card.querySelector('h3')?.textContent),
           crewColumns: getComputedStyle(document.querySelector('#crew .crew-grid'))
             .gridTemplateColumns.split(/\s+/).filter(Boolean).length,
@@ -858,8 +859,9 @@ test.describe('responsive header and dynamic UI', () => {
         body: 'כל אנשי הצוות ב־Moona הם סוכני AI מתמחים שנבנו בתוך הסטודיו.',
         mediaCount: 0
       });
-      expect(layout.sectionAfterAbout).toBe('work');
-      expect(layout.sectionAfterWork).toBe('crew-intro');
+      expect(layout.sectionAfterFilm).toBe('work');
+      expect(layout.sectionAfterWork).toBe('about');
+      expect(layout.sectionAfterAbout).toBe('crew-intro');
       expect(layout.crewNames).toEqual(['Alma', 'Nara', 'Luc', 'Vera', 'Sona', 'Ivo']);
       expect(layout.crewColumns).toBe(width > 980 ? 3 : 1);
       expect(layout.legacyCrewNavigation).toBe(0);
@@ -902,6 +904,7 @@ test.describe('responsive header and dynamic UI', () => {
     const viewports = [
       { width: 390, height: 844, baseline: 'mobile' },
       { width: 768, height: 1024 },
+      { width: 918, height: 1022 },
       { width: 1024, height: 768 },
       { width: 844, height: 390 },
       { width: 1440, height: 900, baseline: 'desktop' }
@@ -920,7 +923,7 @@ test.describe('responsive header and dynamic UI', () => {
         const rect = selector => document.querySelector(selector).getBoundingClientRect();
         const levels = [...document.querySelectorAll('body h1, body h2, body h3')]
           .map(heading => Number(heading.tagName.slice(1)));
-        const labelledSections = ['film', 'about', 'work', 'crew-intro', 'crew', 'contact'].map(id => {
+        const labelledSections = ['film', 'work', 'about', 'crew-intro', 'crew', 'contact'].map(id => {
           const section = document.getElementById(id);
           const labelId = section.getAttribute('aria-labelledby');
           return {
@@ -933,10 +936,13 @@ test.describe('responsive header and dynamic UI', () => {
         const about = document.querySelector('#about');
         const aboutCopy = document.querySelector('.about-copy');
         const aboutMedia = document.querySelector('.about-media');
+        const aboutImage = aboutMedia.querySelector('img');
         const aboutRect = about.getBoundingClientRect();
         const aboutCopyRect = aboutCopy.getBoundingClientRect();
         const aboutMediaRect = aboutMedia.getBoundingClientRect();
+        const aboutImageRect = aboutImage.getBoundingClientRect();
         const aboutCopyStyle = getComputedStyle(aboutCopy);
+        const aboutCopyBackdrop = aboutCopyStyle.backdropFilter || aboutCopyStyle.webkitBackdropFilter || 'none';
         const intersectionWidth = Math.max(0, Math.min(aboutCopyRect.right, aboutMediaRect.right) - Math.max(aboutCopyRect.left, aboutMediaRect.left));
         const intersectionHeight = Math.max(0, Math.min(aboutCopyRect.bottom, aboutMediaRect.bottom) - Math.max(aboutCopyRect.top, aboutMediaRect.top));
 
@@ -946,8 +952,9 @@ test.describe('responsive header and dynamic UI', () => {
           headingSkip: levels.some((level, index) => index > 0 && level > levels[index - 1] + 1),
           labelledSections,
           junctions: {
-            aboutWork: junction('#about', '#work'),
-            workCrewIntro: junction('#work', '#crew-intro'),
+            filmWork: junction('#film', '#work'),
+            workAbout: junction('#work', '#about'),
+            aboutCrewIntro: junction('#about', '#crew-intro'),
             crewIntroCrew: junction('#crew-intro', '#crew'),
             crewContact: junction('#crew', '#contact')
           },
@@ -961,14 +968,19 @@ test.describe('responsive header and dynamic UI', () => {
             contactTop: px(style('#contact').paddingTop),
             contactBottom: px(style('#contact').paddingBottom)
           },
-          aboutOverlay: {
-            mediaPosition: style('.about-media').position,
-            scrimDisplay: style('.about-scrim').display,
-            mediaCoversSection:
-              Math.abs(aboutMediaRect.left - aboutRect.left) <= 1 &&
-              Math.abs(aboutMediaRect.top - aboutRect.top) <= 1 &&
-              Math.abs(aboutMediaRect.right - aboutRect.right) <= 1 &&
-              Math.abs(aboutMediaRect.bottom - aboutRect.bottom) <= 1,
+          aboutSplit: {
+            imageLoaded: aboutImage.complete && aboutImage.naturalWidth > 0,
+            imageObjectFit: getComputedStyle(aboutImage).objectFit,
+            imageFillsMedia:
+              Math.abs(aboutImageRect.left - aboutMediaRect.left) <= 1 &&
+              Math.abs(aboutImageRect.top - aboutMediaRect.top) <= 1 &&
+              Math.abs(aboutImageRect.right - aboutMediaRect.right) <= 1 &&
+              Math.abs(aboutImageRect.bottom - aboutMediaRect.bottom) <= 1,
+            mediaInsideSection:
+              aboutMediaRect.left >= aboutRect.left - 1 &&
+              aboutMediaRect.top >= aboutRect.top - 1 &&
+              aboutMediaRect.right <= aboutRect.right + 1 &&
+              aboutMediaRect.bottom <= aboutRect.bottom + 1,
             copyInsideSection:
               aboutCopyRect.left >= aboutRect.left - 1 &&
               aboutCopyRect.top >= aboutRect.top - 1 &&
@@ -978,19 +990,19 @@ test.describe('responsive header and dynamic UI', () => {
               (intersectionWidth * intersectionHeight) / (aboutCopyRect.width * aboutCopyRect.height),
             copyOverflowX: aboutCopy.scrollWidth - aboutCopy.clientWidth,
             copyOverflowY: aboutCopy.scrollHeight - aboutCopy.clientHeight,
-            sectionHeight: aboutRect.height,
-            copyWidthRatio: aboutCopyRect.width / aboutRect.width,
-            copyHeightRatio: aboutCopyRect.height / aboutRect.height,
-            leftInset: aboutCopyRect.left - aboutRect.left,
-            bottomInset: aboutRect.bottom - aboutCopyRect.bottom,
-            paddingTop: px(aboutCopyStyle.paddingTop),
-            paddingBottom: px(aboutCopyStyle.paddingBottom),
-            borderRadius: px(aboutCopyStyle.borderTopLeftRadius),
-            hasSurface: aboutCopyStyle.backgroundImage !== 'none',
+            horizontalSeparation:
+              aboutMediaRect.right <= aboutCopyRect.left + 1 ||
+              aboutCopyRect.right <= aboutMediaRect.left + 1,
+            verticalOverlapRatio: intersectionHeight / Math.min(aboutCopyRect.height, aboutMediaRect.height),
+            copyAfterMedia: aboutCopyRect.top >= aboutMediaRect.bottom - 1,
+            mediaWidthRatio: aboutMediaRect.width / aboutRect.width,
+            copyBackgroundImage: aboutCopyStyle.backgroundImage,
+            copyBackgroundColor: aboutCopyStyle.backgroundColor,
+            copyBorderWidth: px(aboutCopyStyle.borderTopWidth),
+            copyBorderRadius: px(aboutCopyStyle.borderTopLeftRadius),
             hasDepth:
               aboutCopyStyle.boxShadow !== 'none' ||
-              aboutCopyStyle.backdropFilter !== 'none' ||
-              aboutCopyStyle.webkitBackdropFilter !== 'none'
+              aboutCopyBackdrop !== 'none'
           },
           type: {
             hero: px(style('.statement').fontSize),
@@ -1018,28 +1030,34 @@ test.describe('responsive header and dynamic UI', () => {
       expect(layout.headingSkip).toBe(false);
       expect(layout.labelledSections).toEqual([
         { id: 'film', labelId: 'film-title', labelTag: 'H2' },
-        { id: 'about', labelId: 'about-title', labelTag: 'H2' },
         { id: 'work', labelId: 'work-title', labelTag: 'H2' },
+        { id: 'about', labelId: 'about-title', labelTag: 'H2' },
         { id: 'crew-intro', labelId: 'crew-transition-title', labelTag: 'H2' },
         { id: 'crew', labelId: 'crew-title', labelTag: 'H2' },
         { id: 'contact', labelId: 'contact-title', labelTag: 'H2' }
       ]);
       Object.values(layout.junctions).forEach(gap => expect(gap).toBeLessThanOrEqual(1));
-      expect(layout.aboutOverlay.mediaPosition).toBe('absolute');
-      expect(layout.aboutOverlay.scrimDisplay).not.toBe('none');
-      expect(layout.aboutOverlay.mediaCoversSection).toBe(true);
-      expect(layout.aboutOverlay.copyInsideSection).toBe(true);
-      expect(layout.aboutOverlay.copyMediaOverlapRatio).toBeGreaterThan(.98);
-      expect(layout.aboutOverlay.copyOverflowX).toBeLessThanOrEqual(1);
-      expect(layout.aboutOverlay.copyOverflowY).toBeLessThanOrEqual(1);
-      expect(layout.aboutOverlay.sectionHeight).toBeGreaterThanOrEqual(viewport.height - 1);
-      expect(layout.aboutOverlay.paddingTop).toBeGreaterThanOrEqual(18);
-      expect(layout.aboutOverlay.paddingTop).toBeLessThanOrEqual(52);
-      expect(layout.aboutOverlay.paddingBottom).toBeGreaterThanOrEqual(18);
-      expect(layout.aboutOverlay.paddingBottom).toBeLessThanOrEqual(52);
-      expect(layout.aboutOverlay.borderRadius).toBeCloseTo(20, 1);
-      expect(layout.aboutOverlay.hasSurface).toBe(true);
-      expect(layout.aboutOverlay.hasDepth).toBe(true);
+      expect(layout.aboutSplit.imageLoaded).toBe(true);
+      expect(layout.aboutSplit.imageObjectFit).toBe('cover');
+      expect(layout.aboutSplit.imageFillsMedia).toBe(true);
+      expect(layout.aboutSplit.mediaInsideSection).toBe(true);
+      expect(layout.aboutSplit.copyInsideSection).toBe(true);
+      expect(layout.aboutSplit.copyMediaOverlapRatio).toBeLessThanOrEqual(.002);
+      expect(layout.aboutSplit.copyOverflowX).toBeLessThanOrEqual(1);
+      expect(layout.aboutSplit.copyOverflowY).toBeLessThanOrEqual(1);
+      expect(layout.aboutSplit.copyBackgroundImage).toBe('none');
+      expect(layout.aboutSplit.copyBackgroundColor).toBe('rgba(0, 0, 0, 0)');
+      expect(layout.aboutSplit.copyBorderWidth).toBe(0);
+      expect(layout.aboutSplit.copyBorderRadius).toBe(0);
+      expect(layout.aboutSplit.hasDepth).toBe(false);
+      if (viewport.width <= 760) {
+        expect(layout.aboutSplit.copyAfterMedia).toBe(true);
+        expect(layout.aboutSplit.mediaWidthRatio).toBeGreaterThan(.85);
+      } else {
+        expect(layout.aboutSplit.horizontalSeparation).toBe(true);
+        expect(layout.aboutSplit.verticalOverlapRatio).toBeGreaterThan(.6);
+        expect(layout.aboutSplit.mediaWidthRatio).toBeGreaterThan(.42);
+      }
       const expectedCrewColumns = viewport.width <= 760 ? 1 : viewport.width <= 980 ? 2 : 3;
       expect(layout.editorialGrid.crewColumns).toBe(expectedCrewColumns);
       expect(layout.editorialGrid.crewCardWidth).toBeCloseTo(
@@ -1059,16 +1077,11 @@ test.describe('responsive header and dynamic UI', () => {
           contactBottom: 60
         });
         expect(layout.type).toEqual({ hero: 34, film: 30, about: 64, crewIntro: 50, crew: 54, contact: 56 });
-        expect(layout.aboutOverlay.leftInset).toBeCloseTo(16, 1);
-        expect(layout.aboutOverlay.bottomInset).toBeCloseTo(16, 1);
         expect(layout.editorialGrid.crewGridWidth).toBeCloseTo(viewport.width - 44, 1);
         expect(layout.editorialGrid.crewCardWidth).toBeCloseTo(viewport.width - 44, 1);
       }
 
       if (viewport.baseline === 'desktop') {
-        expect(layout.aboutOverlay.copyWidthRatio).toBeLessThanOrEqual(.55);
-        expect(layout.aboutOverlay.copyHeightRatio).toBeLessThan(.9);
-        expect(layout.aboutOverlay.leftInset).toBeGreaterThanOrEqual(40);
         expect(layout.spacing.crewIntroCopyTop).toBeCloseTo(135, 1);
         expect(layout.spacing.crewIntroCopyBottom).toBeCloseTo(90, 1);
         expect(layout.spacing.crewTop).toBeCloseTo(187.2, 1);
@@ -1090,7 +1103,7 @@ test.describe('responsive header and dynamic UI', () => {
     }
   });
 
-  test('short landscape About deep links reveal the complete editorial plaque', async ({ page }) => {
+  test('short landscape About deep links reveal the complete split composition', async ({ page }) => {
     await page.setViewportSize({ width: 844, height: 390 });
 
     for (const locale of ['en', 'he']) {
@@ -1102,24 +1115,83 @@ test.describe('responsive header and dynamic UI', () => {
       const layout = await page.evaluate(() => {
         const about = document.querySelector('#about').getBoundingClientRect();
         const copy = document.querySelector('.about-copy');
+        const media = document.querySelector('.about-media');
+        const image = media.querySelector('img');
         const copyRect = copy.getBoundingClientRect();
-        const visibleHeight = Math.max(0, Math.min(copyRect.bottom, innerHeight) - Math.max(copyRect.top, 0));
+        const mediaRect = media.getBoundingClientRect();
         return {
           aboutTop: about.top,
-          copyTop: copyRect.top,
-          copyBottom: copyRect.bottom,
-          visibleRatio: visibleHeight / copyRect.height,
-          columns: getComputedStyle(copy).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
+          copyContained: copyRect.left >= about.left - 1 && copyRect.top >= about.top - 1 &&
+            copyRect.right <= about.right + 1 && copyRect.bottom <= about.bottom + 1,
+          mediaContained: mediaRect.left >= about.left - 1 && mediaRect.top >= about.top - 1 &&
+            mediaRect.right <= about.right + 1 && mediaRect.bottom <= about.bottom + 1,
+          horizontallySeparated: copyRect.right <= mediaRect.left + 1 || mediaRect.right <= copyRect.left + 1,
+          copyVisible: copyRect.top >= 0 && copyRect.bottom <= innerHeight,
+          mediaVisible: mediaRect.top >= 0 && mediaRect.bottom <= innerHeight,
+          copyFits: copy.scrollWidth <= copy.clientWidth + 1 && copy.scrollHeight <= copy.clientHeight + 1,
+          imageLoaded: image.complete && image.naturalWidth > 0,
           overflow: document.documentElement.scrollWidth - innerWidth
         };
       });
 
       expect(Math.abs(layout.aboutTop)).toBeLessThanOrEqual(2);
-      expect(layout.copyTop).toBeGreaterThanOrEqual(0);
-      expect(layout.copyBottom).toBeLessThanOrEqual(390);
-      expect(layout.visibleRatio).toBeGreaterThan(.98);
-      expect(layout.columns).toBe(2);
+      expect(layout.copyContained).toBe(true);
+      expect(layout.mediaContained).toBe(true);
+      expect(layout.horizontallySeparated).toBe(true);
+      expect(layout.copyVisible).toBe(true);
+      expect(layout.mediaVisible).toBe(true);
+      expect(layout.copyFits).toBe(true);
+      expect(layout.imageLoaded).toBe(true);
       expect(layout.overflow).toBeLessThanOrEqual(1);
+    }
+  });
+
+  test('founder split stays transparent, mirrored, and disjoint in both languages', async ({ page }) => {
+    for (const locale of ['en', 'he']) {
+      for (const viewport of [{ width: 390, height: 844 }, { width: 568, height: 320 }, { width: 918, height: 1022 }, { width: 1440, height: 900 }]) {
+        await page.setViewportSize(viewport);
+        await openHome(page, `/?lang=${locale}#about`);
+        const copy = page.locator('.about-copy');
+        await copy.scrollIntoViewIfNeeded();
+        await expect(copy).toHaveClass(/seen/);
+        await expect(copy).toHaveCSS('transform', 'none');
+        const split = await page.evaluate(() => {
+          const copy = document.querySelector('.about-copy');
+          const media = document.querySelector('.about-media');
+          const copyRect = copy.getBoundingClientRect();
+          const mediaRect = media.getBoundingClientRect();
+          const style = getComputedStyle(copy);
+          const overlapWidth = Math.max(0, Math.min(copyRect.right, mediaRect.right) - Math.max(copyRect.left, mediaRect.left));
+          const overlapHeight = Math.max(0, Math.min(copyRect.bottom, mediaRect.bottom) - Math.max(copyRect.top, mediaRect.top));
+          return {
+            direction: style.direction,
+            background: style.backgroundColor,
+            borderWidth: Number.parseFloat(style.borderTopWidth),
+            shadow: style.boxShadow,
+            backdrop: style.backdropFilter || style.webkitBackdropFilter,
+            overlapRatio: overlapWidth * overlapHeight / (copyRect.width * copyRect.height),
+            copyAfterMedia: copyRect.top >= mediaRect.bottom - 1,
+            copyBeforeMedia: copyRect.right <= mediaRect.left + 1,
+            copyAfterMediaHorizontally: mediaRect.right <= copyRect.left + 1,
+            overflow: document.documentElement.scrollWidth - innerWidth
+          };
+        });
+
+        expect(split.direction).toBe(locale === 'he' ? 'rtl' : 'ltr');
+        expect(split.background).toBe('rgba(0, 0, 0, 0)');
+        expect(split.borderWidth).toBe(0);
+        expect(split.shadow).toBe('none');
+        expect(split.backdrop).toBe('none');
+        expect(split.overlapRatio).toBeLessThanOrEqual(.002);
+        expect(split.overflow).toBeLessThanOrEqual(1);
+        if (viewport.width <= 760) {
+          expect(split.copyAfterMedia).toBe(true);
+        } else if (locale === 'he') {
+          expect(split.copyAfterMediaHorizontally).toBe(true);
+        } else {
+          expect(split.copyBeforeMedia).toBe(true);
+        }
+      }
     }
   });
 
