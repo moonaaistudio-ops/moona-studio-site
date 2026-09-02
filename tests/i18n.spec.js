@@ -1296,6 +1296,19 @@ test.describe('responsive header and dynamic UI', () => {
     expect(mobileHero.filmTop).toBeLessThan(mobileHero.viewport);
     expect(mobileHero.pageWidth).toBeLessThanOrEqual(mobileHero.viewportWidth + 1);
 
+    const mobileFilmCorners = await page.locator('#film .film-stage').evaluate(stage => {
+      const frame = getComputedStyle(stage.querySelector('.film-frame'));
+      const soundOverlay = getComputedStyle(stage.querySelector('.film-soundcta'));
+      return {
+        frameRadii: [frame.borderTopLeftRadius, frame.borderTopRightRadius, frame.borderBottomRightRadius, frame.borderBottomLeftRadius],
+        soundRadii: [soundOverlay.borderTopLeftRadius, soundOverlay.borderTopRightRadius, soundOverlay.borderBottomRightRadius, soundOverlay.borderBottomLeftRadius],
+        clipPath: frame.clipPath
+      };
+    });
+    expect(new Set(mobileFilmCorners.frameRadii)).toEqual(new Set(['20px']));
+    expect(mobileFilmCorners.soundRadii).toEqual(mobileFilmCorners.frameRadii);
+    expect(mobileFilmCorners.clipPath).toBe('none');
+
     const menuToggle = page.locator('[data-mobile-menu-toggle]');
     await expect(menuToggle).toBeVisible();
     await expect(menuToggle).toHaveAttribute('aria-expanded', 'false');

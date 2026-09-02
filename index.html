@@ -839,7 +839,7 @@ html[dir="rtl"] .beat-line{transform-origin:right}
   .film{padding:9vh 0 9vh}
   .film-head{margin-bottom:4vh}
   .film-wrap{padding:0}
-  .film-frame{border-radius:0}
+  .film-frame,.film.seen .film-frame{border-radius:var(--r-lg);clip-path:none;transition:none}
   .film-frame::after{display:none}
   .film-credit{padding:0 22px}
   .film-story{grid-template-columns:1fr;margin-top:5vh;gap:30px}
