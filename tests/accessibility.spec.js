@@ -48,10 +48,10 @@ async function expectNoAxeViolations(page, include) {
 }
 
 async function canvasSnapshots(page) {
-  return Promise.all([
-    page.locator('#sky').screenshot(),
-    page.locator('#moon').screenshot()
-  ]);
+  const dataUrls = await page.locator('#sky,#moon').evaluateAll(canvases =>
+    canvases.map(canvas => canvas.toDataURL('image/png'))
+  );
+  return dataUrls.map(dataUrl => Buffer.from(dataUrl));
 }
 
 for (const locale of ['en', 'he']) {
@@ -74,6 +74,19 @@ for (const locale of ['en', 'he']) {
       expect(footerLabelStyle.spacing).toMatch(/^(normal|0px)$/);
     }
     await expectNoAxeViolations(page);
+  });
+}
+
+for (const locale of ['en', 'he']) {
+  test(`founder portrait overlay passes mobile axe in ${locale.toUpperCase()}`, async ({ page }) => {
+    for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }]) {
+      await page.setViewportSize(viewport);
+      await openPage(page, `/?lang=${locale}`);
+      await page.locator('#about').scrollIntoViewIfNeeded();
+      await expect(page.locator('.about-copy')).toHaveClass(/seen/);
+      await expect(page.locator('.about-copy')).toHaveCSS('opacity', '1');
+      await expectNoAxeViolations(page, '#about');
+    }
   });
 }
 
@@ -108,12 +121,12 @@ test('mobile menu is keyboard operated, focuses its content, and restores focus'
 
 test('required fields have descriptions and expose an announced validation state', async ({ page }) => {
   await openPage(page, '/?lang=he');
-  const opener = page.locator('#hdr [data-ask]');
+  const opener = page.locator('[data-hero-contact-cta]');
   await opener.click();
   await expect(page.locator('#ask')).toHaveClass(/open/);
   await expect(page.locator('#f-name')).toBeFocused();
 
-  for (const id of ['f-name', 'f-mail', 'f-site']) {
+  for (const id of ['f-name', 'f-mail', 'f-site', 'f-brief']) {
     const field = page.locator(`#${id}`);
     await expect(field).toHaveAttribute('required', '');
     await expect(field).toHaveAttribute('aria-required', 'true');
@@ -133,6 +146,26 @@ test('required fields have descriptions and expose an announced validation state
   await expect(page.locator('#f-name')).toHaveAttribute('aria-invalid', 'true');
   await expect(page.locator('#name-hint')).toHaveAttribute('role', 'alert');
   await expect(page.locator('#name-hint')).toHaveText('את זה צריך למלא.');
+
+  await page.locator('#f-name').fill('דנה כהן');
+  await page.locator('[data-step="0"] [data-next]').click();
+  await page.locator('#f-mail').fill('dana@example.com');
+  await page.locator('[data-step="1"] [data-next]').click();
+  await page.locator('#f-site').fill('example.com');
+  await page.locator('[data-step="2"] [data-next]').click();
+  await expect(page.locator('[data-step="3"]')).toHaveClass(/active/);
+  await expect(page.locator('#f-brief')).toBeFocused();
+
+  await page.locator('#askSubmit').click();
+  await expect(page.locator('#f-brief')).toBeFocused();
+  await expect(page.locator('#f-brief')).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.locator('#brief-hint')).toHaveAttribute('role', 'alert');
+  await expect(page.locator('#brief-hint')).toHaveText('את זה צריך למלא.');
+
+  await page.locator('#f-brief').fill('קצר מדי');
+  await page.locator('#askSubmit').click();
+  await expect(page.locator('#f-brief')).toBeFocused();
+  await expect(page.locator('#brief-hint')).toHaveText('נשמח לקצת יותר פרטים, בין 20 ל־1,200 תווים.');
   await expectNoAxeViolations(page, '#ask');
 
   await page.keyboard.press('Escape');
@@ -170,11 +203,10 @@ test('every reachable media opener has a localized, non-empty, unique accessible
     await openPage(page, `/?lang=${locale}`);
     const labels = await page.locator([
       '#film .film-frame[tabindex="0"]',
-      '[data-media-open]',
-      '.mq .mq-track:not([aria-hidden]) .mq-item[tabindex="0"]'
+      '#work [data-media-open]'
     ].join(',')).evaluateAll(elements => elements.map(element => element.getAttribute('aria-label')?.trim() || ''));
 
-    expect(labels.length).toBeGreaterThan(10);
+    expect(labels).toHaveLength(5);
     expect(labels.every(Boolean)).toBe(true);
     expect(new Set(labels).size, `duplicate ${locale} media labels: ${labels.join(' | ')}`).toBe(labels.length);
     if (locale === 'he') {
@@ -196,6 +228,9 @@ test('action-labelled media and motion controls do not expose a contradictory pr
 test('Hebrew content reflows at the supported narrow width with WCAG text spacing', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 800 });
   await openPage(page, '/?lang=he');
+  await page.locator('#about').scrollIntoViewIfNeeded();
+  await expect(page.locator('.about-copy')).toHaveClass(/seen/);
+  await expect(page.locator('.about-copy')).toHaveCSS('transform', 'none');
   await page.addStyleTag({ content: `
     :where(h1,h2,h3,p,li,a,button,label,input,span){
       line-height:1.5!important;
@@ -204,6 +239,11 @@ test('Hebrew content reflows at the supported narrow width with WCAG text spacin
     }
     p{margin-bottom:2em!important}
   ` });
+  // Exercise the poster's content-driven height, not only its 100svh minimum.
+  await page.locator('.about-body').evaluate(element => {
+    const paragraph = element.textContent.trim();
+    element.textContent = Array(8).fill(paragraph).join(' ');
+  });
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
 
   const layout = await page.evaluate(() => {
@@ -211,20 +251,90 @@ test('Hebrew content reflows at the supported narrow width with WCAG text spacin
       const rect = element.getBoundingClientRect();
       return rect.left >= -1 && rect.right <= innerWidth + 1;
     };
-    const headline = document.querySelector('.htxt h1');
-    const cta = document.querySelector('.hero-cta');
+    const headline = document.querySelector('.film-title');
+    const cta = document.querySelector('.contact .cta-btn.lg');
     const header = document.getElementById('hdr');
     const headlineRange = document.createRange();
     headlineRange.selectNodeContents(headline);
     const headlineText = headlineRange.getBoundingClientRect();
+    const about = document.querySelector('#about');
+    const aboutLayout = about.querySelector('.about-layout');
+    const aboutCopy = about.querySelector('.about-copy');
+    const aboutMedia = about.querySelector('.about-media');
+    const aboutImage = aboutMedia.querySelector('img');
+    const aboutRect = about.getBoundingClientRect();
+    const aboutCopyRect = aboutCopy.getBoundingClientRect();
+    const aboutMediaRect = aboutMedia.getBoundingClientRect();
+    const aboutMediaStyle = getComputedStyle(aboutMedia);
+    const aboutCopyStyle = getComputedStyle(aboutCopy);
+    const aboutScrimStyle = getComputedStyle(aboutLayout, '::after');
+    const overlapWidth = Math.max(0, Math.min(aboutCopyRect.right, aboutMediaRect.right) - Math.max(aboutCopyRect.left, aboutMediaRect.left));
+    const overlapHeight = Math.max(0, Math.min(aboutCopyRect.bottom, aboutMediaRect.bottom) - Math.max(aboutCopyRect.top, aboutMediaRect.top));
     return {
       pageFits: document.documentElement.scrollWidth <= innerWidth + 1,
       headlineFits: withinViewport(headline) && headlineText.left >= -1 && headlineText.right <= innerWidth + 1,
       ctaFits: withinViewport(cta) && cta.scrollWidth <= cta.clientWidth + 1,
-      headerFits: withinViewport(header)
+      headerFits: withinViewport(header),
+      aboutCopyFits:
+        withinViewport(aboutCopy) &&
+        aboutCopy.scrollWidth <= aboutCopy.clientWidth + 1 &&
+        aboutCopy.scrollHeight <= aboutCopy.clientHeight + 1,
+      aboutCopyContained:
+        aboutCopyRect.top >= aboutRect.top - 1 &&
+        aboutCopyRect.bottom <= aboutRect.bottom + 1,
+      aboutMediaContained:
+        aboutMediaRect.left >= aboutRect.left - 1 &&
+        aboutMediaRect.top >= aboutRect.top - 1 &&
+        aboutMediaRect.right <= aboutRect.right + 1 &&
+        aboutMediaRect.bottom <= aboutRect.bottom + 1,
+      aboutImageLoaded: aboutImage.complete && aboutImage.naturalWidth > 0,
+      aboutImageVisible: aboutImage.getClientRects().length > 0,
+      aboutCopyOverMedia:
+        overlapWidth * overlapHeight >= aboutCopyRect.width * aboutCopyRect.height * .99,
+      aboutMediaFullBleed:
+        Math.abs(aboutMediaRect.left - aboutRect.left) <= 1 &&
+        Math.abs(aboutMediaRect.top - aboutRect.top) <= 1 &&
+        Math.abs(aboutMediaRect.right - aboutRect.right) <= 1 &&
+        Math.abs(aboutMediaRect.bottom - aboutRect.bottom) <= 1,
+      aboutSectionAtLeastViewport: aboutRect.height >= innerHeight - 1,
+      aboutSectionGrewWithContent: aboutRect.height > innerHeight + 1,
+      aboutMediaBorderRadius: Number.parseFloat(aboutMediaStyle.borderTopLeftRadius),
+      aboutScrimPresent: aboutScrimStyle.backgroundImage.includes('linear-gradient'),
+      aboutCopyTransparent:
+        aboutCopyStyle.backgroundColor === 'rgba(0, 0, 0, 0)' &&
+        Number.parseFloat(aboutCopyStyle.borderTopWidth) === 0 &&
+        aboutCopyStyle.boxShadow === 'none' &&
+        (aboutCopyStyle.backdropFilter || aboutCopyStyle.webkitBackdropFilter || 'none') === 'none',
+      aboutTextChildrenFit: [...aboutCopy.children].every(child => {
+        const rect = child.getBoundingClientRect();
+        return rect.left >= aboutCopyRect.left - 1 &&
+          rect.right <= aboutCopyRect.right + 1 &&
+          rect.top >= aboutCopyRect.top - 1 &&
+          rect.bottom <= aboutCopyRect.bottom + 1;
+      }),
+      aboutDirection: getComputedStyle(aboutCopy).direction
     };
   });
-  expect(layout).toEqual({ pageFits: true, headlineFits: true, ctaFits: true, headerFits: true });
+  expect(layout).toEqual({
+    pageFits: true,
+    headlineFits: true,
+    ctaFits: true,
+    headerFits: true,
+    aboutCopyFits: true,
+    aboutCopyContained: true,
+    aboutMediaContained: true,
+    aboutImageLoaded: true,
+    aboutImageVisible: true,
+    aboutCopyOverMedia: true,
+    aboutMediaFullBleed: true,
+    aboutSectionAtLeastViewport: true,
+    aboutSectionGrewWithContent: true,
+    aboutMediaBorderRadius: 0,
+    aboutScrimPresent: true,
+    aboutCopyTransparent: true,
+    aboutTextChildrenFit: true,
+    aboutDirection: 'rtl'
+  });
 });
 
 test('privacy notice is localized, linked, and passes axe', async ({ page }) => {
@@ -274,8 +384,9 @@ test.describe('motion accessibility', () => {
     await expect(control).toBeDisabled();
     await expect(control).toHaveAttribute('aria-label', 'התנועה הופחתה לפי הגדרת המערכת');
     expect(await page.locator('video').evaluateAll(videos => videos.every(video => video.paused))).toBe(true);
-    expect(await page.locator('.grain,.scrollcue i,.mq-track,.cta-btn').evaluateAll(elements =>
-      elements.every(element => getComputedStyle(element).animationName === 'none'))).toBe(true);
+    expect(await page.locator('.grain,.scrollcue i,.cta-btn').evaluateAll(elements =>
+      elements.every(element => getComputedStyle(element).animationName === 'none'
+        && getComputedStyle(element, '::before').animationName === 'none'))).toBe(true);
     await page.locator('.film-story').scrollIntoViewIfNeeded();
     const storyMotion = await page.locator('.film-story').evaluate(section => ({
       cards: [...section.querySelectorAll('.film-beat')].every(card => {

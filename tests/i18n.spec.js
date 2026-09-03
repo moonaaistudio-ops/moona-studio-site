@@ -3,10 +3,12 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const BASE_URL = `http://127.0.0.1:${Number(process.env.PLAYWRIGHT_PORT || 4317)}`;
-const HOME_EN_TITLE = 'Moona | AI-native studio for cinematic brand films';
-const HOME_EN_DESCRIPTION = 'We build the world, then film the ad. An AI-native studio making cinematic brand films with uncompromising craft.';
-const HOME_HE_TITLE = 'Moona | סטודיו AI-native לסרטי מותג קולנועיים';
-const HOME_HE_DESCRIPTION = 'סטודיו AI-native להפקת סרטי מותג ופרסומות ברמה קולנועית.';
+const HOME_EN_TITLE = 'Moona | Founder-led creative technology studio';
+const HOME_EN_DESCRIPTION = 'Cinematic campaigns built through creative direction, custom software and specialist AI agents.';
+const HOME_HE_TITLE = 'Moona | סטודיו קריאייטיב טכנולוגי בהובלת המייסד';
+const HOME_HE_DESCRIPTION = 'קמפיינים קולנועיים שנבנים באמצעות קריאייטיב, פיתוח תוכנה וסוכני AI מתמחים.';
+const LEAD_BRIEF = 'We need a cinematic launch film for a new energy-bar brand.';
+const PROJECT_ROOT = path.resolve(__dirname, '..');
 
 const errorsByPage = new WeakMap();
 
@@ -47,15 +49,46 @@ async function seedLocaleOnce(page, locale) {
   }, locale);
 }
 
-async function fillLeadForm(page) {
-  await page.evaluate(() => document.querySelector('[data-ask]').click());
+async function fillLeadForm(page, { brief = LEAD_BRIEF } = {}) {
+  await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
   await expect(page.locator('#ask')).toHaveClass(/open/);
   await page.locator('#f-name').fill('Dana Cohen');
   await page.locator('[data-step="0"] [data-next]').click();
   await page.locator('#f-mail').fill('dana@example.com');
   await page.locator('[data-step="1"] [data-next]').click();
   await page.locator('#f-site').fill('example.com');
+  await page.locator('[data-step="2"] [data-next]').click();
+  await expect(page.locator('[data-step="3"]')).toHaveClass(/active/);
+  if (brief !== null) await page.locator('#f-brief').fill(brief);
 }
+
+test('critical assets and legal links remain compatible with a direct-file preview', () => {
+  const home = fs.readFileSync(path.join(PROJECT_ROOT, 'index.html'), 'utf8');
+  const privacy = fs.readFileSync(path.join(PROJECT_ROOT, 'privacy.html'), 'utf8');
+  const accessibility = fs.readFileSync(path.join(PROJECT_ROOT, 'accessibility.html'), 'utf8');
+
+  expect(home).toContain('<script src="i18n.js"></script>');
+  expect(home).toContain('<script defer src="analytics.js"></script>');
+  expect(home).toContain("location.protocol!=='file:'");
+  expect(home).toContain('window.__MOONA_BOOT_FAILSAFE__');
+  expect(home).not.toContain('<script src="/i18n.js"></script>');
+  for (const document of [home, privacy, accessibility]) {
+    expect(document).not.toMatch(/(?:href|src)="\/(?:i18n\.js|privacy\.html|accessibility\.html|analytics\.js)"/);
+  }
+  for (const asset of ['moona-logo-lockup.svg', 'moona-logo-mark.svg']) {
+    expect(fs.existsSync(path.join(PROJECT_ROOT, 'p', 'brand', asset))).toBe(true);
+  }
+  for (const asset of [
+    'crew-placeholder-640.avif',
+    'crew-placeholder-640.webp',
+    'crew-placeholder-960.avif',
+    'crew-placeholder-960.webp',
+    'crew-placeholder-1600.avif',
+    'crew-placeholder-1600.webp'
+  ]) {
+    expect(fs.existsSync(path.join(PROJECT_ROOT, 'p', 'crew', asset))).toBe(true);
+  }
+});
 
 function metadata(page) {
   return page.evaluate(() => ({
@@ -175,117 +208,116 @@ test.describe('locale bootstrap, URL contract, and metadata', () => {
 });
 
 test.describe('dictionary and first-paint privacy contract', () => {
-  test('approved Hebrew brand copy is applied without stale cards or long dashes', async ({ page }) => {
+  test('brand-first bilingual copy preserves the approved Hebrew DUSTLINE narrative', async ({ page }) => {
     await openHome(page, '/?lang=he');
 
-    await expect(page.locator('#t1 h1')).toHaveText('סטודיו AI-native לסרטי מותג ופרסומות');
-    await expect(page.locator('#t1 h1')).toHaveAccessibleName('סטודיו AI-native לסרטי מותג ופרסומות');
-    await expect(page.locator('.statement-sub')).toContainText('מקריאטיב ובימוי ועד הפקה ופוסט,');
-    await expect(page.locator('.statement-sub')).toContainText('בשליטה מלאה על כל פריים.');
-    await expect(page.locator('#t3')).toHaveCount(0);
-    await expect(page.locator('.film-strip-head .film-eyebrow')).toHaveText('מאחורי הסרט');
-    await expect(page.locator('.film-title')).toHaveText('המותג שלנו והחוויה שאנחנו יצרנו לו');
+    const headerWordmark = page.locator('.lockup-wordmark');
+    await expect(headerWordmark).toHaveAttribute('src', 'p/brand/moona-logo-lockup.svg');
+    await expect(headerWordmark).toHaveAttribute('alt', '');
+    await expect(page.locator('.hero-wordmark, .hero-chroma, .hero-aperture, #markSvg, #heroIris, .lockup-iris, [data-scramble]')).toHaveCount(0);
+    await expect(page.locator('#sky')).toBeVisible();
+    await expect(page.locator('#moon')).toBeVisible();
+    await expect(page.locator('.statement')).toHaveText('סטודיו AI-native לסרטי מותג ופרסומות');
+    await expect(page.locator('.statement-sub span')).toHaveText([
+      'מקריאטיב ובימוי ועד הפקה ופוסט,',
+      'בשליטה מלאה על כל פריים.'
+    ]);
+    await expect(page.locator('.hero-cta [data-i18n="common.primaryCta"]')).toHaveText('בואו נדבר');
+    await expect(page.locator('.film-head .film-eyebrow')).toHaveText('סרט הדגל');
+    await expect(page.locator('.film-title')).toHaveText('יצרנו מותג. וצילמנו לו פרסומת.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE הוא חטיף אנרגיה שאנחנו יצרנו מאפס.');
-    await expect(page.locator('.film-credit')).toHaveText('כל האלמנטים נוצרו ללא אולפן וללא מצלמה. הם 100% AI.');
+    await expect(page.locator('.film-credit')).toHaveText('נוצר ב־AI. בוים עד הפריים האחרון.');
+    await expect(page.locator('.film-strip-head .film-eyebrow')).toHaveText('מאחורי הסרט');
+    await expect(page.locator('.film-strip-head .film-note')).toHaveText('DUSTLINE הוא מותג קונספט מקורי שיצרנו ב־Moona מאפס. הכול התחיל בסיפור. כל פריים תוכנן כדי לשרת את הקריאייטיב ולשמור על עולם עקבי ואמין. אנחנו משלבים כלי AI מתקדמים עם תהליך הפקה קפדני ושליטה מלאה בבימוי, בעריכה ובפוסט.');
     await expect(page.locator('.film-story .film-beat')).toHaveCount(3);
     await expect(page.locator('.film-story .film-beat h3')).toHaveText([
       'לוקיישן שאפשר להאמין בו.',
       'הכול נמצא בפרטים.',
       'קריאייטיב שעובד.'
     ]);
+    await expect(page.locator('.film-story .film-beat .beat-copy > p')).toHaveText([
+      'הוא נבנה עד הפרט האחרון: מרווח של 0.90 מ׳ בין האבנים, מגדלים בגובה 21 מ׳, שמיים וקרקע שנבנו שכבה אחר שכבה. מבחינתנו, אמינות מתחילה בבסיס, בלוקיישן עצמו.',
+      'אמינות הדמויות, העקביות בין השוטים, הלוקיישן ואווירת המסיבה נשמרים לאורך הסרט. הסיפור, התנועה, הצבע ורמת הגימור מקבלים את אותה תשומת לב. כשכל פרט מדויק, הסרט כולו מרגיש אמיתי.',
+      'הכול מתחיל בקריאייטיב ובתסריט. הדמויות, הסטיילינג והשפה הוויזואלית נקבעים כבר בשלב הקריאייטיב. משם נבנים הליהוק, תנועות המצלמה, עיצוב הסאונד והעריכה. את החיבור ביניהם רואים בכל פריים של DUSTLINE.'
+    ]);
+
+    await expect(page.locator('#about h2')).toHaveText('טל צור');
+    await expect(page.locator('.about-role')).toHaveText('מייסד · מנהל קריאייטיב · מפתח');
+    await expect(page.locator('.about-body')).toHaveText('הקמתי את Moona בנקודת המפגש בין קריאייטיב לפיתוח תוכנה. אני מוביל כל פרויקט, בונה את המערכות שמאחורי העבודה ומקבל את ההחלטה היצירתית הסופית.');
+    await expect(page.locator('.about-engine')).toHaveText('פיתוח תוכנה מותאם · מחקר ופיתוח מתמשך · סוכני AI מתמחים');
+    await expect(page.locator('#crew-transition-title')).toHaveText('שישה סוכני AI. בהובלת טל.');
+    await expect(page.locator('.crew-transition-body')).toHaveText('כל אנשי הצוות ב־Moona הם סוכני AI מתמחים שנבנו בתוך הסטודיו.');
+    await expect(page.locator('#crew-title')).toHaveText('המומחים שמאחורי העבודה.');
+    await expect(page.locator('.crew-head > p')).toHaveText('שישה מומחים לסיפור, תמונה, קולנוע, סאונד ומערכות.');
     await expect(page.locator('.work-note')).toHaveText('סרטי הקונספט האלה נוצרו ביוזמתנו כדי להראות מה נוכל ליצור עבור המותג הבא. המותגים המוצגים אינם לקוחות של Moona.');
     await expect(page.locator('[data-i18n="work.bullPadel.concept"]')).toHaveText('המחבט מחזיר חבטה.');
-    await expect(page.locator('[data-i18n="work.koda.tag"]')).toHaveText('זה מוצר שהמצאנו מאפס');
-    await expect(page.locator('.ctagal-h')).toHaveText('אנחנו מעדיפים להראות במקום לספר.');
-    await expect(page.locator('.sentence p')).toHaveText('Moona הוא סטודיו AI-native שיוצר סרטי מותג ופרסומות ברמה קולנועית, גם בלי מצלמה.');
-    await expect(page.locator('.contact-line')).toHaveText('עכשיו תורך.');
-    await expect(page.locator('[data-i18n="nav.cta"]')).toHaveText('דברו איתנו');
-    await expect(page.locator('.hero-cta [data-i18n="hero.workCta"]')).toHaveText('לצפייה בעבודות');
-    await expect(page.locator('[data-i18n="hero.cta"]')).toHaveText(['דברו איתנו', 'דברו איתנו']);
-    await expect(page.locator('.ctagal-body')).toHaveCount(0);
-    await expect(page.locator('.ctagal-note')).toHaveText('ללא התחייבות');
-    await expect(page.locator('.contact .cta-sub')).toHaveText('ללא התחייבות');
-    await expect(page.locator('#askTitle')).toHaveText('ספרו לנו על המותג');
+    await expect(page.locator('[data-i18n="work.koda.concept"]')).toHaveText('נבנה לפיד שבו הוא חי.');
+    await expect(page.locator('.contact-line')).toHaveText('יש לכם פרויקט ששווה ליצור?');
+    await expect(page.locator('.contact-body')).toHaveText('ספרו לנו מה אתם בונים. נחזור אליכם בתוך שני ימי עסקים.');
+    await expect(page.locator('[data-header-contact-cta] [data-i18n="common.primaryCta"]')).toHaveText('בואו נדבר');
+    await expect(page.locator('[data-i18n="common.primaryCta"]')).toHaveText(['בואו נדבר', 'בואו נדבר']);
+    await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
+    await expect(page.locator('.contact [data-i18n="hero.cta"]')).toHaveText('מתחילים פרויקט');
+    await expect(page.locator('#askTitle')).toHaveText('מתחילים פרויקט');
     await expect(page.locator('#ask')).toHaveAttribute('aria-labelledby', 'askTitle');
     await expect(page.locator('#askSubmit [data-i18n="form.send"]')).toHaveText('שליחת הפרטים');
     await expect(page.locator('#analyticsAccept')).toHaveText('אישור עוגיות');
     await expect(page.locator('#analyticsReject')).toHaveText('דחיית עוגיות');
 
     expect(await page.evaluate(() => ({
-      nav: window.MoonaI18n.t('nav.cta', {}, 'en'),
+      primary: window.MoonaI18n.t('common.primaryCta', {}, 'en'),
       hero: window.MoonaI18n.t('hero.cta', {}, 'en'),
-      work: window.MoonaI18n.t('hero.workCta', {}, 'en'),
+      contact: window.MoonaI18n.t('hero.projectCta', {}, 'en'),
       dialog: window.MoonaI18n.t('form.dialog', {}, 'en'),
       send: window.MoonaI18n.t('form.send', {}, 'en'),
       note: window.MoonaI18n.t('studio.note', {}, 'en')
     }))).toEqual({
-      nav: 'Talk to us',
-      hero: 'Talk to us',
-      work: 'View our work',
-      dialog: 'Tell us about your brand',
+      primary: 'LET’S TALK',
+      hero: 'Start a project',
+      contact: 'Start a project',
+      dialog: 'Start a project',
       send: 'Send details',
-      note: 'No commitment'
+      note: 'Reply within two business days'
     });
 
-    const bidiSpacing = await page.evaluate(() => {
-      const heroAi = document.querySelector('#t1 [data-i18n="hero.headline.aiTerm"]');
-      const statementAi = document.querySelector('.sentence bdi[lang="en"]:last-of-type');
-      const isSingleExternalSpace = node =>
-        node?.nodeType === Node.TEXT_NODE && node.textContent === ' ';
-      const trimmedKeys = [
-        'hero.headline.lead',
-        'hero.headline.aiTerm',
-        'studio.statement.afterBrand',
-        'studio.statement.afterAi'
-      ];
+    const bidiContract = await page.evaluate(() => {
+      const dustline = document.querySelector('.film-head .brand-ltr');
+      const singleSpaceAfter = dustline.nextSibling?.nodeType === Node.TEXT_NODE
+        && dustline.nextSibling.textContent === ' ';
       return {
-        heroBefore: isSingleExternalSpace(heroAi.previousSibling),
-        heroAfter: isSingleExternalSpace(heroAi.nextSibling),
-        statementBefore: isSingleExternalSpace(statementAi.previousSibling),
-        statementAfter: isSingleExternalSpace(statementAi.nextSibling),
-        dictionaryTrimmed: ['en', 'he'].every(locale => trimmedKeys.every(key => {
-          const value = window.MoonaI18n.t(key, {}, locale);
-          return value === value.trim();
-        }))
+        direction: dustline.getAttribute('dir'),
+        text: dustline.textContent,
+        singleSpaceAfter,
+        brandTokensProtected: [...document.querySelectorAll('bdi.brand-ltr')]
+          .every(element => element.getAttribute('dir') === 'ltr')
       };
     });
-    expect(bidiSpacing).toEqual({
-      heroBefore: true,
-      heroAfter: true,
-      statementBefore: true,
-      statementAfter: true,
-      dictionaryTrimmed: true
+    expect(bidiContract).toEqual({
+      direction: 'ltr',
+      text: 'DUSTLINE',
+      singleSpaceAfter: true,
+      brandTokensProtected: true
     });
-
-    const heroGaps = await page.evaluate(() => {
-      const fixture = document.createElement('div');
-      fixture.className = 'htxt';
-      fixture.style.cssText = 'position:fixed;visibility:hidden;inset:0 auto auto 0;transform:none;width:max-content;';
-      const clone = document.querySelector('#t1 h1').cloneNode(true);
-      clone.removeAttribute('id');
-      clone.style.cssText = 'white-space:nowrap;width:max-content;max-width:none;transform:none;';
-      fixture.appendChild(clone);
-      document.body.appendChild(fixture);
-      const [lead, ai, emphasis] = clone.children;
-      const gap = (a, b) => {
-        const first = a.getBoundingClientRect();
-        const second = b.getBoundingClientRect();
-        return Math.max(first.left - second.right, second.left - first.right, 0);
-      };
-      const result = { before: gap(lead, ai), after: gap(ai, emphasis) };
-      fixture.remove();
-      return result;
-    });
-    expect(heroGaps.before).toBeGreaterThan(0);
-    expect(heroGaps.after).toBeGreaterThan(0);
-    expect(Math.abs(heroGaps.before - heroGaps.after)).toBeLessThanOrEqual(1.5);
 
     await page.evaluate(() => window.MoonaI18n.setLocale('en', { source: 'programmatic' }));
-    await expect(page.locator('#t1 h1')).toHaveText('Cinematic ads, born without a camera');
-    await expect(page.locator('#t1 h1')).toHaveAccessibleName('Cinematic ads, born without a camera');
+    await expect(page.locator('.statement')).toHaveText('Cinematic ads, born without a camera');
+    await expect(page.locator('.statement-sub span')).toHaveText([
+      'An AI-native studio for film and motion ads.',
+      'Story, craft and taste first.'
+    ]);
+    await expect(page.locator('.hero-cta [data-i18n="common.primaryCta"]')).toHaveText('LET’S TALK');
+    await expect(page.locator('[data-i18n="common.primaryCta"]')).toHaveText(['LET’S TALK', 'LET’S TALK']);
+    await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
+    await expect(page.locator('.film-title')).toHaveText('We created a brand. Then we shot its ad.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE is an energy bar you cannot buy.');
-    await expect(page.locator('.film-credit')).toHaveText('DUSTLINE · born without a camera');
-    await expect(page.locator('.sentence p')).toHaveText('Moona is an AI-native studio making cinematic motion for brands. The camera was optional.');
+    await expect(page.locator('.film-credit')).toHaveText('Made with AI. Directed to the final frame.');
+    await expect(page.locator('.film-strip-head .film-note')).toHaveText('The world, cast and visual rules were built before motion began. The technology changed the production. It did not replace direction.');
+    await expect(page.locator('#about h2')).toHaveText('Tal Tzur');
+    await expect(page.locator('.about-role')).toHaveText('Founder · Creative Director · Developer');
+    await expect(page.locator('#crew-transition-title')).toHaveText('Six AI agents. Directed by Tal.');
+    await expect(page.locator('.crew-transition-body')).toHaveText('Every member of the Moona crew is a specialist AI agent, built inside the studio.');
+    await expect(page.locator('#crew-title')).toHaveText('Specialists behind the work.');
+    await expect(page.locator('.crew-head > p')).toHaveText('Six specialists across story, image, film, sound and systems.');
 
     const dictionarySource = fs.readFileSync(path.join(__dirname, '..', 'i18n.js'), 'utf8');
     const hebrewStart = dictionarySource.indexOf('\n    he: {');
@@ -297,7 +329,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await openHome(page);
     const homeKeys = await page.evaluate(() => {
       const attributes = [
-        'data-i18n', 'data-i18n-aria-label', 'data-i18n-placeholder',
+        'data-i18n', 'data-i18n-alt', 'data-i18n-aria-label', 'data-i18n-placeholder',
         'data-i18n-title', 'data-hint-key', 'data-open-key'
       ];
       return [...new Set(attributes.flatMap(attribute =>
@@ -365,7 +397,8 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await page.goto('/?lang=en');
     await waitForI18n(page);
     const emphasis = await page.evaluate(async () => {
-      const elements = [...document.querySelectorAll('em')];
+      const elements = [...document.querySelectorAll('em')]
+        .filter(element => !element.closest('[hidden]'));
       window.__e2eEmphasisNodes = elements;
       window.MoonaI18n.setLocale('he', { source: 'programmatic' });
       await document.fonts.ready;
@@ -373,6 +406,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
         const style = getComputedStyle(element);
         return {
           text: element.textContent,
+          hero: Boolean(element.closest('#hero-stick')),
           fontStyle: style.fontStyle,
           fontWeight: style.fontWeight,
           color: style.color
@@ -387,14 +421,61 @@ test.describe('dictionary and first-paint privacy contract', () => {
         english: elements.map(element => element.textContent)
       };
     });
-    expect(emphasis.count).toBe(4);
+    expect(emphasis.count).toBe(2);
     expect(emphasis.sameNodes).toBe(true);
-    expect(emphasis.tags).toEqual(['EM', 'EM', 'EM', 'EM']);
+    expect(emphasis.tags).toEqual(['EM', 'EM']);
     expect(emphasis.hebrew.map(item => item.text)).not.toEqual(emphasis.english);
     for (const item of emphasis.hebrew) {
       expect(item.fontStyle).toBe('normal');
-      expect(item.fontWeight).toBe('600');
+      expect(item.fontWeight).toBe(item.hero ? '600' : '700');
       expect(item.color).toBe('rgb(243, 233, 210)');
+    }
+  });
+
+  test('the restored hero is the only serif typography on the site', async ({ page }) => {
+    const displaySelectors = [
+      '.film-title', '.film-title em', '.film-beat h3', '.about-copy h2',
+      '.crew-transition h2', '.crew-head h2', '.crew-credit h3',
+      '.contact .contact-line', '.q .qtitle'
+    ];
+
+    for (const locale of ['en', 'he']) {
+      await openHome(page, `/?lang=${locale}`);
+      const typography = await page.evaluate(selectors => {
+        const family = element => getComputedStyle(element).fontFamily;
+        const serifPattern = /Instrument Serif|Frank Ruhl Libre/i;
+        const outsideHero = [...document.querySelectorAll('body *')]
+          .filter(element => element.getClientRects().length > 0)
+          .filter(element => !element.closest('#hero-stick'))
+          .filter(element => serifPattern.test(family(element)))
+          .map(element => `${element.tagName.toLowerCase()}.${element.className}`);
+        return {
+          heroFamily: family(document.querySelector('.htxt h1.statement')),
+          display: selectors.flatMap(selector => [...document.querySelectorAll(selector)]
+            .map(element => ({ selector, family: family(element) }))),
+          filmEmStyle: getComputedStyle(document.querySelector('.film-title em')).fontStyle,
+          filmWeight: getComputedStyle(document.querySelector('.film-title')).fontWeight,
+          outsideHero
+        };
+      }, displaySelectors);
+
+      expect(typography.heroFamily).toContain(locale === 'he' ? 'Frank Ruhl Libre' : 'Instrument Serif');
+      expect(typography.display.length).toBeGreaterThanOrEqual(displaySelectors.length);
+      for (const item of typography.display) {
+        expect(item.family, `${locale} ${item.selector}`).toContain(locale === 'he' ? 'Assistant' : 'Space Grotesk');
+      }
+      expect(typography.filmEmStyle).toBe('normal');
+      expect(typography.filmWeight).toBe(locale === 'he' ? '700' : '600');
+      expect(typography.outsideHero).toEqual([]);
+
+      for (const legalPage of ['privacy.html', 'accessibility.html']) {
+        await page.goto(`/${legalPage}?lang=${locale}`);
+        await waitForI18n(page);
+        await expect(page.locator('h1')).toHaveCSS(
+          'font-family',
+          new RegExp(locale === 'he' ? 'Assistant' : 'Space Grotesk')
+        );
+      }
     }
   });
 
@@ -421,7 +502,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('html')).not.toHaveClass(/i18n-pending/);
     await expect(page.locator('body')).toBeVisible();
     await expect(page.locator('h1')).toHaveText('הודעת פרטיות');
-    await expect(page.locator('.back')).toHaveAttribute('href', '/?lang=he');
+    await expect(page.locator('.back')).toHaveAttribute('href', '/index.html?lang=he');
   });
 
   test('accessibility statement hides delayed Hebrew copy and keeps bootstrap metadata in sync', async ({ context, page }) => {
@@ -473,44 +554,46 @@ test.describe('dictionary and first-paint privacy contract', () => {
   });
 });
 
-test.describe('animation cancellation and state preservation', () => {
-  test('switching locale cancels scramble, active typing, and pending typing', async ({ page }) => {
+test.describe('locale transitions and state preservation', () => {
+  test('switching locale preserves the official header logo and production canvas hero', async ({ page }) => {
     await openHome(page, '/?lang=en');
-    const result = await page.evaluate(async () => {
-      cancelTextAnimations();
-      const wordmark = document.querySelector('[data-scramble]');
-      const activeTag = document.querySelector('[data-piece] .tag');
-      const syntheticPiece = document.createElement('article');
-      syntheticPiece.innerHTML = '<p class="tag" data-i18n="work.strava.tag"></p>';
-      document.body.appendChild(syntheticPiece);
-      const pendingTag = syntheticPiece.querySelector('.tag');
-
-      scramble(wordmark);
-      typeTag(activeTag);
-      startPiece(syntheticPiece);
-      await new Promise(resolve => setTimeout(resolve, 80));
-      const wasAnimating = wordmark.dataset.busy === '1' && activeTag.textContent.length > 0;
+    const result = await page.evaluate(() => {
+      const headerWordmark = document.querySelector('.lockup-wordmark');
+      const sky = document.getElementById('sky');
+      const moon = document.getElementById('moon');
+      headerWordmark.dataset.e2eMarker = 'header-wordmark';
+      sky.dataset.e2eMarker = 'hero-sky';
+      moon.dataset.e2eMarker = 'hero-moon';
       window.MoonaI18n.setLocale('he', { source: 'programmatic' });
-      const expectedActive = window.MoonaI18n.t(activeTag.dataset.i18n);
-      const expectedPending = window.MoonaI18n.t(pendingTag.dataset.i18n);
-      await new Promise(resolve => setTimeout(resolve, 850));
       return {
-        wasAnimating,
-        wordmark: wordmark.textContent,
-        wordmarkBusy: wordmark.hasAttribute('data-busy'),
-        activeText: activeTag.textContent,
-        activeExpected: expectedActive,
-        pendingText: pendingTag.textContent,
-        pendingExpected: expectedPending,
+        headerMarker: headerWordmark.dataset.e2eMarker,
+        skyMarker: sky.dataset.e2eMarker,
+        moonMarker: moon.dataset.e2eMarker,
+        headerAsset: headerWordmark.getAttribute('src'),
+        hebrewFontsHref: document.getElementById('moona-hebrew-fonts')?.getAttribute('href') || '',
+        statement: document.querySelector('.statement').textContent.replace(/\s+/g, ' ').trim(),
+        canvasSizes: [sky, moon].map(canvas => ({ width: canvas.width, height: canvas.height })),
+        retiredHeroLayers: document.querySelectorAll('.hero-media, .hero-media-video, .hero-media-fallback, .hero-brand-stage, .hero-wordmark, .hero-chroma, .hero-aperture, .hero-actions').length,
+        scrambleTargets: document.querySelectorAll('[data-scramble]').length,
+        irisTargets: document.querySelectorAll('#markSvg, #heroIris, .lockup-iris').length,
+        workTags: document.querySelectorAll('#work .tag').length,
+        workSpecBadges: document.querySelectorAll('#work .specbadge').length,
         staleFinal: document.querySelectorAll('[data-final],[data-typed],[data-busy]').length
       };
     });
 
-    expect(result.wasAnimating).toBe(true);
-    expect(result.wordmark).toBe('MOONA');
-    expect(result.wordmarkBusy).toBe(false);
-    expect(result.activeText).toBe(result.activeExpected);
-    expect(result.pendingText).toBe(result.pendingExpected);
+    expect(result.headerMarker).toBe('header-wordmark');
+    expect(result.skyMarker).toBe('hero-sky');
+    expect(result.moonMarker).toBe('hero-moon');
+    expect(result.headerAsset).toBe('p/brand/moona-logo-lockup.svg');
+    expect(result.hebrewFontsHref).toContain('family=Assistant:wght@400;500;600;700');
+    expect(result.statement).toBe('סטודיו AI-native לסרטי מותג ופרסומות');
+    expect(result.canvasSizes.every(size => size.width > 0 && size.height > 0)).toBe(true);
+    expect(result.retiredHeroLayers).toBe(0);
+    expect(result.scrambleTargets).toBe(0);
+    expect(result.irisTargets).toBe(0);
+    expect(result.workTags).toBe(0);
+    expect(result.workSpecBadges).toBe(0);
     expect(result.staleFinal).toBe(0);
   });
 
@@ -521,7 +604,7 @@ test.describe('animation cancellation and state preservation', () => {
     await page.locator('[data-language-toggle]').click();
     await expect.poll(() => page.evaluate(() => scrollY)).toBe(beforeScroll);
 
-    await page.evaluate(() => document.querySelector('[data-ask]').click());
+    await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
     await expect(page.locator('#ask')).toHaveClass(/open/);
     await page.locator('#f-name').fill('Tal Zur');
     await page.locator('[data-step="0"] [data-next]').click();
@@ -590,6 +673,8 @@ test.describe('responsive header and dynamic UI', () => {
           creativeObjectPosition: getComputedStyle(cards[2].querySelector('.beat-media img')).objectPosition,
           images: images.map(image => ({
             file: new URL(image.currentSrc || image.src).pathname.split('/').pop(),
+            srcset: image.getAttribute('srcset'),
+            sizes: image.getAttribute('sizes'),
             alt: image.getAttribute('alt'),
             loading: image.loading,
             decoding: image.decoding,
@@ -631,6 +716,10 @@ test.describe('responsive header and dynamic UI', () => {
         'dustline-detail-male-12900.webp'
       ]);
       expect(layout.images[4].file).toMatch(/^dustline-creative-04300-(960|1600|1920)\.webp$/);
+      expect(layout.images[0].srcset).toBe('p/dustline-world-crowd-960.webp 960w, p/dustline-world-crowd-1600.webp 1600w, p/dustline-world-crowd-2720.webp 2720w');
+      expect(layout.images[0].sizes).toBe('(max-width:700px) calc(100vw - 44px), (max-width:1733px) 90vw, 1560px');
+      expect(layout.images[4].srcset).toBe('p/dustline-creative-04300-960.webp 960w, p/dustline-creative-04300-1600.webp 1600w, p/dustline-creative-04300-1920.webp 1920w');
+      expect(layout.images[4].sizes).toBe('(max-width:700px) calc(100vw - 44px), (max-width:1000px) 40vw, (max-width:1733px) 43vw, 732px');
       const expectedDimensions = [
         ['2720', '1536'],
         ['1280', '720'],
@@ -667,45 +756,538 @@ test.describe('responsive header and dynamic UI', () => {
     }
   });
 
-  test('studio shows the work before its CTA in visual, DOM, and focus order', async ({ page }) => {
-    const widths = [361, 390, 1440];
+  test('founder, AI-team introduction, credits grid, and selected work expose the rebuilt section contract', async ({ page }) => {
+    const widths = [390, 1440];
     for (const width of widths) {
       await page.setViewportSize({ width, height: width === 1440 ? 900 : 844 });
       await openHome(page, '/?lang=he');
-      const layout = await page.locator('#studio').evaluate(async section => {
+      const firstCrewImage = page.locator('#crew img').first();
+      await firstCrewImage.scrollIntoViewIfNeeded();
+      await expect.poll(() => firstCrewImage.evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
+      const layout = await page.evaluate(async () => {
         await document.fonts.ready;
-        const rect = element => {
-          const value = element.getBoundingClientRect();
-          return { top: value.top, bottom: value.bottom, width: value.width, height: value.height };
-        };
-        const intro = section.querySelector('.ctagal-text');
-        const showcase = section.querySelector('.mqwrap');
-        const actions = section.querySelector('.ctagal-actions');
-        const cta = actions.querySelector('[data-ask]');
-        const firstWork = showcase.querySelector('.mq-item[tabindex="0"]');
+        const ids = ['film', 'work', 'about', 'crew-intro', 'crew', 'contact'];
+        const sections = ids.map(id => document.getElementById(id));
+        const portraits = [...document.querySelectorAll('#crew .crew-portrait')];
+        const cards = [...document.querySelectorAll('#crew .crew-card')];
+        const workGrid = document.querySelector('#work .work-grid');
+        const isRendered = element => element.getClientRects().length > 0;
         return {
-          childOrder: [...section.children].map(element => element.classList[0]),
-          bodyCount: section.querySelectorAll('.ctagal-body').length,
-          intro: rect(intro),
-          showcase: rect(showcase),
-          actions: rect(actions),
-          cta: rect(cta),
-          note: actions.querySelector('.ctagal-note').textContent,
-          showcaseBeforeCta: Boolean(firstWork.compareDocumentPosition(cta) & Node.DOCUMENT_POSITION_FOLLOWING),
+          idCounts: ids.map(id => document.querySelectorAll(`#${id}`).length),
+          ordered: sections.every((section, index) => index === sections.length - 1
+            || Boolean(section.compareDocumentPosition(sections[index + 1]) & Node.DOCUMENT_POSITION_FOLLOWING)),
+          studioAlias: {
+            parent: document.getElementById('studio')?.parentElement?.id,
+            ariaHidden: document.getElementById('studio')?.getAttribute('aria-hidden')
+          },
+          about: {
+            name: document.querySelector('#about h2')?.textContent,
+            imageAlt: document.querySelector('#about img')?.alt,
+            imageSrc: document.querySelector('#about img')?.getAttribute('src'),
+            sourceSrcsets: [...document.querySelectorAll('#about source')]
+              .map(source => source.getAttribute('srcset')),
+            sourceMedia: [...document.querySelectorAll('#about source')]
+              .map(source => source.getAttribute('media'))
+          },
+          crewTransition: {
+            heading: document.querySelector('#crew-transition-title')?.textContent,
+            body: document.querySelector('.crew-transition-body')?.textContent,
+            mediaCount: document.querySelectorAll('#crew-intro :is(picture, img, source)').length
+          },
+          sectionAfterFilm: document.querySelector('#film')?.nextElementSibling?.id,
+          sectionAfterWork: document.querySelector('#work')?.nextElementSibling?.id,
+          sectionAfterAbout: document.querySelector('#about')?.nextElementSibling?.id,
+          crewNames: cards.map(card => card.querySelector('h3')?.textContent),
+          crewNumbering: document.querySelectorAll('#crew .crew-number').length,
+          crewCreditLabels: cards.map(card => card.querySelector('.crew-credit > span')?.textContent),
+          crewColumns: getComputedStyle(document.querySelector('#crew .crew-grid'))
+            .gridTemplateColumns.split(/\s+/).filter(Boolean).length,
+          legacyCrewNavigation: document.querySelectorAll('[data-crew-rail], [data-crew-prev], [data-crew-next]').length,
+          portraitSlots: portraits.map(portrait => {
+            const rect = portrait.getBoundingClientRect();
+            const image = portrait.querySelector('img');
+            const source = portrait.querySelector('source[type="image/avif"]');
+            return {
+              ariaHidden: portrait.getAttribute('aria-hidden'),
+              childCount: portrait.childElementCount,
+              aspectRatio: getComputedStyle(portrait).aspectRatio,
+              renderedRatio: rect.width / rect.height,
+              image: {
+                alt: image.alt,
+                src: image.getAttribute('src'),
+                srcset: image.getAttribute('srcset'),
+                sizes: image.getAttribute('sizes'),
+                width: image.getAttribute('width'),
+                height: image.getAttribute('height'),
+                loading: image.getAttribute('loading'),
+                decoding: image.getAttribute('decoding'),
+                objectFit: getComputedStyle(image).objectFit
+              },
+              avifSrcset: source?.getAttribute('srcset')
+            };
+          }),
+          workCards: workGrid.querySelectorAll(':scope > [data-piece]').length,
+          workColumns: getComputedStyle(workGrid).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
+          retiredWorkDetails: document.querySelectorAll('#work .tag, #work .specbadge').length,
+          legacy: {
+            ctagalRendered: [...document.querySelectorAll('.ctagal')].some(isRendered),
+            marqueeRendered: [...document.querySelectorAll('.mq')].some(isRendered),
+            sentenceRendered: [...document.querySelectorAll('.sentence')].some(isRendered)
+          },
+          staleRenderedCopy: /(?:ללא התחייבות|3 ימים|No commitment|3 days)/i.test(document.body.innerText),
           overflow: document.documentElement.scrollWidth - innerWidth
         };
       });
 
-      expect(layout.childOrder).toEqual(['ctagal-text', 'mqwrap', 'ctagal-actions']);
-      expect(layout.bodyCount).toBe(0);
-      expect(layout.showcaseBeforeCta).toBe(true);
-      expect(layout.cta.top - layout.showcase.bottom).toBeGreaterThanOrEqual(32);
-      expect(layout.actions.top).toBeGreaterThan(layout.showcase.bottom);
-      expect(layout.cta.width).toBeGreaterThanOrEqual(44);
-      expect(layout.cta.height).toBeGreaterThanOrEqual(44);
-      expect(layout.note).toBe('ללא התחייבות');
+      expect(layout.idCounts).toEqual([1, 1, 1, 1, 1, 1]);
+      expect(layout.ordered).toBe(true);
+      expect(layout.studioAlias).toEqual({ parent: 'about', ariaHidden: 'true' });
+      expect(layout.about).toEqual({
+        name: 'טל צור',
+        imageAlt: 'טל צור עומד בחליפת חלל על נוף ירחי',
+        imageSrc: 'p/tal/tal-lunar-1920.webp',
+        sourceSrcsets: [
+          'p/tal/tal-lunar-mobile-900.avif',
+          'p/tal/tal-lunar-mobile-900.webp',
+          'p/tal/tal-lunar-1920.avif'
+        ],
+        sourceMedia: [
+          '(max-width: 980px) and (orientation: portrait)',
+          '(max-width: 980px) and (orientation: portrait)',
+          null
+        ]
+      });
+      expect(layout.crewTransition).toEqual({
+        heading: 'שישה סוכני AI. בהובלת טל.',
+        body: 'כל אנשי הצוות ב־Moona הם סוכני AI מתמחים שנבנו בתוך הסטודיו.',
+        mediaCount: 0
+      });
+      expect(layout.sectionAfterFilm).toBe('work');
+      expect(layout.sectionAfterWork).toBe('about');
+      expect(layout.sectionAfterAbout).toBe('crew-intro');
+      expect(layout.crewNames).toEqual(['Alma', 'Nara', 'Luc', 'Vera', 'Sona', 'Ivo']);
+      expect(layout.crewNumbering).toBe(0);
+      expect(layout.crewCreditLabels).toEqual(Array(6).fill('AI CREW'));
+      expect(layout.crewColumns).toBe(width > 980 ? 3 : 1);
+      expect(layout.legacyCrewNavigation).toBe(0);
+      expect(layout.portraitSlots).toHaveLength(6);
+      for (const portrait of layout.portraitSlots) {
+        expect(portrait).toMatchObject({
+          ariaHidden: 'true',
+          childCount: 1,
+          aspectRatio: '10 / 11',
+          image: {
+            alt: '',
+            src: 'p/crew/crew-placeholder-960.webp',
+            width: '960',
+            height: '1200',
+            loading: 'lazy',
+            decoding: 'async',
+            objectFit: 'cover'
+          }
+        });
+        expect(portrait.image.srcset).toContain('crew-placeholder-1600.webp 1600w');
+        expect(portrait.image.sizes).toContain('(max-width:760px)');
+        expect(portrait.avifSrcset).toContain('crew-placeholder-1600.avif 1600w');
+        expect(portrait.renderedRatio).toBeCloseTo(10 / 11, 2);
+      }
+      expect(layout.workCards).toBe(4);
+      expect(layout.workColumns).toBe(width > 760 ? 2 : 1);
+      expect(layout.retiredWorkDetails).toBe(0);
+      expect(layout.legacy).toEqual({
+        ctagalRendered: false,
+        marqueeRendered: false,
+        sentenceRendered: false
+      });
+      expect(layout.staleRenderedCopy).toBe(false);
       expect(layout.overflow).toBeLessThanOrEqual(0);
-      if (width <= 860) expect(layout.showcase.top).toBeGreaterThan(layout.intro.bottom);
+    }
+  });
+
+  test('page rhythm and heading hierarchy stay stable across responsive sizes', async ({ page }) => {
+    const viewports = [
+      { width: 320, height: 568 },
+      { width: 360, height: 800 },
+      { width: 390, height: 844, baseline: 'mobile' },
+      { width: 768, height: 1024 },
+      { width: 918, height: 1022 },
+      { width: 1024, height: 768 },
+      { width: 844, height: 390 },
+      { width: 1440, height: 900, baseline: 'desktop' }
+    ];
+
+    for (const viewport of viewports) {
+      await page.setViewportSize({ width: viewport.width, height: viewport.height });
+      await openHome(page, '/?lang=en');
+      await page.locator('#about').scrollIntoViewIfNeeded();
+      await expect(page.locator('.about-copy')).toHaveClass(/seen/);
+      await expect(page.locator('.about-copy')).toHaveCSS('transform', 'none');
+      const layout = await page.evaluate(async () => {
+        await document.fonts.ready;
+        const px = value => Number.parseFloat(value);
+        const style = selector => getComputedStyle(document.querySelector(selector));
+        const rect = selector => document.querySelector(selector).getBoundingClientRect();
+        const levels = [...document.querySelectorAll('body h1, body h2, body h3')]
+          .map(heading => Number(heading.tagName.slice(1)));
+        const labelledSections = ['film', 'work', 'about', 'crew-intro', 'crew', 'contact'].map(id => {
+          const section = document.getElementById(id);
+          const labelId = section.getAttribute('aria-labelledby');
+          return {
+            id,
+            labelId,
+            labelTag: document.getElementById(labelId)?.tagName || null
+          };
+        });
+        const junction = (before, after) => Math.abs(rect(after).top - rect(before).bottom);
+        const about = document.querySelector('#about');
+        const aboutLayout = document.querySelector('.about-layout');
+        const aboutCopy = document.querySelector('.about-copy');
+        const aboutMedia = document.querySelector('.about-media');
+        const aboutImage = aboutMedia.querySelector('img');
+        const aboutRect = about.getBoundingClientRect();
+        const aboutLayoutRect = aboutLayout.getBoundingClientRect();
+        const aboutCopyRect = aboutCopy.getBoundingClientRect();
+        const aboutMediaRect = aboutMedia.getBoundingClientRect();
+        const aboutImageRect = aboutImage.getBoundingClientRect();
+        const aboutCopyStyle = getComputedStyle(aboutCopy);
+        const aboutMediaStyle = getComputedStyle(aboutMedia);
+        const aboutImageStyle = getComputedStyle(aboutImage);
+        const aboutScrimStyle = getComputedStyle(aboutLayout, '::after');
+        const aboutCopyBackdrop = aboutCopyStyle.backdropFilter || aboutCopyStyle.webkitBackdropFilter || 'none';
+        const intersectionWidth = Math.max(0, Math.min(aboutCopyRect.right, aboutMediaRect.right) - Math.max(aboutCopyRect.left, aboutMediaRect.left));
+        const intersectionHeight = Math.max(0, Math.min(aboutCopyRect.bottom, aboutMediaRect.bottom) - Math.max(aboutCopyRect.top, aboutMediaRect.top));
+
+        return {
+          overflow: document.documentElement.scrollWidth - innerWidth,
+          h1Count: document.querySelectorAll('body h1').length,
+          headingSkip: levels.some((level, index) => index > 0 && level > levels[index - 1] + 1),
+          labelledSections,
+          junctions: {
+            filmWork: junction('#film', '#work'),
+            workAbout: junction('#work', '#about'),
+            aboutCrewIntro: junction('#about', '#crew-intro'),
+            crewIntroCrew: junction('#crew-intro', '#crew'),
+            crewContact: junction('#crew', '#contact')
+          },
+          spacing: {
+            crewIntroCopyTop: px(style('.crew-transition-copy').paddingTop),
+            crewIntroCopyBottom: px(style('.crew-transition-copy').paddingBottom),
+            crewTop: px(style('#crew').paddingTop),
+            crewBottom: px(style('#crew').paddingBottom),
+            workTop: px(style('#work').paddingTop),
+            workBottom: px(style('#work').paddingBottom),
+            contactTop: px(style('#contact').paddingTop),
+            contactBottom: px(style('#contact').paddingBottom)
+          },
+          aboutSplit: {
+            imageLoaded: aboutImage.complete && aboutImage.naturalWidth > 0,
+            imageObjectFit: getComputedStyle(aboutImage).objectFit,
+            imageFillsMedia:
+              Math.abs(aboutImageRect.left - aboutMediaRect.left) <= 1 &&
+              Math.abs(aboutImageRect.top - aboutMediaRect.top) <= 1 &&
+              Math.abs(aboutImageRect.right - aboutMediaRect.right) <= 1 &&
+              Math.abs(aboutImageRect.bottom - aboutMediaRect.bottom) <= 1,
+            mediaInsideSection:
+              aboutMediaRect.left >= aboutRect.left - 1 &&
+              aboutMediaRect.top >= aboutRect.top - 1 &&
+              aboutMediaRect.right <= aboutRect.right + 1 &&
+              aboutMediaRect.bottom <= aboutRect.bottom + 1,
+            mediaCoversSection:
+              Math.abs(aboutMediaRect.left - aboutRect.left) <= 1 &&
+              Math.abs(aboutMediaRect.top - aboutRect.top) <= 1 &&
+              Math.abs(aboutMediaRect.right - aboutRect.right) <= 1 &&
+              Math.abs(aboutMediaRect.bottom - aboutRect.bottom) <= 1,
+            layoutCoversSection:
+              Math.abs(aboutLayoutRect.left - aboutRect.left) <= 1 &&
+              Math.abs(aboutLayoutRect.top - aboutRect.top) <= 1 &&
+              Math.abs(aboutLayoutRect.right - aboutRect.right) <= 1 &&
+              Math.abs(aboutLayoutRect.bottom - aboutRect.bottom) <= 1,
+            copyInsideSection:
+              aboutCopyRect.left >= aboutRect.left - 1 &&
+              aboutCopyRect.top >= aboutRect.top - 1 &&
+              aboutCopyRect.right <= aboutRect.right + 1 &&
+              aboutCopyRect.bottom <= aboutRect.bottom + 1,
+            copyMediaOverlapRatio:
+              (intersectionWidth * intersectionHeight) / (aboutCopyRect.width * aboutCopyRect.height),
+            copyOverflowX: aboutCopy.scrollWidth - aboutCopy.clientWidth,
+            copyOverflowY: aboutCopy.scrollHeight - aboutCopy.clientHeight,
+            horizontalSeparation:
+              aboutMediaRect.right <= aboutCopyRect.left + 1 ||
+              aboutCopyRect.right <= aboutMediaRect.left + 1,
+            verticalOverlapRatio: intersectionHeight / Math.min(aboutCopyRect.height, aboutMediaRect.height),
+            copyAfterMedia: aboutCopyRect.top >= aboutMediaRect.bottom - 1,
+            copyStartRatio: (aboutCopyRect.top - aboutRect.top) / aboutRect.height,
+            mediaWidthRatio: aboutMediaRect.width / aboutRect.width,
+            sectionAtLeastViewport: aboutRect.height >= innerHeight - 1,
+            imageObjectPosition: aboutImageStyle.objectPosition,
+            mediaBorderRadius: px(aboutMediaStyle.borderTopLeftRadius),
+            scrimBackgroundImage: aboutScrimStyle.backgroundImage,
+            copyBackgroundImage: aboutCopyStyle.backgroundImage,
+            copyBackgroundColor: aboutCopyStyle.backgroundColor,
+            copyBorderWidth: px(aboutCopyStyle.borderTopWidth),
+            copyBorderRadius: px(aboutCopyStyle.borderTopLeftRadius),
+            hasDepth:
+              aboutCopyStyle.boxShadow !== 'none' ||
+              aboutCopyBackdrop !== 'none'
+          },
+          type: {
+            hero: px(style('.statement').fontSize),
+            film: px(style('.film-title').fontSize),
+            about: px(style('.about-copy h2').fontSize),
+            crewIntro: px(style('.crew-transition h2').fontSize),
+            crew: px(style('.crew-head h2').fontSize),
+            contact: px(style('.contact-line').fontSize)
+          },
+          editorialGrid: {
+            workHeadLeft: rect('.work-head').left,
+            workHeadRight: rect('.work-head').right,
+            workGridLeft: rect('.work-grid').left,
+            workGridRight: rect('.work-grid').right,
+            crewGridWidth: rect('.crew-grid').width,
+            crewColumns: style('.crew-grid').gridTemplateColumns.split(/\s+/).filter(Boolean).length,
+            crewCardWidth: rect('.crew-card').width,
+            crewColumnGap: px(style('.crew-grid').columnGap)
+          }
+        };
+      });
+
+      expect(layout.overflow).toBeLessThanOrEqual(1);
+      expect(layout.h1Count).toBe(1);
+      expect(layout.headingSkip).toBe(false);
+      expect(layout.labelledSections).toEqual([
+        { id: 'film', labelId: 'film-title', labelTag: 'H2' },
+        { id: 'work', labelId: 'work-title', labelTag: 'H2' },
+        { id: 'about', labelId: 'about-title', labelTag: 'H2' },
+        { id: 'crew-intro', labelId: 'crew-transition-title', labelTag: 'H2' },
+        { id: 'crew', labelId: 'crew-title', labelTag: 'H2' },
+        { id: 'contact', labelId: 'contact-title', labelTag: 'H2' }
+      ]);
+      Object.values(layout.junctions).forEach(gap => expect(gap).toBeLessThanOrEqual(1));
+      expect(layout.aboutSplit.imageLoaded).toBe(true);
+      expect(layout.aboutSplit.imageObjectFit).toBe('cover');
+      expect(layout.aboutSplit.imageFillsMedia).toBe(true);
+      expect(layout.aboutSplit.mediaInsideSection).toBe(true);
+      expect(layout.aboutSplit.copyInsideSection).toBe(true);
+      expect(layout.aboutSplit.copyOverflowX).toBeLessThanOrEqual(1);
+      expect(layout.aboutSplit.copyOverflowY).toBeLessThanOrEqual(1);
+      expect(layout.aboutSplit.copyBackgroundImage).toBe('none');
+      expect(layout.aboutSplit.copyBackgroundColor).toBe('rgba(0, 0, 0, 0)');
+      expect(layout.aboutSplit.copyBorderWidth).toBe(0);
+      expect(layout.aboutSplit.copyBorderRadius).toBe(0);
+      expect(layout.aboutSplit.hasDepth).toBe(false);
+      const isPortraitPhone = viewport.width <= 760 && viewport.height > viewport.width;
+      if (isPortraitPhone) {
+        expect(layout.aboutSplit.copyMediaOverlapRatio).toBeGreaterThanOrEqual(.99);
+        expect(layout.aboutSplit.mediaCoversSection).toBe(true);
+        expect(layout.aboutSplit.layoutCoversSection).toBe(true);
+        expect(layout.aboutSplit.sectionAtLeastViewport).toBe(true);
+        expect(layout.aboutSplit.mediaWidthRatio).toBeCloseTo(1, 2);
+        expect(layout.aboutSplit.mediaBorderRadius).toBe(0);
+        expect(layout.aboutSplit.scrimBackgroundImage).toContain('linear-gradient');
+        expect(layout.aboutSplit.imageObjectPosition).toBe('30% 50%');
+        expect(layout.aboutSplit.copyStartRatio).toBeGreaterThan(.35);
+      } else {
+        expect(layout.aboutSplit.copyMediaOverlapRatio).toBeLessThanOrEqual(.002);
+        expect(layout.aboutSplit.horizontalSeparation).toBe(true);
+        expect(layout.aboutSplit.verticalOverlapRatio).toBeGreaterThan(.6);
+        expect(layout.aboutSplit.mediaWidthRatio).toBeGreaterThan(.42);
+      }
+      const expectedCrewColumns = viewport.width <= 760 ? 1 : viewport.width <= 980 ? 2 : 3;
+      expect(layout.editorialGrid.crewColumns).toBe(expectedCrewColumns);
+      expect(layout.editorialGrid.crewCardWidth).toBeCloseTo(
+        (layout.editorialGrid.crewGridWidth - layout.editorialGrid.crewColumnGap * (expectedCrewColumns - 1)) / expectedCrewColumns,
+        1
+      );
+
+      if (viewport.baseline === 'mobile') {
+        expect(layout.spacing).toEqual({
+          crewIntroCopyTop: 82,
+          crewIntroCopyBottom: 92,
+          crewTop: 92,
+          crewBottom: 110,
+          workTop: 100,
+          workBottom: 100,
+          contactTop: 110,
+          contactBottom: 60
+        });
+        expect(layout.type).toMatchObject({ hero: 34, film: 30, crewIntro: 50, crew: 54, contact: 56 });
+        expect(layout.type.about).toBeCloseTo(46.8, 1);
+        expect(layout.editorialGrid.crewGridWidth).toBeCloseTo(viewport.width - 44, 1);
+        expect(layout.editorialGrid.crewCardWidth).toBeCloseTo(viewport.width - 44, 1);
+      }
+
+      if (viewport.baseline === 'desktop') {
+        expect(layout.spacing.crewIntroCopyTop).toBeCloseTo(135, 1);
+        expect(layout.spacing.crewIntroCopyBottom).toBeCloseTo(90, 1);
+        expect(layout.spacing.crewTop).toBeCloseTo(187.2, 1);
+        expect(layout.spacing.crewBottom).toBeCloseTo(201.6, 1);
+        expect(layout.spacing.workTop).toBeCloseTo(201.6, 1);
+        expect(layout.spacing.workBottom).toBeCloseTo(201.6, 1);
+        expect(layout.spacing.contactTop).toBeCloseTo(180, 1);
+        expect(layout.spacing.contactBottom).toBeCloseTo(60, 1);
+        expect(layout.type.hero).toBeCloseTo(82, 1);
+        expect(layout.type.film).toBeCloseTo(58, 1);
+        expect(layout.type.about).toBeCloseTo(108, 1);
+        expect(layout.type.crewIntro).toBeCloseTo(90.72, 1);
+        expect(layout.type.crew).toBeCloseTo(86.4, 1);
+        expect(layout.type.contact).toBeCloseTo(115.2, 1);
+        expect(layout.editorialGrid.workHeadLeft).toBeCloseTo(layout.editorialGrid.workGridLeft, 1);
+        expect(layout.editorialGrid.workHeadRight).toBeCloseTo(layout.editorialGrid.workGridRight, 1);
+        expect(layout.editorialGrid.crewGridWidth).toBeCloseTo(viewport.width * .9, 1);
+      }
+    }
+  });
+
+  test('short landscape About deep links reveal the complete split composition', async ({ page }) => {
+    await page.setViewportSize({ width: 844, height: 390 });
+
+    for (const locale of ['en', 'he']) {
+      await openHome(page, `/?lang=${locale}#about`);
+      const copy = page.locator('.about-copy');
+      await expect(copy).toHaveClass(/seen/);
+      await expect(copy).toHaveCSS('opacity', '1');
+
+      const layout = await page.evaluate(() => {
+        const about = document.querySelector('#about').getBoundingClientRect();
+        const copy = document.querySelector('.about-copy');
+        const media = document.querySelector('.about-media');
+        const image = media.querySelector('img');
+        const copyRect = copy.getBoundingClientRect();
+        const mediaRect = media.getBoundingClientRect();
+        return {
+          aboutTop: about.top,
+          copyContained: copyRect.left >= about.left - 1 && copyRect.top >= about.top - 1 &&
+            copyRect.right <= about.right + 1 && copyRect.bottom <= about.bottom + 1,
+          mediaContained: mediaRect.left >= about.left - 1 && mediaRect.top >= about.top - 1 &&
+            mediaRect.right <= about.right + 1 && mediaRect.bottom <= about.bottom + 1,
+          horizontallySeparated: copyRect.right <= mediaRect.left + 1 || mediaRect.right <= copyRect.left + 1,
+          copyVisible: copyRect.top >= 0 && copyRect.bottom <= innerHeight,
+          mediaVisible: mediaRect.top >= 0 && mediaRect.bottom <= innerHeight,
+          copyFits: copy.scrollWidth <= copy.clientWidth + 1 && copy.scrollHeight <= copy.clientHeight + 1,
+          imageLoaded: image.complete && image.naturalWidth > 0,
+          overflow: document.documentElement.scrollWidth - innerWidth
+        };
+      });
+
+      expect(Math.abs(layout.aboutTop)).toBeLessThanOrEqual(2);
+      expect(layout.copyContained).toBe(true);
+      expect(layout.mediaContained).toBe(true);
+      expect(layout.horizontallySeparated).toBe(true);
+      expect(layout.copyVisible).toBe(true);
+      expect(layout.mediaVisible).toBe(true);
+      expect(layout.copyFits).toBe(true);
+      expect(layout.imageLoaded).toBe(true);
+      expect(layout.overflow).toBeLessThanOrEqual(1);
+    }
+  });
+
+  test('founder composition overlays portrait phones and stays disjoint elsewhere', async ({ page }) => {
+    for (const locale of ['en', 'he']) {
+      for (const viewport of [
+        { width: 320, height: 568 },
+        { width: 360, height: 800 },
+        { width: 390, height: 844 },
+        { width: 568, height: 320 },
+        { width: 768, height: 1024 },
+        { width: 918, height: 1022 },
+        { width: 1440, height: 900 }
+      ]) {
+        await page.setViewportSize(viewport);
+        await openHome(page, `/?lang=${locale}#about`);
+        const copy = page.locator('.about-copy');
+        await copy.scrollIntoViewIfNeeded();
+        await expect(copy).toHaveClass(/seen/);
+        await expect(copy).toHaveCSS('transform', 'none');
+        const split = await page.evaluate(() => {
+          const about = document.querySelector('#about');
+          const layout = document.querySelector('.about-layout');
+          const copy = document.querySelector('.about-copy');
+          const media = document.querySelector('.about-media');
+          const image = media.querySelector('img');
+          const aboutRect = about.getBoundingClientRect();
+          const layoutRect = layout.getBoundingClientRect();
+          const copyRect = copy.getBoundingClientRect();
+          const mediaRect = media.getBoundingClientRect();
+          const style = getComputedStyle(copy);
+          const mediaStyle = getComputedStyle(media);
+          const imageStyle = getComputedStyle(image);
+          const scrimStyle = getComputedStyle(layout, '::after');
+          const overlapWidth = Math.max(0, Math.min(copyRect.right, mediaRect.right) - Math.max(copyRect.left, mediaRect.left));
+          const overlapHeight = Math.max(0, Math.min(copyRect.bottom, mediaRect.bottom) - Math.max(copyRect.top, mediaRect.top));
+          return {
+            portraitMobile: matchMedia('(max-width:760px) and (orientation:portrait)').matches,
+            direction: style.direction,
+            background: style.backgroundColor,
+            borderWidth: Number.parseFloat(style.borderTopWidth),
+            shadow: style.boxShadow,
+            backdrop: style.backdropFilter || style.webkitBackdropFilter,
+            overlapRatio: overlapWidth * overlapHeight / (copyRect.width * copyRect.height),
+            copyContained:
+              copyRect.left >= aboutRect.left - 1 &&
+              copyRect.top >= aboutRect.top - 1 &&
+              copyRect.right <= aboutRect.right + 1 &&
+              copyRect.bottom <= aboutRect.bottom + 1,
+            mediaFullBleed:
+              Math.abs(mediaRect.left - aboutRect.left) <= 1 &&
+              Math.abs(mediaRect.top - aboutRect.top) <= 1 &&
+              Math.abs(mediaRect.right - aboutRect.right) <= 1 &&
+              Math.abs(mediaRect.bottom - aboutRect.bottom) <= 1,
+            layoutFullBleed:
+              Math.abs(layoutRect.left - aboutRect.left) <= 1 &&
+              Math.abs(layoutRect.top - aboutRect.top) <= 1 &&
+              Math.abs(layoutRect.right - aboutRect.right) <= 1 &&
+              Math.abs(layoutRect.bottom - aboutRect.bottom) <= 1,
+            sectionAtLeastViewport: aboutRect.height >= innerHeight - 1,
+            copyStartRatio: (copyRect.top - aboutRect.top) / aboutRect.height,
+            mediaBorderRadius: Number.parseFloat(mediaStyle.borderTopLeftRadius),
+            scrimBackgroundImage: scrimStyle.backgroundImage,
+            scrimPointerEvents: scrimStyle.pointerEvents,
+            imageObjectPosition: imageStyle.objectPosition,
+            imageTransform: imageStyle.transform,
+            headingSize: Number.parseFloat(getComputedStyle(copy.querySelector('h2')).fontSize),
+            bodySize: Number.parseFloat(getComputedStyle(copy.querySelector('.about-body')).fontSize),
+            copyAfterMedia: copyRect.top >= mediaRect.bottom - 1,
+            copyBeforeMedia: copyRect.right <= mediaRect.left + 1,
+            copyAfterMediaHorizontally: mediaRect.right <= copyRect.left + 1,
+            overflow: document.documentElement.scrollWidth - innerWidth
+          };
+        });
+
+        expect(split.direction).toBe(locale === 'he' ? 'rtl' : 'ltr');
+        expect(split.background).toBe('rgba(0, 0, 0, 0)');
+        expect(split.borderWidth).toBe(0);
+        expect(split.shadow).toBe('none');
+        expect(split.backdrop).toBe('none');
+        expect(split.copyContained).toBe(true);
+        expect(split.overflow).toBeLessThanOrEqual(1);
+        expect(split.imageTransform).toBe('none');
+        if (split.portraitMobile) {
+          expect(split.overlapRatio).toBeGreaterThanOrEqual(.99);
+          expect(split.copyAfterMedia).toBe(false);
+          expect(split.mediaFullBleed).toBe(true);
+          expect(split.layoutFullBleed).toBe(true);
+          expect(split.sectionAtLeastViewport).toBe(true);
+          expect(split.mediaBorderRadius).toBe(0);
+          expect(split.scrimBackgroundImage).toContain('linear-gradient');
+          expect(split.scrimPointerEvents).toBe('none');
+          expect(split.imageObjectPosition).toBe(locale === 'he' ? '70% 50%' : '30% 50%');
+          expect(split.copyStartRatio).toBeGreaterThan(.35);
+          expect(split.headingSize).toBeGreaterThanOrEqual(42);
+          expect(split.headingSize).toBeLessThanOrEqual(48);
+          expect(split.bodySize).toBeGreaterThanOrEqual(15);
+          expect(split.bodySize).toBeLessThanOrEqual(16);
+        } else {
+          expect(split.overlapRatio).toBeLessThanOrEqual(.002);
+          expect(split.scrimBackgroundImage).toBe('none');
+          if (viewport.width <= 760) {
+            expect(split.copyAfterMedia).toBe(true);
+          } else if (locale === 'he') {
+            expect(split.copyAfterMediaHorizontally).toBe(true);
+          } else {
+            expect(split.copyBeforeMedia).toBe(true);
+          }
+        }
+      }
     }
   });
 
@@ -736,7 +1318,13 @@ test.describe('responsive header and dynamic UI', () => {
     await piece.evaluate(element => element.scrollIntoView({ block: 'center' }));
     await expect.poll(() => video.evaluate(element => element.paused)).toBe(false);
 
-    await piece.locator('[data-media-play]').click();
+    /* Keep the playback state and the click in one task. Playwright's actionability
+       wait can otherwise overlap the scroll-idle observer and invert the button. */
+    await piece.evaluate(async element => {
+      const media = element.querySelector('video');
+      if (media.paused) await media.play();
+      element.querySelector('[data-media-play]').click();
+    });
     await expect(piece).toHaveAttribute('data-user-paused', '1');
     await expect.poll(() => video.evaluate(element => element.paused)).toBe(true);
     await page.evaluate(() => window.scrollTo(0, 0));
@@ -849,92 +1437,267 @@ test.describe('responsive header and dynamic UI', () => {
     expect(result).toEqual({ playCalls: 1, readinessListeners: 4 });
   });
 
-  test('header targets remain separated and contained at the approved widths', async ({ page }) => {
-    const widths = [360, 375, 385, 386, 387, 390, 1440];
+  test('header contact CTA follows the hero without crowding the approved widths', async ({ page }) => {
+    test.setTimeout(120_000);
+    const widths = [320, 360, 375, 385, 386, 387, 390, 700, 701, 768, 1440];
+    const readLayout = () => page.evaluate(async () => {
+      await document.fonts.ready;
+      const rect = element => {
+        const value = element.getBoundingClientRect();
+        return { left: value.left, right: value.right, top: value.top, bottom: value.bottom, width: value.width, height: value.height };
+      };
+      const header = document.getElementById('hdr');
+      const lockup = header.querySelector('.lockup');
+      const headerLinks = header.querySelector('.header-links');
+      const headerActions = header.querySelector('.header-actions');
+      const language = header.querySelector('[data-language-toggle]');
+      const contactCta = header.querySelector('[data-header-contact-cta]');
+      const heroCta = document.querySelector('[data-hero-contact-cta]');
+      const isVisible = element => {
+        const style = getComputedStyle(element);
+        return style.display !== 'none' && style.visibility !== 'hidden' && element.getClientRects().length > 0;
+      };
+      const ctaContract = element => {
+        const style = getComputedStyle(element);
+        const arrow = getComputedStyle(element.querySelector('i'));
+        const glow = getComputedStyle(element, '::before');
+        return {
+          shared: {
+            borderRadius: style.borderRadius,
+            borderTopWidth: style.borderTopWidth,
+            borderTopStyle: style.borderTopStyle,
+            borderTopColor: style.borderTopColor,
+            backgroundImage: style.backgroundImage,
+            backgroundClip: style.backgroundClip,
+            backgroundOrigin: style.backgroundOrigin,
+            backgroundSize: style.backgroundSize,
+            color: style.color,
+            fontFamily: style.fontFamily,
+            fontWeight: style.fontWeight,
+            textTransform: style.textTransform,
+            whiteSpace: style.whiteSpace,
+            arrowBorderTopColor: arrow.borderTopColor,
+            arrowBorderRightColor: arrow.borderRightColor,
+            glowDisplay: glow.display,
+            glowBackgroundImage: glow.backgroundImage,
+            glowFilter: glow.filter
+          },
+          height: element.getBoundingClientRect().height,
+          fontSize: style.fontSize,
+          letterSpacing: style.letterSpacing,
+          arrowDirection: new DOMMatrix(arrow.transform).a
+        };
+      };
+      const visibleTargets = [...header.querySelectorAll('a, button')]
+        .filter(isVisible).map(rect).sort((a, b) => a.left - b.left);
+      const visibleLinkTargets = [...headerLinks.querySelectorAll('button')]
+        .filter(isVisible).map(rect).sort((a, b) => a.left - b.left);
+      const visibleActionTargets = [...headerActions.querySelectorAll('button')]
+        .filter(isVisible).map(rect).sort((a, b) => a.left - b.left);
+      const visibleGroups = [lockup, headerLinks, headerActions]
+        .filter(isVisible).map(rect).sort((a, b) => a.left - b.left);
+      const wordmark = lockup.querySelector('.lockup-wordmark');
+      const mark = lockup.querySelector('.lockup-mark');
+      return {
+        viewport: innerWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+        header: rect(header),
+        headerPosition: getComputedStyle(header).position,
+        headerHasCta: header.classList.contains('has-header-cta'),
+        lockup: rect(lockup),
+        wordmark: rect(wordmark),
+        wordmarkDisplay: getComputedStyle(wordmark).display,
+        wordmarkSrc: wordmark.getAttribute('src'),
+        mark: rect(mark),
+        markDisplay: getComputedStyle(mark).display,
+        markSrc: mark.getAttribute('src'),
+        headerLinks: rect(headerLinks),
+        headerActions: rect(headerActions),
+        language: rect(language),
+        contactCta: rect(contactCta),
+        contactCtaVisible: isVisible(contactCta),
+        contactCtaContract: ctaContract(contactCta),
+        heroCtaContract: ctaContract(heroCta),
+        visibleTargets,
+        visibleLinkTargets,
+        visibleActionTargets,
+        visibleGroups,
+        headerLinksDisplay: getComputedStyle(headerLinks).display,
+        menuToggleDisplay: getComputedStyle(headerActions.querySelector('[data-mobile-menu-toggle]')).display,
+        sectionRendered: [...headerLinks.querySelectorAll('.nav-section')].map(isVisible),
+        navLetterSpacing: getComputedStyle(headerLinks.querySelector('[data-goto]')).letterSpacing,
+        containerType: getComputedStyle(header).containerType
+      };
+    });
+    const assertContained = (layout, label) => {
+      expect(layout.scrollWidth, `${label} horizontal overflow`).toBeLessThanOrEqual(layout.viewport);
+      expect(layout.headerPosition).toBe('fixed');
+      expect(layout.containerType).toBe('inline-size');
+      expect(layout.lockup.width).toBeGreaterThanOrEqual(44);
+      expect(layout.lockup.height).toBeGreaterThanOrEqual(44);
+      for (const target of layout.visibleTargets) {
+        expect(target.width, `${label} target width`).toBeGreaterThanOrEqual(44);
+        expect(target.height, `${label} target height`).toBeGreaterThanOrEqual(44);
+      }
+      for (const target of [layout.lockup, layout.headerActions]) {
+        expect(target.left, `${label} left containment`).toBeGreaterThanOrEqual(-0.5);
+        expect(target.right, `${label} right containment`).toBeLessThanOrEqual(layout.viewport + 0.5);
+      }
+      for (let index = 1; index < layout.visibleGroups.length; index += 1) {
+        expect(layout.visibleGroups[index].left - layout.visibleGroups[index - 1].right, `${label} group spacing`).toBeGreaterThanOrEqual(6);
+      }
+      for (const targets of [layout.visibleLinkTargets, layout.visibleActionTargets]) {
+        for (let index = 1; index < targets.length; index += 1) {
+          expect(targets[index].left - targets[index - 1].right, `${label} target spacing`).toBeGreaterThanOrEqual(6);
+        }
+      }
+    };
+
     for (const locale of ['en', 'he']) {
       for (const width of widths) {
+        const mobile = width <= 700;
         await page.setViewportSize({ width, height: width === 1440 ? 900 : 844 });
         await page.goto(`/?lang=${locale}`);
         await waitForI18n(page);
-        const layout = await page.evaluate(async () => {
-          await document.fonts.ready;
-          const rect = element => {
-            const value = element.getBoundingClientRect();
-            return { left: value.left, right: value.right, top: value.top, bottom: value.bottom, width: value.width, height: value.height };
-          };
-          const header = document.getElementById('hdr');
-          const lockup = header.querySelector('.lockup');
-          const nav = header.querySelector('nav');
-          const buttons = [...nav.children]
-            .filter(element => element.tagName === 'BUTTON' && getComputedStyle(element).display !== 'none')
-            .map(rect).sort((a, b) => a.left - b.left);
-          return {
-            viewport: innerWidth,
-            scrollWidth: document.documentElement.scrollWidth,
-            header: rect(header),
-            lockup: rect(lockup),
-            nav: rect(nav),
-            buttons,
-            toggle: rect(nav.querySelector('[data-language-toggle]')),
-            menuToggleDisplay: getComputedStyle(nav.querySelector('[data-mobile-menu-toggle]')).display,
-            sectionDisplays: [...nav.querySelectorAll(':scope > .nav-section')].map(element => getComputedStyle(element).display),
-            wordmarkDisplay: getComputedStyle(lockup.querySelector('.lockup-name')).display,
-            navLetterSpacing: getComputedStyle(nav.querySelector('[data-goto]')).letterSpacing,
-            containerType: getComputedStyle(header).containerType
-          };
-        });
+        const headerCta = page.locator('[data-header-contact-cta]');
+        await expect(headerCta).toBeHidden();
 
-        expect(layout.scrollWidth, `${locale} ${width}px horizontal overflow`).toBeLessThanOrEqual(layout.viewport);
-        expect(layout.containerType).toBe('inline-size');
-        expect(layout.lockup.width).toBeGreaterThanOrEqual(44);
-        expect(layout.lockup.height).toBeGreaterThanOrEqual(44);
-        for (const target of layout.buttons) {
-          expect(target.width).toBeGreaterThanOrEqual(44);
-          expect(target.height).toBeGreaterThanOrEqual(44);
+        const atHero = await readLayout();
+        assertContained(atHero, `${locale} ${width}px hero`);
+        expect(atHero.headerHasCta).toBe(false);
+        expect(atHero.contactCtaVisible).toBe(false);
+        expect(atHero.wordmarkDisplay).not.toBe('none');
+        expect(atHero.markDisplay).toBe('none');
+        expect(atHero.wordmarkSrc).toBe('p/brand/moona-logo-lockup.svg');
+        expect(atHero.markSrc).toBe('p/brand/moona-logo-mark.svg');
+
+        await page.evaluate(() => {
+          const hero = document.getElementById('hero-track');
+          window.scrollTo(0, hero.offsetTop + hero.offsetHeight - innerHeight / 2);
+        });
+        await expect(headerCta).toBeHidden();
+
+        await page.evaluate(() => {
+          const hero = document.getElementById('hero-track');
+          window.scrollTo(0, hero.offsetTop + hero.offsetHeight + 2);
+        });
+        await expect(headerCta).toBeVisible();
+        await expect(headerCta).toHaveText(locale === 'he' ? 'בואו נדבר' : 'LET’S TALK');
+
+        const belowHero = await readLayout();
+        assertContained(belowHero, `${locale} ${width}px below hero`);
+        expect(belowHero.headerHasCta).toBe(true);
+        expect(belowHero.contactCtaVisible).toBe(true);
+        expect(belowHero.header.height).toBeCloseTo(atHero.header.height, 0);
+        expect(belowHero.contactCtaContract.shared).toEqual(belowHero.heroCtaContract.shared);
+        expect(belowHero.contactCtaContract.shared.borderRadius).toBe('999px');
+        expect(belowHero.contactCtaContract.shared.backgroundImage).not.toBe('none');
+        expect(belowHero.contactCtaContract.shared.glowDisplay).not.toBe('none');
+        expect(belowHero.contactCtaContract.shared.glowBackgroundImage).not.toBe('none');
+        expect(belowHero.contactCtaContract.height).toBeGreaterThanOrEqual(44);
+        expect(belowHero.heroCtaContract.height).toBeGreaterThanOrEqual(44);
+        expect(belowHero.contactCtaContract.height).toBeLessThan(belowHero.heroCtaContract.height);
+        expect(Math.sign(belowHero.contactCtaContract.arrowDirection)).toBe(locale === 'he' ? -1 : 1);
+        expect(Math.sign(belowHero.heroCtaContract.arrowDirection)).toBe(locale === 'he' ? -1 : 1);
+        if (locale === 'he') {
+          expect(belowHero.contactCtaContract.shared.fontFamily).toContain('Assistant');
+          expect(['0px', 'normal']).toContain(belowHero.contactCtaContract.letterSpacing);
+          expect(['0px', 'normal']).toContain(belowHero.heroCtaContract.letterSpacing);
         }
-        expect(layout.lockup.left).toBeGreaterThanOrEqual(-0.5);
-        expect(layout.nav.left).toBeGreaterThanOrEqual(-0.5);
-        expect(layout.lockup.right).toBeLessThanOrEqual(layout.viewport + 0.5);
-        expect(layout.nav.right).toBeLessThanOrEqual(layout.viewport + 0.5);
-        const topLevel = [layout.lockup, layout.nav].sort((a, b) => a.left - b.left);
-        expect(topLevel[1].left - topLevel[0].right).toBeGreaterThanOrEqual(6);
-        for (let index = 1; index < layout.buttons.length; index += 1) {
-          expect(layout.buttons[index].left - layout.buttons[index - 1].right).toBeGreaterThanOrEqual(6);
+        const languageCtaGap = Math.max(
+          belowHero.language.left - belowHero.contactCta.right,
+          belowHero.contactCta.left - belowHero.language.right
+        );
+        expect(languageCtaGap, `${locale} ${width}px language/CTA adjacency`).toBeGreaterThanOrEqual(6);
+        expect(languageCtaGap, `${locale} ${width}px language/CTA adjacency`).toBeLessThanOrEqual(14);
+
+        expect(belowHero.menuToggleDisplay === 'none').toBe(!mobile);
+        expect(belowHero.headerLinksDisplay === 'none').toBe(mobile);
+        expect(belowHero.sectionRendered.every(Boolean)).toBe(!mobile);
+        expect(belowHero.wordmarkDisplay === 'none').toBe(mobile);
+        expect(belowHero.markDisplay === 'none').toBe(!mobile);
+        if (!mobile) {
+          expect(Math.abs((belowHero.headerLinks.left + belowHero.headerLinks.right) / 2 - belowHero.viewport / 2)).toBeLessThanOrEqual(2);
         }
-        expect(layout.wordmarkDisplay === 'none').toBe(width <= 386);
-        expect(layout.menuToggleDisplay === 'none').toBe(width > 700);
-        expect(layout.sectionDisplays.every(display => display === 'none')).toBe(width <= 700);
-        if (locale === 'he') expect(['0px', 'normal']).toContain(layout.navLetterSpacing);
+        if (locale === 'he') expect(['0px', 'normal']).toContain(belowHero.navLetterSpacing);
+
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await expect(headerCta).toBeHidden();
+        await expect(page.locator('#hdr')).not.toHaveClass(/has-header-cta/);
+        await expect(page.locator('.lockup-wordmark')).toBeVisible();
       }
     }
   });
 
-  test('single-beat hero leads to the work and mobile navigation stays accessible', async ({ page }) => {
+  test('production canvas hero opens contact and mobile navigation stays accessible', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await openHome(page, '/?lang=he');
+
+    await expect(page.locator('#sky')).toBeVisible();
+    await expect(page.locator('#moon')).toBeVisible();
+    await expect(page.locator('.statement')).toHaveText('סטודיו AI-native לסרטי מותג ופרסומות');
+    await expect(page.locator('.statement-sub span')).toHaveText([
+      'מקריאטיב ובימוי ועד הפקה ופוסט,',
+      'בשליטה מלאה על כל פריים.'
+    ]);
+    await expect(page.locator('.hero-cta')).toHaveText('בואו נדבר');
+    await expect(page.locator('#hud-chapter')).toHaveText('CH·01');
+    await expect(page.locator('#hud-progress')).toHaveText(/\d{3}/);
+    await expect(page.locator('.hero-media, .hero-media-video, .hero-media-fallback, .hero-brand-stage')).toHaveCount(0);
+
     const desktopHeroRatio = await page.locator('#hero-track').evaluate(element => element.offsetHeight / innerHeight);
     expect(desktopHeroRatio).toBeGreaterThanOrEqual(1.69);
     expect(desktopHeroRatio).toBeLessThanOrEqual(1.71);
     await expect(page.locator('[data-mobile-menu-toggle]')).toBeHidden();
 
     await page.locator('.hero-cta').click();
+    await expect(page.locator('#ask')).toHaveClass(/open/);
+    await expect(page.locator('#f-name')).toBeFocused();
+    await page.locator('#askClose').click();
     await expect(page.locator('#ask')).not.toHaveClass(/open/);
+    await expect(page.locator('.hero-cta')).toBeFocused();
+
+    await page.locator('.header-links [data-goto="crew-intro"]').click();
     await expect.poll(() => page.evaluate(() => {
-      const film = document.getElementById('film');
+      const intro = document.getElementById('crew-intro');
       const header = document.getElementById('hdr');
-      return Math.abs(film.getBoundingClientRect().top - header.offsetHeight);
+      return Math.abs(intro.getBoundingClientRect().top - header.offsetHeight);
     })).toBeLessThan(3);
+    await expect(page.locator('#crew-intro')).toBeFocused();
+    await expect(page.locator('#crew-intro')).toHaveCSS('outline-style', 'none');
+    const headerContactCta = page.locator('[data-header-contact-cta]');
+    await expect(headerContactCta).toBeVisible();
+    await headerContactCta.click();
+    await expect(page.locator('#ask')).toHaveClass(/open/);
+    await page.locator('#askClose').click();
+    await expect(headerContactCta).toBeFocused();
 
     await page.setViewportSize({ width: 390, height: 844 });
     await page.evaluate(() => window.scrollTo(0, 0));
     const mobileHero = await page.evaluate(() => ({
       ratio: document.getElementById('hero-track').offsetHeight / innerHeight,
       filmTop: document.getElementById('film').getBoundingClientRect().top,
-      viewport: innerHeight
+      viewport: innerHeight,
+      pageWidth: document.documentElement.scrollWidth,
+      viewportWidth: innerWidth
     }));
     expect(mobileHero.ratio).toBeGreaterThanOrEqual(.95);
     expect(mobileHero.ratio).toBeLessThanOrEqual(.97);
     expect(mobileHero.filmTop).toBeLessThan(mobileHero.viewport);
+    expect(mobileHero.pageWidth).toBeLessThanOrEqual(mobileHero.viewportWidth + 1);
+
+    const mobileFilmCorners = await page.locator('#film .film-stage').evaluate(stage => {
+      const frame = getComputedStyle(stage.querySelector('.film-frame'));
+      const soundOverlay = getComputedStyle(stage.querySelector('.film-soundcta'));
+      return {
+        frameRadii: [frame.borderTopLeftRadius, frame.borderTopRightRadius, frame.borderBottomRightRadius, frame.borderBottomLeftRadius],
+        soundRadii: [soundOverlay.borderTopLeftRadius, soundOverlay.borderTopRightRadius, soundOverlay.borderBottomRightRadius, soundOverlay.borderBottomLeftRadius],
+        clipPath: frame.clipPath
+      };
+    });
+    expect(new Set(mobileFilmCorners.frameRadii)).toEqual(new Set(['20px']));
+    expect(mobileFilmCorners.soundRadii).toEqual(mobileFilmCorners.frameRadii);
+    expect(mobileFilmCorners.clipPath).toBe('none');
 
     const menuToggle = page.locator('[data-mobile-menu-toggle]');
     await expect(menuToggle).toBeVisible();
@@ -959,7 +1722,7 @@ test.describe('responsive header and dynamic UI', () => {
 
   test('validation and uploaded-file labels rerender without losing files', async ({ page }) => {
     await openHome(page, '/?lang=en');
-    await page.evaluate(() => document.querySelector('[data-ask]').click());
+    await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
     await page.locator('[data-step="0"] [data-next]').click();
     await expect(page.locator('[data-step="0"] .qhint')).toHaveText('This one we need.');
     await page.evaluate(() => window.MoonaI18n.setLocale('he', { source: 'programmatic' }));
@@ -1013,8 +1776,7 @@ test.describe('responsive header and dynamic UI', () => {
     expect(initial.openLabelsValid).toBe(true);
 
     await page.evaluate(() => {
-      const item = document.querySelector('.mq .mq-track:not([aria-hidden]) .mq-item');
-      item.click();
+      document.querySelector('#work [data-media-open]').click();
     });
     await expect(page.locator('#lb')).toHaveClass(/open/);
     await page.locator('#lb .lb-stage > *').evaluate(element => { element.dataset.e2eStage = 'preserved'; });
@@ -1059,37 +1821,23 @@ test.describe('responsive header and dynamic UI', () => {
     await expect(page.locator('#lb .lb-stage > *')).toHaveAttribute('src', stageSource);
   });
 
-  test('RTL marquee keeps its physical LTR loop after a complete forced cycle', async ({ page }) => {
+  test('crew credits remain static, complete, and localized without nested horizontal scrolling', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
     await openHome(page, '/?lang=he');
-    const result = await page.evaluate(async () => {
-      const rows = [...document.querySelectorAll('.mq')];
-      const before = rows.map(row => [...row.querySelectorAll('.mq-track')].map(track => track.children.length));
-      rows.forEach(row => row.querySelectorAll('.mq-track').forEach(track => {
-        track.style.animationDuration = '50ms';
-        track.style.animationPlayState = 'running';
-      }));
-      await new Promise(resolve => setTimeout(resolve, 140));
-      return rows.map((row, index) => {
-        const tracks = [...row.querySelectorAll('.mq-track')];
-        return {
-          rowDirection: getComputedStyle(row).direction,
-          trackDirections: tracks.map(track => getComputedStyle(track).direction),
-          animationNames: tracks.map(track => getComputedStyle(track).animationName),
-          before: before[index],
-          after: tracks.map(track => track.children.length),
-          widths: tracks.map(track => track.getBoundingClientRect().width),
-          rowWidth: row.getBoundingClientRect().width
-        };
-      });
-    });
-    for (const row of result) {
-      expect(row.rowDirection).toBe('ltr');
-      expect(row.trackDirections).toEqual(['ltr', 'ltr']);
-      expect(row.animationNames).toEqual(['mq', 'mq']);
-      expect(row.after).toEqual(row.before);
-      expect(row.after[0]).toBe(row.after[1]);
-      row.widths.forEach(width => expect(width).toBeGreaterThanOrEqual(row.rowWidth));
-    }
+    const grid = page.locator('#crew .crew-grid');
+
+    await expect(grid).not.toHaveAttribute('tabindex', /.+/);
+    await expect(page.locator('[data-crew-rail], [data-crew-prev], [data-crew-next]')).toHaveCount(0);
+    await expect(grid.locator('.crew-card')).toHaveCount(6);
+    await expect(page.locator('#crew-transition-title')).toHaveText('שישה סוכני AI. בהובלת טל.');
+    expect(await grid.evaluate(element => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(1);
+
+    await grid.evaluate(element => { element.dataset.e2eMarker = 'preserved'; });
+    await page.evaluate(() => window.MoonaI18n.setLocale('en', { source: 'programmatic' }));
+    await expect(grid).toHaveAttribute('data-e2e-marker', 'preserved');
+    await expect(page.locator('#crew-transition-title')).toHaveText('Six AI agents. Directed by Tal.');
+    await expect(page.locator('.crew-transition-body')).toHaveText('Every member of the Moona crew is a specialist AI agent, built inside the studio.');
+    expect(await grid.evaluate(element => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(1);
   });
 
   test('language control is keyboard operable, labelled, and is not a pressed-state toggle', async ({ page }) => {
@@ -1109,14 +1857,50 @@ test.describe('responsive header and dynamic UI', () => {
 });
 
 test.describe('lead submission mocks', () => {
-  test('successful mocked submission reaches the translated completion state', async ({ page }) => {
+  test('required brief validation gates the payload and success reaches data-step 4', async ({ page }) => {
+    let payload;
+    await page.route('**/api/lead', route => {
+      payload = route.request().postDataJSON();
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ ok: true })
+      });
+    });
     await openHome(page, '/?lang=he');
-    await fillLeadForm(page);
+    await expect(page.locator('#askForm > [data-step]')).toHaveCount(5);
+    expect(await page.locator('#askForm > [data-step]').evaluateAll(steps =>
+      steps.map(step => step.dataset.step))).toEqual(['0', '1', '2', '3', '4']);
+
+    await fillLeadForm(page, { brief: null });
+    await expect(page.locator('#f-brief')).toHaveAttribute('required', '');
+    await expect(page.locator('#f-brief')).toHaveAttribute('minlength', '20');
     await page.locator('#askSubmit').click();
-    await expect(page.locator('[data-step="3"]')).toHaveClass(/active/);
-    await expect(page.locator('[data-step="3"] .qtitle')).toHaveText('אנחנו על זה.');
-    await expect(page.locator('#doneMsg')).toHaveText('העבודה תגיע למייל בתוך כמה ימים.');
+    await expect(page.locator('#brief-hint')).toHaveText('את זה צריך למלא.');
+    await expect(page.locator('#f-brief')).toHaveAttribute('aria-invalid', 'true');
+    expect(payload).toBeUndefined();
+
+    await page.locator('#f-brief').fill('קצר מדי');
+    await page.locator('#askSubmit').click();
+    await expect(page.locator('#brief-hint')).toHaveText('נשמח לקצת יותר פרטים, בין 20 ל־1,200 תווים.');
+    await expect(page.locator('#brief-hint')).toHaveClass(/err/);
+    expect(payload).toBeUndefined();
+
+    await page.locator('#f-brief').fill(LEAD_BRIEF);
+    await page.locator('#askSubmit').click();
+    await expect(page.locator('[data-step="4"]')).toHaveClass(/active/);
+    await expect(page.locator('[data-step="4"] .qtitle')).toHaveText('קיבלנו.');
+    await expect(page.locator('#doneMsg')).toHaveText('נעבור על הפרויקט ונחזור אליכם בתוך שני ימי עסקים.');
     await expect(page.locator('#doneTitle')).toBeFocused();
+    expect(payload).toEqual({
+      name: 'Dana Cohen',
+      company: 'Example',
+      website: 'https://example.com',
+      email: 'dana@example.com',
+      brief: LEAD_BRIEF,
+      'bot-field': '',
+      files: []
+    });
   });
 
   test('mocked API and hosted fallback failure opens a translated mailto without navigation', async ({ page }) => {
@@ -1138,18 +1922,19 @@ test.describe('lead submission mocks', () => {
     await fillLeadForm(page);
     await page.locator('#askSubmit').click();
     await page.waitForFunction(() => Boolean(window.__e2eMailto));
-    await expect(page.locator('[data-step="2"] .qhint')).toHaveText('לא ניתן לשלוח מכאן. המייל ייפתח במקום.');
-    await expect(page.locator('[data-step="2"] .qhint')).toHaveClass(/err/);
+    await expect(page.locator('[data-step="3"] .qhint')).toHaveText('לא ניתן לשלוח מכאן. המייל ייפתח במקום.');
+    await expect(page.locator('[data-step="3"] .qhint')).toHaveClass(/err/);
 
     const mailto = await page.evaluate(() => window.__e2eMailto);
     const url = new URL(mailto);
     expect(url.protocol).toBe('mailto:');
     expect(url.pathname).toBe('moona.ai.studio@gmail.com');
-    expect(url.searchParams.get('subject')).toBe('בקשה לפרסומת: ⁦Example⁩');
+    expect(url.searchParams.get('subject')).toBe('פנייה לפרויקט: ⁦Example⁩');
     expect(url.searchParams.get('body')).toContain('שם: Dana Cohen');
     expect(url.searchParams.get('body')).toContain('מותג: Example');
     expect(url.searchParams.get('body')).toContain('אתר: https://example.com');
     expect(url.searchParams.get('body')).toContain('מייל: dana@example.com');
+    expect(url.searchParams.get('body')).toContain(`תיאור הפרויקט:\n${LEAD_BRIEF}`);
     expect(page.url()).toContain('?lang=he');
   });
 });

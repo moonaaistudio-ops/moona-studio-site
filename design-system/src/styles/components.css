@@ -1,0 +1,328 @@
+/* ═════════════════════════════════════════════════════════════
+   Moona Studio — component styles
+   Ported from the live site. Every value reads a token; nothing
+   here hard-codes a colour that tokens.css already names.
+   Import order: tokens.css, then this file.
+   ═════════════════════════════════════════════════════════════ */
+
+/* ───────────────────────── Button ─────────────────────────
+   Rainbow Button — Magic UI (Dillion Verma), dark variant,
+   retinted to the Moona gold ramp. https://magicui.design      */
+@property --speed{syntax:"<time>";inherits:true;initial-value:2s}
+
+.mn-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  flex-shrink:0;white-space:normal;min-height:var(--moona-tap);line-height:1.4;text-align:center;
+  text-decoration:none;
+  font-family:var(--moona-mono);font-size:var(--moona-fs-label-lg);
+  letter-spacing:var(--moona-track-cta);text-transform:uppercase;font-weight:500;
+  color:var(--moona-gold-ink);padding:17px 30px;border-radius:var(--r-pill);
+  border:.125rem solid transparent;
+  background-image:
+    linear-gradient(#fff,#fff),
+    linear-gradient(#fff 50%,rgba(255,255,255,.6) 80%,rgba(0,0,0,0)),
+    linear-gradient(90deg,var(--color-1),var(--color-5),var(--color-3),var(--color-4),var(--color-2));
+  background-size:200%;
+  background-clip:padding-box,border-box,border-box;
+  background-origin:border-box;
+  animation:mn-rainbow var(--speed) infinite linear;
+  transition:--speed .45s linear}
+.mn-btn::before{content:"";position:absolute;bottom:-20%;left:50%;
+  height:20%;width:60%;transform:translateX(-50%);
+  background-image:linear-gradient(90deg,var(--color-1),var(--color-5),var(--color-3),var(--color-4),var(--color-2));
+  background-size:200%;filter:blur(.75rem);
+  animation:mn-rainbow var(--speed) infinite linear}
+@keyframes mn-rainbow{0%{background-position:0%}100%{background-position:200%}}
+.mn-btn:hover{--speed:1s}
+.mn-btn:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(255,255,255,.35)}
+.mn-btn--lg{font-size:12px;padding:21px 40px;letter-spacing:.24em;gap:12px}
+.mn-btn--sm{font-size:var(--moona-fs-label);padding:13px 20px;letter-spacing:.18em;gap:9px}
+
+/* the caret is drawn, not a glyph: it points the same way in every font */
+.mn-caret{width:7px;height:7px;flex:none;
+  border-right:1.5px solid currentColor;border-top:1.5px solid currentColor;
+  transform:rotate(45deg);transition:transform .4s var(--ease)}
+.mn-btn--sm .mn-caret{width:6px;height:6px}
+.mn-btn:hover .mn-caret,.mn-mail:hover .mn-caret{transform:rotate(45deg) translate(3px,-3px)}
+html[dir="rtl"] .mn-caret{transform:rotate(-135deg)}
+html[dir="rtl"] .mn-btn:hover .mn-caret,
+html[dir="rtl"] .mn-mail:hover .mn-caret{transform:rotate(-135deg) translate(3px,-3px)}
+
+@media(prefers-reduced-motion:reduce){
+  .mn-btn,.mn-btn::before,.mn-btn .mn-caret{animation:none;transition:none}
+}
+@media(max-width:410px){
+  .mn-btn--lg{font-size:11px;padding:19px 22px;letter-spacing:.15em;gap:10px}
+}
+
+/* ───────────────────────── MailButton ─────────────────────────
+   The second door. Same family as the CTA so it reads as a real
+   control — dark with a gold hairline, so it never competes.     */
+.mn-mail{display:inline-flex;align-items:center;justify-content:center;gap:12px;
+  min-height:var(--moona-tap);
+  font-family:var(--moona-mono);font-size:var(--moona-fs-label-lg);
+  letter-spacing:var(--moona-track-cta);text-transform:uppercase;
+  color:var(--moona-ice-hot);text-decoration:none;white-space:nowrap;
+  padding:17px 28px;border-radius:var(--r-pill);
+  border:1px solid rgba(217,198,156,.55);background:rgba(217,198,156,.07);
+  transition:background .4s var(--ease),border-color .4s var(--ease),box-shadow .4s var(--ease)}
+.mn-mail:hover{background:var(--moona-gold-wash-hot);border-color:var(--moona-gold);
+  box-shadow:var(--moona-glow-gold)}
+.mn-mail:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.mn-mail__ico{flex:none;color:var(--moona-gold)}
+@media(max-width:410px){
+  .mn-mail{font-size:var(--moona-fs-label);padding:16px 20px;letter-spacing:.16em;gap:10px}
+}
+
+/* ───────────────────────── IconButton ─────────────────────────
+   Media controls over video. 44px, gold hairline, void scrim.    */
+.mn-iconbtn{display:inline-flex;align-items:center;justify-content:center;
+  width:var(--moona-tap);height:var(--moona-tap);padding:0;border:0;
+  border-radius:var(--r-pill);
+  color:var(--moona-gold);border:1px solid var(--moona-gold-line);
+  background:var(--moona-scrim);
+  transition:background .3s,border-color .3s}
+.mn-iconbtn:hover{background:var(--moona-gold-wash-hot);border-color:var(--moona-gold)}
+.mn-iconbtn:focus-visible{outline:none;box-shadow:0 0 0 2px var(--moona-gold)}
+
+/* ───────────────────────── Chip ─────────────────────────
+   One shape, three voices: spec (gold outline), plain (ice on
+   scrim) and file (removable, with a danger state).            */
+.mn-chip{display:inline-flex;align-items:center;gap:9px;max-width:100%;
+  font-family:var(--moona-mono);font-size:9.5px;
+  letter-spacing:var(--moona-track-cta);text-transform:uppercase;
+  padding:5px 11px;border-radius:var(--r-pill);border:1px solid transparent}
+.mn-chip--spec{color:var(--moona-gold);border-color:rgba(217,198,156,.45);
+  background:var(--moona-scrim)}
+.mn-chip--plain{color:var(--moona-ice-hot);background:var(--moona-scrim);letter-spacing:.22em}
+.mn-chip--file{padding-block:6px;padding-inline:13px 6px;font-size:10.5px;letter-spacing:.1em;
+  text-transform:none;color:var(--moona-ice);
+  background:rgba(168,198,232,.07);border-color:var(--moona-line)}
+.mn-chip--file .mn-chip__name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:22ch}
+.mn-chip--file b{color:var(--moona-ice-dim);font-weight:400}
+.mn-chip__remove{flex:none;display:grid;place-items:center;width:30px;height:30px;border:0;
+  border-radius:var(--r-pill);color:var(--moona-ice-dim);background:none;
+  transition:background .25s,color .25s}
+.mn-chip__remove:hover{background:rgba(217,198,156,.2);color:var(--moona-ice-hot)}
+.mn-chip__remove:focus-visible{outline:none;box-shadow:0 0 0 2px var(--moona-gold)}
+.mn-chip--danger{border-color:rgba(232,160,154,.5);background:rgba(232,160,154,.08);
+  color:var(--moona-danger)}
+.mn-chip--danger b{color:rgba(232,160,154,.75)}
+@media(pointer:coarse){.mn-chip__remove{width:38px;height:38px}}
+
+/* ───────────────────────── SectionHeading ───────────────────── */
+.mn-heading__eyebrow{display:block;font-family:var(--moona-mono);font-size:var(--moona-fs-label);
+  letter-spacing:var(--moona-track-label-wide);text-transform:uppercase;
+  color:var(--moona-gold);margin-bottom:22px}
+.mn-heading__eyebrow--index{letter-spacing:.4em;color:var(--moona-ice-dim);margin-bottom:14px}
+.mn-heading__title{font-family:var(--moona-display);font-size:var(--moona-fs-title);font-weight:600;
+  line-height:1;letter-spacing:var(--moona-track-display);
+  color:var(--moona-ice-hot);max-width:20ch;text-wrap:balance}
+.mn-heading__title em{font-family:inherit;font-style:normal;font-weight:inherit;color:var(--moona-gold-hot)}
+html[lang="he"] .mn-heading__title{font-weight:700;letter-spacing:-.025em}
+.mn-heading__note{margin-top:22px;font-size:var(--moona-fs-lead);color:var(--moona-body-dim);
+  max-width:44ch;line-height:var(--moona-lh-body)}
+
+/* ───────────────────────── Frame ─────────────────────────
+   Media surface with the aperture reveal: a circle that opens
+   once the frame is in view. The box never depends on the video. */
+.mn-frame{position:relative;overflow:hidden;border-radius:var(--r-lg);
+  background:var(--moona-void-2) center/cover no-repeat;
+  box-shadow:var(--moona-shadow-frame);
+  clip-path:circle(18% at 50% 50%);transition:clip-path 1.05s var(--ease)}
+.mn-frame--stage{box-shadow:var(--moona-shadow-stage);transition-duration:1.25s}
+.mn-frame[data-ratio="16/9"]{aspect-ratio:16/9}
+.mn-frame[data-ratio="16/9.18"]{aspect-ratio:16/9.18}
+.mn-frame[data-ratio="9/16"]{aspect-ratio:9/16}
+.mn-frame[data-ratio="1/1"]{aspect-ratio:1/1}
+.mn-frame.is-open{clip-path:circle(75% at 50% 50%)}
+.mn-frame--stage.is-open{clip-path:circle(78% at 50% 50%)}
+.mn-frame > video,.mn-frame > img{width:100%;height:100%;object-fit:cover;display:block;
+  opacity:0;transform:scale(1.05);
+  transition:opacity .75s var(--ease),transform 1.4s var(--ease)}
+.mn-frame.is-open > video,.mn-frame.is-open > img{opacity:1;transform:none}
+.mn-frame:focus-visible{outline:none;
+  box-shadow:0 0 0 2px var(--moona-gold),var(--moona-shadow-frame)}
+.mn-frame__badges{position:absolute;left:14px;bottom:14px;z-index:3;display:flex;gap:8px;
+  opacity:0;transition:opacity .7s var(--ease) .5s}
+.mn-frame.is-open .mn-frame__badges{opacity:.9}
+.mn-frame__controls{position:absolute;right:14px;bottom:14px;z-index:4;
+  display:flex;flex-direction:column;align-items:flex-end;gap:8px;
+  opacity:0;pointer-events:none;transition:opacity .7s var(--ease) .5s}
+.mn-frame.is-open .mn-frame__controls{opacity:1;pointer-events:auto}
+.mn-frame__progress{position:absolute;left:0;bottom:0;height:1.5px;z-index:3;
+  background:var(--moona-ice);opacity:.55;transition:width .12s linear}
+@media(max-width:480px){.mn-frame__badges .mn-chip--spec{display:none}}
+@media(prefers-reduced-motion:reduce){
+  .mn-frame{clip-path:none;transition:none}
+  .mn-frame > video,.mn-frame > img{opacity:1!important;transform:none!important;transition:none}
+}
+
+/* ───────────────────────── Card (story beat) ─────────────────
+   Void glass, an ember-gold and ice glow rising from the floor,
+   a lit bottom edge, and a quiet 3D tilt. The tilt lives on the
+   inner element so it never fights the reveal transform.        */
+.mn-card{perspective:900px}
+.mn-card__inner{position:relative;overflow:hidden;height:100%;border-radius:var(--r-lg);
+  background:var(--moona-void-2);border:1px solid var(--moona-line);padding:26px 24px 34px;
+  box-shadow:var(--moona-shadow-panel);
+  transform:translateY(var(--lift,0px)) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  transition:transform .18s ease-out,border-color .45s var(--ease)}
+.mn-card:hover .mn-card__inner{--lift:-5px;border-color:rgba(217,198,156,.28)}
+.mn-card__glow{position:absolute;left:-20%;right:-20%;bottom:-35%;height:85%;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 80% 100%,rgba(217,198,156,.42),rgba(217,198,156,0) 62%),
+    radial-gradient(ellipse at 15% 100%,rgba(168,198,232,.30),rgba(168,198,232,0) 62%);
+  filter:blur(30px);opacity:.5;transition:opacity .5s var(--ease)}
+.mn-card:hover .mn-card__glow{opacity:.85}
+.mn-card__edge{position:absolute;left:7%;right:7%;bottom:0;height:1.5px;pointer-events:none;
+  background:linear-gradient(90deg,rgba(220,236,255,.04),rgba(220,236,255,.7) 50%,rgba(220,236,255,.04));
+  box-shadow:0 0 14px 2px rgba(217,198,156,.5);opacity:.55;transition:opacity .5s,box-shadow .5s}
+.mn-card:hover .mn-card__edge{opacity:.95;box-shadow:0 0 20px 4px rgba(217,198,156,.7)}
+.mn-card__head{position:relative;z-index:1;display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.mn-card__num{display:grid;place-items:center;width:var(--moona-tap);height:var(--moona-tap);
+  border-radius:var(--r-pill);direction:ltr;unicode-bidi:isolate;
+  background:linear-gradient(225deg,#10141f 0%,#0a0d15 100%);
+  border:1px solid rgba(217,198,156,.22);
+  box-shadow:0 6px 12px -2px rgba(0,0,0,.4),inset 1px 1px 3px rgba(255,255,255,.1),inset -2px -2px 4px rgba(0,0,0,.5);
+  font-family:var(--moona-mono);font-size:var(--moona-fs-label-lg);letter-spacing:.18em;
+  color:var(--moona-gold);transition:box-shadow .4s var(--ease)}
+.mn-card:hover .mn-card__num{box-shadow:0 8px 16px -2px rgba(0,0,0,.5),inset 2px 2px 5px rgba(255,255,255,.14),inset -2px -2px 5px rgba(0,0,0,.7),0 0 18px -4px rgba(217,198,156,.5)}
+.mn-card__label{font-family:var(--moona-mono);font-size:var(--moona-fs-label);
+  letter-spacing:var(--moona-track-label);text-transform:uppercase;color:var(--moona-gold)}
+.mn-card__title{position:relative;z-index:1;font-family:var(--moona-display);
+  font-size:var(--moona-fs-card);font-weight:600;line-height:1.08;
+  letter-spacing:-.035em;color:var(--moona-ice-hot);text-wrap:balance}
+html[lang="he"] .mn-card__title{font-weight:700;letter-spacing:-.025em}
+.mn-card__body{position:relative;z-index:1;margin-top:14px;font-size:var(--moona-fs-body-sm);
+  line-height:var(--moona-lh-loose);color:rgba(190,212,238,.78)}
+@media(prefers-reduced-motion:reduce){.mn-card__inner{transform:none;transition:none}}
+
+/* ───────────────────────── Steps ─────────────────────────
+   Three joined dots say 'three, and you are here' before anyone
+   decides whether to start.                                     */
+.mn-steps{display:flex;align-items:center;margin-bottom:26px}
+.mn-steps__dot{flex:none;width:9px;height:9px;border-radius:50%;background:rgba(168,198,232,.2);
+  transition:background .45s var(--ease),width .45s var(--ease),height .45s var(--ease)}
+.mn-steps__dot.is-done{background:rgba(217,198,156,.6)}
+.mn-steps__dot.is-now{width:12px;height:12px;background:var(--moona-gold);
+  box-shadow:0 0 12px -1px rgba(217,198,156,.9)}
+.mn-steps__seg{flex:none;width:clamp(34px,7vw,58px);height:1px;background:rgba(168,198,232,.18);
+  transition:background .45s var(--ease)}
+.mn-steps__seg.is-done{background:rgba(217,198,156,.5)}
+@media(max-width:560px){.mn-steps{margin-bottom:20px}.mn-steps__seg{width:clamp(28px,9vw,44px)}}
+@media(prefers-reduced-motion:reduce){.mn-steps__dot,.mn-steps__seg{transition:none}}
+
+/* ───────────────────────── FileDrop ─────────────────────────
+   A <label> is inline by default, so it renders as a collapsed
+   sliver. It also has to look actionable: an icon, a plain-language
+   action in the body face, and a visible Browse control.        */
+.mn-drop{display:flex;align-items:center;gap:15px;text-align:start;
+  border:1px dashed rgba(217,198,156,.4);border-radius:var(--r-md);padding:15px 16px;
+  background:rgba(217,198,156,.035);
+  transition:border-color .35s var(--ease),background .35s var(--ease)}
+.mn-drop:hover,.mn-drop:focus-within,.mn-drop.is-over{border-color:var(--moona-gold);
+  background:rgba(217,198,156,.09)}
+.mn-drop:focus-within{outline:none;box-shadow:0 0 0 2px var(--moona-gold-line)}
+.mn-drop__ico{flex:none;display:grid;place-items:center;width:38px;height:38px;
+  border-radius:var(--r-pill);color:var(--moona-gold);
+  background:var(--moona-gold-wash);border:1px solid rgba(217,198,156,.28)}
+.mn-drop__txt{flex:1;min-width:0;display:flex;flex-direction:column}
+/* the action reads in the body face: mono at .18em is a label, not an invitation */
+.mn-drop__title{font-family:var(--moona-sans);font-size:14px;letter-spacing:0;text-transform:none;
+  color:var(--moona-ice-hot);line-height:1.35}
+.mn-drop__sub{margin-top:3px;font-family:var(--moona-mono);font-size:9.5px;letter-spacing:var(--moona-track-label-tight);
+  text-transform:uppercase;color:var(--moona-ice-dim)}
+.mn-drop__cta{flex:none;display:grid;place-items:center;min-height:34px;padding:0 14px;
+  border-radius:var(--r-pill);border:1px solid rgba(217,198,156,.45);
+  font-family:var(--moona-mono);font-size:var(--moona-fs-label-sm);letter-spacing:.18em;
+  text-transform:uppercase;color:var(--moona-ice-hot);transition:background .3s}
+.mn-drop:hover .mn-drop__cta{background:var(--moona-gold-wash-hot)}
+.mn-drop__input{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
+  clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap;border:0}
+@media(max-width:560px){
+  .mn-drop{gap:12px;padding:13px}
+  .mn-drop__cta{display:none}      /* the whole card is the target on a phone */
+  .mn-drop__title{font-size:13px}
+}
+
+/* ───────────────────────── Header ───────────────────────── */
+.mn-header{position:fixed;top:0;inset-inline:0;z-index:65;container:header/inline-size;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:26px clamp(28px,4vw,52px) 12px;
+  background:linear-gradient(rgba(5,7,12,.72),rgba(5,7,12,0));pointer-events:none}
+.mn-header > *{pointer-events:auto}
+.mn-lockup{display:flex;align-items:center;gap:9px;font-family:var(--moona-mono);
+  font-size:var(--moona-fs-label-lg);min-height:var(--moona-tap);min-width:var(--moona-tap);
+  letter-spacing:var(--moona-track-lockup);color:var(--moona-ice-hot);
+  text-decoration:none;text-transform:uppercase}
+.mn-lockup__name{white-space:nowrap}
+.mn-lockup__mark{width:28px;height:28px;flex:none;border-radius:50%;
+  filter:drop-shadow(0 0 12px rgba(217,198,156,.35))}
+.mn-nav{position:relative;display:flex;align-items:center;gap:clamp(14px,2.6vw,30px)}
+.mn-nav__link{font-family:var(--moona-mono);font-size:var(--moona-fs-label);
+  letter-spacing:var(--moona-track-label);min-width:var(--moona-tap);min-height:var(--moona-tap);
+  text-transform:uppercase;color:var(--moona-ice-dim);padding:9px 2px;background:none;border:0;
+  border-bottom:1px solid transparent;transition:color .3s,border-color .3s}
+.mn-nav__link:hover{color:var(--moona-ice-hot);border-color:var(--moona-ice)}
+.mn-round{display:grid;place-items:center;flex:none;width:var(--moona-tap);height:var(--moona-tap);
+  border:1px solid var(--moona-ice-faint);border-radius:50%;background:none;
+  font-family:var(--moona-mono);font-size:var(--moona-fs-label);letter-spacing:.08em;
+  color:var(--moona-ice-hot);transition:border-color .3s,background .3s}
+.mn-round:hover{border-color:var(--moona-gold);background:var(--moona-gold-wash)}
+.mn-round:focus-visible{outline:2px solid #fff;outline-offset:3px}
+/* the wordmark drops before the nav does — the mark alone still reads as home */
+@container header (max-width:350px){.mn-lockup__name{display:none}}
+@supports not (container-type:inline-size){
+  @media(max-width:386px){.mn-lockup__name{display:none}}
+}
+@media(max-width:700px){
+  .mn-header{padding:18px 18px 10px}
+  .mn-lockup{gap:7px;font-size:var(--moona-fs-label);letter-spacing:.22em}
+  .mn-lockup__mark{width:24px;height:24px}
+  .mn-nav{gap:6px}
+}
+
+/* ───────────────────────── Marquee ─────────────────────────
+   Two rows at two speeds, so they never lock together.        */
+.mn-marquee{--gap:clamp(12px,1.4vw,18px);display:flex;gap:var(--gap);overflow:hidden;direction:ltr;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
+.mn-marquee__track{display:flex;align-items:center;gap:var(--gap);flex:0 0 auto;min-width:100%;
+  direction:ltr;animation:mn-marquee var(--dur,42s) linear infinite;will-change:transform}
+.mn-marquee--reverse .mn-marquee__track{animation-direction:reverse;--dur:52s}
+.mn-marquee:hover .mn-marquee__track,
+.mn-marquee:focus-within .mn-marquee__track{animation-play-state:paused}
+@keyframes mn-marquee{from{transform:translateX(0)}to{transform:translateX(calc(-100% - var(--gap)))}}
+.mn-marquee__item{position:relative;flex:0 0 auto;width:clamp(158px,15.5vw,232px);aspect-ratio:1/1;
+  overflow:hidden;border-radius:var(--r-lg);background:var(--moona-void-2);border:0;padding:0;
+  border:1px solid rgba(168,198,232,.10);box-shadow:0 20px 54px -30px rgba(0,0,0,.9);
+  transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
+.mn-marquee__item--tall{aspect-ratio:3/4}
+.mn-marquee__item > img,.mn-marquee__item > video{width:100%;height:100%;object-fit:cover;display:block}
+.mn-marquee__item::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(5,7,12,0) 58%,rgba(5,7,12,.42) 100%)}
+.mn-marquee__item:hover,.mn-marquee__item:focus-visible{transform:translateY(-4px) scale(1.03);
+  box-shadow:0 26px 60px -26px rgba(0,0,0,.95);outline:none}
+.mn-marquee__item:focus-visible{box-shadow:0 0 0 2px var(--moona-gold),0 26px 60px -26px rgba(0,0,0,.95)}
+@media(max-width:860px){.mn-marquee__item{width:clamp(140px,40vw,196px)}}
+@media(prefers-reduced-motion:reduce){
+  .mn-marquee__track{animation:none}
+  .mn-marquee__item{transition:none}
+}
+
+/* ───────────────────────── Reveal ───────────────────────── */
+.mn-reveal{opacity:0;transform:translateY(34px);
+  transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.mn-reveal.is-seen{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  .mn-reveal{opacity:1!important;transform:none!important;transition:none}
+}
+
+/* ───────────────────────── Section ───────────────────────── */
+.mn-section{position:relative;padding:15vh 0 8vh}
+.mn-section--divided{border-top:1px solid var(--moona-line)}
+.mn-section__inner{max-width:var(--moona-max);margin:0 auto;padding:0 var(--moona-gutter)}
+.mn-section__inner--wide{max-width:var(--moona-max-wide)}
+
+/* Numerals, timestamps and the HUD stay LTR inside Hebrew text. */
+.mn-ltr{direction:ltr;unicode-bidi:isolate}

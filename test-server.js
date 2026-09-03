@@ -9,6 +9,7 @@ const host = '127.0.0.1';
 const port = Number(process.env.PORT || 4317);
 
 const mimeTypes = {
+  '.avif': 'image/avif',
   '.css': 'text/css; charset=utf-8',
   '.html': 'text/html; charset=utf-8',
   '.ico': 'image/x-icon',

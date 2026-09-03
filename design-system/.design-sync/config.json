@@ -1,0 +1,20 @@
+{
+  "pkg": "@moona/design-system",
+  "globalName": "Moona",
+  "shape": "package",
+  "buildCmd": "./node_modules/.bin/tsc --declaration --emitDeclarationOnly --noEmit false --outDir dist && .ds-sync/node_modules/.bin/esbuild src/index.ts --bundle --format=esm --jsx=automatic --target=es2020 --external:react --external:react-dom --external:react/jsx-runtime --outfile=dist/index.js",
+  "srcDir": "src",
+  "tsconfig": "tsconfig.json",
+  "cssEntry": "dist/index.css",
+  "tokensGlob": "src/tokens/tokens.css",
+  "docsDir": ".design-sync/docs",
+  "extraFonts": ".design-sync/fonts/fonts.css",
+  "readmeHeader": ".design-sync/conventions.md",
+  "overrides": {
+    "Header": { "cardMode": "column" },
+    "MarqueeItem": { "cardMode": "column" },
+    "Card": { "cardMode": "column" },
+    "Section": { "cardMode": "column" },
+    "Marquee": { "cardMode": "column" }
+  }
+}
