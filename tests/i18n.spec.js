@@ -570,6 +570,7 @@ test.describe('locale transitions and state preservation', () => {
         skyMarker: sky.dataset.e2eMarker,
         moonMarker: moon.dataset.e2eMarker,
         headerAsset: headerWordmark.getAttribute('src'),
+        hebrewFontsHref: document.getElementById('moona-hebrew-fonts')?.getAttribute('href') || '',
         statement: document.querySelector('.statement').textContent.replace(/\s+/g, ' ').trim(),
         canvasSizes: [sky, moon].map(canvas => ({ width: canvas.width, height: canvas.height })),
         retiredHeroLayers: document.querySelectorAll('.hero-media, .hero-media-video, .hero-media-fallback, .hero-brand-stage, .hero-wordmark, .hero-chroma, .hero-aperture, .hero-actions').length,
@@ -585,6 +586,7 @@ test.describe('locale transitions and state preservation', () => {
     expect(result.skyMarker).toBe('hero-sky');
     expect(result.moonMarker).toBe('hero-moon');
     expect(result.headerAsset).toBe('p/brand/moona-logo-lockup.svg');
+    expect(result.hebrewFontsHref).toContain('family=Assistant:wght@400;500;600;700');
     expect(result.statement).toBe('סטודיו AI-native לסרטי מותג ופרסומות');
     expect(result.canvasSizes.every(size => size.width > 0 && size.height > 0)).toBe(true);
     expect(result.retiredHeroLayers).toBe(0);

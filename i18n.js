@@ -5,7 +5,7 @@
   const STORAGE_KEY = 'moona.locale';
   const VALID_LOCALES = new Set(['en', 'he']);
   const HEBREW_FONTS_ID = 'moona-hebrew-fonts';
-  const HEBREW_FONTS_URL = 'https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600&family=Frank+Ruhl+Libre:wght@400;600&display=swap';
+  const HEBREW_FONTS_URL = 'https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@400;600&display=swap';
 
   const messages = {
     en: {
