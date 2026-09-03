@@ -78,13 +78,15 @@ for (const locale of ['en', 'he']) {
 }
 
 for (const locale of ['en', 'he']) {
-  test(`founder split section passes mobile axe in ${locale.toUpperCase()}`, async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await openPage(page, `/?lang=${locale}`);
-    await page.locator('#about').scrollIntoViewIfNeeded();
-    await expect(page.locator('.about-copy')).toHaveClass(/seen/);
-    await expect(page.locator('.about-copy')).toHaveCSS('opacity', '1');
-    await expectNoAxeViolations(page, '#about');
+  test(`founder portrait overlay passes mobile axe in ${locale.toUpperCase()}`, async ({ page }) => {
+    for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }]) {
+      await page.setViewportSize(viewport);
+      await openPage(page, `/?lang=${locale}`);
+      await page.locator('#about').scrollIntoViewIfNeeded();
+      await expect(page.locator('.about-copy')).toHaveClass(/seen/);
+      await expect(page.locator('.about-copy')).toHaveCSS('opacity', '1');
+      await expectNoAxeViolations(page, '#about');
+    }
   });
 }
 
@@ -237,6 +239,11 @@ test('Hebrew content reflows at the supported narrow width with WCAG text spacin
     }
     p{margin-bottom:2em!important}
   ` });
+  // Exercise the poster's content-driven height, not only its 100svh minimum.
+  await page.locator('.about-body').evaluate(element => {
+    const paragraph = element.textContent.trim();
+    element.textContent = Array(8).fill(paragraph).join(' ');
+  });
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
 
   const layout = await page.evaluate(() => {
@@ -251,12 +258,16 @@ test('Hebrew content reflows at the supported narrow width with WCAG text spacin
     headlineRange.selectNodeContents(headline);
     const headlineText = headlineRange.getBoundingClientRect();
     const about = document.querySelector('#about');
+    const aboutLayout = about.querySelector('.about-layout');
     const aboutCopy = about.querySelector('.about-copy');
     const aboutMedia = about.querySelector('.about-media');
     const aboutImage = aboutMedia.querySelector('img');
     const aboutRect = about.getBoundingClientRect();
     const aboutCopyRect = aboutCopy.getBoundingClientRect();
     const aboutMediaRect = aboutMedia.getBoundingClientRect();
+    const aboutMediaStyle = getComputedStyle(aboutMedia);
+    const aboutCopyStyle = getComputedStyle(aboutCopy);
+    const aboutScrimStyle = getComputedStyle(aboutLayout, '::after');
     const overlapWidth = Math.max(0, Math.min(aboutCopyRect.right, aboutMediaRect.right) - Math.max(aboutCopyRect.left, aboutMediaRect.left));
     const overlapHeight = Math.max(0, Math.min(aboutCopyRect.bottom, aboutMediaRect.bottom) - Math.max(aboutCopyRect.top, aboutMediaRect.top));
     return {
@@ -278,11 +289,28 @@ test('Hebrew content reflows at the supported narrow width with WCAG text spacin
         aboutMediaRect.bottom <= aboutRect.bottom + 1,
       aboutImageLoaded: aboutImage.complete && aboutImage.naturalWidth > 0,
       aboutImageVisible: aboutImage.getClientRects().length > 0,
-      aboutCopyAfterMedia: aboutCopyRect.top >= aboutMediaRect.bottom - 1,
-      aboutCopyMediaDisjoint: overlapWidth * overlapHeight === 0,
+      aboutCopyOverMedia:
+        overlapWidth * overlapHeight >= aboutCopyRect.width * aboutCopyRect.height * .99,
+      aboutMediaFullBleed:
+        Math.abs(aboutMediaRect.left - aboutRect.left) <= 1 &&
+        Math.abs(aboutMediaRect.top - aboutRect.top) <= 1 &&
+        Math.abs(aboutMediaRect.right - aboutRect.right) <= 1 &&
+        Math.abs(aboutMediaRect.bottom - aboutRect.bottom) <= 1,
+      aboutSectionAtLeastViewport: aboutRect.height >= innerHeight - 1,
+      aboutSectionGrewWithContent: aboutRect.height > innerHeight + 1,
+      aboutMediaBorderRadius: Number.parseFloat(aboutMediaStyle.borderTopLeftRadius),
+      aboutScrimPresent: aboutScrimStyle.backgroundImage.includes('linear-gradient'),
+      aboutCopyTransparent:
+        aboutCopyStyle.backgroundColor === 'rgba(0, 0, 0, 0)' &&
+        Number.parseFloat(aboutCopyStyle.borderTopWidth) === 0 &&
+        aboutCopyStyle.boxShadow === 'none' &&
+        (aboutCopyStyle.backdropFilter || aboutCopyStyle.webkitBackdropFilter || 'none') === 'none',
       aboutTextChildrenFit: [...aboutCopy.children].every(child => {
         const rect = child.getBoundingClientRect();
-        return rect.left >= aboutCopyRect.left - 1 && rect.right <= aboutCopyRect.right + 1;
+        return rect.left >= aboutCopyRect.left - 1 &&
+          rect.right <= aboutCopyRect.right + 1 &&
+          rect.top >= aboutCopyRect.top - 1 &&
+          rect.bottom <= aboutCopyRect.bottom + 1;
       }),
       aboutDirection: getComputedStyle(aboutCopy).direction
     };
@@ -297,8 +325,13 @@ test('Hebrew content reflows at the supported narrow width with WCAG text spacin
     aboutMediaContained: true,
     aboutImageLoaded: true,
     aboutImageVisible: true,
-    aboutCopyAfterMedia: true,
-    aboutCopyMediaDisjoint: true,
+    aboutCopyOverMedia: true,
+    aboutMediaFullBleed: true,
+    aboutSectionAtLeastViewport: true,
+    aboutSectionGrewWithContent: true,
+    aboutMediaBorderRadius: 0,
+    aboutScrimPresent: true,
+    aboutCopyTransparent: true,
     aboutTextChildrenFit: true,
     aboutDirection: 'rtl'
   });
@@ -352,7 +385,8 @@ test.describe('motion accessibility', () => {
     await expect(control).toHaveAttribute('aria-label', 'התנועה הופחתה לפי הגדרת המערכת');
     expect(await page.locator('video').evaluateAll(videos => videos.every(video => video.paused))).toBe(true);
     expect(await page.locator('.grain,.scrollcue i,.cta-btn').evaluateAll(elements =>
-      elements.every(element => getComputedStyle(element).animationName === 'none'))).toBe(true);
+      elements.every(element => getComputedStyle(element).animationName === 'none'
+        && getComputedStyle(element, '::before').animationName === 'none'))).toBe(true);
     await page.locator('.film-story').scrollIntoViewIfNeeded();
     const storyMotion = await page.locator('.film-story').evaluate(section => ({
       cards: [...section.querySelectorAll('.film-beat')].every(card => {

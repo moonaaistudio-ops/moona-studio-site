@@ -222,7 +222,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
       'מקריאטיב ובימוי ועד הפקה ופוסט,',
       'בשליטה מלאה על כל פריים.'
     ]);
-    await expect(page.locator('.hero-cta [data-i18n="hero.workCta"]')).toHaveText('צור איתנו קשר');
+    await expect(page.locator('.hero-cta [data-i18n="common.primaryCta"]')).toHaveText('בואו נדבר');
     await expect(page.locator('.film-head .film-eyebrow')).toHaveText('סרט הדגל');
     await expect(page.locator('.film-title')).toHaveText('יצרנו מותג. וצילמנו לו פרסומת.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE הוא חטיף אנרגיה שאנחנו יצרנו מאפס.');
@@ -254,7 +254,8 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('[data-i18n="work.koda.concept"]')).toHaveText('נבנה לפיד שבו הוא חי.');
     await expect(page.locator('.contact-line')).toHaveText('יש לכם פרויקט ששווה ליצור?');
     await expect(page.locator('.contact-body')).toHaveText('ספרו לנו מה אתם בונים. נחזור אליכם בתוך שני ימי עסקים.');
-    await expect(page.locator('[data-i18n="nav.cta"]')).toHaveText('צור איתנו קשר');
+    await expect(page.locator('[data-header-contact-cta] [data-i18n="common.primaryCta"]')).toHaveText('בואו נדבר');
+    await expect(page.locator('[data-i18n="common.primaryCta"]')).toHaveText(['בואו נדבר', 'בואו נדבר']);
     await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
     await expect(page.locator('.contact [data-i18n="hero.cta"]')).toHaveText('מתחילים פרויקט');
     await expect(page.locator('#askTitle')).toHaveText('מתחילים פרויקט');
@@ -264,17 +265,15 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('#analyticsReject')).toHaveText('דחיית עוגיות');
 
     expect(await page.evaluate(() => ({
-      nav: window.MoonaI18n.t('nav.cta', {}, 'en'),
+      primary: window.MoonaI18n.t('common.primaryCta', {}, 'en'),
       hero: window.MoonaI18n.t('hero.cta', {}, 'en'),
-      work: window.MoonaI18n.t('hero.workCta', {}, 'en'),
       contact: window.MoonaI18n.t('hero.projectCta', {}, 'en'),
       dialog: window.MoonaI18n.t('form.dialog', {}, 'en'),
       send: window.MoonaI18n.t('form.send', {}, 'en'),
       note: window.MoonaI18n.t('studio.note', {}, 'en')
     }))).toEqual({
-      nav: 'Contact us',
+      primary: 'LET’S TALK',
       hero: 'Start a project',
-      work: 'Contact us',
       contact: 'Start a project',
       dialog: 'Start a project',
       send: 'Send details',
@@ -306,7 +305,8 @@ test.describe('dictionary and first-paint privacy contract', () => {
       'An AI-native studio for film and motion ads.',
       'Story, craft and taste first.'
     ]);
-    await expect(page.locator('.hero-cta [data-i18n="hero.workCta"]')).toHaveText('Contact us');
+    await expect(page.locator('.hero-cta [data-i18n="common.primaryCta"]')).toHaveText('LET’S TALK');
+    await expect(page.locator('[data-i18n="common.primaryCta"]')).toHaveText(['LET’S TALK', 'LET’S TALK']);
     await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
     await expect(page.locator('.film-title')).toHaveText('We created a brand. Then we shot its ad.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE is an energy bar you cannot buy.');
@@ -796,6 +796,8 @@ test.describe('responsive header and dynamic UI', () => {
           sectionAfterWork: document.querySelector('#work')?.nextElementSibling?.id,
           sectionAfterAbout: document.querySelector('#about')?.nextElementSibling?.id,
           crewNames: cards.map(card => card.querySelector('h3')?.textContent),
+          crewNumbering: document.querySelectorAll('#crew .crew-number').length,
+          crewCreditLabels: cards.map(card => card.querySelector('.crew-credit > span')?.textContent),
           crewColumns: getComputedStyle(document.querySelector('#crew .crew-grid'))
             .gridTemplateColumns.split(/\s+/).filter(Boolean).length,
           legacyCrewNavigation: document.querySelectorAll('[data-crew-rail], [data-crew-prev], [data-crew-next]').length,
@@ -806,7 +808,6 @@ test.describe('responsive header and dynamic UI', () => {
             return {
               ariaHidden: portrait.getAttribute('aria-hidden'),
               childCount: portrait.childElementCount,
-              number: portrait.querySelector('.crew-number')?.textContent,
               aspectRatio: getComputedStyle(portrait).aspectRatio,
               renderedRatio: rect.width / rect.height,
               image: {
@@ -863,15 +864,16 @@ test.describe('responsive header and dynamic UI', () => {
       expect(layout.sectionAfterWork).toBe('about');
       expect(layout.sectionAfterAbout).toBe('crew-intro');
       expect(layout.crewNames).toEqual(['Alma', 'Nara', 'Luc', 'Vera', 'Sona', 'Ivo']);
+      expect(layout.crewNumbering).toBe(0);
+      expect(layout.crewCreditLabels).toEqual(Array(6).fill('AI CREW'));
       expect(layout.crewColumns).toBe(width > 980 ? 3 : 1);
       expect(layout.legacyCrewNavigation).toBe(0);
       expect(layout.portraitSlots).toHaveLength(6);
-      for (const [index, portrait] of layout.portraitSlots.entries()) {
+      for (const portrait of layout.portraitSlots) {
         expect(portrait).toMatchObject({
           ariaHidden: 'true',
-          childCount: 2,
-          number: String(index + 1).padStart(2, '0'),
-          aspectRatio: '4 / 5',
+          childCount: 1,
+          aspectRatio: '10 / 11',
           image: {
             alt: '',
             src: 'p/crew/crew-placeholder-960.webp',
@@ -885,7 +887,7 @@ test.describe('responsive header and dynamic UI', () => {
         expect(portrait.image.srcset).toContain('crew-placeholder-1600.webp 1600w');
         expect(portrait.image.sizes).toContain('(max-width:760px)');
         expect(portrait.avifSrcset).toContain('crew-placeholder-1600.avif 1600w');
-        expect(portrait.renderedRatio).toBeCloseTo(4 / 5, 2);
+        expect(portrait.renderedRatio).toBeCloseTo(10 / 11, 2);
       }
       expect(layout.workCards).toBe(4);
       expect(layout.workColumns).toBe(width > 760 ? 2 : 1);
@@ -902,6 +904,8 @@ test.describe('responsive header and dynamic UI', () => {
 
   test('page rhythm and heading hierarchy stay stable across responsive sizes', async ({ page }) => {
     const viewports = [
+      { width: 320, height: 568 },
+      { width: 360, height: 800 },
       { width: 390, height: 844, baseline: 'mobile' },
       { width: 768, height: 1024 },
       { width: 918, height: 1022 },
@@ -934,14 +938,19 @@ test.describe('responsive header and dynamic UI', () => {
         });
         const junction = (before, after) => Math.abs(rect(after).top - rect(before).bottom);
         const about = document.querySelector('#about');
+        const aboutLayout = document.querySelector('.about-layout');
         const aboutCopy = document.querySelector('.about-copy');
         const aboutMedia = document.querySelector('.about-media');
         const aboutImage = aboutMedia.querySelector('img');
         const aboutRect = about.getBoundingClientRect();
+        const aboutLayoutRect = aboutLayout.getBoundingClientRect();
         const aboutCopyRect = aboutCopy.getBoundingClientRect();
         const aboutMediaRect = aboutMedia.getBoundingClientRect();
         const aboutImageRect = aboutImage.getBoundingClientRect();
         const aboutCopyStyle = getComputedStyle(aboutCopy);
+        const aboutMediaStyle = getComputedStyle(aboutMedia);
+        const aboutImageStyle = getComputedStyle(aboutImage);
+        const aboutScrimStyle = getComputedStyle(aboutLayout, '::after');
         const aboutCopyBackdrop = aboutCopyStyle.backdropFilter || aboutCopyStyle.webkitBackdropFilter || 'none';
         const intersectionWidth = Math.max(0, Math.min(aboutCopyRect.right, aboutMediaRect.right) - Math.max(aboutCopyRect.left, aboutMediaRect.left));
         const intersectionHeight = Math.max(0, Math.min(aboutCopyRect.bottom, aboutMediaRect.bottom) - Math.max(aboutCopyRect.top, aboutMediaRect.top));
@@ -981,6 +990,16 @@ test.describe('responsive header and dynamic UI', () => {
               aboutMediaRect.top >= aboutRect.top - 1 &&
               aboutMediaRect.right <= aboutRect.right + 1 &&
               aboutMediaRect.bottom <= aboutRect.bottom + 1,
+            mediaCoversSection:
+              Math.abs(aboutMediaRect.left - aboutRect.left) <= 1 &&
+              Math.abs(aboutMediaRect.top - aboutRect.top) <= 1 &&
+              Math.abs(aboutMediaRect.right - aboutRect.right) <= 1 &&
+              Math.abs(aboutMediaRect.bottom - aboutRect.bottom) <= 1,
+            layoutCoversSection:
+              Math.abs(aboutLayoutRect.left - aboutRect.left) <= 1 &&
+              Math.abs(aboutLayoutRect.top - aboutRect.top) <= 1 &&
+              Math.abs(aboutLayoutRect.right - aboutRect.right) <= 1 &&
+              Math.abs(aboutLayoutRect.bottom - aboutRect.bottom) <= 1,
             copyInsideSection:
               aboutCopyRect.left >= aboutRect.left - 1 &&
               aboutCopyRect.top >= aboutRect.top - 1 &&
@@ -995,7 +1014,12 @@ test.describe('responsive header and dynamic UI', () => {
               aboutCopyRect.right <= aboutMediaRect.left + 1,
             verticalOverlapRatio: intersectionHeight / Math.min(aboutCopyRect.height, aboutMediaRect.height),
             copyAfterMedia: aboutCopyRect.top >= aboutMediaRect.bottom - 1,
+            copyStartRatio: (aboutCopyRect.top - aboutRect.top) / aboutRect.height,
             mediaWidthRatio: aboutMediaRect.width / aboutRect.width,
+            sectionAtLeastViewport: aboutRect.height >= innerHeight - 1,
+            imageObjectPosition: aboutImageStyle.objectPosition,
+            mediaBorderRadius: px(aboutMediaStyle.borderTopLeftRadius),
+            scrimBackgroundImage: aboutScrimStyle.backgroundImage,
             copyBackgroundImage: aboutCopyStyle.backgroundImage,
             copyBackgroundColor: aboutCopyStyle.backgroundColor,
             copyBorderWidth: px(aboutCopyStyle.borderTopWidth),
@@ -1042,7 +1066,6 @@ test.describe('responsive header and dynamic UI', () => {
       expect(layout.aboutSplit.imageFillsMedia).toBe(true);
       expect(layout.aboutSplit.mediaInsideSection).toBe(true);
       expect(layout.aboutSplit.copyInsideSection).toBe(true);
-      expect(layout.aboutSplit.copyMediaOverlapRatio).toBeLessThanOrEqual(.002);
       expect(layout.aboutSplit.copyOverflowX).toBeLessThanOrEqual(1);
       expect(layout.aboutSplit.copyOverflowY).toBeLessThanOrEqual(1);
       expect(layout.aboutSplit.copyBackgroundImage).toBe('none');
@@ -1050,10 +1073,19 @@ test.describe('responsive header and dynamic UI', () => {
       expect(layout.aboutSplit.copyBorderWidth).toBe(0);
       expect(layout.aboutSplit.copyBorderRadius).toBe(0);
       expect(layout.aboutSplit.hasDepth).toBe(false);
-      if (viewport.width <= 760) {
-        expect(layout.aboutSplit.copyAfterMedia).toBe(true);
-        expect(layout.aboutSplit.mediaWidthRatio).toBeGreaterThan(.85);
+      const isPortraitPhone = viewport.width <= 760 && viewport.height > viewport.width;
+      if (isPortraitPhone) {
+        expect(layout.aboutSplit.copyMediaOverlapRatio).toBeGreaterThanOrEqual(.99);
+        expect(layout.aboutSplit.mediaCoversSection).toBe(true);
+        expect(layout.aboutSplit.layoutCoversSection).toBe(true);
+        expect(layout.aboutSplit.sectionAtLeastViewport).toBe(true);
+        expect(layout.aboutSplit.mediaWidthRatio).toBeCloseTo(1, 2);
+        expect(layout.aboutSplit.mediaBorderRadius).toBe(0);
+        expect(layout.aboutSplit.scrimBackgroundImage).toContain('linear-gradient');
+        expect(layout.aboutSplit.imageObjectPosition).toBe('30% 50%');
+        expect(layout.aboutSplit.copyStartRatio).toBeGreaterThan(.35);
       } else {
+        expect(layout.aboutSplit.copyMediaOverlapRatio).toBeLessThanOrEqual(.002);
         expect(layout.aboutSplit.horizontalSeparation).toBe(true);
         expect(layout.aboutSplit.verticalOverlapRatio).toBeGreaterThan(.6);
         expect(layout.aboutSplit.mediaWidthRatio).toBeGreaterThan(.42);
@@ -1076,7 +1108,8 @@ test.describe('responsive header and dynamic UI', () => {
           contactTop: 110,
           contactBottom: 60
         });
-        expect(layout.type).toEqual({ hero: 34, film: 30, about: 64, crewIntro: 50, crew: 54, contact: 56 });
+        expect(layout.type).toMatchObject({ hero: 34, film: 30, crewIntro: 50, crew: 54, contact: 56 });
+        expect(layout.type.about).toBeCloseTo(46.8, 1);
         expect(layout.editorialGrid.crewGridWidth).toBeCloseTo(viewport.width - 44, 1);
         expect(layout.editorialGrid.crewCardWidth).toBeCloseTo(viewport.width - 44, 1);
       }
@@ -1146,9 +1179,17 @@ test.describe('responsive header and dynamic UI', () => {
     }
   });
 
-  test('founder split stays transparent, mirrored, and disjoint in both languages', async ({ page }) => {
+  test('founder composition overlays portrait phones and stays disjoint elsewhere', async ({ page }) => {
     for (const locale of ['en', 'he']) {
-      for (const viewport of [{ width: 390, height: 844 }, { width: 568, height: 320 }, { width: 918, height: 1022 }, { width: 1440, height: 900 }]) {
+      for (const viewport of [
+        { width: 320, height: 568 },
+        { width: 360, height: 800 },
+        { width: 390, height: 844 },
+        { width: 568, height: 320 },
+        { width: 768, height: 1024 },
+        { width: 918, height: 1022 },
+        { width: 1440, height: 900 }
+      ]) {
         await page.setViewportSize(viewport);
         await openHome(page, `/?lang=${locale}#about`);
         const copy = page.locator('.about-copy');
@@ -1156,20 +1197,53 @@ test.describe('responsive header and dynamic UI', () => {
         await expect(copy).toHaveClass(/seen/);
         await expect(copy).toHaveCSS('transform', 'none');
         const split = await page.evaluate(() => {
+          const about = document.querySelector('#about');
+          const layout = document.querySelector('.about-layout');
           const copy = document.querySelector('.about-copy');
           const media = document.querySelector('.about-media');
+          const image = media.querySelector('img');
+          const aboutRect = about.getBoundingClientRect();
+          const layoutRect = layout.getBoundingClientRect();
           const copyRect = copy.getBoundingClientRect();
           const mediaRect = media.getBoundingClientRect();
           const style = getComputedStyle(copy);
+          const mediaStyle = getComputedStyle(media);
+          const imageStyle = getComputedStyle(image);
+          const scrimStyle = getComputedStyle(layout, '::after');
           const overlapWidth = Math.max(0, Math.min(copyRect.right, mediaRect.right) - Math.max(copyRect.left, mediaRect.left));
           const overlapHeight = Math.max(0, Math.min(copyRect.bottom, mediaRect.bottom) - Math.max(copyRect.top, mediaRect.top));
           return {
+            portraitMobile: matchMedia('(max-width:760px) and (orientation:portrait)').matches,
             direction: style.direction,
             background: style.backgroundColor,
             borderWidth: Number.parseFloat(style.borderTopWidth),
             shadow: style.boxShadow,
             backdrop: style.backdropFilter || style.webkitBackdropFilter,
             overlapRatio: overlapWidth * overlapHeight / (copyRect.width * copyRect.height),
+            copyContained:
+              copyRect.left >= aboutRect.left - 1 &&
+              copyRect.top >= aboutRect.top - 1 &&
+              copyRect.right <= aboutRect.right + 1 &&
+              copyRect.bottom <= aboutRect.bottom + 1,
+            mediaFullBleed:
+              Math.abs(mediaRect.left - aboutRect.left) <= 1 &&
+              Math.abs(mediaRect.top - aboutRect.top) <= 1 &&
+              Math.abs(mediaRect.right - aboutRect.right) <= 1 &&
+              Math.abs(mediaRect.bottom - aboutRect.bottom) <= 1,
+            layoutFullBleed:
+              Math.abs(layoutRect.left - aboutRect.left) <= 1 &&
+              Math.abs(layoutRect.top - aboutRect.top) <= 1 &&
+              Math.abs(layoutRect.right - aboutRect.right) <= 1 &&
+              Math.abs(layoutRect.bottom - aboutRect.bottom) <= 1,
+            sectionAtLeastViewport: aboutRect.height >= innerHeight - 1,
+            copyStartRatio: (copyRect.top - aboutRect.top) / aboutRect.height,
+            mediaBorderRadius: Number.parseFloat(mediaStyle.borderTopLeftRadius),
+            scrimBackgroundImage: scrimStyle.backgroundImage,
+            scrimPointerEvents: scrimStyle.pointerEvents,
+            imageObjectPosition: imageStyle.objectPosition,
+            imageTransform: imageStyle.transform,
+            headingSize: Number.parseFloat(getComputedStyle(copy.querySelector('h2')).fontSize),
+            bodySize: Number.parseFloat(getComputedStyle(copy.querySelector('.about-body')).fontSize),
             copyAfterMedia: copyRect.top >= mediaRect.bottom - 1,
             copyBeforeMedia: copyRect.right <= mediaRect.left + 1,
             copyAfterMediaHorizontally: mediaRect.right <= copyRect.left + 1,
@@ -1182,14 +1256,34 @@ test.describe('responsive header and dynamic UI', () => {
         expect(split.borderWidth).toBe(0);
         expect(split.shadow).toBe('none');
         expect(split.backdrop).toBe('none');
-        expect(split.overlapRatio).toBeLessThanOrEqual(.002);
+        expect(split.copyContained).toBe(true);
         expect(split.overflow).toBeLessThanOrEqual(1);
-        if (viewport.width <= 760) {
-          expect(split.copyAfterMedia).toBe(true);
-        } else if (locale === 'he') {
-          expect(split.copyAfterMediaHorizontally).toBe(true);
+        expect(split.imageTransform).toBe('none');
+        if (split.portraitMobile) {
+          expect(split.overlapRatio).toBeGreaterThanOrEqual(.99);
+          expect(split.copyAfterMedia).toBe(false);
+          expect(split.mediaFullBleed).toBe(true);
+          expect(split.layoutFullBleed).toBe(true);
+          expect(split.sectionAtLeastViewport).toBe(true);
+          expect(split.mediaBorderRadius).toBe(0);
+          expect(split.scrimBackgroundImage).toContain('linear-gradient');
+          expect(split.scrimPointerEvents).toBe('none');
+          expect(split.imageObjectPosition).toBe(locale === 'he' ? '70% 50%' : '30% 50%');
+          expect(split.copyStartRatio).toBeGreaterThan(.35);
+          expect(split.headingSize).toBeGreaterThanOrEqual(42);
+          expect(split.headingSize).toBeLessThanOrEqual(48);
+          expect(split.bodySize).toBeGreaterThanOrEqual(15);
+          expect(split.bodySize).toBeLessThanOrEqual(16);
         } else {
-          expect(split.copyBeforeMedia).toBe(true);
+          expect(split.overlapRatio).toBeLessThanOrEqual(.002);
+          expect(split.scrimBackgroundImage).toBe('none');
+          if (viewport.width <= 760) {
+            expect(split.copyAfterMedia).toBe(true);
+          } else if (locale === 'he') {
+            expect(split.copyAfterMediaHorizontally).toBe(true);
+          } else {
+            expect(split.copyBeforeMedia).toBe(true);
+          }
         }
       }
     }
@@ -1342,8 +1436,8 @@ test.describe('responsive header and dynamic UI', () => {
   });
 
   test('header contact CTA follows the hero without crowding the approved widths', async ({ page }) => {
-    test.setTimeout(90_000);
-    const widths = [320, 360, 375, 385, 386, 387, 390, 768, 1440];
+    test.setTimeout(120_000);
+    const widths = [320, 360, 375, 385, 386, 387, 390, 700, 701, 768, 1440];
     const readLayout = () => page.evaluate(async () => {
       await document.fonts.ready;
       const rect = element => {
@@ -1356,9 +1450,41 @@ test.describe('responsive header and dynamic UI', () => {
       const headerActions = header.querySelector('.header-actions');
       const language = header.querySelector('[data-language-toggle]');
       const contactCta = header.querySelector('[data-header-contact-cta]');
+      const heroCta = document.querySelector('[data-hero-contact-cta]');
       const isVisible = element => {
         const style = getComputedStyle(element);
         return style.display !== 'none' && style.visibility !== 'hidden' && element.getClientRects().length > 0;
+      };
+      const ctaContract = element => {
+        const style = getComputedStyle(element);
+        const arrow = getComputedStyle(element.querySelector('i'));
+        const glow = getComputedStyle(element, '::before');
+        return {
+          shared: {
+            borderRadius: style.borderRadius,
+            borderTopWidth: style.borderTopWidth,
+            borderTopStyle: style.borderTopStyle,
+            borderTopColor: style.borderTopColor,
+            backgroundImage: style.backgroundImage,
+            backgroundClip: style.backgroundClip,
+            backgroundOrigin: style.backgroundOrigin,
+            backgroundSize: style.backgroundSize,
+            color: style.color,
+            fontFamily: style.fontFamily,
+            fontWeight: style.fontWeight,
+            textTransform: style.textTransform,
+            whiteSpace: style.whiteSpace,
+            arrowBorderTopColor: arrow.borderTopColor,
+            arrowBorderRightColor: arrow.borderRightColor,
+            glowDisplay: glow.display,
+            glowBackgroundImage: glow.backgroundImage,
+            glowFilter: glow.filter
+          },
+          height: element.getBoundingClientRect().height,
+          fontSize: style.fontSize,
+          letterSpacing: style.letterSpacing,
+          arrowDirection: new DOMMatrix(arrow.transform).a
+        };
       };
       const visibleTargets = [...header.querySelectorAll('a, button')]
         .filter(isVisible).map(rect).sort((a, b) => a.left - b.left);
@@ -1388,6 +1514,8 @@ test.describe('responsive header and dynamic UI', () => {
         language: rect(language),
         contactCta: rect(contactCta),
         contactCtaVisible: isVisible(contactCta),
+        contactCtaContract: ctaContract(contactCta),
+        heroCtaContract: ctaContract(heroCta),
         visibleTargets,
         visibleLinkTargets,
         visibleActionTargets,
@@ -1452,13 +1580,28 @@ test.describe('responsive header and dynamic UI', () => {
           window.scrollTo(0, hero.offsetTop + hero.offsetHeight + 2);
         });
         await expect(headerCta).toBeVisible();
-        await expect(headerCta).toHaveText(locale === 'he' ? 'צור איתנו קשר' : 'Contact us');
+        await expect(headerCta).toHaveText(locale === 'he' ? 'בואו נדבר' : 'LET’S TALK');
 
         const belowHero = await readLayout();
         assertContained(belowHero, `${locale} ${width}px below hero`);
         expect(belowHero.headerHasCta).toBe(true);
         expect(belowHero.contactCtaVisible).toBe(true);
         expect(belowHero.header.height).toBeCloseTo(atHero.header.height, 0);
+        expect(belowHero.contactCtaContract.shared).toEqual(belowHero.heroCtaContract.shared);
+        expect(belowHero.contactCtaContract.shared.borderRadius).toBe('999px');
+        expect(belowHero.contactCtaContract.shared.backgroundImage).not.toBe('none');
+        expect(belowHero.contactCtaContract.shared.glowDisplay).not.toBe('none');
+        expect(belowHero.contactCtaContract.shared.glowBackgroundImage).not.toBe('none');
+        expect(belowHero.contactCtaContract.height).toBeGreaterThanOrEqual(44);
+        expect(belowHero.heroCtaContract.height).toBeGreaterThanOrEqual(44);
+        expect(belowHero.contactCtaContract.height).toBeLessThan(belowHero.heroCtaContract.height);
+        expect(Math.sign(belowHero.contactCtaContract.arrowDirection)).toBe(locale === 'he' ? -1 : 1);
+        expect(Math.sign(belowHero.heroCtaContract.arrowDirection)).toBe(locale === 'he' ? -1 : 1);
+        if (locale === 'he') {
+          expect(belowHero.contactCtaContract.shared.fontFamily).toContain('Assistant');
+          expect(['0px', 'normal']).toContain(belowHero.contactCtaContract.letterSpacing);
+          expect(['0px', 'normal']).toContain(belowHero.heroCtaContract.letterSpacing);
+        }
         const languageCtaGap = Math.max(
           belowHero.language.left - belowHero.contactCta.right,
           belowHero.contactCta.left - belowHero.language.right
@@ -1495,7 +1638,7 @@ test.describe('responsive header and dynamic UI', () => {
       'מקריאטיב ובימוי ועד הפקה ופוסט,',
       'בשליטה מלאה על כל פריים.'
     ]);
-    await expect(page.locator('.hero-cta')).toHaveText('צור איתנו קשר');
+    await expect(page.locator('.hero-cta')).toHaveText('בואו נדבר');
     await expect(page.locator('#hud-chapter')).toHaveText('CH·01');
     await expect(page.locator('#hud-progress')).toHaveText(/\d{3}/);
     await expect(page.locator('.hero-media, .hero-media-video, .hero-media-fallback, .hero-brand-stage')).toHaveCount(0);
