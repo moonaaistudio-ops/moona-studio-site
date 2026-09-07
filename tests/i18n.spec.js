@@ -78,15 +78,12 @@ test('critical assets and legal links remain compatible with a direct-file previ
   for (const asset of ['moona-logo-lockup.svg', 'moona-logo-mark.svg']) {
     expect(fs.existsSync(path.join(PROJECT_ROOT, 'p', 'brand', asset))).toBe(true);
   }
-  for (const asset of [
-    'crew-placeholder-640.avif',
-    'crew-placeholder-640.webp',
-    'crew-placeholder-960.avif',
-    'crew-placeholder-960.webp',
-    'crew-placeholder-1600.avif',
-    'crew-placeholder-1600.webp'
-  ]) {
-    expect(fs.existsSync(path.join(PROJECT_ROOT, 'p', 'crew', asset))).toBe(true);
+  for (const name of ['alma', 'nara', 'luc', 'vero', 'sona', 'iva']) {
+    for (const width of [480, 768, 1086]) {
+      for (const format of ['avif', 'webp']) {
+        expect(fs.existsSync(path.join(PROJECT_ROOT, 'p', 'crew', `${name}-moon-r10-${width}.${format}`))).toBe(true);
+      }
+    }
   }
 });
 
@@ -865,31 +862,32 @@ test.describe('responsive header and dynamic UI', () => {
       expect(layout.sectionAfterFilm).toBe('work');
       expect(layout.sectionAfterWork).toBe('about');
       expect(layout.sectionAfterAbout).toBe('crew-intro');
-      expect(layout.crewNames).toEqual(['Alma', 'Nara', 'Luc', 'Vera', 'Sona', 'Ivo']);
+      expect(layout.crewNames).toEqual(['Alma', 'Nara', 'Luc', 'Vero', 'Sona', 'Iva']);
       expect(layout.crewNumbering).toBe(0);
       expect(layout.crewCreditLabels).toEqual(Array(6).fill('AI CREW'));
       expect(layout.crewColumns).toBe(width > 980 ? 3 : 1);
       expect(layout.legacyCrewNavigation).toBe(0);
       expect(layout.portraitSlots).toHaveLength(6);
-      for (const portrait of layout.portraitSlots) {
+      for (const [index, portrait] of layout.portraitSlots.entries()) {
+        const name = layout.crewNames[index].toLowerCase();
         expect(portrait).toMatchObject({
           ariaHidden: 'true',
           childCount: 1,
-          aspectRatio: '10 / 11',
+          aspectRatio: '3 / 4',
           image: {
             alt: '',
-            src: 'p/crew/crew-placeholder-960.webp',
-            width: '960',
-            height: '1200',
+            src: `p/crew/${name}-moon-r10-768.webp`,
+            width: '768',
+            height: '1024',
             loading: 'lazy',
             decoding: 'async',
-            objectFit: 'cover'
+            objectFit: 'contain'
           }
         });
-        expect(portrait.image.srcset).toContain('crew-placeholder-1600.webp 1600w');
+        expect(portrait.image.srcset).toContain(`${name}-moon-r10-1086.webp 1086w`);
         expect(portrait.image.sizes).toContain('(max-width:760px)');
-        expect(portrait.avifSrcset).toContain('crew-placeholder-1600.avif 1600w');
-        expect(portrait.renderedRatio).toBeCloseTo(10 / 11, 2);
+        expect(portrait.avifSrcset).toContain(`${name}-moon-r10-1086.avif 1086w`);
+        expect(portrait.renderedRatio).toBeCloseTo(3 / 4, 2);
       }
       expect(layout.workCards).toBe(4);
       expect(layout.workColumns).toBe(width > 760 ? 2 : 1);
