@@ -418,9 +418,9 @@ test.describe('dictionary and first-paint privacy contract', () => {
         english: elements.map(element => element.textContent)
       };
     });
-    expect(emphasis.count).toBe(2);
+    expect(emphasis.count).toBe(4);
     expect(emphasis.sameNodes).toBe(true);
-    expect(emphasis.tags).toEqual(['EM', 'EM']);
+    expect(emphasis.tags).toEqual(['EM', 'EM', 'EM', 'EM']);
     expect(emphasis.hebrew.map(item => item.text)).not.toEqual(emphasis.english);
     for (const item of emphasis.hebrew) {
       expect(item.fontStyle).toBe('normal');
@@ -1644,8 +1644,8 @@ test.describe('responsive header and dynamic UI', () => {
     await expect(page.locator('.hero-media, .hero-media-video, .hero-media-fallback, .hero-brand-stage')).toHaveCount(0);
 
     const desktopHeroRatio = await page.locator('#hero-track').evaluate(element => element.offsetHeight / innerHeight);
-    expect(desktopHeroRatio).toBeGreaterThanOrEqual(1.69);
-    expect(desktopHeroRatio).toBeLessThanOrEqual(1.71);
+    expect(desktopHeroRatio).toBeGreaterThanOrEqual(2.59);
+    expect(desktopHeroRatio).toBeLessThanOrEqual(2.61);
     await expect(page.locator('[data-mobile-menu-toggle]')).toBeHidden();
 
     await page.locator('.hero-cta').click();
