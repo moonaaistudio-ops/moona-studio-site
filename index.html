@@ -1087,6 +1087,15 @@ html[dir="rtl"] :is(.cta-btn,.qnext,.contact .mail):hover i{transform:rotate(-13
   .cta-btn.hero-cta{padding:14px 22px;font-size:10px;letter-spacing:.16em}
 }
 
+/* phones (the same breakpoint the script uses to decide the film loops instead of
+   scrubbing): beats 2 and 3 ride the film's clock. they sit low on the ground over
+   a scrim, and the headline copy steps aside for them while the button stays put */
+@media(max-width:700px){
+  #t2,#t3{justify-content:flex-end;padding-bottom:13vh;align-items:center;text-align:center}
+  #t2::before,#t3::before{content:"";position:absolute;inset:auto 0 0 0;height:58%;pointer-events:none;
+    background:linear-gradient(to top,rgba(3,4,8,.84),rgba(3,4,8,.46) 50%,transparent)}
+}
+
 /* reveal on scroll */
 .rv{opacity:0;transform:translateY(34px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
 .rv.seen{opacity:1;transform:none}
@@ -1354,8 +1363,10 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
     <div class="hud br" id="hud-progress">000</div>
 
     <div class="htxt" id="t1">
+      <div class="htxt-copy">
       <h1 class="statement"><span data-i18n="hero.headline.lead">Cinematic ads,</span> <bdi lang="en" dir="ltr" data-i18n="hero.headline.aiTerm"></bdi> <em data-i18n="hero.headline.emphasis">born without a camera</em></h1>
       <p class="statement-sub"><span data-i18n="hero.subline.one">An AI-native studio for film and motion ads.</span><span data-i18n="hero.subline.two">Story, craft and taste first.</span></p>
+      </div>
       <button class="cta-btn hero-cta" type="button" data-ask data-hero-contact-cta data-hover><span data-i18n="common.primaryCta">LET’S TALK</span><i></i></button>
     </div>
 
@@ -2128,6 +2139,7 @@ function drawScrub(p, t){
 const track=document.getElementById('hero-track');
 const hudPr=document.getElementById('hud-progress');
 const t1=document.getElementById('t1'), t2=document.getElementById('t2'), t3=document.getElementById('t3');
+const t1Copy=t1.querySelector('.htxt-copy');
 const cue=document.getElementById('cue');
 let target=0, shown=0;
 
@@ -2136,6 +2148,16 @@ let target=0, shown=0;
    lines are never on the plate together. arrivals ease out, exits ease in and
    are short, so a fast scroll reads as a cut rather than a smear. */
 const eOut=t=>1-Math.pow(1-t,3), eIn=t=>t*t;
+/* phones have no runway, so the film's own clock stands in for it. the wrap is
+   noticed so the headline can rise back in after the loop instead of snapping. */
+let filmWraps=0, lastClockT=0;
+function filmClock(){
+  if(!filmReady||!filmRolling) return .1;            /* inside beat 1's hold */
+  const t=heroFilm.currentTime;
+  if(t<lastClockT-5) filmWraps++;
+  lastClockT=t;
+  return Math.min(1,t/Math.max(.1,filmEnd));
+}
 function beatWindow(el,p,a,b,c,d){
   let o,y;
   if(p<a){o=0;y=48}
@@ -2256,9 +2278,22 @@ function loop(t){
     /* three beats over one film: the headline on the ground flow, the second
        as the lander arrives, the third as the flag goes in. a gap sits between
        each pair so the plate is briefly clean — that is the cut. */
-    beatWindow(t1,shown,-1,-.5,.20,.28);
-    beatWindow(t2,shown,.33,.41,.60,.67);
-    beatWindow(t3,shown,.72,.80,2,3);
+    if(filmScrubs){
+      beatWindow(t1,shown,-1,-.5,.20,.28);
+      beatWindow(t2,shown,.33,.41,.60,.67);
+      beatWindow(t3,shown,.72,.80,2,3);
+    }else{
+      /* same three beats, timed to the loop: the lander lands, the flag goes in,
+         the plate is clean through the dissolve, then the headline rises again */
+      /* on a clock the windows are wall time, so they are cut short: arrivals
+         half a second, exits a third, and a clean plate between — a cut, not a
+         dissolve. (fractions of the 19.7s story: .025 ≈ 0.5s, .018 ≈ 0.35s) */
+      const p=filmClock();
+      t1.style.opacity=1; t1.style.visibility='visible';
+      beatWindow(t1Copy,p,filmWraps?0:-1,filmWraps?.03:-.5,.30,.318);
+      beatWindow(t2,p,.34,.365,.64,.658);
+      beatWindow(t3,p,.68,.705,.975,.993);
+    }
     const pr=String(Math.round(shown*100)).padStart(3,'0');
     if(pr!==lastHudPr){lastHudPr=pr; if(hudPr)hudPr.textContent=pr}
     const cueOp=(shown<.02 && v<.06)?1:0;
