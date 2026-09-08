@@ -626,6 +626,11 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
   left:50%;top:50%;width:126%;height:200%;transform:translate(-50%,-50%);
   background:radial-gradient(closest-side,rgba(168,198,232,.20),rgba(168,198,232,0) 72%)}
 .htxt :is(h1.statement,.hero-beat) em{font-style:normal}
+/* the phone fades the words without touching the button, so they need a wrapper —
+   but a plain block takes the width of the widest child (the subline) and leaves the
+   headline's own narrower column sitting against its left edge. make it a centring
+   box of full width so the headline stays on the axis. */
+.htxt-copy{display:flex;flex-direction:column;align-items:center;width:100%}
 .hero-beat{margin:0}
 .hero-beat em{display:block}   /* the emphasised sentence starts on its own line, not mid-wrap */
 /* beats 2 and 3 leave the centre — the lander and the flag own it. they sit low on
