@@ -40,6 +40,10 @@
   }
 })();
 </script>
+<!-- on a phone the film is the top of the page, and Safari paints its status-bar
+     backdrop from theme-color; matching the frame's own top tone lets the film
+     read to the edge instead of stopping at a darker band. first match wins. -->
+<meta name="theme-color" media="(max-width:700px)" content="#1a2225">
 <meta name="theme-color" content="#05070c">
 <link rel="canonical" href="https://moona-studio-two.vercel.app/">
 
@@ -2359,7 +2363,8 @@ function loop(t){
       /* they swap in place now, so the move is a nudge, not a slide */
       /* same shot map, but the loop is rotated one second, so a source second S
          sits at (S-1)/19.7 of the clock. fades are wall time here: ~0.9s. */
-      beatWindow(t1Copy,p,filmWraps?0:-1,filmWraps?.045:-.5,.142,.188,24,20);
+      /* the headline holds until the sweep is close, so the plate is clean for a beat, not a pause */
+      beatWindow(t1Copy,p,filmWraps?0:-1,filmWraps?.045:-.5,.225,.262,24,20);
       beatWindow(t2,p,.274,.320,.386,.431,24,20);
       beatWindow(t3,p,.883,.929,.985,.999,24,20);
     }
