@@ -1097,14 +1097,6 @@ html[dir="rtl"] :is(.cta-btn,.qnext,.contact .mail):hover i{transform:rotate(-13
   .cta-btn.hero-cta{padding:14px 22px;font-size:10px;letter-spacing:.16em}
 }
 
-/* SPIKE: with ?heroscrub=1 a phone gets a runway and the desktop stage back */
-html.force-scrub #hero-track{height:300vh;height:300svh}
-html.force-scrub #hero-stick{position:sticky;top:0;height:100vh;height:100svh}
-html.force-scrub .hero-cta{position:static;left:auto;top:auto;margin-top:38px;transform:none}
-html.force-scrub :is(#t2,#t3){justify-content:flex-end;padding-bottom:14vh}
-#scrubdbg{position:fixed;left:8px;bottom:8px;z-index:99;font:11px/1.45 ui-monospace,monospace;
-  color:#7dffc0;background:rgba(0,0,0,.74);padding:8px 10px;border-radius:6px;white-space:pre;pointer-events:none}
-
 /* phones (the same breakpoint the script uses to decide the film loops instead of
    scrubbing): beats 2 and 3 ride the film's clock. all three share one stage at the
    centre — the copy is the only thing left in flow, so whichever beat is showing
@@ -2245,12 +2237,7 @@ let lastPush=-1, lastGrade=-1;
 function gradeAt(p){ const k=Math.max(0,Math.min(1,(p-.62)/.38)); return k*k*(3-2*k); }
 /* wide enough for the sticky runway and the scroll drives the film; narrower than
    that there is nothing to scrub along, so it simply loops instead */
-/* SPIKE (throwaway, remove after the decision): ?heroscrub=1 forces a phone onto
-   the scrub path so iOS seek behaviour can be measured on a real device;
-   ?heroscrub=0 forces the loop. Default is untouched. */
-const scrubFlag=new URLSearchParams(location.search).get('heroscrub');
-const filmScrubs=scrubFlag==='1'?true:scrubFlag==='0'?false:!matchMedia('(max-width:700px)').matches;
-if(scrubFlag==='1') document.documentElement.classList.add('force-scrub');
+const filmScrubs=!matchMedia('(max-width:700px)').matches;
 const SEAM=1;   /* the dissolve back to the head — the scrub stops just before it,
                    so scrolling out of the hero lands on the flag, not on a melt */
 let filmPlate=false, filmReady=false, filmRolling=false, filmEnd=0, lastFilmT=-1;
@@ -2276,30 +2263,6 @@ if(heroFilm&&!reduced){
   /* fetched after load, like the flagship warm-up further down: the plate must not
      race the first paint — or the page's own interactions — for bandwidth */
   addEventListener('load',()=>{heroFilm.preload='auto';heroFilm.load()},{once:true});
-}
-
-/* ═══════ SPIKE: seek probe (throwaway, only with ?heroscrub) ═══════
-   counts the seeks we ask for against the ones the decoder actually serves, and
-   how long each takes. printed on screen, so a phone screenshot is the result. */
-if(scrubFlag!==null&&heroFilm){
-  const P={issued:0,served:0,sum:0,n:0,worst:0,pending:null,frames:0};
-  P.issue=()=>{P.issued++; if(P.pending===null)P.pending=performance.now();};
-  heroFilm.addEventListener('seeked',()=>{P.served++;
-    if(P.pending!==null){const d=performance.now()-P.pending;P.sum+=d;P.n++;if(d>P.worst)P.worst=d;P.pending=null;}});
-  window.__scrubProbe=P;
-  const box=document.createElement('div'); box.id='scrubdbg'; document.body.appendChild(box);
-  const rvfc=heroFilm.requestVideoFrameCallback?.bind(heroFilm);
-  if(rvfc){const step=()=>{P.frames++;rvfc(step)};rvfc(step);}
-  let t0=performance.now(), f0=0;
-  setInterval(()=>{
-    const now=performance.now(), fps=(P.frames-f0)/((now-t0)/1000)||0; t0=now; f0=P.frames;
-    box.textContent=
-      'scrub '+(filmScrubs?'ON':'off')+'   ct '+heroFilm.currentTime.toFixed(2)+' / '+(heroFilm.duration||0).toFixed(1)+'\n'+
-      'seeks asked '+P.issued+'   served '+P.served+'   unserved '+(P.issued?Math.round(100-100*P.served/P.issued):0)+'%\n'+
-      'seek ms   mean '+(P.n?P.sum/P.n:0).toFixed(0)+'   worst '+P.worst.toFixed(0)+'\n'+
-      'video fps '+fps.toFixed(1)+'   readyState '+heroFilm.readyState+'   buffered '+
-      (heroFilm.buffered.length?heroFilm.buffered.end(heroFilm.buffered.length-1).toFixed(1):0)+'s';
-  },500);
 }
 /* the aurora only costs anything while it is actually on screen */
 let heroOnScreen=true;
@@ -2347,7 +2310,7 @@ function loop(t){
       if(shown>.006) setRolling(true); else if(shown<.002) setRolling(false);
       if(filmRolling){
         const ct=Math.max(0,Math.min(filmEnd,rampT(shown)*filmEnd/20.7));
-        if(Math.abs(ct-lastFilmT)>.016){lastFilmT=ct; window.__scrubProbe?.issue(); heroFilm.currentTime=ct}
+        if(Math.abs(ct-lastFilmT)>.016){lastFilmT=ct; heroFilm.currentTime=ct}
         /* the camera in the shot is moving forward, so the push is the shot's own
            motion carried a little further — not a move laid on top of it. it
            peaks through the landing and settles as the walk ends: the frame is
