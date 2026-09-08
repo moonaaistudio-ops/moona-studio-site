@@ -2214,7 +2214,7 @@ const hudCh=document.getElementById('hud-chapter'), hudName=document.getElementB
    and the flag (18.3s to the end) — and runs through the ground flow and the
    dust cloud, where there is nothing to hold on. knots are (scroll, seconds);
    monotonic, so scrolling down never rewinds. */
-const RAMP=[[0,0],[.30,7.5],[.38,9.5],[.62,11.8],[.68,14.5],[.80,18.3],[1,20.7]];
+const RAMP=[[0,0],[.20,5.0],[.30,7.2],[.46,8.8],[.66,13.0],[.76,16.5],[.86,19.2],[1,20.7]];
 function rampT(p){
   p=Math.max(0,Math.min(1,p));
   for(let i=1;i<RAMP.length;i++){ const [p0,t0]=RAMP[i-1],[p1,t1]=RAMP[i];
@@ -2223,7 +2223,7 @@ function rampT(p){
 }
 /* chapters are named in film seconds, so the counter tells the truth on the
    phone's loop as much as on the desktop scrub */
-const CHAPTERS=[[0,'Ground'],[9.5,'Landing'],[18.3,'Flag']];
+const CHAPTERS=[[0,'Ground'],[8.8,'Landing'],[19.2,'Flag']];
 let lastChapter=-1;
 function setChapter(t){
   let i=0; for(let k=0;k<CHAPTERS.length;k++) if(t>=CHAPTERS[k][0]) i=k;
@@ -2335,18 +2335,17 @@ function loop(t){
       lastHudOp=hudOp; lastPxs=pxs;
       for(const h of huds){h.style.opacity=hudOp; h.style.transform=`translate(${pxs*8}px,${pys*6}px)`}
     }
-    /* three beats over one film, placed against the film's own motion rather
-       than on round fractions. measured energy per half second: the flare at
-       6.5-8.5s and the dust whiteout and walk at 13-17.5s are the busiest
-       stretches, 9-10s is the calmest in the whole clip.
-       so a line holds where the footage is quiet and the plate goes clean
-       where it is loud — the gaps sit over the flare and over the walk, and
-       beat two arrives in the hush before touchdown. every gap is 250px of
-       scroll, nearly double what it was; the fades are 270px each. */
+    /* three beats placed on what the footage actually is, shot by shot:
+       0-4.5 the run, 4.5-7.2 boots on regolith, 7.2-8.8 the horizon sweep past
+       a ringed planet (the calmest, most readable frame in the clip), 8.8-13
+       the ship coming down, 13-16.5 the tumble, 16.5-19.2 the recovery,
+       19.2-end the flag held.
+       a line holds only where it can be read. the whole crash and tumble —
+       nine seconds, the best footage here — carries no text at all. */
     if(filmScrubs){
-      beatWindow(t1,shown,-1,-.5,.159,.259);
-      beatWindow(t2,shown,.352,.452,.593,.693);
-      beatWindow(t3,shown,.785,.885,2,3);
+      beatWindow(t1,shown,-1,-.5,.112,.192);
+      beatWindow(t2,shown,.245,.320,.440,.517);
+      beatWindow(t3,shown,.849,.925,2,3);
     }else{
       /* same three beats, timed to the loop: the lander lands, the flag goes in,
          the plate is clean through the dissolve, then the headline rises again */
@@ -2356,9 +2355,11 @@ function loop(t){
       const p=filmClock();
       t1.style.opacity=1; t1.style.visibility='visible';
       /* they swap in place now, so the move is a nudge, not a slide */
-      beatWindow(t1Copy,p,filmWraps?0:-1,filmWraps?.045:-.5,.28,.315,24,20);
-      beatWindow(t2,p,.36,.405,.60,.635,24,20);
-      beatWindow(t3,p,.68,.725,.96,.995,24,20);
+      /* same shot map, but the loop is rotated one second, so a source second S
+         sits at (S-1)/19.7 of the clock. fades are wall time here: ~0.9s. */
+      beatWindow(t1Copy,p,filmWraps?0:-1,filmWraps?.045:-.5,.142,.188,24,20);
+      beatWindow(t2,p,.274,.320,.386,.431,24,20);
+      beatWindow(t3,p,.883,.929,.985,.999,24,20);
     }
     const pr=String(Math.round(shown*100)).padStart(3,'0');
     if(pr!==lastHudPr){lastHudPr=pr; if(hudPr)hudPr.textContent=pr}
