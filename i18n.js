@@ -2,7 +2,8 @@
 (() => {
   'use strict';
 
-  const STORAGE_KEY = 'moona.locale';
+  // The old key also stored shared-link locales, so it cannot prove a user choice.
+  const STORAGE_KEY = 'moona.locale.user';
   const VALID_LOCALES = new Set(['en', 'he']);
   const HEBREW_FONTS_ID = 'moona-hebrew-fonts';
   const HEBREW_FONTS_URL = 'https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@400;600&display=swap';
@@ -659,7 +660,7 @@
     notify({ phase: 'before', from, to: nextLocale, source });
     locale = nextLocale;
     window.__MOONA_LOCALE__ = locale;
-    if (options.persist !== false) saveLocale(locale);
+    if (source === 'user' && options.persist !== false) saveLocale(locale);
     if (options.updateUrl !== false) syncUrl(locale, true);
     applyDocument();
     notify({ phase: 'after', from, to: locale, source });
@@ -680,7 +681,6 @@
   window.MoonaI18n = { getLocale, setLocale, t, applyDocument, subscribe };
 
   const initialSource = window.__MOONA_LOCALE_SOURCE__ || 'default';
-  if (initialSource === 'query') saveLocale(locale);
   syncUrl(locale, initialSource !== 'default');
   applyDocument();
 

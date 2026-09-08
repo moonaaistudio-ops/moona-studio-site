@@ -9,12 +9,11 @@
 /* Resolve direction before CSS or analytics can paint the wrong locale. Keep this
    small map in lock-step with i18n.js; the E2E suite checks it for drift. */
 (()=>{
-  const valid=new Set(['en','he']), key='moona.locale', params=new URLSearchParams(location.search);
+  const valid=new Set(['en','he']), key='moona.locale.user', params=new URLSearchParams(location.search);
   const requested=params.get('lang');
   let locale='en', source='default';
   if(valid.has(requested)){
     locale=requested; source='query';
-    try{localStorage.setItem(key,locale)}catch(_){}
   }else{
     try{
       const saved=localStorage.getItem(key);

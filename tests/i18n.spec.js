@@ -45,7 +45,7 @@ async function openHome(page, path = '/') {
 async function seedLocaleOnce(page, locale) {
   await page.addInitScript(value => {
     if (sessionStorage.getItem('__moona_e2e_locale_seeded')) return;
-    localStorage.setItem('moona.locale', value);
+    localStorage.setItem('moona.locale.user', value);
     sessionStorage.setItem('__moona_e2e_locale_seeded', '1');
   }, locale);
 }
@@ -103,9 +103,13 @@ function metadata(page) {
 }
 
 test.describe('locale bootstrap, URL contract, and metadata', () => {
-  test('defaults to English without adding a lang parameter', async ({ page }) => {
+  test.use({ locale: 'he-IL', timezoneId: 'Asia/Jerusalem' });
+
+  test('defaults to English for a Hebrew browser in Israel without adding a lang parameter', async ({ page }) => {
     await openHome(page, '/?campaign=moon#film');
 
+    expect(await page.evaluate(() => navigator.language)).toBe('he-IL');
+    expect(await page.evaluate(() => Intl.DateTimeFormat().resolvedOptions().timeZone)).toBe('Asia/Jerusalem');
     await expect.poll(() => metadata(page)).toEqual({
       lang: 'en',
       dir: 'ltr',
@@ -141,7 +145,7 @@ test.describe('locale bootstrap, URL contract, and metadata', () => {
       twitterTitle: HOME_EN_TITLE,
       canonical: 'https://moona-studio-two.vercel.app/'
     });
-    expect(await page.evaluate(() => localStorage.getItem('moona.locale'))).toBe('he');
+    expect(await page.evaluate(() => localStorage.getItem('moona.locale.user'))).toBe('en');
     const url = new URL(page.url());
     expect(url.searchParams.get('campaign')).toBe('moon');
     expect(url.searchParams.get('lang')).toBe('he');
@@ -168,7 +172,66 @@ test.describe('locale bootstrap, URL contract, and metadata', () => {
     await page.reload();
     await waitForI18n(page);
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-    expect(await page.evaluate(() => localStorage.getItem('moona.locale'))).toBe('en');
+    expect(await page.evaluate(() => localStorage.getItem('moona.locale.user'))).toBe('en');
+  });
+
+  for (const route of ['/', '/privacy.html', '/accessibility.html']) {
+    test(`legacy Hebrew preference is ignored before and after runtime on ${route}`, async ({ context, page }) => {
+      await page.addInitScript(() => localStorage.setItem('moona.locale', 'he'));
+      await context.addCookies([{ name: 'e2e_i18n', value: 'delay', url: BASE_URL }]);
+      await page.goto(route, { waitUntil: 'commit' });
+      await page.waitForFunction(() => window.__MOONA_LOCALE__ && !window.MoonaI18n);
+      await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+      await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
+      expect(await page.evaluate(() => localStorage.getItem('moona.locale.user'))).toBeNull();
+
+      await waitForI18n(page);
+      await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+      expect(new URL(page.url()).searchParams.has('lang')).toBe(false);
+    });
+  }
+
+  test('a Hebrew link keeps internal navigation Hebrew without saving the next visit', async ({ page }) => {
+    await openHome(page, '/?lang=he');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'he');
+    expect(await page.evaluate(() => localStorage.getItem('moona.locale.user'))).toBeNull();
+
+    await page.locator('.contact [data-i18n="footer.privacy"]').click();
+    await waitForI18n(page);
+    await expect(page.locator('h1')).toHaveText('הודעת פרטיות');
+    expect(new URL(page.url()).searchParams.get('lang')).toBe('he');
+    expect(await page.evaluate(() => localStorage.getItem('moona.locale.user'))).toBeNull();
+
+    await page.locator('[data-i18n="footer.accessibility"]').click();
+    await waitForI18n(page);
+    await expect(page.locator('h1')).toHaveText('הצהרת נגישות');
+    expect(new URL(page.url()).searchParams.get('lang')).toBe('he');
+    expect(await page.evaluate(() => localStorage.getItem('moona.locale.user'))).toBeNull();
+
+    await page.locator('.back').click();
+    await waitForI18n(page);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'he');
+
+    await openHome(page);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    expect(new URL(page.url()).searchParams.has('lang')).toBe(false);
+  });
+
+  test('a manual Hebrew choice survives a bare visit and a later English link', async ({ page }) => {
+    await openHome(page);
+    await page.locator('[data-language-toggle]').click();
+    await expect(page.locator('html')).toHaveAttribute('lang', 'he');
+    expect(await page.evaluate(() => localStorage.getItem('moona.locale.user'))).toBe('he');
+
+    await openHome(page);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'he');
+
+    await openHome(page, '/?lang=en');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    expect(await page.evaluate(() => localStorage.getItem('moona.locale.user'))).toBe('he');
+
+    await openHome(page);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'he');
   });
 
   test('invalid query falls back to storage while preserving query and hash', async ({ page }) => {
@@ -478,6 +541,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
   });
 
   test('head bootstrap sets Hebrew direction and metadata before the shared runtime arrives', async ({ context, page }) => {
+    await seedLocaleOnce(page, 'en');
     await context.addCookies([{ name: 'e2e_i18n', value: 'delay', url: BASE_URL }]);
     await page.goto('/?lang=he', { waitUntil: 'commit' });
     await page.waitForFunction(expected => document.title === expected && !window.MoonaI18n, HOME_HE_TITLE);
@@ -487,16 +551,21 @@ test.describe('dictionary and first-paint privacy contract', () => {
       title: HOME_HE_TITLE,
       description: HOME_HE_DESCRIPTION
     });
+    expect(await page.evaluate(() => localStorage.getItem('moona.locale.user'))).toBe('en');
     await waitForI18n(page);
+    expect(await page.evaluate(() => localStorage.getItem('moona.locale.user'))).toBe('en');
   });
 
   test('privacy hides delayed Hebrew copy, then reveals it after translation', async ({ context, page }) => {
+    await seedLocaleOnce(page, 'en');
     await context.addCookies([{ name: 'e2e_i18n', value: 'delay', url: BASE_URL }]);
     await page.goto('/privacy.html?lang=he', { waitUntil: 'commit' });
     await page.waitForFunction(() => document.body && document.documentElement.classList.contains('i18n-pending'));
     expect(await page.evaluate(() => getComputedStyle(document.body).visibility)).toBe('hidden');
+    expect(await page.evaluate(() => localStorage.getItem('moona.locale.user'))).toBe('en');
 
     await waitForI18n(page);
+    expect(await page.evaluate(() => localStorage.getItem('moona.locale.user'))).toBe('en');
     await expect(page.locator('html')).not.toHaveClass(/i18n-pending/);
     await expect(page.locator('body')).toBeVisible();
     await expect(page.locator('h1')).toHaveText('הודעת פרטיות');
@@ -504,6 +573,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
   });
 
   test('accessibility statement hides delayed Hebrew copy and keeps bootstrap metadata in sync', async ({ context, page }) => {
+    await seedLocaleOnce(page, 'en');
     await context.addCookies([{ name: 'e2e_i18n', value: 'delay', url: BASE_URL }]);
     await page.goto('/accessibility.html?lang=he', { waitUntil: 'commit' });
     await page.waitForFunction(() => document.body && document.documentElement.classList.contains('i18n-pending'));
@@ -515,8 +585,10 @@ test.describe('dictionary and first-paint privacy contract', () => {
       description: 'מידע על נגישות אתר Moona ודרכי פנייה בנושא נגישות.'
     });
     expect(await page.evaluate(() => getComputedStyle(document.body).visibility)).toBe('hidden');
+    expect(await page.evaluate(() => localStorage.getItem('moona.locale.user'))).toBe('en');
 
     await waitForI18n(page);
+    expect(await page.evaluate(() => localStorage.getItem('moona.locale.user'))).toBe('en');
     await expect(page.locator('html')).not.toHaveClass(/i18n-pending/);
     await expect(page.locator('body')).toBeVisible();
     await expect(page.locator('h1')).toHaveText('הצהרת נגישות');
@@ -593,6 +665,7 @@ test.describe('locale transitions and state preservation', () => {
     expect(result.workTags).toBe(0);
     expect(result.workSpecBadges).toBe(0);
     expect(result.staleFinal).toBe(0);
+    expect(await page.evaluate(() => localStorage.getItem('moona.locale.user'))).toBeNull();
   });
 
   test('language switch preserves scroll, form values, step, dialog, and active validation', async ({ page }) => {

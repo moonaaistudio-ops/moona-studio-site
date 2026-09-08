@@ -13,7 +13,7 @@ AI-native studio for film and motion ads. The site is static HTML, CSS and JavaS
 - `v/` and `p/` — films and poster/still assets
 - `tests/` — focused Playwright and axe coverage for locale, RTL, accessibility, state and form behavior
 
-English is the default. A language choice is shared as `?lang=en|he` and stored under `moona.locale` when browser storage is available.
+English is the default for all visitors, regardless of browser language or location. Only a manual language-button choice is saved under `moona.locale.user` when browser storage is available. A `?lang=en|he` link selects the language for that visit and internal navigation without changing the saved preference. The old `moona.locale` value is ignored because it could have come from a shared link; returning visitors need to choose Hebrew once again if they want it remembered.
 
 ## Local testing
 
