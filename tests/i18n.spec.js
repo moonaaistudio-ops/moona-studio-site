@@ -309,7 +309,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('#crew-transition-title')).toHaveText('צוות של סוכני AI מתמחים. כולם נבנו בסטודיו.');
     await expect(page.locator('.crew-transition-body')).toHaveText('כל אחד מאומן במקצוע אחד. לכולם יש במאי אחד.');
     await expect(page.locator('#crew-title')).toHaveText('המומחים שמאחורי העבודה.');
-    await expect(page.locator('.crew-head > p')).toHaveText('מומחים לסיפור, תמונה, קולנוע, סאונד ומערכות.');
+    await expect(page.locator('.crew-head > p')).toHaveText('קריאייטיב, עריכה, תמונה, וידאו, אודיו ופרודקט.');
     await expect(page.locator('.work-note')).toHaveText('סרטי הקונספט האלה נוצרו ביוזמתנו כדי להראות מה נוכל ליצור עבור המותג הבא. המותגים המוצגים אינם לקוחות של Moona.');
     await expect(page.locator('[data-i18n="work.bullPadel.concept"]')).toHaveText('המחבט מחזיר חבטה.');
     await expect(page.locator('[data-i18n="work.koda.concept"]')).toHaveText('נבנה לפיד שבו הוא חי.');
@@ -378,7 +378,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('#crew-transition-title')).toHaveText('A crew of specialist AI agents. All built in the studio.');
     await expect(page.locator('.crew-transition-body')).toHaveText('Each one is trained for a single craft and answers to a single director.');
     await expect(page.locator('#crew-title')).toHaveText('Specialists behind the work.');
-    await expect(page.locator('.crew-head > p')).toHaveText('Specialists across story, image, film, sound and systems.');
+    await expect(page.locator('.crew-head > p')).toHaveText('Creative, editing, image, video, audio and product.');
 
     const dictionarySource = fs.readFileSync(path.join(__dirname, '..', 'i18n.js'), 'utf8');
     const hebrewStart = dictionarySource.indexOf('\n    he: {');
