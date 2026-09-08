@@ -2335,13 +2335,18 @@ function loop(t){
       lastHudOp=hudOp; lastPxs=pxs;
       for(const h of huds){h.style.opacity=hudOp; h.style.transform=`translate(${pxs*8}px,${pys*6}px)`}
     }
-    /* three beats over one film: the headline on the ground flow, the second
-       as the lander arrives, the third as the flag goes in. a gap sits between
-       each pair so the plate is briefly clean — that is the cut. */
+    /* three beats over one film, placed against the film's own motion rather
+       than on round fractions. measured energy per half second: the flare at
+       6.5-8.5s and the dust whiteout and walk at 13-17.5s are the busiest
+       stretches, 9-10s is the calmest in the whole clip.
+       so a line holds where the footage is quiet and the plate goes clean
+       where it is loud — the gaps sit over the flare and over the walk, and
+       beat two arrives in the hush before touchdown. every gap is 250px of
+       scroll, nearly double what it was; the fades are 270px each. */
     if(filmScrubs){
-      beatWindow(t1,shown,-1,-.5,.20,.28);
-      beatWindow(t2,shown,.33,.41,.60,.67);
-      beatWindow(t3,shown,.72,.80,2,3);
+      beatWindow(t1,shown,-1,-.5,.159,.259);
+      beatWindow(t2,shown,.352,.452,.593,.693);
+      beatWindow(t3,shown,.785,.885,2,3);
     }else{
       /* same three beats, timed to the loop: the lander lands, the flag goes in,
          the plate is clean through the dissolve, then the headline rises again */
@@ -2351,9 +2356,9 @@ function loop(t){
       const p=filmClock();
       t1.style.opacity=1; t1.style.visibility='visible';
       /* they swap in place now, so the move is a nudge, not a slide */
-      beatWindow(t1Copy,p,filmWraps?0:-1,filmWraps?.03:-.5,.30,.318,24,20);
-      beatWindow(t2,p,.34,.365,.64,.658,24,20);
-      beatWindow(t3,p,.68,.705,.975,.993,24,20);
+      beatWindow(t1Copy,p,filmWraps?0:-1,filmWraps?.045:-.5,.28,.315,24,20);
+      beatWindow(t2,p,.36,.405,.60,.635,24,20);
+      beatWindow(t3,p,.68,.725,.96,.995,24,20);
     }
     const pr=String(Math.round(shown*100)).padStart(3,'0');
     if(pr!==lastHudPr){lastHudPr=pr; if(hudPr)hudPr.textContent=pr}
