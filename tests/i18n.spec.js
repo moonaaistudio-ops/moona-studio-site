@@ -1755,9 +1755,11 @@ test.describe('responsive header and dynamic UI', () => {
       pageWidth: document.documentElement.scrollWidth,
       viewportWidth: innerWidth
     }));
-    expect(mobileHero.ratio).toBeGreaterThanOrEqual(.95);
-    expect(mobileHero.ratio).toBeLessThanOrEqual(.97);
-    expect(mobileHero.filmTop).toBeLessThan(mobileHero.viewport);
+    // phones scrub the hero film along a three-screen runway, so the flagship
+    // section begins where that runway ends
+    expect(mobileHero.ratio).toBeGreaterThanOrEqual(2.99);
+    expect(mobileHero.ratio).toBeLessThanOrEqual(3.01);
+    expect(Math.abs(mobileHero.filmTop - mobileHero.ratio * mobileHero.viewport)).toBeLessThan(2);
     expect(mobileHero.pageWidth).toBeLessThanOrEqual(mobileHero.viewportWidth + 1);
 
     const mobileFilmCorners = await page.locator('#film .film-stage').evaluate(stage => {
