@@ -1087,12 +1087,18 @@ html[dir="rtl"] :is(.cta-btn,.qnext,.contact .mail):hover i{transform:rotate(-13
 }
 
 /* phones (the same breakpoint the script uses to decide the film loops instead of
-   scrubbing): beats 2 and 3 ride the film's clock. they sit low on the ground over
-   a scrim, and the headline copy steps aside for them while the button stays put */
+   scrubbing): beats 2 and 3 ride the film's clock. all three share one stage at the
+   centre — the copy is the only thing left in flow, so whichever beat is showing
+   lands on the same axis, and the button is anchored off that centre so it never
+   moves while the words change above it. */
 @media(max-width:700px){
-  #t2,#t3{justify-content:flex-end;padding-bottom:13vh;align-items:center;text-align:center}
-  #t2::before,#t3::before{content:"";position:absolute;inset:auto 0 0 0;height:58%;pointer-events:none;
-    background:linear-gradient(to top,rgba(3,4,8,.84),rgba(3,4,8,.46) 50%,transparent)}
+  .htxt{padding:0 6vw}
+  #t1,#t2,#t3{justify-content:center;align-items:center;text-align:center}
+  .hero-cta{position:absolute;left:50%;top:50%;margin-top:104px;transform:translateX(-50%)}
+  /* the words carry their own darkness with them, centred like they are */
+  #t2::before,#t3::before{content:"";position:absolute;left:50%;top:50%;width:160%;height:52%;
+    transform:translate(-50%,-50%);pointer-events:none;
+    background:radial-gradient(closest-side,rgba(3,4,8,.74),rgba(3,4,8,0) 78%)}
 }
 
 /* reveal on scroll */
@@ -2157,13 +2163,13 @@ function filmClock(){
   lastClockT=t;
   return Math.min(1,t/Math.max(.1,filmEnd));
 }
-function beatWindow(el,p,a,b,c,d){
+function beatWindow(el,p,a,b,c,d,rise=48,fall=40){
   let o,y;
-  if(p<a){o=0;y=48}
-  else if(p<b){const k=eOut((p-a)/(b-a));o=k;y=48*(1-k)}
+  if(p<a){o=0;y=rise}
+  else if(p<b){const k=eOut((p-a)/(b-a));o=k;y=rise*(1-k)}
   else if(p<c){o=1;y=0}
-  else if(p<d){const k=eIn((p-c)/(d-c));o=1-k;y=-40*k}
-  else{o=0;y=-40}
+  else if(p<d){const k=eIn((p-c)/(d-c));o=1-k;y=-fall*k}
+  else{o=0;y=-fall}
   el.style.opacity=o;
   el.style.visibility=o>0?'visible':'hidden';
   el.style.transform=`translate(${pxs*-14}px,${y+pys*-10}px)`;  /* text floats against scene */
@@ -2289,9 +2295,10 @@ function loop(t){
          dissolve. (fractions of the 19.7s story: .025 ≈ 0.5s, .018 ≈ 0.35s) */
       const p=filmClock();
       t1.style.opacity=1; t1.style.visibility='visible';
-      beatWindow(t1Copy,p,filmWraps?0:-1,filmWraps?.03:-.5,.30,.318);
-      beatWindow(t2,p,.34,.365,.64,.658);
-      beatWindow(t3,p,.68,.705,.975,.993);
+      /* they swap in place now, so the move is a nudge, not a slide */
+      beatWindow(t1Copy,p,filmWraps?0:-1,filmWraps?.03:-.5,.30,.318,24,20);
+      beatWindow(t2,p,.34,.365,.64,.658,24,20);
+      beatWindow(t3,p,.68,.705,.975,.993,24,20);
     }
     const pr=String(Math.round(shown*100)).padStart(3,'0');
     if(pr!==lastHudPr){lastHudPr=pr; if(hudPr)hudPr.textContent=pr}
