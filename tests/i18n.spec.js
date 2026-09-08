@@ -809,6 +809,7 @@ test.describe('responsive header and dynamic UI', () => {
               childCount: portrait.childElementCount,
               aspectRatio: getComputedStyle(portrait).aspectRatio,
               renderedRatio: rect.width / rect.height,
+              renderedHeight: rect.height,
               image: {
                 alt: image.alt,
                 src: image.getAttribute('src'),
@@ -862,10 +863,10 @@ test.describe('responsive header and dynamic UI', () => {
       expect(layout.sectionAfterFilm).toBe('work');
       expect(layout.sectionAfterWork).toBe('about');
       expect(layout.sectionAfterAbout).toBe('crew-intro');
-      expect(layout.crewNames).toEqual(['Alma', 'Nara', 'Luc', 'Vero', 'Sona', 'Iva']);
+      expect(layout.crewNames).toEqual(['Sona', 'Vero', 'Alma', 'Nara', 'Luc', 'Iva']);
       expect(layout.crewNumbering).toBe(0);
       expect(layout.crewCreditLabels).toEqual(Array(6).fill('AI CREW'));
-      expect(layout.crewColumns).toBe(width > 980 ? 3 : 1);
+      expect(layout.crewColumns).toBe(width > 760 ? 3 : 1);
       expect(layout.legacyCrewNavigation).toBe(0);
       expect(layout.portraitSlots).toHaveLength(6);
       for (const [index, portrait] of layout.portraitSlots.entries()) {
@@ -888,6 +889,7 @@ test.describe('responsive header and dynamic UI', () => {
         expect(portrait.image.sizes).toContain('(max-width:760px)');
         expect(portrait.avifSrcset).toContain(`${name}-moon-r10-1086.avif 1086w`);
         expect(portrait.renderedRatio).toBeCloseTo(3 / 4, 2);
+        expect(portrait.renderedHeight).toBeLessThanOrEqual(width <= 760 ? 193 : 410);
       }
       expect(layout.workCards).toBe(4);
       expect(layout.workColumns).toBe(width > 760 ? 2 : 1);
@@ -1090,7 +1092,7 @@ test.describe('responsive header and dynamic UI', () => {
         expect(layout.aboutSplit.verticalOverlapRatio).toBeGreaterThan(.6);
         expect(layout.aboutSplit.mediaWidthRatio).toBeGreaterThan(.42);
       }
-      const expectedCrewColumns = viewport.width <= 760 ? 1 : viewport.width <= 980 ? 2 : 3;
+      const expectedCrewColumns = viewport.width <= 760 ? 1 : 3;
       expect(layout.editorialGrid.crewColumns).toBe(expectedCrewColumns);
       expect(layout.editorialGrid.crewCardWidth).toBeCloseTo(
         (layout.editorialGrid.crewGridWidth - layout.editorialGrid.crewColumnGap * (expectedCrewColumns - 1)) / expectedCrewColumns,
@@ -1131,7 +1133,7 @@ test.describe('responsive header and dynamic UI', () => {
         expect(layout.type.contact).toBeCloseTo(115.2, 1);
         expect(layout.editorialGrid.workHeadLeft).toBeCloseTo(layout.editorialGrid.workGridLeft, 1);
         expect(layout.editorialGrid.workHeadRight).toBeCloseTo(layout.editorialGrid.workGridRight, 1);
-        expect(layout.editorialGrid.crewGridWidth).toBeCloseTo(viewport.width * .9, 1);
+        expect(layout.editorialGrid.crewGridWidth).toBeCloseTo(Math.min(960, viewport.width * .9), 1);
       }
     }
   });
