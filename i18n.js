@@ -305,7 +305,7 @@
       'hero.subline.two': 'בשליטה מלאה על כל פריים.',
       'hero.beat2.lead': 'לכל פריים יש במאי.',
       'hero.beat2.emphasis': 'בנינו את העולם עד גרגר החול האחרון.',
-      'hero.beat3.lead': 'המותג שלך,',
+      'hero.beat3.lead': 'המותג שלכם,',
       'hero.beat3.emphasis': 'נועץ דגל.',
       'hero.cta': 'לדבר עם הסטודיו',
       'hero.projectCta': 'לדבר עם הסטודיו',
