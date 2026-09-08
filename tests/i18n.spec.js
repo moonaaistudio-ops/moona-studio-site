@@ -9,6 +9,7 @@ const HOME_HE_TITLE = 'Moona | סטודיו קריאייטיב טכנולוגי 
 const HOME_HE_DESCRIPTION = 'קמפיינים קולנועיים שנבנים באמצעות קריאייטיב, פיתוח תוכנה וסוכני AI מתמחים.';
 const LEAD_BRIEF = 'We need a cinematic launch film for a new energy-bar brand.';
 const PROJECT_ROOT = path.resolve(__dirname, '..');
+const crewRevision = name => ['iva', 'luc'].includes(name) ? 'r11' : 'r10';
 
 const errorsByPage = new WeakMap();
 
@@ -81,7 +82,7 @@ test('critical assets and legal links remain compatible with a direct-file previ
   for (const name of ['alma', 'nara', 'luc', 'vero', 'sona', 'iva']) {
     for (const width of [480, 768, 1086]) {
       for (const format of ['avif', 'webp']) {
-        expect(fs.existsSync(path.join(PROJECT_ROOT, 'p', 'crew', `${name}-moon-r10-${width}.${format}`))).toBe(true);
+        expect(fs.existsSync(path.join(PROJECT_ROOT, 'p', 'crew', `${name}-moon-${crewRevision(name)}-${width}.${format}`))).toBe(true);
       }
     }
   }
@@ -877,7 +878,7 @@ test.describe('responsive header and dynamic UI', () => {
           aspectRatio: '3 / 4',
           image: {
             alt: '',
-            src: `p/crew/${name}-moon-r10-768.webp`,
+            src: `p/crew/${name}-moon-${crewRevision(name)}-768.webp`,
             width: '768',
             height: '1024',
             loading: 'lazy',
@@ -885,9 +886,9 @@ test.describe('responsive header and dynamic UI', () => {
             objectFit: 'contain'
           }
         });
-        expect(portrait.image.srcset).toContain(`${name}-moon-r10-1086.webp 1086w`);
+        expect(portrait.image.srcset).toContain(`${name}-moon-${crewRevision(name)}-1086.webp 1086w`);
         expect(portrait.image.sizes).toContain('(max-width:760px)');
-        expect(portrait.avifSrcset).toContain(`${name}-moon-r10-1086.avif 1086w`);
+        expect(portrait.avifSrcset).toContain(`${name}-moon-${crewRevision(name)}-1086.avif 1086w`);
         expect(portrait.renderedRatio).toBeCloseTo(3 / 4, 2);
         expect(portrait.renderedHeight).toBeLessThanOrEqual(width <= 760 ? 193 : 410);
       }
