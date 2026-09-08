@@ -9,7 +9,7 @@ const HOME_HE_TITLE = 'Moona | סטודיו קריאייטיב טכנולוגי 
 const HOME_HE_DESCRIPTION = 'קמפיינים קולנועיים שנבנים באמצעות קריאייטיב, פיתוח תוכנה וסוכני AI מתמחים.';
 const LEAD_BRIEF = 'We need a cinematic launch film for a new energy-bar brand.';
 const PROJECT_ROOT = path.resolve(__dirname, '..');
-const crewRevision = name => name === 'iva' ? 'r12' : name === 'luc' ? 'r11' : 'r10';
+const crewRevision = name => name === 'sona' ? 'r10' : 'r13';
 
 const errorsByPage = new WeakMap();
 
