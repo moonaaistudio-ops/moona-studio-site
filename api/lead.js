@@ -45,23 +45,27 @@ module.exports = async (req, res) => {
   const website = clean(body.website);
   const email   = clean(body.email);
   const brief   = String(body.brief == null ? '' : body.brief).trim();
-  /* the form stopped asking for a company name once it had the site; fall back
-     to the domain so the subject line still says who this is */
-  const company = clean(body.company) || website.replace(/^https?:\/\//i, '').replace(/^www\./i, '').split('/')[0];
+  /* the site is optional, so the subject falls back through the domain to the
+     person: an enquiry with no brand link still has to say who it is from */
+  const domain = website.replace(/^https?:\/\//i, '').replace(/^www\./i, '').split('/')[0];
+  const company = clean(body.company) || domain || name;
 
-  if (!name || !website || !email) return res.status(422).json({ ok: false, error: 'missing' });
+  if (!name || !email) return res.status(422).json({ ok: false, error: 'missing' });
   if (brief.length < MIN_BRIEF || brief.length > MAX_BRIEF) {
     return res.status(422).json({ ok: false, error: 'brief' });
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return res.status(422).json({ ok: false, error: 'email' });
-  let site;
-  try {
-    const candidate = /^https?:\/\//i.test(website) ? website : 'https://' + website;
-    const parsed = new URL(candidate);
-    if (!/^https?:$/.test(parsed.protocol) || !parsed.hostname) throw new Error('unsupported URL');
-    site = parsed.href;
-  } catch (_) {
-    return res.status(422).json({ ok: false, error: 'website' });
+  /* only a site that was actually given has to parse */
+  let site = '';
+  if (website) {
+    try {
+      const candidate = /^https?:\/\//i.test(website) ? website : 'https://' + website;
+      const parsed = new URL(candidate);
+      if (!/^https?:$/.test(parsed.protocol) || !parsed.hostname) throw new Error('unsupported URL');
+      site = parsed.href;
+    } catch (_) {
+      return res.status(422).json({ ok: false, error: 'website' });
+    }
   }
 
   /* attachments arrive base64 in JSON, so there is no multipart to parse */
@@ -100,8 +104,10 @@ module.exports = async (req, res) => {
     `<p style="font:12px ui-monospace,monospace;letter-spacing:.22em;text-transform:uppercase;color:#8a8a8a">New ad request</p>` +
     `<table style="border-collapse:collapse;margin-top:8px">` +
       row('Name', name) + row('Company', company) +
-      `<tr><td style="padding:6px 18px 6px 0;color:#8a8a8a;font:12px ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase">Website</td>` +
-      `<td style="padding:6px 0"><a href="${esc(site)}">${esc(website)}</a></td></tr>` +
+      (site
+        ? `<tr><td style="padding:6px 18px 6px 0;color:#8a8a8a;font:12px ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase">Website</td>` +
+          `<td style="padding:6px 0"><a href="${esc(site)}">${esc(website)}</a></td></tr>`
+        : row('Website', 'not given')) +
       `<tr><td style="padding:6px 18px 6px 0;color:#8a8a8a;font:12px ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase">Email</td>` +
       `<td style="padding:6px 0"><a href="mailto:${esc(email)}">${esc(email)}</a></td></tr>` +
       `<tr><td style="padding:6px 18px 6px 0;color:#8a8a8a;font:12px ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;vertical-align:top">Brief</td>` +
@@ -115,7 +121,7 @@ module.exports = async (req, res) => {
     'New ad request', '',
     'Name:    ' + name,
     'Company: ' + company,
-    'Website: ' + website,
+    'Website: ' + (website || 'not given'),
     'Email:   ' + email,
     '', 'Brief:', brief,
     '',

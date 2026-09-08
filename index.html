@@ -1588,8 +1588,8 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
   <section class="crew-transition" id="crew-intro" tabindex="-1" aria-labelledby="crew-transition-title">
     <div class="crew-transition-copy rv">
       <p class="section-kicker" data-i18n="crew.transitionEyebrow">The crew</p>
-      <h2 id="crew-transition-title" data-i18n="crew.transition">Six AI agents. Directed by Tal.</h2>
-      <p class="crew-transition-body" data-i18n="crew.transitionBody">Every member of the Moona crew is a specialist AI agent, built inside the studio.</p>
+      <h2 id="crew-transition-title" data-i18n="crew.transition">A crew of specialist AI agents. All built in the studio.</h2>
+      <p class="crew-transition-body" data-i18n="crew.transitionBody">Each one is trained for a single craft and answers to a single director.</p>
     </div>
   </section>
 
@@ -1600,7 +1600,7 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
         <p class="section-kicker" data-i18n="crew.eyebrow">AI Crew</p>
         <h2 id="crew-title" data-i18n="crew.heading">Specialists behind the work.</h2>
       </div>
-      <p data-i18n="crew.intro">Six specialists across story, image, film, sound and systems.</p>
+      <p data-i18n="crew.intro">Specialists across story, image, film, sound and systems.</p>
     </header>
     <div class="crew-grid">
       <article class="crew-card" aria-labelledby="crew-sona">
@@ -1645,9 +1645,9 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
 </main>
 
   <footer class="contact" id="contact" tabindex="-1" aria-labelledby="contact-title">
-    <h2 class="contact-line rv" id="contact-title" data-i18n="contact.line">Have a project worth making?</h2>
-    <p class="contact-body rv" data-i18n="contact.body">Tell us what you are building. We reply within two business days.</p>
-    <button class="cta-btn lg rv" data-ask data-hover><span data-i18n="hero.cta">Start a project</span><i></i></button>
+    <h2 class="contact-line rv" id="contact-title" data-i18n="contact.line">Let’s make one for your brand.</h2>
+    <p class="contact-body rv" data-i18n="contact.body">Send the brand and a rough note on what you want made. We reply within two business days.</p>
+    <button class="cta-btn lg rv" data-ask data-hover><span data-i18n="hero.cta">Talk to the studio</span><i></i></button>
     <p class="disc rv" data-i18n="contact.disclaimer">All work self-initiated. Brands are shown for demonstration only and are not clients. No client relationship implied.</p>
     <nav class="legal-nav" aria-label="Legal and accessibility" data-i18n-aria-label="footer.nav">
       <a href="privacy.html" data-locale-link data-i18n="footer.privacy">Privacy notice</a>
@@ -1661,7 +1661,7 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
 <div id="ask" role="dialog" aria-modal="true" aria-labelledby="askTitle">
   <div class="ask-top">
     <span class="ask-step"><b id="askNum">01</b> / 04</span>
-    <span class="ask-title" id="askTitle" data-i18n="form.dialog">Start a project</span>
+    <span class="ask-title" id="askTitle" data-i18n="form.dialog">Talk to the studio</span>
     <button class="ask-close" id="askClose" type="button" data-hover data-i18n="common.close">Close</button>
   </div>
 
@@ -1685,8 +1685,8 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
     <div class="q" data-step="2">
       <p class="qlab" data-i18n="form.step.site.label">03 / The brand</p>
       <h2 class="qtitle" id="q-site" data-i18n="form.step.site.title">Where can we see the brand?</h2>
-      <input type="url" name="website" id="f-site" aria-labelledby="q-site" aria-describedby="site-hint" aria-required="true" aria-invalid="false" required placeholder="yourbrand.com" data-i18n-placeholder="form.step.site.placeholder" inputmode="url" dir="ltr" data-hover>
-      <p class="qhint" id="site-hint" aria-live="polite" aria-atomic="true" data-hint-key="form.step.site.hint" data-i18n="form.step.site.hint">A website or product page.</p>
+      <input type="url" name="website" id="f-site" aria-labelledby="q-site" aria-describedby="site-hint" aria-required="false" aria-invalid="false" placeholder="yourbrand.com" data-i18n-placeholder="form.step.site.placeholder" inputmode="url" dir="ltr" data-hover>
+      <p class="qhint" id="site-hint" aria-live="polite" aria-atomic="true" data-hint-key="form.step.site.hint" data-i18n="form.step.site.hint">A website or product page. Optional.</p>
       <div class="qnav"><button type="button" class="qback" data-back data-hover data-i18n="form.back">Back</button><button type="button" class="qnext" data-next data-hover><span data-i18n="form.next">Next</span><span class="ring"><i></i></span></button></div>
     </div>
 
@@ -2860,7 +2860,9 @@ function valid(n){
   const q=qs[n], inp=q.querySelector('input:not([type=file]):not([type=hidden]),textarea');
   if(!inp) return true;
   const v=inp.value.trim();
-  if(!v){hint(q,'form.validation.required',true);inp.focus();return false}
+  if(!v){
+    if(!inp.required){hint(q,null,false);return true}   /* optional: an empty answer is an answer */
+    hint(q,'form.validation.required',true);inp.focus();return false}
   if(inp.type==='email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){
     hint(q,'form.validation.email',true);inp.focus();return false}
   if(inp.type==='url'){

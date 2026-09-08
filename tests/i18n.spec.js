@@ -334,9 +334,9 @@ test.describe('dictionary and first-paint privacy contract', () => {
       note: window.MoonaI18n.t('studio.note', {}, 'en')
     }))).toEqual({
       primary: 'LET’S TALK',
-      hero: 'Start a project',
-      contact: 'Start a project',
-      dialog: 'Start a project',
+      hero: 'Talk to the studio',
+      contact: 'Talk to the studio',
+      dialog: 'Talk to the studio',
       send: 'Send details',
       note: 'Reply within two business days'
     });
@@ -375,10 +375,10 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.film-strip-head .film-note')).toHaveText('The world, cast and visual rules were built before motion began. The technology changed the production. It did not replace direction.');
     await expect(page.locator('#about h2')).toHaveText('Tal Tzur');
     await expect(page.locator('.about-role')).toHaveText('Founder · Creative Director · Developer');
-    await expect(page.locator('#crew-transition-title')).toHaveText('Six AI agents. Directed by Tal.');
-    await expect(page.locator('.crew-transition-body')).toHaveText('Every member of the Moona crew is a specialist AI agent, built inside the studio.');
+    await expect(page.locator('#crew-transition-title')).toHaveText('A crew of specialist AI agents. All built in the studio.');
+    await expect(page.locator('.crew-transition-body')).toHaveText('Each one is trained for a single craft and answers to a single director.');
     await expect(page.locator('#crew-title')).toHaveText('Specialists behind the work.');
-    await expect(page.locator('.crew-head > p')).toHaveText('Six specialists across story, image, film, sound and systems.');
+    await expect(page.locator('.crew-head > p')).toHaveText('Specialists across story, image, film, sound and systems.');
 
     const dictionarySource = fs.readFileSync(path.join(__dirname, '..', 'i18n.js'), 'utf8');
     const hebrewStart = dictionarySource.indexOf('\n    he: {');
@@ -1909,8 +1909,8 @@ test.describe('responsive header and dynamic UI', () => {
     await grid.evaluate(element => { element.dataset.e2eMarker = 'preserved'; });
     await page.evaluate(() => window.MoonaI18n.setLocale('en', { source: 'programmatic' }));
     await expect(grid).toHaveAttribute('data-e2e-marker', 'preserved');
-    await expect(page.locator('#crew-transition-title')).toHaveText('Six AI agents. Directed by Tal.');
-    await expect(page.locator('.crew-transition-body')).toHaveText('Every member of the Moona crew is a specialist AI agent, built inside the studio.');
+    await expect(page.locator('#crew-transition-title')).toHaveText('A crew of specialist AI agents. All built in the studio.');
+    await expect(page.locator('.crew-transition-body')).toHaveText('Each one is trained for a single craft and answers to a single director.');
     expect(await grid.evaluate(element => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(1);
   });
 

@@ -126,10 +126,13 @@ test('required fields have descriptions and expose an announced validation state
   await expect(page.locator('#ask')).toHaveClass(/open/);
   await expect(page.locator('#f-name')).toBeFocused();
 
+  // the brand link is deliberately optional, so it carries the opposite contract
   for (const id of ['f-name', 'f-mail', 'f-site', 'f-brief']) {
     const field = page.locator(`#${id}`);
-    await expect(field).toHaveAttribute('required', '');
-    await expect(field).toHaveAttribute('aria-required', 'true');
+    const optional = id === 'f-site';
+    if (optional) await expect(field).not.toHaveAttribute('required', '');
+    else await expect(field).toHaveAttribute('required', '');
+    await expect(field).toHaveAttribute('aria-required', optional ? 'false' : 'true');
     await expect(field).toHaveAttribute('aria-invalid', 'false');
     const descriptionId = await field.getAttribute('aria-describedby');
     expect(descriptionId).toBeTruthy();
