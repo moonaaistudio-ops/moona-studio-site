@@ -1720,8 +1720,8 @@ test.describe('responsive header and dynamic UI', () => {
     await expect(page.locator('.hero-media, .hero-media-video, .hero-media-fallback, .hero-brand-stage')).toHaveCount(0);
 
     const desktopHeroRatio = await page.locator('#hero-track').evaluate(element => element.offsetHeight / innerHeight);
-    expect(desktopHeroRatio).toBeGreaterThanOrEqual(2.59);
-    expect(desktopHeroRatio).toBeLessThanOrEqual(2.61);
+    expect(desktopHeroRatio).toBeGreaterThanOrEqual(3.99);
+    expect(desktopHeroRatio).toBeLessThanOrEqual(4.01);
     await expect(page.locator('[data-mobile-menu-toggle]')).toBeHidden();
 
     await page.locator('.hero-cta').click();
