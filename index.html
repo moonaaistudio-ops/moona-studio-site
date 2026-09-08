@@ -611,7 +611,9 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
   .lockup{min-height:44px}                         /* the wordmark remains a full thumb target */
   #hero-track{height:96vh;height:96svh}
   #hero-stick{position:relative;height:96vh;height:96svh}
-  #hero-stick.film-plate{background-image:image-set(url("p/hero-ground-flow-1600.avif") type("image/avif"),url("p/hero-ground-flow-1600.webp") type("image/webp"))}
+  /* phones get a 9:16 cut of the master, so the still and the loop use every
+     pixel of a portrait screen instead of the middle third of a landscape one */
+  #hero-stick.film-plate{background-image:image-set(url("p/hero-ground-flow-portrait.avif") type("image/avif"),url("p/hero-ground-flow-portrait.webp") type("image/webp"))}
   }
 @container header (max-width:350px){.lockup-name{display:none}}
 @supports not (container-type:inline-size){
@@ -1370,7 +1372,7 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
 <div id="hero-track">
   <div id="hero-stick">
     <video id="hero-film" aria-hidden="true" playsinline muted loop preload="none"
-           data-src-scrub="v/hero-ground-flow-1080.mp4" data-src-loop="v/hero-ground-flow-900.mp4"></video>
+           data-src-scrub="v/hero-ground-flow-1080.mp4" data-src-loop="v/hero-ground-flow-portrait.mp4"></video>
     <canvas id="sky" aria-hidden="true"></canvas>
     <canvas id="moon" aria-hidden="true"></canvas>
     <div class="vig"></div>
