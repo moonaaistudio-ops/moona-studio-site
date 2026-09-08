@@ -306,20 +306,20 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.about-role')).toHaveText('מייסד · מנהל קריאייטיב · מפתח');
     await expect(page.locator('.about-body')).toHaveText('הקמתי את Moona בנקודת המפגש בין קריאייטיב לפיתוח תוכנה. אני מוביל כל פרויקט, בונה את המערכות שמאחורי העבודה ומקבל את ההחלטה היצירתית הסופית.');
     await expect(page.locator('.about-engine')).toHaveText('פיתוח תוכנה מותאם · מחקר ופיתוח מתמשך · סוכני AI מתמחים');
-    await expect(page.locator('#crew-transition-title')).toHaveText('שישה סוכני AI. בהובלת טל.');
-    await expect(page.locator('.crew-transition-body')).toHaveText('כל אנשי הצוות ב־Moona הם סוכני AI מתמחים שנבנו בתוך הסטודיו.');
+    await expect(page.locator('#crew-transition-title')).toHaveText('צוות של סוכני AI מתמחים. כולם נבנו בסטודיו.');
+    await expect(page.locator('.crew-transition-body')).toHaveText('כל אחד מאומן במקצוע אחד. לכולם יש במאי אחד.');
     await expect(page.locator('#crew-title')).toHaveText('המומחים שמאחורי העבודה.');
-    await expect(page.locator('.crew-head > p')).toHaveText('שישה מומחים לסיפור, תמונה, קולנוע, סאונד ומערכות.');
+    await expect(page.locator('.crew-head > p')).toHaveText('מומחים לסיפור, תמונה, קולנוע, סאונד ומערכות.');
     await expect(page.locator('.work-note')).toHaveText('סרטי הקונספט האלה נוצרו ביוזמתנו כדי להראות מה נוכל ליצור עבור המותג הבא. המותגים המוצגים אינם לקוחות של Moona.');
     await expect(page.locator('[data-i18n="work.bullPadel.concept"]')).toHaveText('המחבט מחזיר חבטה.');
     await expect(page.locator('[data-i18n="work.koda.concept"]')).toHaveText('נבנה לפיד שבו הוא חי.');
-    await expect(page.locator('.contact-line')).toHaveText('יש לכם פרויקט ששווה ליצור?');
-    await expect(page.locator('.contact-body')).toHaveText('ספרו לנו מה אתם בונים. נחזור אליכם בתוך שני ימי עסקים.');
+    await expect(page.locator('.contact-line')).toHaveText('בואו נעשה את זה גם למותג שלכם.');
+    await expect(page.locator('.contact-body')).toHaveText('שלחו את המותג וכמה מילים על מה שאתם רוצים שנעשה. נחזור אליכם בתוך שני ימי עסקים.');
     await expect(page.locator('[data-header-contact-cta] [data-i18n="common.primaryCta"]')).toHaveText('בואו נדבר');
     await expect(page.locator('[data-i18n="common.primaryCta"]')).toHaveText(['בואו נדבר', 'בואו נדבר']);
     await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
-    await expect(page.locator('.contact [data-i18n="hero.cta"]')).toHaveText('מתחילים פרויקט');
-    await expect(page.locator('#askTitle')).toHaveText('מתחילים פרויקט');
+    await expect(page.locator('.contact [data-i18n="hero.cta"]')).toHaveText('לדבר עם הסטודיו');
+    await expect(page.locator('#askTitle')).toHaveText('לדבר עם הסטודיו');
     await expect(page.locator('#ask')).toHaveAttribute('aria-labelledby', 'askTitle');
     await expect(page.locator('#askSubmit [data-i18n="form.send"]')).toHaveText('שליחת הפרטים');
     await expect(page.locator('#analyticsAccept')).toHaveText('אישור עוגיות');
@@ -930,8 +930,8 @@ test.describe('responsive header and dynamic UI', () => {
         ]
       });
       expect(layout.crewTransition).toEqual({
-        heading: 'שישה סוכני AI. בהובלת טל.',
-        body: 'כל אנשי הצוות ב־Moona הם סוכני AI מתמחים שנבנו בתוך הסטודיו.',
+        heading: 'צוות של סוכני AI מתמחים. כולם נבנו בסטודיו.',
+        body: 'כל אחד מאומן במקצוע אחד. לכולם יש במאי אחד.',
         mediaCount: 0
       });
       expect(layout.sectionAfterFilm).toBe('work');
@@ -1903,7 +1903,7 @@ test.describe('responsive header and dynamic UI', () => {
     await expect(grid).not.toHaveAttribute('tabindex', /.+/);
     await expect(page.locator('[data-crew-rail], [data-crew-prev], [data-crew-next]')).toHaveCount(0);
     await expect(grid.locator('.crew-card')).toHaveCount(6);
-    await expect(page.locator('#crew-transition-title')).toHaveText('שישה סוכני AI. בהובלת טל.');
+    await expect(page.locator('#crew-transition-title')).toHaveText('צוות של סוכני AI מתמחים. כולם נבנו בסטודיו.');
     expect(await grid.evaluate(element => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(1);
 
     await grid.evaluate(element => { element.dataset.e2eMarker = 'preserved'; });
