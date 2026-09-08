@@ -543,9 +543,14 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
 #hero-stick.film-plate{background:#05070c url("p/hero-ground-flow-3840.webp") center/cover no-repeat;
   background-image:image-set(url("p/hero-ground-flow-3840.avif") type("image/avif"),url("p/hero-ground-flow-3840.webp") type("image/webp"))}
 #hero-stick.film-plate :is(#sky,#moon){opacity:0}
-#hero-film{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+#hero-film{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:50% 55%;
   transform:translateZ(0);opacity:0;transition:opacity .45s var(--ease);pointer-events:none}
 #hero-stick.film-rolling #hero-film{opacity:1}
+/* the grade breathes with the story: nothing until the dust clears, then a warm
+   lift at the centre and the corners closing in as the flag goes up. opacity
+   only, so it costs the compositor and not the painter. */
+#hero-stick .grade{position:absolute;inset:0;pointer-events:none;opacity:0;
+  background:radial-gradient(120% 90% at 50% 46%,rgba(217,198,156,.09) 0%,transparent 42%,rgba(3,4,8,.66) 100%)}
 #hero-stick .vig{position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(120% 90% at 50% 50%,transparent 55%,rgba(3,4,8,.75) 100%)}
 .htxt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -665,6 +670,7 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
   color:var(--ice-dim);text-transform:uppercase;pointer-events:none;transition:opacity .6s}
 .hud.tl{top:22px;left:16px}.hud.tr{top:26px;right:28px;text-align:right}
 .hud.bl{bottom:30px;left:28px}.hud.br{bottom:58px;right:28px;text-align:right}
+.hud.bl.hud-name{left:calc(28px + var(--hud-ch,52px));color:var(--ice)}   /* the chapter's name, beside its number */
 
 /* ————————————————————— sections ————————————————————— */
 main{position:relative;z-index:2;background:var(--void)}
@@ -1368,8 +1374,10 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
     <canvas id="sky" aria-hidden="true"></canvas>
     <canvas id="moon" aria-hidden="true"></canvas>
     <div class="vig"></div>
+    <div class="grade" aria-hidden="true"></div>
 
     <div class="hud bl" id="hud-chapter">CH·01</div>
+    <div class="hud bl hud-name" id="hud-name">Ground</div>
     <div class="hud br" id="hud-progress">000</div>
 
     <div class="htxt" id="t1">
@@ -2199,6 +2207,34 @@ const fogEl=document.querySelector('#hero-stick .vig');
    for the download at all. */
 const heroFilm=document.getElementById('hero-film');
 const heroStick=document.getElementById('hero-stick');
+const gradeEl=document.querySelector('#hero-stick .grade');
+const hudCh=document.getElementById('hud-chapter'), hudName=document.getElementById('hud-name');
+/* the scroll does not move through the film at one speed. it slows into the two
+   shots that carry the story — the landing (touchdown and its dust at 9.5–11.8s)
+   and the flag (18.3s to the end) — and runs through the ground flow and the
+   dust cloud, where there is nothing to hold on. knots are (scroll, seconds);
+   monotonic, so scrolling down never rewinds. */
+const RAMP=[[0,0],[.30,7.5],[.38,9.5],[.62,11.8],[.68,14.5],[.80,18.3],[1,20.7]];
+function rampT(p){
+  p=Math.max(0,Math.min(1,p));
+  for(let i=1;i<RAMP.length;i++){ const [p0,t0]=RAMP[i-1],[p1,t1]=RAMP[i];
+    if(p<=p1) return t0+(t1-t0)*(p-p0)/(p1-p0); }
+  return RAMP[RAMP.length-1][1];
+}
+/* chapters are named in film seconds, so the counter tells the truth on the
+   phone's loop as much as on the desktop scrub */
+const CHAPTERS=[[0,'Ground'],[9.5,'Landing'],[18.3,'Flag']];
+let lastChapter=-1;
+function setChapter(t){
+  let i=0; for(let k=0;k<CHAPTERS.length;k++) if(t>=CHAPTERS[k][0]) i=k;
+  if(i===lastChapter) return; lastChapter=i;
+  hudCh.textContent='CH·0'+(i+1); hudName.textContent=CHAPTERS[i][1];
+}
+function placeHudName(){ heroStick.style.setProperty('--hud-ch',(hudCh.getBoundingClientRect().width+14)+'px'); }
+placeHudName(); addEventListener('resize',placeHudName);
+document.fonts?.ready.then(placeHudName);   /* measured in the mono face, not the fallback */
+let lastPush=-1, lastGrade=-1;
+function gradeAt(p){ const k=Math.max(0,Math.min(1,(p-.62)/.38)); return k*k*(3-2*k); }
 /* wide enough for the sticky runway and the scroll drives the film; narrower than
    that there is nothing to scrub along, so it simply loops instead */
 const filmScrubs=!matchMedia('(max-width:700px)').matches;
@@ -2273,9 +2309,23 @@ function loop(t){
       /* the still holds until the visitor moves; back at the top it returns */
       if(shown>.006) setRolling(true); else if(shown<.002) setRolling(false);
       if(filmRolling){
-        const ct=Math.max(0,Math.min(filmEnd,shown*filmEnd));
+        const ct=Math.max(0,Math.min(filmEnd,rampT(shown)*filmEnd/20.7));
         if(Math.abs(ct-lastFilmT)>.016){lastFilmT=ct; heroFilm.currentTime=ct}
+        /* the camera in the shot is moving forward, so the push is the shot's own
+           motion carried a little further — not a move laid on top of it. it
+           peaks through the landing and settles as the walk ends: the frame is
+           still by the time the flag goes up, and the flag is never cropped */
+        const sm=(a,b,x)=>{const k=Math.max(0,Math.min(1,(x-a)/(b-a)));return k*k*(3-2*k)};
+        const push=1+.06*sm(0,.5,shown)*(1-.85*sm(.68,.96,shown));
+        if(Math.abs(push-lastPush)>.0008){lastPush=push; heroFilm.style.transform=`translateZ(0) scale(${push.toFixed(4)})`}
+        setChapter(ct);
       }
+    }
+    if(filmPlate){
+      const gp=filmScrubs?shown:(filmReady&&filmRolling?heroFilm.currentTime/Math.max(.1,filmEnd):0);
+      const g=gradeAt(gp);
+      if(Math.abs(g-lastGrade)>.004){lastGrade=g; gradeEl.style.opacity=g.toFixed(3)}
+      if(!filmScrubs&&filmReady&&filmRolling) setChapter(heroFilm.currentTime+1);   /* the loop is rotated one second */
     }
 
     /* DOM writes only when the value actually changed */
