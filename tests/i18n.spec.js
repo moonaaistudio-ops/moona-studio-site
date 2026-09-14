@@ -289,7 +289,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE הוא חטיף אנרגיה שאנחנו יצרנו מאפס.');
     await expect(page.locator('.film-credit')).toHaveText('נוצר ב־AI. בוים עד הפריים האחרון.');
     await expect(page.locator('.film-strip-head .film-eyebrow')).toHaveText('מאחורי הסרט');
-    await expect(page.locator('.film-strip-head .film-note')).toHaveText('DUSTLINE הוא מותג קונספט מקורי שיצרנו ב־Moona מאפס. הכול התחיל בסיפור. כל פריים תוכנן כדי לשרת את הקריאייטיב ולשמור על עולם עקבי ואמין. אנחנו משלבים כלי AI מתקדמים עם תהליך הפקה קפדני ושליטה מלאה בבימוי, בעריכה ובפוסט.');
+    await expect(page.locator('.film-strip-head .film-note')).toHaveText('DUSTLINE הוא סרט עצמאי למותג חטיף אנרגיה בדיוני. יצרנו את העולם והדמויות והובלנו את הבימוי והעריכה. תהליך כזה יכול להתאים לסרט מותג או להשקת מוצר.');
     await expect(page.locator('.film-story .film-beat')).toHaveCount(3);
     await expect(page.locator('.film-story .film-beat h3')).toHaveText([
       'לוקיישן שאפשר להאמין בו.',
@@ -304,7 +304,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
 
     await expect(page.locator('#about h2')).toHaveText('טל צור');
     await expect(page.locator('.about-role')).toHaveText('מייסד · מנהל קריאייטיב · מפתח');
-    await expect(page.locator('.about-body')).toHaveText('הקמתי את Moona בנקודת המפגש בין קריאייטיב לפיתוח תוכנה. אני מוביל כל פרויקט, בונה את המערכות שמאחורי העבודה ומקבל את ההחלטה היצירתית הסופית.');
+    await expect(page.locator('.about-body')).toHaveText('אני טל, מייסד מונה. אני מגיע מפיתוח ויוצר סרטי מותג ומוצר, מהרעיון והבימוי ועד לעריכה ולגימור.');
     await expect(page.locator('.about-engine')).toHaveText('פיתוח תוכנה מותאם · מחקר ופיתוח מתמשך · סוכני AI מתמחים');
     await expect(page.locator('#crew-transition-title')).toHaveText('צוות של סוכני AI מתמחים. כולם נבנו בסטודיו.');
     await expect(page.locator('.crew-transition-body')).toHaveText('כל אחד מאומן במקצוע אחד. לכולם יש במאי אחד.');
@@ -372,7 +372,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.film-title')).toHaveText('We created a brand. Then we shot its ad.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE is an energy bar you cannot buy.');
     await expect(page.locator('.film-credit')).toHaveText('Made with AI. Directed to the final frame.');
-    await expect(page.locator('.film-strip-head .film-note')).toHaveText('The world, cast and visual rules were built before motion began. The technology changed the production. It did not replace direction.');
+    await expect(page.locator('.film-strip-head .film-note')).toHaveText('DUSTLINE is a self-initiated film for a fictional energy bar. We created the world and characters, then directed and edited the film. This approach can shape a brand film or product launch.');
     await expect(page.locator('#about h2')).toHaveText('Tal Tzur');
     await expect(page.locator('.about-role')).toHaveText('Founder · Creative Director · Developer');
     await expect(page.locator('#crew-transition-title')).toHaveText('A crew of specialist AI agents. All built in the studio.');

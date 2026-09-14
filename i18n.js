@@ -70,7 +70,7 @@
       'film.credit.aiTerm': '',
       'film.credit.end': '',
       'film.how.eyebrow': 'How we work',
-      'film.how.body': 'The world, cast and visual rules were built before motion began. The technology changed the production. It did not replace direction.',
+      'film.how.body': 'DUSTLINE is a self-initiated film for a fictional energy bar. We created the world and characters, then directed and edited the film. This approach can shape a brand film or product launch.',
       'film.beat.experience.label': 'The experience',
       'film.beat.experience.mediaLabel': 'DUSTLINE desert-festival world, with a monumental mirrored stage facing the crowd at sunset.',
       'film.beat.experience.title': 'A place that never existed.',
@@ -87,7 +87,7 @@
       'about.eyebrow': 'About',
       'about.name': 'Tal Tzur',
       'about.role': 'Founder · Creative Director · Developer',
-      'about.body': 'I built Moona where creative direction and software development meet. I direct every project, build the systems behind the work and make the final creative call.',
+      'about.body': "I'm Tal, founder of Moona. My background is in software development, and I create brand and product films, from concept and direction through editing and finishing.",
       'about.engine': 'Custom software · Continuous R&D · Specialist AI agents',
       'about.imageAlt': 'Tal Tzur standing in a spacesuit on a lunar landscape',
 
@@ -129,6 +129,7 @@
       'work.koda.video': 'Koda self-initiated spec film by Moona',
       'work.koda.open': 'Open the Koda concept film larger',
       'work.koda.concept': 'Built for the feed it lives in.',
+      'work.koda.summary': 'An original product and self-initiated concept film by Moona. We created the product world and made the film around it. A short format like this can introduce a product or launch on social.',
       'work.koda.tag': 'An original product world by Moona.',
 
       'studio.eyebrow': 'Founder-led',
@@ -324,7 +325,7 @@
       'film.credit.aiTerm': '',
       'film.credit.end': '',
       'film.how.eyebrow': 'מאחורי הסרט',
-      'film.how.body': 'DUSTLINE הוא מותג קונספט מקורי שיצרנו ב־Moona מאפס. הכול התחיל בסיפור. כל פריים תוכנן כדי לשרת את הקריאייטיב ולשמור על עולם עקבי ואמין. אנחנו משלבים כלי AI מתקדמים עם תהליך הפקה קפדני ושליטה מלאה בבימוי, בעריכה ובפוסט.',
+      'film.how.body': 'DUSTLINE הוא סרט עצמאי למותג חטיף אנרגיה בדיוני. יצרנו את העולם והדמויות והובלנו את הבימוי והעריכה. תהליך כזה יכול להתאים לסרט מותג או להשקת מוצר.',
       'film.beat.experience.label': 'בניית העולם',
       'film.beat.experience.mediaLabel': 'עולם הפסטיבל המדברי של DUSTLINE, עם במה מונומנטלית וסימטרית מול הקהל בשעת שקיעה.',
       'film.beat.experience.title': 'לוקיישן שאפשר להאמין בו.',
@@ -341,7 +342,7 @@
       'about.eyebrow': 'אודות',
       'about.name': 'טל צור',
       'about.role': 'מייסד · מנהל קריאייטיב · מפתח',
-      'about.body': 'הקמתי את Moona בנקודת המפגש בין קריאייטיב לפיתוח תוכנה. אני מוביל כל פרויקט, בונה את המערכות שמאחורי העבודה ומקבל את ההחלטה היצירתית הסופית.',
+      'about.body': 'אני טל, מייסד מונה. אני מגיע מפיתוח ויוצר סרטי מותג ומוצר, מהרעיון והבימוי ועד לעריכה ולגימור.',
       'about.engine': 'פיתוח תוכנה מותאם · מחקר ופיתוח מתמשך · סוכני AI מתמחים',
       'about.imageAlt': 'טל צור עומד בחליפת חלל על נוף ירחי',
 
@@ -383,6 +384,7 @@
       'work.koda.video': 'סרט קונספט ביוזמת Moona עבור Koda',
       'work.koda.open': 'פתיחת סרט הקונספט של Koda בתצוגה מוגדלת',
       'work.koda.concept': 'נבנה לפיד שבו הוא חי.',
+      'work.koda.summary': 'מוצר מקורי וסרט קונספט עצמאי שיצרנו במונה. בנינו עולם חזותי סביב המוצר והפכנו אותו לסרט קצר. כיוון כזה יכול להתאים להשקת מוצר ולגרסאות לסושיאל.',
       'work.koda.tag': 'זה מוצר שהמצאנו מאפס',
 
       'studio.eyebrow': 'בהובלת המייסד',
