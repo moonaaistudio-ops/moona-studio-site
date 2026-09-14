@@ -35,7 +35,7 @@
   if(locale==='he'){
     const font=document.createElement('link');
     font.id='moona-hebrew-fonts'; font.rel='stylesheet';
-    font.href='https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Frank+Ruhl+Libre:wght@400;600&display=swap';
+    font.href='https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&display=swap';
     document.head.appendChild(font);
   }
 })();
@@ -192,11 +192,11 @@ if(location.protocol!=='file:'){
   --he-emphasis-color:#f3e9d2;
 }
 
-/* Hebrew swaps the two text faces; the mono HUD stays Latin on purpose. */
+/* Hebrew uses Assistant throughout, including the hero; the mono HUD stays Latin. */
 html[lang="he"]{
   --moona-display:Assistant,Arial,sans-serif;
   --moona-sans:Assistant,Arial,sans-serif;
-  --moona-serif:"Frank Ruhl Libre","Times New Roman",serif;
+  --moona-serif:var(--moona-display);
 }
 
 /* Back-compat aliases — the live site's short names still resolve. */
@@ -1147,7 +1147,7 @@ body{font-size:16px;font-synthesis:none}
 .section-kicker{font-family:var(--sans);font-size:12px;line-height:1.3;letter-spacing:.14em;text-transform:uppercase;color:var(--ice-dim);font-weight:600}
 
 /* A heavyweight grotesk carries the brand system. The restored production
-   hero above is the sole editorial-serif exception. */
+   English hero above is the sole editorial-serif exception. */
 #hdr button[data-goto]{font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:.08em}
 .language-toggle{width:auto;min-width:44px;border:0;border-bottom:1px solid rgba(255,255,255,.38);border-radius:0;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.04em}
 .language-toggle:hover{border-color:#fff;background:transparent}

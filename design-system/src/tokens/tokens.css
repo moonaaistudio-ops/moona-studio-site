@@ -109,11 +109,11 @@
   --he-emphasis-color:#f3e9d2;
 }
 
-/* Hebrew swaps the two text faces; the mono HUD stays Latin on purpose. */
+/* Hebrew uses Assistant throughout, including the hero; the mono HUD stays Latin. */
 html[lang="he"]{
   --moona-display:Assistant,Arial,sans-serif;
   --moona-sans:Assistant,Arial,sans-serif;
-  --moona-serif:"Frank Ruhl Libre","Times New Roman",serif;
+  --moona-serif:var(--moona-display);
 }
 
 /* Back-compat aliases — the live site's short names still resolve. */

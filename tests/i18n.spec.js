@@ -493,7 +493,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     }
   });
 
-  test('the restored hero is the only serif typography on the site', async ({ page }) => {
+  test('Hebrew hero shares the site font while English retains its serif hero', async ({ page }) => {
     const displaySelectors = [
       '.film-title', '.film-title em', '.film-beat h3', '.about-copy h2',
       '.crew-transition h2', '.crew-head h2', '.crew-credit h3',
@@ -511,7 +511,8 @@ test.describe('dictionary and first-paint privacy contract', () => {
           .filter(element => serifPattern.test(family(element)))
           .map(element => `${element.tagName.toLowerCase()}.${element.className}`);
         return {
-          heroFamily: family(document.querySelector('.htxt h1.statement')),
+          heroFamilies: [...document.querySelectorAll('.htxt h1.statement, .htxt .hero-beat, .htxt em')]
+            .map(family),
           display: selectors.flatMap(selector => [...document.querySelectorAll(selector)]
             .map(element => ({ selector, family: family(element) }))),
           filmEmStyle: getComputedStyle(document.querySelector('.film-title em')).fontStyle,
@@ -520,7 +521,10 @@ test.describe('dictionary and first-paint privacy contract', () => {
         };
       }, displaySelectors);
 
-      expect(typography.heroFamily).toContain(locale === 'he' ? 'Frank Ruhl Libre' : 'Instrument Serif');
+      expect(typography.heroFamilies).toHaveLength(6);
+      for (const family of typography.heroFamilies) {
+        expect(family).toContain(locale === 'he' ? 'Assistant' : 'Instrument Serif');
+      }
       expect(typography.display.length).toBeGreaterThanOrEqual(displaySelectors.length);
       for (const item of typography.display) {
         expect(item.family, `${locale} ${item.selector}`).toContain(locale === 'he' ? 'Assistant' : 'Space Grotesk');

@@ -61,7 +61,7 @@ test('Hebrew swaps the display and body faces and leaves mono alone', async ({ p
   const vars = await readVars(['--display', '--sans', '--serif', '--mono'])(page);
   expect(vars['--display']).toContain('Assistant');
   expect(vars['--sans']).toContain('Assistant');
-  expect(vars['--serif']).toContain('Frank Ruhl Libre');
+  expect(vars['--serif']).toBe(vars['--display']);
   expect(vars['--mono']).toContain('SF Mono');
 });
 
