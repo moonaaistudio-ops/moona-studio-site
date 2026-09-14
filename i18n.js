@@ -643,6 +643,7 @@
 
   function syncUrl(nextLocale, forceParameter) {
     const url = new URL(location.href);
+    url.searchParams.delete('moona-country');
     if (forceParameter) url.searchParams.set('lang', nextLocale);
     else url.searchParams.delete('lang');
     history.replaceState(history.state, '', `${url.pathname}${url.search}${url.hash}`);

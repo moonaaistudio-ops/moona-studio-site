@@ -13,7 +13,7 @@ AI-native studio for film and motion ads. The site is static HTML, CSS and JavaS
 - `v/` and `p/` — films and poster/still assets
 - `tests/` — focused Playwright and axe coverage for locale, RTL, accessibility, state and form behavior
 
-English is the default for all visitors, regardless of browser language or location. Only a manual language-button choice is saved under `moona.locale.user` when browser storage is available. A `?lang=en|he` link selects the language for that visit and internal navigation without changing the saved preference. The old `moona.locale` value is ignored because it could have come from a shared link; returning visitors need to choose Hebrew once again if they want it remembered.
+Visitors whose IP is located in Israel start in Hebrew; other visitors start in English. Vercel middleware adds that country default only when the request has no `lang` parameter, and the client removes the temporary marker immediately. Only a manual language-button choice is saved under `moona.locale.user` when browser storage is available, and it takes precedence over the country default. A `?lang=en|he` link selects the language for that visit and internal navigation without changing the saved preference. The old `moona.locale` value is ignored because it could have come from a shared link.
 
 ## Local testing
 

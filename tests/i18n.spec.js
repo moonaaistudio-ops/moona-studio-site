@@ -105,7 +105,7 @@ function metadata(page) {
 test.describe('locale bootstrap, URL contract, and metadata', () => {
   test.use({ locale: 'he-IL', timezoneId: 'Asia/Jerusalem' });
 
-  test('defaults to English for a Hebrew browser in Israel without adding a lang parameter', async ({ page }) => {
+  test('defaults to English when no country default is supplied, even for a Hebrew browser in Israel', async ({ page }) => {
     await openHome(page, '/?campaign=moon#film');
 
     expect(await page.evaluate(() => navigator.language)).toBe('he-IL');
@@ -128,6 +128,40 @@ test.describe('locale bootstrap, URL contract, and metadata', () => {
     await expect(page.locator('[data-language-toggle]')).toHaveText('HE');
     await expect(page.locator('[data-language-toggle]')).toHaveAttribute('aria-label', 'Switch to Hebrew');
     await expect(page.locator('#moona-hebrew-fonts')).toHaveCount(0);
+  });
+
+  test('country default starts Hebrew and removes its temporary marker', async ({ page }) => {
+    await openHome(page, '/?campaign=moon&lang=he&moona-country=IL#film');
+
+    await expect.poll(() => metadata(page)).toEqual({
+      lang: 'he',
+      dir: 'rtl',
+      title: HOME_HE_TITLE,
+      description: HOME_HE_DESCRIPTION,
+      ogLocale: 'en_US',
+      ogTitle: HOME_EN_TITLE,
+      ogDescription: HOME_EN_DESCRIPTION,
+      twitterTitle: HOME_EN_TITLE,
+      canonical: 'https://moona-studio-two.vercel.app/'
+    });
+    const url = new URL(page.url());
+    expect(url.searchParams.get('campaign')).toBe('moon');
+    expect(url.searchParams.get('lang')).toBe('he');
+    expect(url.searchParams.has('moona-country')).toBe(false);
+    expect(url.hash).toBe('#film');
+    expect(await page.evaluate(() => localStorage.getItem('moona.locale.user'))).toBeNull();
+  });
+
+  test('a country default never overrides a saved manual language choice', async ({ page }) => {
+    await seedLocaleOnce(page, 'en');
+    await openHome(page, '/?campaign=moon&lang=he&moona-country=IL#film');
+
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    const url = new URL(page.url());
+    expect(url.searchParams.get('campaign')).toBe('moon');
+    expect(url.searchParams.get('lang')).toBe('en');
+    expect(url.searchParams.has('moona-country')).toBe(false);
+    expect(url.hash).toBe('#film');
   });
 
   test('valid query wins over storage and Hebrew changes only dynamic metadata', async ({ page }) => {

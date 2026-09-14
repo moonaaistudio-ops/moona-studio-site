@@ -9,16 +9,18 @@
 /* Resolve direction before CSS or analytics can paint the wrong locale. Keep this
    small map in lock-step with i18n.js; the E2E suite checks it for drift. */
 (()=>{
-  const valid=new Set(['en','he']), key='moona.locale.user', params=new URLSearchParams(location.search);
+  const valid=new Set(['en','he']), key='moona.locale.user', countryMarker='moona-country', params=new URLSearchParams(location.search);
   const requested=params.get('lang');
+  const countryDefault=params.get(countryMarker)==='IL';
   let locale='en', source='default';
-  if(valid.has(requested)){
+  let saved;
+  try{saved=localStorage.getItem(key)}catch(_){}
+  if(valid.has(requested)&&!countryDefault){
     locale=requested; source='query';
-  }else{
-    try{
-      const saved=localStorage.getItem(key);
-      if(valid.has(saved)){locale=saved;source='storage'}
-    }catch(_){}
+  }else if(valid.has(saved)){
+    locale=saved; source='storage';
+  }else if(valid.has(requested)){
+    locale=requested; source='country';
   }
   const metadata={
     en:{title:'Moona | Founder-led creative technology studio',description:'Cinematic campaigns built through creative direction, custom software and specialist AI agents.'},

@@ -10,16 +10,18 @@
   /* Privacy has no loader, so hide only the Hebrew first paint until its copy
      is applied. The timeout is deliberately fail-open. */
   (()=>{
-    const valid=new Set(['en','he']), key='moona.locale.user', params=new URLSearchParams(location.search);
+    const valid=new Set(['en','he']), key='moona.locale.user', countryMarker='moona-country', params=new URLSearchParams(location.search);
     const requested=params.get('lang');
+    const countryDefault=params.get(countryMarker)==='IL';
     let locale='en', source='default';
-    if(valid.has(requested)){
+    let saved;
+    try{saved=localStorage.getItem(key)}catch(_){}
+    if(valid.has(requested)&&!countryDefault){
       locale=requested; source='query';
-    }else{
-      try{
-        const saved=localStorage.getItem(key);
-        if(valid.has(saved)){locale=saved;source='storage'}
-      }catch(_){}
+    }else if(valid.has(saved)){
+      locale=saved; source='storage';
+    }else if(valid.has(requested)){
+      locale=requested; source='country';
     }
     const metadata={
       en:{title:'Privacy notice | Moona',description:'How Moona uses optional, consent-based analytics and protects inquiry form data.'},

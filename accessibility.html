@@ -10,13 +10,18 @@
   /* This page has no loader. Hide only a Hebrew first paint until the shared
      dictionary has applied, then fail open if that script cannot load. */
   (()=>{
-    const valid=new Set(['en','he']),key='moona.locale.user',params=new URLSearchParams(location.search);
+    const valid=new Set(['en','he']),key='moona.locale.user',countryMarker='moona-country',params=new URLSearchParams(location.search);
     const requested=params.get('lang');
+    const countryDefault=params.get(countryMarker)==='IL';
     let locale='en',source='default';
-    if(valid.has(requested)){
+    let saved;
+    try{saved=localStorage.getItem(key)}catch(_){}
+    if(valid.has(requested)&&!countryDefault){
       locale=requested;source='query';
-    }else{
-      try{const saved=localStorage.getItem(key);if(valid.has(saved)){locale=saved;source='storage'}}catch(_){}
+    }else if(valid.has(saved)){
+      locale=saved;source='storage';
+    }else if(valid.has(requested)){
+      locale=requested;source='country';
     }
     const metadata={
       en:{title:'Accessibility statement | Moona',description:'Accessibility arrangements on the Moona website and how to contact us about accessibility.'},
