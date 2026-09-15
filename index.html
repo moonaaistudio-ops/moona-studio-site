@@ -1379,6 +1379,7 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
 <div id="hero-track">
   <div id="hero-stick">
     <video id="hero-film" aria-hidden="true" playsinline muted loop preload="none"
+           data-src-desktop-loop="v/hero-ground-flow-1080.mp4"
            data-src-loop="v/hero-ground-flow-portrait.mp4"></video>
     <canvas id="sky" aria-hidden="true"></canvas>
     <canvas id="moon" aria-hidden="true"></canvas>
@@ -2242,7 +2243,9 @@ function setRolling(on){
 if(heroFilm&&!reduced){
   /* the still is the plate from the first paint; the film joins it once it rolls */
   filmPlate=true; heroStick.classList.add('film-plate');
-  heroFilm.src=heroFilm.dataset.srcLoop;
+  heroFilm.src=matchMedia('(min-width:701px)').matches
+    ? heroFilm.dataset.srcDesktopLoop
+    : heroFilm.dataset.srcLoop;
   heroFilm.addEventListener('loadeddata',()=>{
     filmEnd=Math.max(.1,heroFilm.duration-SEAM);
     filmReady=true; heroStick.classList.add('film-live');
