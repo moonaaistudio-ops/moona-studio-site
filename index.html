@@ -536,8 +536,8 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
 #loader .pct{font-family:var(--mono);font-size:10px;color:var(--ice-dim);letter-spacing:.2em}
 
 /* ————————————————————— hero ————————————————————— */
-#hero-track{height:400vh;height:400svh;position:relative}   /* the runway the film is scrubbed along */
-#hero-stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;
+#hero-track{height:100vh;height:100svh;position:relative}
+#hero-stick{position:relative;height:100vh;height:100svh;overflow:hidden;
   contain:paint;transform:translateZ(0)}
 #sky{position:absolute;inset:0;width:100%;height:100%;transform:translateZ(0)}
 #moon{position:absolute;inset:0;width:100%;height:100%;transform:translateZ(0)}
@@ -617,8 +617,8 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
   .lockup{min-height:44px}                         /* the wordmark remains a full thumb target */
   #hero-track{height:96vh;height:96svh}
   #hero-stick{position:relative;height:96vh;height:96svh}
-  /* phones get a 9:16 cut of the master, so the still and the loop use every
-     pixel of a portrait screen instead of the middle third of a landscape one */
+  /* phones keep the dedicated 9:16 still under the loop, so the first paint
+     matches the composition that follows. */
   #hero-stick.film-plate{background-image:image-set(url("p/hero-ground-flow-portrait.avif") type("image/avif"),url("p/hero-ground-flow-portrait.webp") type("image/webp"))}
   }
 @container header (max-width:350px){.lockup-name{display:none}}
@@ -1379,7 +1379,7 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
 <div id="hero-track">
   <div id="hero-stick">
     <video id="hero-film" aria-hidden="true" playsinline muted loop preload="none"
-           data-src-scrub="v/hero-ground-flow-1080.mp4" data-src-loop="v/hero-ground-flow-portrait.mp4"></video>
+           data-src-loop="v/hero-ground-flow-portrait.mp4"></video>
     <canvas id="sky" aria-hidden="true"></canvas>
     <canvas id="moon" aria-hidden="true"></canvas>
     <div class="vig"></div>
@@ -2219,20 +2219,8 @@ const heroFilm=document.getElementById('hero-film');
 const heroStick=document.getElementById('hero-stick');
 const gradeEl=document.querySelector('#hero-stick .grade');
 const hudCh=document.getElementById('hud-chapter'), hudName=document.getElementById('hud-name');
-/* the scroll does not move through the film at one speed. it slows into the two
-   shots that carry the story — the landing (touchdown and its dust at 9.5–11.8s)
-   and the flag (18.3s to the end) — and runs through the ground flow and the
-   dust cloud, where there is nothing to hold on. knots are (scroll, seconds);
-   monotonic, so scrolling down never rewinds. */
-const RAMP=[[0,0],[.20,5.0],[.30,7.2],[.46,8.8],[.66,13.0],[.76,16.5],[.86,19.2],[1,20.7]];
-function rampT(p){
-  p=Math.max(0,Math.min(1,p));
-  for(let i=1;i<RAMP.length;i++){ const [p0,t0]=RAMP[i-1],[p1,t1]=RAMP[i];
-    if(p<=p1) return t0+(t1-t0)*(p-p0)/(p1-p0); }
-  return RAMP[RAMP.length-1][1];
-}
 /* chapters are named in film seconds, so the counter tells the truth on the
-   phone's loop as much as on the desktop scrub */
+   looping hero on every screen size */
 const CHAPTERS=[[0,'Ground'],[8.8,'Landing'],[19.2,'Flag']];
 let lastChapter=-1;
 function setChapter(t){
@@ -2243,14 +2231,10 @@ function setChapter(t){
 function placeHudName(){ heroStick.style.setProperty('--hud-ch',(hudCh.getBoundingClientRect().width+14)+'px'); }
 placeHudName(); addEventListener('resize',placeHudName);
 document.fonts?.ready.then(placeHudName);   /* measured in the mono face, not the fallback */
-let lastPush=-1, lastGrade=-1;
+let lastGrade=-1;
 function gradeAt(p){ const k=Math.max(0,Math.min(1,(p-.62)/.38)); return k*k*(3-2*k); }
-/* wide enough for the sticky runway and the scroll drives the film; narrower than
-   that there is nothing to scrub along, so it simply loops instead */
-const filmScrubs=!matchMedia('(max-width:700px)').matches;
-const SEAM=1;   /* the dissolve back to the head — the scrub stops just before it,
-                   so scrolling out of the hero lands on the flag, not on a melt */
-let filmPlate=false, filmReady=false, filmRolling=false, filmEnd=0, lastFilmT=-1;
+const SEAM=1;
+let filmPlate=false, filmReady=false, filmRolling=false, filmEnd=0;
 function setRolling(on){
   if(on===filmRolling) return;
   filmRolling=on; heroStick.classList.toggle('film-rolling',on);
@@ -2258,16 +2242,16 @@ function setRolling(on){
 if(heroFilm&&!reduced){
   /* the still is the plate from the first paint; the film joins it once it rolls */
   filmPlate=true; heroStick.classList.add('film-plate');
-  heroFilm.src=filmScrubs?heroFilm.dataset.srcScrub:heroFilm.dataset.srcLoop;
+  heroFilm.src=heroFilm.dataset.srcLoop;
   heroFilm.addEventListener('loadeddata',()=>{
     filmEnd=Math.max(.1,heroFilm.duration-SEAM);
     filmReady=true; heroStick.classList.add('film-live');
-    if(!filmScrubs&&!motionReduced()){ heroFilm.play().then(()=>setRolling(true)).catch(()=>{}); }
+    if(!motionReduced()){ heroFilm.play().then(()=>setRolling(true)).catch(()=>{}); }
   },{once:true});
   /* a codec the browser refuses hands the plate back to the canvases */
   heroFilm.addEventListener('error',()=>{filmPlate=false;filmReady=false;setRolling(false);heroStick.classList.remove('film-plate','film-live')});
   addEventListener('moona:motionchange',e=>{
-    if(e.detail.paused||!filmReady||filmScrubs) return; /* setMotionPaused already paused it */
+    if(e.detail.paused||!filmReady) return; /* setMotionPaused already paused it */
     if(heroOnScreen) heroFilm.play().then(()=>setRolling(true)).catch(()=>{});
   });
   /* fetched after load, like the flagship warm-up further down: the plate must not
@@ -2292,7 +2276,7 @@ function setHeaderContactCta(show){
 new IntersectionObserver(([e])=>{
   heroOnScreen=e.isIntersecting;
   /* the film costs nothing once the hero is gone, same bargain as the aurora */
-  if(filmReady&&!filmScrubs&&!motionReduced()){
+  if(filmReady&&!motionReduced()){
     if(e.isIntersecting) heroFilm.play().catch(()=>{}); else heroFilm.pause();
   }
   setHeaderContactCta(!e.isIntersecting);
@@ -2315,27 +2299,11 @@ function loop(t){
   if(heroOnScreen && !filmCovering){
     /* the canvases only cost anything while they are the plate */
     if(!filmPlate) drawScrub(shown,sceneTime);
-    else if(filmReady && filmScrubs && !pausedMotion){
-      /* the still holds until the visitor moves; back at the top it returns */
-      if(shown>.006) setRolling(true); else if(shown<.002) setRolling(false);
-      if(filmRolling){
-        const ct=Math.max(0,Math.min(filmEnd,rampT(shown)*filmEnd/20.7));
-        if(Math.abs(ct-lastFilmT)>.016){lastFilmT=ct; heroFilm.currentTime=ct}
-        /* the camera in the shot is moving forward, so the push is the shot's own
-           motion carried a little further — not a move laid on top of it. it
-           peaks through the landing and settles as the walk ends: the frame is
-           still by the time the flag goes up, and the flag is never cropped */
-        const sm=(a,b,x)=>{const k=Math.max(0,Math.min(1,(x-a)/(b-a)));return k*k*(3-2*k)};
-        const push=1+.06*sm(0,.5,shown)*(1-.85*sm(.68,.96,shown));
-        if(Math.abs(push-lastPush)>.0008){lastPush=push; heroFilm.style.transform=`translateZ(0) scale(${push.toFixed(4)})`}
-        setChapter(ct);
-      }
-    }
     if(filmPlate){
-      const gp=filmScrubs?shown:(filmReady&&filmRolling?heroFilm.currentTime/Math.max(.1,filmEnd):0);
+      const gp=filmReady&&filmRolling?heroFilm.currentTime/Math.max(.1,filmEnd):0;
       const g=gradeAt(gp);
       if(Math.abs(g-lastGrade)>.004){lastGrade=g; gradeEl.style.opacity=g.toFixed(3)}
-      if(!filmScrubs&&filmReady&&filmRolling) setChapter(heroFilm.currentTime+1);   /* the loop is rotated one second */
+      if(filmReady&&filmRolling) setChapter(heroFilm.currentTime+1);   /* the loop is rotated one second */
     }
 
     /* DOM writes only when the value actually changed */
@@ -2352,26 +2320,13 @@ function loop(t){
        19.2-end the flag held.
        a line holds only where it can be read. the whole crash and tumble —
        nine seconds, the best footage here — carries no text at all. */
-    if(filmScrubs){
-      beatWindow(t1,shown,-1,-.5,.112,.192);
-      beatWindow(t2,shown,.245,.320,.440,.517);
-      beatWindow(t3,shown,.849,.925,2,3);
-    }else{
-      /* same three beats, timed to the loop: the lander lands, the flag goes in,
-         the plate is clean through the dissolve, then the headline rises again */
-      /* on a clock the windows are wall time, so they are cut short: arrivals
-         half a second, exits a third, and a clean plate between — a cut, not a
-         dissolve. (fractions of the 19.7s story: .025 ≈ 0.5s, .018 ≈ 0.35s) */
-      const p=filmClock();
-      t1.style.opacity=1; t1.style.visibility='visible';
-      /* they swap in place now, so the move is a nudge, not a slide */
-      /* same shot map, but the loop is rotated one second, so a source second S
-         sits at (S-1)/19.7 of the clock. fades are wall time here: ~0.9s. */
-      /* the headline holds until the sweep is close, so the plate is clean for a beat, not a pause */
-      beatWindow(t1Copy,p,filmWraps?0:-1,filmWraps?.045:-.5,.225,.262,24,20);
-      beatWindow(t2,p,.274,.320,.386,.431,24,20);
-      beatWindow(t3,p,.883,.929,.985,.999,24,20);
-    }
+    /* Timed to the loop: the lander lands, the flag goes in, the plate is clean
+       through the dissolve, then the headline rises again. */
+    const p=filmClock();
+    t1.style.opacity=1; t1.style.visibility='visible';
+    beatWindow(t1Copy,p,filmWraps?0:-1,filmWraps?.045:-.5,.225,.262,24,20);
+    beatWindow(t2,p,.274,.320,.386,.431,24,20);
+    beatWindow(t3,p,.883,.929,.985,.999,24,20);
     const pr=String(Math.round(shown*100)).padStart(3,'0');
     if(pr!==lastHudPr){lastHudPr=pr; if(hudPr)hudPr.textContent=pr}
     const cueOp=(shown<.02 && v<.06)?1:0;
