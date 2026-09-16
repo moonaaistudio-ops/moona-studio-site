@@ -34,10 +34,10 @@ section:first-of-type{border-top:0}
 .hero{padding-block:clamp(28px,4vw,48px) clamp(40px,6vw,88px)}
 .hero .top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:clamp(32px,5vw,64px)}
 .hero .top img{height:22px;width:auto}
-.hero .grid{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(28px,5vw,72px);align-items:end}
-.hero .art{aspect-ratio:9/16;border-radius:20px;overflow:hidden;background:var(--panel);max-width:520px;justify-self:start}
+.hero .grid{display:grid;grid-template-columns:auto 1fr;gap:clamp(28px,5vw,72px);align-items:center}
+.hero .art{aspect-ratio:9/16;height:min(78vh,880px);width:auto;max-width:100%;border-radius:20px;overflow:hidden;background:var(--panel)}
 .hero .art img{width:100%;height:100%;object-fit:cover}
-.hero .copy{padding-bottom:clamp(12px,3vw,40px)}
+.hero .copy{padding-block:16px}
 .hero h1{font-size:clamp(46px,7.5vw,104px);max-width:10ch;margin-top:12px}
 .hero .sub{margin-top:18px;font-size:clamp(19px,2.1vw,24px);color:var(--ice-mute);max-width:32ch;line-height:1.5;font-weight:300}
 
@@ -78,7 +78,8 @@ section:first-of-type{border-top:0}
   .frames .row{grid-template-columns:1fr 1fr}
   .idea .rules{grid-template-columns:1fr}
   .hero .grid{grid-template-columns:1fr}
-  .hero .art{max-width:100%;justify-self:stretch}
+  .hero .art{height:auto;width:100%}
+  .hero .copy{order:-1;padding-block:0 8px}
 }
 @media (max-width:520px){.frames .row{grid-template-columns:1fr}.close .logos{gap:18px}.close .logos img{height:40px}.close .logos img:first-child{height:72px}.close .logos .x{display:none}}
 @media print{
@@ -142,7 +143,7 @@ section:first-of-type{border-top:0}
   <div class="wrap">
     <div class="logos"><img src="img/logo.png" alt="מרינה מלכת הפטריות"><span class="x">×</span><img src="img/moona_lockup.png" alt="MOONA STUDIO"></div>
     <h2>אותה מרינה. אותו קול. כל פרק.</h2>
-    <p>הדמויות שלכם כמו שהן, נעולות בכל פריים. הקול של מרינה מהסרטון שלכם. טעימה בווידאו בהמשך השבוע.</p>
+    <p>הדמויות שלכם כמו שהן, נעולות בכל פריים. הקול של מרינה מהסרטון שלכם. זו הצגת הקונספט; הווידאו ברמת גימור גבוהה מאוד.</p>
     <div class="sig"><b>MOONA STUDIO</b> · TAL TZUR</div>
   </div>
 </section>
