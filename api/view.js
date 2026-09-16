@@ -41,7 +41,7 @@ module.exports = async (req, res) => {
   const line = `${page}  ·  ${country} / ${city}  ·  ${device(ua)}  ·  ${when}  ·  מקור: ${ref}`;
 
   const user = process.env.SMTP_USER, pass = process.env.SMTP_PASS;
-  if (!user || !pass) return res.status(204).end();
+  if (!user || !pass) return res.status(204).json ? res.status(204).end() : res.end();
   try {
     const transport = nodemailer.createTransport({ host: 'smtp.gmail.com', port: 465, secure: true, auth: { user, pass } });
     await transport.sendMail({
@@ -50,7 +50,11 @@ module.exports = async (req, res) => {
       subject: `צפייה בבריף: ${page}`,
       text: line
     });
-  } catch (_) { /* a view is not worth an error page */ }
+  } catch (err) {
+    /* a view is not worth an error page; surface the reason only when asked */
+    if (body.debug) return res.status(200).json({ ok: false, error: String(err && err.message || err) });
+  }
+  if (body.debug) return res.status(200).json({ ok: true, line });
   return res.status(204).end();
 };
 
