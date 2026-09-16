@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:title" content="הכיתה של מרינה">
+<meta property="og:description" content="שיעור אחד, שלושה כללים, ארבע קופסאות. MOONA × מרינה מלכת הפטריות.">
+<meta property="og:image" content="https://moona-studio-two.vercel.app/marina/img/T1_chalk_v8.jpg">
+<title>הכיתה של מרינה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Space+Grotesk:wght@400;500&family=Space+Mono:wght@400&display=swap">
+<style>
+:root{
+  --void:#05070c; --panel:#080b13; --line:rgba(168,198,232,.16);
+  --ice:#dcecff; --ice-dim:#a8c6e8; --ice-mute:rgba(220,236,255,.62);
+  --gold:#d9c69c;
+  --he:"Assistant","Arial Hebrew",Arial,sans-serif;
+  --latin:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
+  --mono:"SF Mono","Space Mono",Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--void)}
+body{color:var(--ice);font-family:var(--he);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased;padding-inline:clamp(16px,4vw,56px)}
+img{max-width:100%;display:block}
+.wrap{max-width:1180px;margin-inline:auto}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ice-dim);direction:ltr;unicode-bidi:isolate;display:inline-block}
+.eyebrow b{font-weight:400;color:var(--gold)}
+h1,h2{font-family:var(--he);font-weight:600;line-height:1.08;text-wrap:balance;letter-spacing:-.01em}
+section{padding-block:clamp(56px,8vw,112px);border-top:1px solid var(--line)}
+section:first-of-type{border-top:0}
+
+.hero{padding-block:clamp(28px,4vw,48px) clamp(40px,6vw,88px)}
+.hero .top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:clamp(32px,5vw,64px)}
+.hero .top img{height:22px;width:auto}
+.hero .grid{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(28px,5vw,72px);align-items:end}
+.hero .art{aspect-ratio:9/16;border-radius:20px;overflow:hidden;background:var(--panel);max-width:520px;justify-self:start}
+.hero .art img{width:100%;height:100%;object-fit:cover}
+.hero .copy{padding-bottom:clamp(12px,3vw,40px)}
+.hero h1{font-size:clamp(46px,7.5vw,104px);max-width:10ch;margin-top:12px}
+.hero .sub{margin-top:18px;font-size:clamp(19px,2.1vw,24px);color:var(--ice-mute);max-width:32ch;line-height:1.5;font-weight:300}
+
+.idea .grid{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(28px,5vw,72px);align-items:center}
+.idea .ph{aspect-ratio:2/3;border-radius:20px;overflow:hidden;background:var(--panel);max-width:440px;justify-self:start}
+.idea .ph img{width:100%;height:100%;object-fit:cover}
+.idea blockquote{font-size:clamp(28px,3.6vw,46px);font-weight:600;line-height:1.18;max-width:20ch;text-wrap:balance}
+.idea blockquote span{color:var(--gold)}
+.idea .txt{margin-top:24px;display:grid;gap:14px}
+.idea .txt p{max-width:46ch;color:var(--ice-mute);font-weight:300}
+.idea .rules{margin-top:28px;display:grid;grid-template-columns:repeat(3,auto);gap:10px 28px;justify-content:start;font-family:var(--he);font-weight:600;font-size:17px}
+.idea .rules span::before{content:attr(data-n);font-family:var(--mono);font-size:11px;color:var(--gold);margin-inline-end:8px;letter-spacing:.1em}
+
+.frames h2{font-size:clamp(30px,4.2vw,48px);margin-top:12px}
+.frames .row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:36px}
+.frames figure{display:grid;gap:14px;align-content:start}
+.frames .ph{aspect-ratio:2/3;overflow:hidden;border-radius:14px;background:var(--panel)}
+.frames .ph img{width:100%;height:100%;object-fit:cover}
+.frames figcaption{font-size:16px;line-height:1.45;padding-inline:2px}
+.frames figcaption .who{font-family:var(--he);font-weight:700;font-size:15px;color:var(--ice-dim);display:block;margin-bottom:4px}
+.frames figcaption em{font-style:normal;display:block;color:var(--ice-mute);font-weight:300;margin-top:4px}
+.frames figure.win figcaption .who{color:var(--gold)}
+.frames figure.win .ph{outline:1px solid var(--gold);outline-offset:-1px}
+
+.close{text-align:center}
+.close .logos{display:flex;justify-content:center;align-items:center;gap:36px;margin-bottom:28px;flex-wrap:wrap}
+.close .logos img{height:48px;width:auto}
+.close .logos img:first-child{height:88px}
+.close .logos .x{font-family:var(--mono);color:var(--ice-dim);font-size:14px}
+.close h2{font-size:clamp(26px,3.6vw,42px)}
+.close p{color:var(--ice-mute);margin-top:12px;max-width:42ch;margin-inline:auto;font-weight:300}
+.close .sig{margin-top:44px;font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--ice-dim);direction:ltr}
+.close .sig b{color:var(--ice);font-weight:400}
+
+@media (max-width:900px){
+  .idea .grid{grid-template-columns:1fr}
+  .idea .ph{max-width:100%;justify-self:stretch}
+  .frames .row{grid-template-columns:1fr 1fr}
+  .idea .rules{grid-template-columns:1fr}
+  .hero .grid{grid-template-columns:1fr}
+  .hero .art{max-width:100%;justify-self:stretch}
+}
+@media (max-width:520px){.frames .row{grid-template-columns:1fr}.close .logos{gap:18px}.close .logos img{height:40px}.close .logos img:first-child{height:72px}.close .logos .x{display:none}}
+@media print{
+  @page{size:1440px 3080px;margin:0}
+  html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  section{break-inside:auto}
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="top">
+      <span class="eyebrow">MOONA STUDIO <b>×</b> MARINA</span>
+      <img src="img/moona_lockup.png" alt="MOONA STUDIO">
+    </div>
+    <div class="grid">
+      <div class="art"><img src="img/T1_chalk_v8.jpg" alt="הכיתה של מרינה ביער, על הלוח: 1. לא שוטפים"></div>
+      <div class="copy">
+        <span class="eyebrow">Episode 01</span>
+        <h1>הכיתה של מרינה</h1>
+        <p class="sub">איך שומרים על פטריות יפות ולבנות. שיעור אחד, שלושה כללים, ארבע קופסאות.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="idea">
+  <div class="wrap grid">
+    <div class="ph"><img src="img/class_reverse.jpg" alt="חזי, קיפי וציפי על גזעים, קופסה סגורה לכל אחד"></div>
+    <div>
+      <blockquote>מרינה נתנה משימת בית: להביא פטריות מהבית ולשמור אותן <span>יפות ולבנות</span> שבוע. היום מראים.</blockquote>
+      <div class="txt">
+        <p>כיתה ביער: לוח, פעמון, שלושה תלמידים. חזי, קיפי וציפי. מרינה קוראת בשם, כל אחד פותח קופסה, וכל קופסה נראית רע מסיבה אחרת. מרינה מסבירה למה, וכותבת כלל על הלוח.</p>
+        <p>ואז היא פותחת את שלה. יפות ולבנות. "שלי. שבוע."</p>
+      </div>
+      <div class="rules">
+        <span data-n="01">לא שוטפים</span>
+        <span data-n="02">לא מקלפים</span>
+        <span data-n="03">לא נותנים לה להזיע</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frames">
+  <div class="wrap">
+    <span class="eyebrow">Four boxes</span>
+    <h2>ארבע קופסאות</h2>
+    <div class="row">
+      <figure><div class="ph"><img src="img/chezi_box.jpg" alt=""></div><figcaption><span class="who">חזי</span>חומות, רטובות.<em>"שטפתי אותן. כל יום." מרינה: "פטרייה טובה גדלה נקי ומפוקח. לא טיילה בשום יער. מים פלוס המתנה שווה פטרייה לא מרוצה."</em></figcaption></figure>
+      <figure><div class="ph"><img src="img/kipi_box.jpg" alt=""></div><figcaption><span class="who">קיפי</span>חשופות, אפורות.<em>"קילפתי. חשבתי שככה נקי." מרינה: "קליפה? זו לא ביצה קשה. טבעית, טעימה ומוכנה לאכילה."</em></figcaption></figure>
+      <figure><div class="ph"><img src="img/tzipi_box.jpg" alt=""></div><figcaption><span class="who">ציפי</span>סגורה בניילון, אדים.<em>"סגרתי טוב טוב שלא ייכנס אוויר." מרינה: "והן הזיעו. שקית נייר, או הניילון המקורי. יבש."</em></figcaption></figure>
+      <figure class="win"><div class="ph"><img src="img/marina_box.jpg" alt=""></div><figcaption><span class="who">מרינה</span>יפות ולבנות.<em>"שלי. שבוע." "סיכום זריז?" הכיתה: "לא שוטפים! לא מקלפים! לא נותנים לה להזיע!"</em></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="close">
+  <div class="wrap">
+    <div class="logos"><img src="img/logo.png" alt="מרינה מלכת הפטריות"><span class="x">×</span><img src="img/moona_lockup.png" alt="MOONA STUDIO"></div>
+    <h2>אותה מרינה. אותו קול. כל פרק.</h2>
+    <p>הדמויות שלכם כמו שהן, נעולות בכל פריים. הקול של מרינה מהסרטון שלכם. טעימה בווידאו בהמשך השבוע.</p>
+    <div class="sig"><b>MOONA STUDIO</b> · TAL TZUR</div>
+  </div>
+</section>
+
+</body>
+</html>
