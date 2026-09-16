@@ -148,6 +148,9 @@ section:first-of-type{border-top:0}
   </div>
 </section>
 
+<script>
+try{fetch('/api/view',{method:'POST',headers:{'Content-Type':'application/json'},keepalive:true,body:JSON.stringify({page:location.pathname,ref:document.referrer})})}catch(e){}
+</script>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
