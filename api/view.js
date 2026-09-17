@@ -42,7 +42,9 @@ module.exports = async (req, res) => {
   const ref = String(body.ref || '').slice(0, 120) || 'ישיר';
   const line = `${code ? 'קוד ' + code : page}  ·  ${country} / ${city}  ·  ${device(ua)}  ·  ${when}  ·  מקור: ${ref}`;
 
-  const user = process.env.SMTP_USER, pass = process.env.SMTP_PASS;
+  /* same normalisation as lead.js: App Passwords are shown with spaces */
+  const user = (process.env.SMTP_USER || '').trim();
+  const pass = (process.env.SMTP_PASS || '').replace(/\s+/g, '');
   if (!user || !pass) return res.status(204).json ? res.status(204).end() : res.end();
   try {
     const transport = nodemailer.createTransport({ host: 'smtp.gmail.com', port: 465, secure: true, auth: { user, pass } });
