@@ -1,5 +1,6 @@
 /* Moona — page-view ping for pitch pages.
-   A pitch page (currently /marina) calls this once per load. We mail the
+   A pitch page (currently /marina) calls this once per load, and the home
+   page calls it when reached through an outreach link (?c=<code>). We mail the
    studio inbox one line per view: page, country, city, device, time.
    No cookies, no identifiers stored, nothing persisted here. A warm instance
    remembers recent viewer hashes for a short while so one person refreshing
@@ -24,11 +25,12 @@ module.exports = async (req, res) => {
 
   const body = typeof req.body === 'string' ? safeParse(req.body) : (req.body || {});
   const page = String(body.page || '').slice(0, 64);
-  if (!PAGES.has(page)) return res.status(204).end();
+  const code = String(body.code || '').replace(/[^\w-]/g, '').slice(0, 40);
+  if (!PAGES.has(page) && !(page === '/' && code)) return res.status(204).end();
 
   const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim();
   const ua = String(req.headers['user-agent'] || '');
-  const key = crypto.createHash('sha256').update(page + '|' + ip + '|' + ua).digest('hex');
+  const key = crypto.createHash('sha256').update(page + '|' + code + '|' + ip + '|' + ua).digest('hex');
   const now = Date.now();
   for (const [k, t] of recent) if (now - t > QUIET_MS) recent.delete(k);
   if (recent.has(key)) return res.status(204).end();
@@ -38,7 +40,7 @@ module.exports = async (req, res) => {
   const city = decodeURIComponent(String(req.headers['x-vercel-ip-city'] || '')) || '?';
   const when = new Date().toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem', hour12: false });
   const ref = String(body.ref || '').slice(0, 120) || 'ישיר';
-  const line = `${page}  ·  ${country} / ${city}  ·  ${device(ua)}  ·  ${when}  ·  מקור: ${ref}`;
+  const line = `${code ? 'קוד ' + code : page}  ·  ${country} / ${city}  ·  ${device(ua)}  ·  ${when}  ·  מקור: ${ref}`;
 
   const user = process.env.SMTP_USER, pass = process.env.SMTP_PASS;
   if (!user || !pass) return res.status(204).json ? res.status(204).end() : res.end();
@@ -47,7 +49,7 @@ module.exports = async (req, res) => {
     await transport.sendMail({
       from: `"Moona site" <${user}>`,
       to: process.env.LEAD_TO || user,
-      subject: `צפייה בבריף: ${page}`,
+      subject: code ? `כניסה מקישור: ${code}` : `צפייה בבריף: ${page}`,
       text: line
     });
   } catch (err) {

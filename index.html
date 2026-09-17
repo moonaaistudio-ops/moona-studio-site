@@ -3353,5 +3353,11 @@ i18n.subscribe(change=>{
 renderLocaleState();
 
 </script>
+<script>
+/* outreach links carry ?c=<code>; one mail to the studio per such visit, nothing stored */
+try{var _c=new URLSearchParams(location.search).get('c');if(_c)fetch('/api/view',{method:'POST',headers:{'Content-Type':'application/json'},keepalive:true,body:JSON.stringify({page:'/',code:_c,ref:document.referrer})})}catch(e){}
+</script>
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
