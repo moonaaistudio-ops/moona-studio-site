@@ -10,7 +10,10 @@
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
-const PAGES = new Set(['/marina/', '/marina']);
+const PAGES = new Set(['/marina/', '/marina', '/marina/ep1/', '/marina/ep1']);
+/* server-side copy of every view to PostHog: survives ad blockers and a broken SMTP */
+const PH_KEY = 'phc_tR7sebAcZCkQvnc475AGEXGYhpmXxFa4JZTD4fQXrhuW';
+const PH_HOST = 'https://us.i.posthog.com';
 const QUIET_MS = 30 * 60 * 1000;
 const recent = new Map();
 
@@ -40,7 +43,17 @@ module.exports = async (req, res) => {
   const city = decodeURIComponent(String(req.headers['x-vercel-ip-city'] || '')) || '?';
   const when = new Date().toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem', hour12: false });
   const ref = String(body.ref || '').slice(0, 120) || 'ישיר';
-  const line = `${code ? 'קוד ' + code : page}  ·  ${country} / ${city}  ·  ${device(ua)}  ·  ${when}  ·  מקור: ${ref}`;
+  const line = `${page}${code ? '  ·  קוד ' + code : ''}  ·  ${country} / ${city}  ·  ${device(ua)}  ·  ${when}  ·  מקור: ${ref}`;
+
+  /* PostHog first: it needs no credentials and is the channel that is known to work */
+  try {
+    await fetch(PH_HOST + '/capture/', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ api_key: PH_KEY, event: 'brief_view', distinct_id: 'server:' + key.slice(0, 16),
+        properties: { page, code, country, city, device: device(ua), ref, $ip: ip, $lib: 'moona-view' } })
+    });
+  } catch {}
+  console.log('[view]', line);
 
   /* same normalisation as lead.js: App Passwords are shown with spaces */
   const user = (process.env.SMTP_USER || '').trim();
@@ -51,7 +64,7 @@ module.exports = async (req, res) => {
     await transport.sendMail({
       from: `"Moona site" <${user}>`,
       to: process.env.LEAD_TO || user,
-      subject: code ? `כניסה מקישור: ${code}` : `צפייה בבריף: ${page}`,
+      subject: `צפייה בבריף: ${page}${code ? ' · ' + code : ''}`,
       text: line
     });
   } catch (err) {
