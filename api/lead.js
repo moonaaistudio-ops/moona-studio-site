@@ -11,7 +11,6 @@
 const nodemailer = require('nodemailer');
 
 const MAX_FIELD = 400;          /* chars per text field                */
-const MIN_BRIEF = 20;
 const MAX_BRIEF = 1200;
 const MAX_FILES = 6;
 const MAX_BYTES = 3.5 * 1024 * 1024;   /* total attachments, decoded    */
@@ -51,7 +50,7 @@ module.exports = async (req, res) => {
   const company = clean(body.company) || domain || name;
 
   if (!name || !email) return res.status(422).json({ ok: false, error: 'missing' });
-  if (brief.length < MIN_BRIEF || brief.length > MAX_BRIEF) {
+  if (brief.length > MAX_BRIEF) {
     return res.status(422).json({ ok: false, error: 'brief' });
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return res.status(422).json({ ok: false, error: 'email' });

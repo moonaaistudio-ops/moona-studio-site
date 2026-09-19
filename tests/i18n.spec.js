@@ -6,7 +6,7 @@ const BASE_URL = `http://127.0.0.1:${Number(process.env.PLAYWRIGHT_PORT || 4317)
 const HOME_EN_TITLE = 'Moona | Founder-led creative technology studio';
 const HOME_EN_DESCRIPTION = 'Cinematic campaigns built through creative direction, custom software and specialist AI agents.';
 const HOME_HE_TITLE = 'Moona | סטודיו קריאייטיב טכנולוגי בהובלת המייסד';
-const HOME_HE_DESCRIPTION = 'קמפיינים קולנועיים שנבנים באמצעות קריאייטיב, פיתוח תוכנה וסוכני AI מתמחים.';
+const HOME_HE_DESCRIPTION = 'קמפיינים קולנועיים שנבנים באמצעות קריאייטיב, פיתוח תוכנה וסוכני AI מומחים.';
 const LEAD_BRIEF = 'We need a cinematic launch film for a new energy-bar brand.';
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 const crewRevision = name => name === 'sona' ? 'r10' : 'r13';
@@ -54,12 +54,8 @@ async function fillLeadForm(page, { brief = LEAD_BRIEF } = {}) {
   await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
   await expect(page.locator('#ask')).toHaveClass(/open/);
   await page.locator('#f-name').fill('Dana Cohen');
-  await page.locator('[data-step="0"] [data-next]').click();
   await page.locator('#f-mail').fill('dana@example.com');
-  await page.locator('[data-step="1"] [data-next]').click();
-  await page.locator('#f-site').fill('example.com');
-  await page.locator('[data-step="2"] [data-next]').click();
-  await expect(page.locator('[data-step="3"]')).toHaveClass(/active/);
+  await expect(page.locator('[data-step="0"]')).toHaveClass(/active/);
   if (brief !== null) await page.locator('#f-brief').fill(brief);
 }
 
@@ -338,9 +334,9 @@ test.describe('dictionary and first-paint privacy contract', () => {
 
     await expect(page.locator('#about h2')).toHaveText('טל צור');
     await expect(page.locator('.about-role')).toHaveText('מייסד · מנהל קריאייטיב · מפתח');
-    await expect(page.locator('.about-body')).toHaveText('אני טל, מייסד מונה. אני מגיע מפיתוח ויוצר סרטי מותג ומוצר, מהרעיון והבימוי ועד לעריכה ולגימור.');
-    await expect(page.locator('.about-engine')).toHaveText('פיתוח תוכנה מותאם · מחקר ופיתוח מתמשך · סוכני AI מתמחים');
-    await expect(page.locator('#crew-transition-title')).toHaveText('צוות של סוכני AI מתמחים. כולם נבנו בסטודיו.');
+    await expect(page.locator('.about-body')).toHaveText('אני טל, מייסד MOONA. אני מגיע מפיתוח ויוצר סרטי מותג ומוצר, מהרעיון והבימוי ועד לעריכה ולגימור.');
+    await expect(page.locator('.about-engine')).toHaveText('פיתוח תוכנה מותאם · מחקר ופיתוח מתמשך · סוכני AI מומחים');
+    await expect(page.locator('#crew-transition-title')).toHaveText('צוות של סוכני AI מומחים. כולם נבנו בסטודיו.');
     await expect(page.locator('.crew-transition-body')).toHaveText('כל אחד מאומן במקצוע אחד. לכולם יש במאי אחד.');
     await expect(page.locator('#crew-title')).toHaveText('המומחים שמאחורי העבודה.');
     await expect(page.locator('.crew-head > p')).toHaveText('קריאייטיב, עריכה, תמונה, וידאו, אודיו ופרודקט.');
@@ -355,7 +351,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.contact [data-i18n="hero.cta"]')).toHaveText('לדבר עם הסטודיו');
     await expect(page.locator('#askTitle')).toHaveText('לדבר עם הסטודיו');
     await expect(page.locator('#ask')).toHaveAttribute('aria-labelledby', 'askTitle');
-    await expect(page.locator('#askSubmit [data-i18n="form.send"]')).toHaveText('שליחת הפרטים');
+    await expect(page.locator('#askSubmit [data-i18n="form.quick.send"]')).toHaveText('שליחת פנייה');
     await expect(page.locator('#analyticsAccept')).toHaveText('אישור עוגיות');
     await expect(page.locator('#analyticsReject')).toHaveText('דחיית עוגיות');
 
@@ -364,14 +360,14 @@ test.describe('dictionary and first-paint privacy contract', () => {
       hero: window.MoonaI18n.t('hero.cta', {}, 'en'),
       contact: window.MoonaI18n.t('hero.projectCta', {}, 'en'),
       dialog: window.MoonaI18n.t('form.dialog', {}, 'en'),
-      send: window.MoonaI18n.t('form.send', {}, 'en'),
+      send: window.MoonaI18n.t('form.quick.send', {}, 'en'),
       note: window.MoonaI18n.t('studio.note', {}, 'en')
     }))).toEqual({
       primary: 'LET’S TALK',
       hero: 'Talk to the studio',
       contact: 'Talk to the studio',
       dialog: 'Talk to the studio',
-      send: 'Send details',
+      send: 'Send inquiry',
       note: 'Reply within two business days'
     });
 
@@ -716,19 +712,18 @@ test.describe('locale transitions and state preservation', () => {
     await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
     await expect(page.locator('#ask')).toHaveClass(/open/);
     await page.locator('#f-name').fill('Tal Zur');
-    await page.locator('[data-step="0"] [data-next]').click();
     await page.locator('#f-mail').fill('invalid-address');
-    await page.locator('[data-step="1"] [data-next]').click();
-    await expect(page.locator('[data-step="1"] .qhint')).toHaveClass(/err/);
+    await page.locator('#askSubmit').click();
+    await expect(page.locator('#email-hint')).toHaveClass(/err/);
     const expectedHebrew = await page.evaluate(() => window.MoonaI18n.t('form.validation.email', {}, 'he'));
 
     await page.evaluate(() => window.MoonaI18n.setLocale('he', { source: 'user' }));
     await expect(page.locator('#ask')).toHaveClass(/open/);
-    await expect(page.locator('[data-step="1"]')).toHaveClass(/active/);
+    await expect(page.locator('[data-step="0"]')).toHaveClass(/active/);
     await expect(page.locator('#f-name')).toHaveValue('Tal Zur');
     await expect(page.locator('#f-mail')).toHaveValue('invalid-address');
-    await expect(page.locator('[data-step="1"] .qhint')).toHaveText(expectedHebrew);
-    await expect(page.locator('[data-step="1"] .qhint')).toHaveClass(/err/);
+    await expect(page.locator('#email-hint')).toHaveText(expectedHebrew);
+    await expect(page.locator('#email-hint')).toHaveClass(/err/);
     const url = new URL(page.url());
     expect(url.searchParams.get('keep')).toBe('form');
     expect(url.searchParams.get('lang')).toBe('he');
@@ -968,12 +963,12 @@ test.describe('responsive header and dynamic UI', () => {
         ]
       });
       expect(layout.crewTransition).toEqual({
-        heading: 'צוות של סוכני AI מתמחים. כולם נבנו בסטודיו.',
+        heading: 'צוות של סוכני AI מומחים. כולם נבנו בסטודיו.',
         body: 'כל אחד מאומן במקצוע אחד. לכולם יש במאי אחד.',
         mediaCount: 0
       });
       expect(layout.sectionAfterFilm).toBe('work');
-      expect(layout.sectionAfterWork).toBe('about');
+      expect(layout.sectionAfterWork).toBe('solutions');
       expect(layout.sectionAfterAbout).toBe('crew-intro');
       expect(layout.crewNames).toEqual(['Sona', 'Vero', 'Alma', 'Nara', 'Luc', 'Iva']);
       expect(layout.crewNumbering).toBe(0);
@@ -1076,7 +1071,8 @@ test.describe('responsive header and dynamic UI', () => {
           labelledSections,
           junctions: {
             filmWork: junction('#film', '#work'),
-            workAbout: junction('#work', '#about'),
+            workSolutions: junction('#work', '#solutions'),
+            solutionsAbout: junction('#solutions', '#about'),
             aboutCrewIntro: junction('#about', '#crew-intro'),
             crewIntroCrew: junction('#crew-intro', '#crew'),
             crewContact: junction('#crew', '#contact')
@@ -1832,35 +1828,17 @@ test.describe('responsive header and dynamic UI', () => {
     await expect(menuToggle).toHaveAttribute('aria-expanded', 'false');
   });
 
-  test('validation and uploaded-file labels rerender without losing files', async ({ page }) => {
+  test('single-screen inquiry preserves input and validation when language changes', async ({ page }) => {
     await openHome(page, '/?lang=en');
     await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
-    await page.locator('[data-step="0"] [data-next]').click();
-    await expect(page.locator('[data-step="0"] .qhint')).toHaveText('This one we need.');
+    await page.locator('#askSubmit').click();
+    await expect(page.locator('#name-hint')).toHaveText('This one we need.');
+    await page.locator('#f-brief').fill('Product film');
     await page.evaluate(() => window.MoonaI18n.setLocale('he', { source: 'programmatic' }));
-    await expect(page.locator('[data-step="0"] .qhint')).toHaveText('את זה צריך למלא.');
-
-    const files = Array.from({ length: 7 }, (_, index) => ({
-      name: index === 0 ? 'לוגו.pdf' : `asset-${index + 1}.pdf`,
-      mimeType: 'application/pdf',
-      buffer: Buffer.alloc(600 * 1024, index + 1)
-    }));
-    await page.locator('#f-files').setInputFiles(files);
-    await expect(page.locator('.filechip')).toHaveCount(7);
-    await expect(page.locator('.filechip.over')).toHaveCount(2);
-    const expected = await page.evaluate(() => ({
-      note: window.MoonaI18n.t('form.files.notFit', { count: 2, size: '3.2 MB' }),
-      remove: window.MoonaI18n.t('form.files.remove', { name: 'לוגו.pdf' })
-    }));
-    await expect(page.locator('.filenote')).toHaveText(expected.note);
-    await expect(page.locator('.filechip').first().locator('button')).toHaveAttribute('aria-label', expected.remove);
-    await expect(page.locator('.filechip').first().locator('bdi')).toHaveAttribute('dir', 'auto');
-    await expect(page.locator('.filechip').first().locator('b')).toHaveAttribute('dir', 'ltr');
-    expect(await page.locator('#f-files').evaluate(input => input.files.length)).toBe(7);
-
-    await page.evaluate(() => document.querySelector('.filechip button').click());
-    await expect(page.locator('.filechip')).toHaveCount(6);
-    expect(await page.locator('#f-files').evaluate(input => input.files.length)).toBe(6);
+    await expect(page.locator('#name-hint')).toHaveText('את זה צריך למלא.');
+    await expect(page.locator('#f-brief')).toHaveValue('Product film');
+    await expect(page.locator('#askSubmit')).toHaveText('שליחת פנייה');
+    await expect(page.locator('#f-site,#f-files,[data-next],[data-back],.ask-step,.qsteps')).toHaveCount(0);
   });
 
   test('media and lightbox labels rerender while media and overlay nodes stay intact', async ({ page }) => {
@@ -1941,7 +1919,7 @@ test.describe('responsive header and dynamic UI', () => {
     await expect(grid).not.toHaveAttribute('tabindex', /.+/);
     await expect(page.locator('[data-crew-rail], [data-crew-prev], [data-crew-next]')).toHaveCount(0);
     await expect(grid.locator('.crew-card')).toHaveCount(6);
-    await expect(page.locator('#crew-transition-title')).toHaveText('צוות של סוכני AI מתמחים. כולם נבנו בסטודיו.');
+    await expect(page.locator('#crew-transition-title')).toHaveText('צוות של סוכני AI מומחים. כולם נבנו בסטודיו.');
     expect(await grid.evaluate(element => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(1);
 
     await grid.evaluate(element => { element.dataset.e2eMarker = 'preserved'; });
@@ -1969,7 +1947,32 @@ test.describe('responsive header and dynamic UI', () => {
 });
 
 test.describe('lead submission mocks', () => {
-  test('required brief validation gates the payload and success reaches data-step 4', async ({ page }) => {
+  test('pending submission is sent once and drafts survive closing the dialog', async ({ page }) => {
+    let requests = 0;
+    let finish;
+    const pending = new Promise(resolve => { finish = resolve; });
+    await page.route('**/api/lead', async route => {
+      requests++;
+      await pending;
+      await route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' });
+    });
+    await openHome(page, '/?lang=en');
+    await fillLeadForm(page);
+    await page.locator('#askClose').click();
+    await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
+    await expect(page.locator('#f-name')).toHaveValue('Dana Cohen');
+    await expect(page.locator('#f-brief')).toHaveValue(LEAD_BRIEF);
+    await page.locator('#askSubmit').click();
+    await expect.poll(() => requests).toBe(1);
+    await expect(page.locator('#askSubmit')).toBeDisabled();
+    await page.locator('#askForm').evaluate(form => form.requestSubmit());
+    expect(requests).toBe(1);
+    finish();
+    await expect(page.locator('#doneTitle')).toBeFocused();
+    expect(requests).toBe(1);
+  });
+
+  test('single-screen inquiry sends with only name and email', async ({ page }) => {
     let payload;
     await page.route('**/api/lead', route => {
       payload = route.request().postDataJSON();
@@ -1980,36 +1983,25 @@ test.describe('lead submission mocks', () => {
       });
     });
     await openHome(page, '/?lang=he');
-    await expect(page.locator('#askForm > [data-step]')).toHaveCount(5);
+    await expect(page.locator('#askForm > [data-step]')).toHaveCount(2);
     expect(await page.locator('#askForm > [data-step]').evaluateAll(steps =>
-      steps.map(step => step.dataset.step))).toEqual(['0', '1', '2', '3', '4']);
+      steps.map(step => step.dataset.step))).toEqual(['0', '1']);
 
     await fillLeadForm(page, { brief: null });
-    await expect(page.locator('#f-brief')).toHaveAttribute('required', '');
-    await expect(page.locator('#f-brief')).toHaveAttribute('minlength', '20');
+    await expect(page.locator('#f-brief')).not.toHaveAttribute('required', '');
+    await expect(page.locator('#f-brief')).toHaveAttribute('aria-required', 'false');
+    await expect(page.locator('label[for="f-brief"]')).toContainText('לא חובה');
     await page.locator('#askSubmit').click();
-    await expect(page.locator('#brief-hint')).toHaveText('את זה צריך למלא.');
-    await expect(page.locator('#f-brief')).toHaveAttribute('aria-invalid', 'true');
-    expect(payload).toBeUndefined();
-
-    await page.locator('#f-brief').fill('קצר מדי');
-    await page.locator('#askSubmit').click();
-    await expect(page.locator('#brief-hint')).toHaveText('נשמח לקצת יותר פרטים, בין 20 ל־1,200 תווים.');
-    await expect(page.locator('#brief-hint')).toHaveClass(/err/);
-    expect(payload).toBeUndefined();
-
-    await page.locator('#f-brief').fill(LEAD_BRIEF);
-    await page.locator('#askSubmit').click();
-    await expect(page.locator('[data-step="4"]')).toHaveClass(/active/);
-    await expect(page.locator('[data-step="4"] .qtitle')).toHaveText('קיבלנו.');
+    await expect(page.locator('[data-step="1"]')).toHaveClass(/active/);
+    await expect(page.locator('[data-step="1"] .qtitle')).toHaveText('קיבלנו.');
     await expect(page.locator('#doneMsg')).toHaveText('נעבור על הפרויקט ונחזור אליכם בתוך שני ימי עסקים.');
     await expect(page.locator('#doneTitle')).toBeFocused();
     expect(payload).toEqual({
       name: 'Dana Cohen',
-      company: 'Example',
-      website: 'https://example.com',
+      company: 'Dana Cohen',
+      website: '',
       email: 'dana@example.com',
-      brief: LEAD_BRIEF,
+      brief: '',
       'bot-field': '',
       files: []
     });
@@ -2034,17 +2026,15 @@ test.describe('lead submission mocks', () => {
     await fillLeadForm(page);
     await page.locator('#askSubmit').click();
     await page.waitForFunction(() => Boolean(window.__e2eMailto));
-    await expect(page.locator('[data-step="3"] .qhint')).toHaveText('לא ניתן לשלוח מכאן. המייל ייפתח במקום.');
-    await expect(page.locator('[data-step="3"] .qhint')).toHaveClass(/err/);
+    await expect(page.locator('#send-status')).toHaveText('לא ניתן לשלוח מכאן. המייל ייפתח במקום.');
+    await expect(page.locator('#send-status')).toHaveClass(/err/);
 
     const mailto = await page.evaluate(() => window.__e2eMailto);
     const url = new URL(mailto);
     expect(url.protocol).toBe('mailto:');
     expect(url.pathname).toBe('moona.ai.studio@gmail.com');
-    expect(url.searchParams.get('subject')).toBe('פנייה לפרויקט: ⁦Example⁩');
+    expect(url.searchParams.get('subject')).toBe('פנייה לפרויקט: ⁦Dana Cohen⁩');
     expect(url.searchParams.get('body')).toContain('שם: Dana Cohen');
-    expect(url.searchParams.get('body')).toContain('מותג: Example');
-    expect(url.searchParams.get('body')).toContain('אתר: https://example.com');
     expect(url.searchParams.get('body')).toContain('מייל: dana@example.com');
     expect(url.searchParams.get('body')).toContain(`תיאור הפרויקט:\n${LEAD_BRIEF}`);
     expect(page.url()).toContain('?lang=he');

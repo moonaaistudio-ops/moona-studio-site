@@ -126,50 +126,34 @@ test('required fields have descriptions and expose an announced validation state
   await expect(page.locator('#ask')).toHaveClass(/open/);
   await expect(page.locator('#f-name')).toBeFocused();
 
-  // the brand link is deliberately optional, so it carries the opposite contract
-  for (const id of ['f-name', 'f-mail', 'f-site', 'f-brief']) {
+  for (const id of ['f-name', 'f-mail', 'f-brief']) {
     const field = page.locator(`#${id}`);
-    const optional = id === 'f-site';
-    if (optional) await expect(field).not.toHaveAttribute('required', '');
+    await expect(field).toBeVisible();
+    if (id === 'f-brief') await expect(field).not.toHaveAttribute('required', '');
     else await expect(field).toHaveAttribute('required', '');
-    await expect(field).toHaveAttribute('aria-required', optional ? 'false' : 'true');
+    await expect(field).toHaveAttribute('aria-required', id === 'f-brief' ? 'false' : 'true');
     await expect(field).toHaveAttribute('aria-invalid', 'false');
     const descriptionId = await field.getAttribute('aria-describedby');
-    expect(descriptionId).toBeTruthy();
     await expect(page.locator(`#${descriptionId}`)).toHaveAttribute('aria-live', 'polite');
   }
-
-  const fileInput = page.locator('#f-files');
-  await expect(fileInput).not.toHaveCSS('display', 'none');
-  await expect(fileInput).toHaveAttribute('aria-describedby', 'upload-detail');
-  expect(await fileInput.evaluate(input => input.tabIndex)).toBeGreaterThanOrEqual(0);
-
-  await page.locator('[data-step="0"] [data-next]').click();
+  await page.locator('#askSubmit').click();
   await expect(page.locator('#f-name')).toBeFocused();
   await expect(page.locator('#f-name')).toHaveAttribute('aria-invalid', 'true');
   await expect(page.locator('#name-hint')).toHaveAttribute('role', 'alert');
   await expect(page.locator('#name-hint')).toHaveText('את זה צריך למלא.');
-
   await page.locator('#f-name').fill('דנה כהן');
-  await page.locator('[data-step="0"] [data-next]').click();
-  await page.locator('#f-mail').fill('dana@example.com');
-  await page.locator('[data-step="1"] [data-next]').click();
-  await page.locator('#f-site').fill('example.com');
-  await page.locator('[data-step="2"] [data-next]').click();
-  await expect(page.locator('[data-step="3"]')).toHaveClass(/active/);
-  await expect(page.locator('#f-brief')).toBeFocused();
-
+  await page.locator('#f-mail').fill('invalid-email');
   await page.locator('#askSubmit').click();
-  await expect(page.locator('#f-brief')).toBeFocused();
-  await expect(page.locator('#f-brief')).toHaveAttribute('aria-invalid', 'true');
-  await expect(page.locator('#brief-hint')).toHaveAttribute('role', 'alert');
-  await expect(page.locator('#brief-hint')).toHaveText('את זה צריך למלא.');
-
-  await page.locator('#f-brief').fill('קצר מדי');
-  await page.locator('#askSubmit').click();
-  await expect(page.locator('#f-brief')).toBeFocused();
-  await expect(page.locator('#brief-hint')).toHaveText('נשמח לקצת יותר פרטים, בין 20 ל־1,200 תווים.');
+  await expect(page.locator('#f-mail')).toBeFocused();
+  await expect(page.locator('#email-hint')).toHaveText('כתובת המייל לא נראית תקינה.');
+  await expect(page.locator('#f-brief')).toHaveAttribute('aria-invalid', 'false');
+  await expect(page.locator('#brief-hint')).toBeEmpty();
   await expectNoAxeViolations(page, '#ask');
+  await page.locator('#askClose').focus();
+  await page.keyboard.press('Shift+Tab');
+  await expect(page.locator('#askSubmit')).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.locator('#askClose')).toBeFocused();
 
   await page.keyboard.press('Escape');
   await expect(page.locator('#ask')).not.toHaveClass(/open/);
