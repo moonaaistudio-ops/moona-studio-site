@@ -58,14 +58,14 @@ test.after(() => {
   }
 });
 
-test('requires a trimmed brief between 20 and 1200 characters', async () => {
+test('accepts an optional brief and rejects more than 1200 characters', async () => {
   let transportCalls = 0;
   nodemailer.createTransport = () => {
     transportCalls += 1;
     return { sendMail: async () => {} };
   };
 
-  for (const brief of [undefined, ' '.repeat(8), 'x'.repeat(19), `  ${'x'.repeat(1201)}  `]) {
+  for (const brief of [`  ${'x'.repeat(1201)}  `]) {
     const res = response();
     await lead(request(validBody({ brief })), res);
     assert.equal(res.statusCode, 422);
@@ -74,14 +74,14 @@ test('requires a trimmed brief between 20 and 1200 characters', async () => {
 
   assert.equal(transportCalls, 0);
 
-  for (const brief of ['x'.repeat(20), `  ${'x'.repeat(1200)}  `]) {
+  for (const brief of [undefined, '', ' '.repeat(8), 'סרט מוצר', `  ${'x'.repeat(1200)}  `]) {
     const res = response();
     await lead(request(validBody({ brief })), res);
     assert.equal(res.statusCode, 200);
     assert.deepEqual(res.payload, { ok: true });
   }
 
-  assert.equal(transportCalls, 2);
+  assert.equal(transportCalls, 5);
 });
 
 test('includes the trimmed brief in SMTP text and escaped HTML', async () => {

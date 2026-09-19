@@ -24,7 +24,7 @@
   }
   const metadata={
     en:{title:'Moona | Founder-led creative technology studio',description:'Cinematic campaigns built through creative direction, custom software and specialist AI agents.'},
-    he:{title:'Moona | סטודיו קריאייטיב טכנולוגי בהובלת המייסד',description:'קמפיינים קולנועיים שנבנים באמצעות קריאייטיב, פיתוח תוכנה וסוכני AI מתמחים.'}
+    he:{title:'Moona | סטודיו קריאייטיב טכנולוגי בהובלת המייסד',description:'קמפיינים קולנועיים שנבנים באמצעות קריאייטיב, פיתוח תוכנה וסוכני AI מומחים.'}
   };
   const root=document.documentElement;
   root.lang=locale;
@@ -723,7 +723,7 @@ main{position:relative;z-index:2;background:var(--void)}
 /* ————————————————— flagship: DUSTLINE ————————————————— */
 /* Same visual language as .piece and .ctagal, none of their behaviour. */
 .film{position:relative;padding:13vh 0 11vh}
-.film:focus,.about:focus,.crew-transition:focus,.crew:focus,.work:focus,.contact:focus{outline:none}
+.solutions:focus,.film:focus,.about:focus,.crew-transition:focus,.crew:focus,.work:focus,.contact:focus{outline:none}
 .film-head{max-width:1560px;margin:0 auto 6vh;padding:0 clamp(22px,5vw,72px)}
 .film-eyebrow{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.32em;
   text-transform:uppercase;color:#d9c69c;margin-bottom:22px}
@@ -1151,10 +1151,67 @@ body{font-size:16px;font-synthesis:none}
 /* A heavyweight grotesk carries the brand system. The restored production
    English hero above is the sole editorial-serif exception. */
 #hdr button[data-goto]{font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:.08em}
+@media(min-width:701px) and (max-width:900px){
+  #hdr{gap:12px}
+  #hdr .lockup-wordmark{width:138px}
+  #hdr .header-links{gap:12px}
+  #hdr button[data-goto]{font-size:11px;letter-spacing:.04em}
+  #hdr .header-actions{gap:8px}
+  #hdr .cta-btn--compact{padding-inline:12px}
+}
 .language-toggle{width:auto;min-width:44px;border:0;border-bottom:1px solid rgba(255,255,255,.38);border-radius:0;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.04em}
 .language-toggle:hover{border-color:#fff;background:transparent}
 :is(.about-copy h2,.crew-transition h2,.crew-head h2,.crew-credit h3,.ctagal-h,.contact .contact-line,.q .qtitle){font-family:var(--display);font-weight:600;letter-spacing:-.045em}
 .work-grid .piece .meta .brand{font-family:var(--display);font-weight:600;letter-spacing:-.04em}
+
+/* Solutions bridge the portfolio and the people behind the studio. */
+.solutions{background:var(--void);padding:var(--moona-section-space) 0;border-block:1px solid var(--moona-line)}
+.solutions-inner{width:min(var(--moona-max-wide),90vw);margin-inline:auto}
+.solutions-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:32px;margin-bottom:48px}
+.solutions .section-kicker{color:var(--gold)}
+.solutions h2{margin:16px 0 24px;font-family:var(--display);font-size:clamp(46px,6.3vw,96px);font-weight:600;line-height:1;letter-spacing:-.045em;color:var(--ice-hot)}
+.solutions-intro{max-width:58ch;margin:0;font-size:clamp(17px,1.45vw,21px);line-height:1.55;color:var(--moona-body-dim)}
+.solutions-head .cta-btn{margin-bottom:8px;white-space:nowrap}
+.solution-row{display:grid;grid-template-columns:56px minmax(0,1.2fr) minmax(0,.8fr);align-items:start;gap:32px;padding:36px 0;border-top:1px solid var(--moona-ice-faint)}
+.solution-number{padding-top:8px;font-family:var(--mono);font-size:12px;color:var(--gold)}
+.solution-row h3{margin:0;font-family:var(--display);font-size:clamp(28px,3.5vw,54px);font-weight:600;line-height:1.08;letter-spacing:-.04em;color:var(--ice-hot)}
+.solution-row p{max-width:40ch;margin:0;padding-top:4px;font-size:16px;line-height:1.6;color:var(--moona-body-dim)}
+/* A connected process rail, read from the document's starting edge. */
+.solutions-method{margin-top:32px;padding:48px 0 0;border-top:1px solid var(--moona-ice-faint)}
+.solutions-method-head{display:flex;align-items:end;justify-content:space-between;gap:32px;margin-bottom:40px}
+.solutions .solutions-method-title{margin:0;font-family:var(--display);font-size:clamp(28px,3vw,42px);line-height:1.12;font-weight:600;letter-spacing:-.035em;color:var(--ice-hot)}
+.solutions-method-note{max-width:32ch;margin:0;font-size:14px;line-height:1.55;color:var(--moona-body-dim);text-align:end}
+.solutions-method-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));list-style:none;margin:0;padding:0}
+.method-step{position:relative;min-width:0;padding:36px 24px 12px 0;padding-inline:0 24px;border-top:1px solid var(--moona-gold-line)}
+.method-step::before{content:"";position:absolute;inset-block-start:-5px;inset-inline-start:0;width:9px;height:9px;border:1px solid var(--gold);border-radius:50%;background:var(--void)}
+.method-step:last-child::before{background:var(--gold);box-shadow:0 0 18px var(--moona-gold-wash-hot)}
+.method-step:last-child{border-top-color:transparent}
+.method-step-number{display:block;margin-bottom:24px;font-family:var(--mono);font-size:clamp(36px,4vw,56px);line-height:1;font-weight:400;letter-spacing:-.07em;color:var(--gold)}
+.method-step-name{display:block;font-family:var(--display);font-size:clamp(20px,2.3vw,34px);line-height:1.18;font-weight:500;letter-spacing:-.035em;color:var(--ice-hot)}
+html[lang="he"] .method-step-name{font-weight:600;letter-spacing:-.02em}
+html[dir="rtl"] .method-step-number{text-align:right}
+html[lang="he"] .solutions :is(h2,h3){font-weight:700;letter-spacing:-.025em}
+@media(max-width:760px){
+  .solutions{padding:80px 0}
+  .solutions-inner{width:calc(100% - 44px)}
+  .solutions-head{grid-template-columns:1fr;gap:24px;margin-bottom:32px}
+  .solutions-head .cta-btn{justify-self:start;margin:0}
+  .solutions h2{font-size:clamp(38px,8vw,58px)}
+  .solution-row{grid-template-columns:28px minmax(0,1fr);gap:12px 16px;padding:28px 0}
+  .solution-number{padding-top:5px;font-size:10px}
+  .solution-row h3{font-size:clamp(27px,6vw,38px)}
+  .solution-row p{grid-column:2;padding:0;font-size:16px}
+  .solutions-method{margin-top:24px;padding-top:32px}
+  .solutions-method-head{display:block;margin-bottom:32px}
+  .solutions-method-note{margin-top:12px;text-align:start}
+  .solutions-method-steps{grid-template-columns:1fr}
+  .method-step{display:grid;grid-template-columns:56px minmax(0,1fr);align-items:baseline;gap:20px;border-top:0;border-inline-start:1px solid var(--moona-gold-line);padding:0 0 36px;padding-inline-start:24px}
+  .method-step::before{inset-block-start:12px;inset-inline-start:-5px}
+  .method-step:last-child{padding-bottom:0;border-inline-start-color:transparent}
+  .method-step-number{margin:0;font-size:36px}
+  .method-step-name{font-size:26px}
+
+}
 
 /* Founder: image and biography share one editorial spread. On portrait phones
    they resolve into a single cinematic poster; wider viewports keep the split. */
@@ -1303,6 +1360,41 @@ html[lang="he"] :is(.film-title,.film-beat h3,.sentence p,.about-copy h2,.crew-t
 @media(prefers-reduced-motion:reduce){
   .work-grid .piece .meta .concept{transition:none}
 }
+
+/* Single-screen inquiry: three fields, one send action. */
+#ask .ask-top{justify-content:flex-end;background:var(--void)}
+#ask .ask-title{inset-inline-start:clamp(24px,4vw,52px);transform:none;max-width:calc(100% - 140px)}
+#ask .qwrap{display:block;overflow-y:auto;overscroll-behavior:contain;padding:110px 24px 32px;pointer-events:auto;scroll-padding-block:24px}
+#ask .q{position:relative;width:min(620px,100%);margin:0 auto;display:none;padding:0}
+#ask .q.active{display:block}
+#ask .qcompact .qtitle{font-size:clamp(32px,4vw,48px);line-height:1.08;margin:0 0 12px;text-wrap:balance}
+.quick-intro{margin:0 0 32px;font-size:16px;line-height:1.5;color:var(--moona-body-dim)}
+.quick-fields{display:grid;grid-template-columns:1fr 1fr;gap:22px 28px}
+.quick-field{min-width:0}
+.quick-field label{display:block;margin-bottom:8px;font-size:14px;font-weight:500;color:var(--ice-hot)}
+.quick-brief{grid-column:1/-1}
+#ask .quick-field :is(input,textarea){display:block;width:100%;max-width:none;min-height:46px;margin:0;padding:10px 0;background:transparent;border:0;border-bottom:1px solid var(--moona-ice-faint);border-radius:0;color:var(--ice-hot);font:400 18px/1.5 var(--sans);outline:none}
+#ask .quick-field textarea{min-height:82px;resize:vertical}
+#ask .quick-field :is(input,textarea):focus{border-color:var(--gold)}
+#ask .quick-field :is(input,textarea)::placeholder{color:var(--moona-body-dim)}
+#ask .quick-field :is(input[type="text"],textarea):placeholder-shown{direction:inherit;text-align:start}
+#ask .quick-field [aria-invalid="true"]{border-color:var(--moona-danger)}
+#ask .qhint{font-family:var(--sans);font-size:13px;letter-spacing:0;text-transform:none;line-height:1.5;min-height:0;margin:8px 0 0}
+#ask .qhint:empty{margin:0}
+.quick-actions{display:flex;align-items:center;gap:24px;margin-top:28px}
+.quick-actions p{margin:0;max-width:25ch;font-size:13px;line-height:1.5;color:var(--moona-body-dim)}
+#ask .quick-actions .cta-btn{flex-shrink:0;font-family:var(--sans);font-size:14px;letter-spacing:0;text-transform:none;padding:16px 28px}
+#ask .cta-btn:disabled{cursor:wait}
+#ask .qdone{padding-top:40px}
+@media(max-width:540px){
+  #ask .ask-top{padding:12px 16px}
+  #ask .qwrap{padding:90px 24px 24px}
+  .quick-intro{margin-bottom:24px}
+  .quick-fields{grid-template-columns:1fr;gap:18px}
+  .quick-actions{display:flex;flex-direction:column;align-items:stretch;gap:14px;margin-top:24px}
+  .quick-actions p{max-width:none;text-align:center}
+}
+@media(max-height:540px){#ask .qwrap{padding-top:84px}}
 </style>
 </head>
 <body data-page="home">
@@ -1350,6 +1442,7 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
   <nav aria-label="Sections" data-i18n-aria-label="nav.sections">
     <div class="header-links">
       <button class="nav-section" type="button" data-goto="film" data-i18n="nav.work">Work</button>
+      <button class="nav-section" type="button" data-goto="solutions" data-i18n="nav.solutions">Solutions</button>
       <button class="nav-section" type="button" data-goto="about" data-i18n="nav.about">About</button>
       <button class="nav-section" type="button" data-goto="crew-intro" data-i18n="nav.crew">Crew</button>
     </div>
@@ -1368,6 +1461,7 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
     </div>
     <div class="mobile-menu" id="mobileMenu" hidden>
       <button class="nav-section" type="button" data-goto="film" data-i18n="nav.work">Work</button>
+      <button class="nav-section" type="button" data-goto="solutions" data-i18n="nav.solutions">Solutions</button>
       <button class="nav-section" type="button" data-goto="about" data-i18n="nav.about">About</button>
       <button class="nav-section" type="button" data-goto="crew-intro" data-i18n="nav.crew">Crew</button>
     </div>
@@ -1583,6 +1677,51 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
     </div>
   </section>
 
+  <section class="solutions" id="solutions" tabindex="-1" aria-labelledby="solutions-title">
+    <div class="solutions-inner">
+      <header class="solutions-head rv">
+        <div>
+          <p class="section-kicker" data-i18n="solutions.eyebrow">The Moona approach</p>
+          <h2 id="solutions-title" data-i18n="solutions.heading">Creative solutions.</h2>
+          <p class="solutions-intro" data-i18n="solutions.intro">Creative direction, custom-built tools and specialist AI agents. One studio takes your idea from the first brief to the final frame.</p>
+        </div>
+        <button class="cta-btn" type="button" data-ask data-hover><span data-i18n="hero.cta">Talk to the studio</span><i aria-hidden="true"></i></button>
+      </header>
+      <article class="solution-row rv" aria-labelledby="solution-creative">
+        <span class="solution-number" dir="ltr" aria-hidden="true">(01)</span>
+        <h3 id="solution-creative" data-i18n="solutions.creative.title">Creative direction</h3>
+        <p data-i18n="solutions.creative.body">A clear idea before the first frame. We shape the concept, script and visual language around your brand and the story you want to tell.</p>
+      </article>
+      <article class="solution-row rv" aria-labelledby="solution-films">
+        <span class="solution-number" dir="ltr" aria-hidden="true">(02)</span>
+        <h3 id="solution-films" data-i18n="solutions.films.title">Brand &amp; product films</h3>
+        <p data-i18n="solutions.films.body">Films for launches, campaigns and social. Direction, motion, editing and sound come together to give your product a world of its own.</p>
+      </article>
+      <article class="solution-row rv" aria-labelledby="solution-visuals">
+        <span class="solution-number" dir="ltr" aria-hidden="true">(03)</span>
+        <h3 id="solution-visuals" data-i18n="solutions.visuals.title">Visual production</h3>
+        <p data-i18n="solutions.visuals.body">Product imagery, characters and cinematic worlds built with AI. A consistent visual language connects the stills, the shots and the campaign.</p>
+      </article>
+      <article class="solution-row rv" aria-labelledby="solution-digital">
+        <span class="solution-number" dir="ltr" aria-hidden="true">(04)</span>
+        <h3 id="solution-digital" data-i18n="solutions.digital.title">AI &amp; digital</h3>
+        <p data-i18n="solutions.digital.body">Websites, interactive experiences and custom tools. We bring software development into the creative process to build what the project needs.</p>
+      </article>
+      <div class="solutions-method rv">
+        <div class="solutions-method-head">
+          <h3 class="solutions-method-title" id="method-title" data-i18n="solutions.method.label">From brief to delivery</h3>
+          <p class="solutions-method-note" data-i18n="solutions.method.note">One creative direction connects every stage.</p>
+        </div>
+        <ol class="solutions-method-steps" aria-labelledby="method-title" role="list">
+          <li class="method-step"><span class="method-step-number" dir="ltr" aria-hidden="true">01</span><span class="method-step-name" data-i18n="solutions.method.concept">Concept</span></li>
+          <li class="method-step"><span class="method-step-number" dir="ltr" aria-hidden="true">02</span><span class="method-step-name" data-i18n="solutions.method.visual">Visual development</span></li>
+          <li class="method-step"><span class="method-step-number" dir="ltr" aria-hidden="true">03</span><span class="method-step-name" data-i18n="solutions.method.production">Production</span></li>
+          <li class="method-step"><span class="method-step-number" dir="ltr" aria-hidden="true">04</span><span class="method-step-name" data-i18n="solutions.method.finishing">Edit &amp; sound</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
   <!-- ═══════════ FOUNDER ═══════════ -->
   <section class="about" id="about" tabindex="-1" aria-labelledby="about-title">
     <span class="anchor-alias" id="studio" aria-hidden="true"></span>
@@ -1679,65 +1818,39 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
 <!-- ═══════════ REQUEST FLOW ═══════════ -->
 <div id="ask" role="dialog" aria-modal="true" aria-labelledby="askTitle">
   <div class="ask-top">
-    <span class="ask-step"><b id="askNum">01</b> / 04</span>
     <span class="ask-title" id="askTitle" data-i18n="form.dialog">Talk to the studio</span>
     <button class="ask-close" id="askClose" type="button" data-hover data-i18n="common.close">Close</button>
   </div>
 
   <form class="qwrap" id="askForm" autocomplete="on" data-clarity-mask="true" novalidate>
-    <div class="q" data-step="0">
-      <p class="qlab" data-i18n="form.step.name.label">01 / Introduction</p>
-      <h2 class="qtitle" id="q-name" data-i18n="form.step.name.title">Who are we speaking with?</h2>
-      <input type="text" name="name" id="f-name" aria-labelledby="q-name" aria-describedby="name-hint" aria-required="true" aria-invalid="false" required placeholder="Jane Cohen" data-i18n-placeholder="form.step.name.placeholder" autocomplete="name" dir="auto" data-hover>
-      <p class="qhint" id="name-hint" aria-live="polite" aria-atomic="true" data-hint-key="form.step.name.hint" data-i18n="form.step.name.hint">Press Enter to continue</p>
-      <div class="qnav"><button type="button" class="qnext" data-next data-hover><span data-i18n="form.next">Next</span><span class="ring"><i></i></span></button></div>
-    </div>
-
-    <div class="q" data-step="1">
-      <p class="qlab" data-i18n="form.step.email.label">02 / Reply</p>
-      <h2 class="qtitle" id="q-mail" data-i18n="form.step.email.title">Where should we reply?</h2>
-      <input type="email" name="email" id="f-mail" aria-labelledby="q-mail" aria-describedby="email-hint" aria-required="true" aria-invalid="false" required placeholder="you@yourbrand.com" data-i18n-placeholder="form.step.email.placeholder" autocomplete="email" inputmode="email" dir="ltr" data-hover>
-      <p class="qhint" id="email-hint" aria-live="polite" aria-atomic="true" data-hint-key="form.step.email.hint" data-i18n="form.step.email.hint">Used only to reply to this project inquiry.</p>
-      <div class="qnav"><button type="button" class="qback" data-back data-hover data-i18n="form.back">Back</button><button type="button" class="qnext" data-next data-hover><span data-i18n="form.next">Next</span><span class="ring"><i></i></span></button></div>
-    </div>
-
-    <div class="q" data-step="2">
-      <p class="qlab" data-i18n="form.step.site.label">03 / The brand</p>
-      <h2 class="qtitle" id="q-site" data-i18n="form.step.site.title">Where can we see the brand?</h2>
-      <input type="url" name="website" id="f-site" aria-labelledby="q-site" aria-describedby="site-hint" aria-required="false" aria-invalid="false" placeholder="yourbrand.com" data-i18n-placeholder="form.step.site.placeholder" inputmode="url" dir="ltr" data-hover>
-      <p class="qhint" id="site-hint" aria-live="polite" aria-atomic="true" data-hint-key="form.step.site.hint" data-i18n="form.step.site.hint">A website or product page. Optional.</p>
-      <div class="qnav"><button type="button" class="qback" data-back data-hover data-i18n="form.back">Back</button><button type="button" class="qnext" data-next data-hover><span data-i18n="form.next">Next</span><span class="ring"><i></i></span></button></div>
-    </div>
-
-    <div class="q qbrief" data-step="3">
-      <p class="qlab" data-i18n="form.step.brief.label">04 / The project</p>
-      <h2 class="qtitle" id="q-brief" data-i18n="form.step.brief.title">What are you looking to make?</h2>
-      <textarea name="brief" id="f-brief" aria-labelledby="q-brief" aria-describedby="brief-hint" aria-required="true" aria-invalid="false" required minlength="20" maxlength="1200" rows="4" placeholder="Tell us about the brand, the film and what success should feel like." data-i18n-placeholder="form.step.brief.placeholder" dir="auto" data-hover></textarea>
-      <p class="qhint" id="brief-hint" aria-live="polite" aria-atomic="true" data-hint-key="form.step.brief.hint" data-i18n="form.step.brief.hint">20 to 1,200 characters.</p>
-      <label class="drop" id="drop" for="f-files" data-hover>
-        <input type="file" name="attachments" id="f-files" multiple aria-describedby="upload-detail" accept="image/*,video/*,.pdf,.ai,.psd,.zip">
-        <span class="drop-ico" aria-hidden="true">
-          <svg viewBox="0 0 20 20" width="17" height="17" fill="none" stroke="currentColor"
-               stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M10 13V3.5"/><path d="M6.2 7.3 10 3.5l3.8 3.8"/>
-            <path d="M3.5 13v2.5a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V13"/>
-          </svg>
-        </span>
-        <span class="drop-txt">
-          <span class="drop-t" data-i18n="form.upload.title">Add product shots or a logo</span>
-          <span class="drop-s" id="upload-detail" data-i18n="form.upload.detail">Optional &middot; images, PDF or zip &middot; up to 3.5 MB</span>
-        </span>
-        <span class="drop-cta" data-i18n="form.upload.browse">Browse</span>
-      </label>
-      <div class="filelist" id="filelist" aria-live="polite" aria-atomic="true"></div>
-
-      <div class="qnav">
-        <button type="button" class="qback" data-back data-hover data-i18n="form.back">Back</button>
-        <button type="submit" class="qnext qsend" id="askSubmit" data-hover><span data-i18n="form.send">Send details</span><span class="ring"><i></i></span></button>
+    <div class="q qcompact" data-step="0">
+      <h2 class="qtitle" data-i18n="form.quick.title">Let’s make something.</h2>
+      <p class="quick-intro" data-i18n="form.quick.intro">A few words are enough to start.</p>
+      <div class="quick-fields">
+        <div class="quick-field">
+          <label for="f-name" data-i18n="form.quick.name">Name</label>
+          <input type="text" name="name" id="f-name" placeholder=" " aria-describedby="name-hint" aria-required="true" aria-invalid="false" required maxlength="400" autocomplete="name" dir="auto" data-hover>
+          <p class="qhint" id="name-hint" aria-live="polite" aria-atomic="true"></p>
+        </div>
+        <div class="quick-field">
+          <label for="f-mail" data-i18n="form.quick.email">Email</label>
+          <input type="email" name="email" id="f-mail" aria-describedby="email-hint" aria-required="true" aria-invalid="false" required maxlength="400" autocomplete="email" inputmode="email" dir="ltr" data-hover>
+          <p class="qhint" id="email-hint" aria-live="polite" aria-atomic="true"></p>
+        </div>
+        <div class="quick-field quick-brief">
+          <label for="f-brief" data-i18n="form.quick.brief">What would you like to create? (optional)</label>
+          <textarea name="brief" id="f-brief" aria-describedby="brief-hint" aria-required="false" aria-invalid="false" maxlength="1200" rows="2" placeholder="For example, a short film for a product launch." data-i18n-placeholder="form.quick.placeholder" dir="auto" data-hover></textarea>
+          <p class="qhint" id="brief-hint" aria-live="polite" aria-atomic="true"></p>
+        </div>
       </div>
+      <div class="quick-actions">
+        <button type="submit" class="cta-btn" id="askSubmit" data-hover><span data-i18n="form.quick.send">Send inquiry</span><i aria-hidden="true"></i></button>
+        <p data-i18n="form.quick.reply">We reply within two business days.</p>
+      </div>
+      <p class="qhint" id="send-status" role="status" aria-live="polite" aria-atomic="true"></p>
     </div>
 
-    <div class="q qdone" data-step="4" role="status" aria-live="polite" aria-atomic="true">
+    <div class="q qdone" data-step="1" role="status" aria-live="polite" aria-atomic="true">
       <svg class="iris-done" viewBox="0 0 100 100" id="doneIris" aria-hidden="true"></svg>
       <h2 class="qtitle" id="doneTitle" tabindex="-1" data-i18n="form.done.title">Received.</h2>
       <p class="qhint" id="doneMsg" data-i18n="form.done.body">We will review the project and reply within two business days.</p>
@@ -1746,7 +1859,6 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
 
     <input name="bot-field" tabindex="-1" style="position:absolute;inset-inline-start:-9999px" aria-hidden="true" aria-label="Leave this field blank">
   </form>
-  <div class="ask-rail"><i id="askRail"></i></div>
 </div>
 <script src="i18n.js"></script>
 <script>
@@ -2738,35 +2850,14 @@ setTimeout(()=>document.querySelectorAll('.rv:not(.seen)').forEach(el=>{
 }),2500);
 
 /* ═══════════════════ request flow ═══════════════════
-   One question per screen. Enter or the arrow advances; nothing
-   commits until the last step. Posts to Netlify Forms with files. */
+   One compact inquiry screen, followed by a delivery confirmation. */
 const ask=document.getElementById('ask'), askForm=document.getElementById('askForm');
 const qs=[...askForm.querySelectorAll('.q')];
-const askNum=document.getElementById('askNum'), askRail=document.getElementById('askRail');
-const LAST=3, DONE=4;
+const DONE=1;
 let step=0, lastFocus=null, focusRun=0;
 
 document.getElementById('doneIris').innerHTML =
   '<circle cx="50" cy="50" r="48" fill="#100D07"/>' + irisSVG(.34,'d',true,48);
-
-/* one stepper per question so it rides the crossfade and always sits exactly
-   above that step's own label */
-const steppers=[];
-qs.forEach(q=>{
-  const lab=q.querySelector('.qlab');
-  if(!lab) return;                       /* the done screen has no stepper */
-  const el=document.createElement('div');
-  el.className='qsteps';
-  el.setAttribute('aria-hidden','true');
-  let html='';
-  for(let i=0;i<=LAST;i++){
-    if(i) html+='<span class="qs-seg"></span>';
-    html+='<span class="qs-dot"></span>';
-  }
-  el.innerHTML=html;
-  q.insertBefore(el,lab);
-  steppers.push(el);
-});
 
 function focusStepTarget(target,n){
   const run=++focusRun;
@@ -2789,19 +2880,6 @@ function focusStepTarget(target,n){
 function showStep(n){
   step=n;
   qs.forEach(q=>q.classList.toggle('active',+q.dataset.step===n));
-  const shown=Math.min(n+1,DONE);
-  askNum.textContent=String(shown).padStart(2,'0');
-  /* fill for the step you are on, not the ones behind you: an empty bar on
-     the first screen reads as 'nothing done yet' and costs people */
-  askRail.style.width=(Math.min(n+1,LAST+1)/(LAST+1)*100)+'%';
-  steppers.forEach(el=>{
-    [...el.querySelectorAll('.qs-dot')].forEach((d,i)=>{
-      d.classList.toggle('done', i<n);
-      d.classList.toggle('now',  i===n);
-    });
-    [...el.querySelectorAll('.qs-seg')].forEach((g,i)=>g.classList.toggle('done', i<n));
-  });
-  document.querySelector('.ask-step').style.opacity = n===DONE?0:1;
   const inp=qs[n].querySelector('input:not([type=file]):not([type=hidden]),textarea');
   if(inp) focusStepTarget(inp,n);
   else if(n===DONE) focusStepTarget(document.getElementById('doneTitle'),n);
@@ -2825,7 +2903,7 @@ function openAsk(event){
   if(lastFocus && lastFocus.blur) lastFocus.blur();
   /* the page behind is inert while the dialog owns the screen */
   pageRegions.forEach(el=>{el.inert=true;el.setAttribute('aria-hidden','true')});
-  showStep(0);
+  showStep(step===DONE?DONE:0);
 }
 function closeAsk(){
   ask.classList.remove('open');
@@ -2863,140 +2941,43 @@ document.getElementById('askClose').addEventListener('click',closeAsk);
 document.getElementById('askDone').addEventListener('click',closeAsk);
 addEventListener('keydown',e=>{if(e.key==='Escape'&&ask.classList.contains('open'))closeAsk()});
 
-/* ── validation: only what the step actually needs ── */
-function hint(q,key,isErr){
-  const h=q.querySelector('.qhint');
-  if(!h) return;
-  const inp=q.querySelector('input:not([type=file]):not([type=hidden]),textarea');
-  const nextKey=key || h.dataset.hintKey || h.dataset.i18n;
-  if(!nextKey) return;
-  h.dataset.i18nCurrent=nextKey;
-  h.textContent=tr(nextKey);
-  h.classList.toggle('err',!!isErr);
-  h.setAttribute('role',isErr?'alert':'status');
-  if(inp)inp.setAttribute('aria-invalid',String(!!isErr));
+/* Field errors stay next to their inputs and survive locale changes. */
+function fieldHint(input,key){
+  const h=document.getElementById(input.getAttribute('aria-describedby'));
+  h.dataset.i18nCurrent=key||'';
+  h.textContent=key?tr(key):'';
+  h.classList.toggle('err',!!key);
+  h.setAttribute('role',key?'alert':'status');
+  input.setAttribute('aria-invalid',String(!!key));
 }
-const renderHints=onLocaleRender(()=>{
-  document.querySelectorAll('.qhint[data-i18n-current]').forEach(h=>{
-    h.textContent=tr(h.dataset.i18nCurrent);
+function sendStatus(key,isError=false){
+  const h=document.getElementById('send-status');
+  h.dataset.i18nCurrent=key||'';
+  h.textContent=key?tr(key):'';
+  h.classList.toggle('err',isError);
+  h.setAttribute('role',isError?'alert':'status');
+}
+onLocaleRender(()=>{
+  askForm.querySelectorAll('[data-i18n-current]').forEach(h=>{
+    h.textContent=h.dataset.i18nCurrent?tr(h.dataset.i18nCurrent):'';
   });
 });
-function valid(n){
-  const q=qs[n], inp=q.querySelector('input:not([type=file]):not([type=hidden]),textarea');
-  if(!inp) return true;
-  const v=inp.value.trim();
-  if(!v){
-    if(!inp.required){hint(q,null,false);return true}   /* optional: an empty answer is an answer */
-    hint(q,'form.validation.required',true);inp.focus();return false}
-  if(inp.type==='email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){
-    hint(q,'form.validation.email',true);inp.focus();return false}
-  if(inp.type==='url'){
-    const u=/^https?:\/\//i.test(v)?v:'https://'+v;
-    if(!/^https?:\/\/[^\s.]+\.[^\s]{2,}$/i.test(u)){hint(q,'form.validation.url',true);inp.focus();return false}
-    inp.value=u;
+function validateInquiry(){
+  let firstInvalid=null;
+  for(const input of askForm.querySelectorAll('.quick-field input,.quick-field textarea')){
+    const value=input.value.trim();
+    let error='';
+    if(!value && input.required) error='form.validation.required';
+    else if(input.type==='email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) error='form.validation.email';
+    else if(input.name==='brief' && value.length>1200) error='form.validation.brief';
+    fieldHint(input,error);
+    if(error && !firstInvalid) firstInvalid=input;
   }
-  if(inp.name==='brief' && (v.length<20 || v.length>1200)){
-    hint(q,'form.validation.brief',true);inp.focus();return false}
-  hint(q,null,false);
+  if(firstInvalid){firstInvalid.focus();return false}
   return true;
 }
-function next(){
-  if(step<LAST){
-    if(valid(step)){
-      window.MoonaAnalytics?.capture('lead_form_step_completed',{step:step+1});
-      showStep(step+1);
-    }
-  } else submitAsk();
-}
-function back(){ if(step>0) showStep(step-1) }
-askForm.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click',next));
-askForm.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',back));
-askForm.addEventListener('keydown',e=>{
-  if(e.key==='Enter' && e.target.tagName==='INPUT' && e.target.type!=='file'){
-    e.preventDefault(); next();
-  }
-});
-
-/* ── files ── */
-const drop=document.getElementById('drop'), fileInput=document.getElementById('f-files'),
-      fileList=document.getElementById('filelist');
-/* rounding a 90-byte file to '0 KB' reads as a failed upload */
-const fmt=b=> b>=1048576 ? (b/1048576).toFixed(1)+' MB'
-            : b>=1024    ? Math.round(b/1024)+' KB'
-                         : b+' B';
-/* A phone photo is 4-8MB, and the request cap is 4.5MB before base64 inflates
-   it by a third. Shrinking to 2000px covers anything we would work from and
-   turns 'one photo, maybe' into 'eight photos, comfortably'. */
-const MAX_EDGE=2000, JPEG_Q=.85;
-async function shrinkImage(f){
-  if(!/^image\//.test(f.type) || /svg|gif/i.test(f.type)) return f;
-  try{
-    const bmp=await createImageBitmap(f);
-    const scale=Math.min(1, MAX_EDGE/Math.max(bmp.width,bmp.height));
-    if(scale===1 && f.size<900*1024) return f;          /* already small enough */
-    const w=Math.round(bmp.width*scale), h=Math.round(bmp.height*scale);
-    const c=document.createElement('canvas'); c.width=w; c.height=h;
-    c.getContext('2d').drawImage(bmp,0,0,w,h);
-    bmp.close&&bmp.close();
-    const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',JPEG_Q));
-    if(!blob || blob.size>=f.size) return f;            /* never make it worse */
-    return new File([blob], f.name.replace(/\.[^.]+$/,'')+'.jpg', {type:'image/jpeg'});
-  }catch(_){ return f }
-}
-
-function renderFiles(){
-  let total=0, dropped=0;
-  const fragment=document.createDocumentFragment();
-  [...fileInput.files].forEach((f,i)=>{
-    /* mirror packFiles exactly, so what is marked here is what actually rides */
-    const fits = i<6 && total+f.size<=ATTACH_BUDGET;
-    if(fits) total+=f.size; else dropped++;
-    const chip=document.createElement('span');
-    chip.className=`filechip${fits?'':' over'}`;
-    if(!fits) chip.title=tr('form.files.tooLarge');
-    const name=document.createElement('bdi');
-    name.className='nm'; name.dir='auto'; name.textContent=f.name;
-    const size=document.createElement('b');
-    size.dir='ltr'; size.textContent=fmt(f.size);
-    const remove=document.createElement('button');
-    remove.type='button'; remove.dataset.rm=String(i); remove.dataset.hover='';
-    remove.setAttribute('aria-label',tr('form.files.remove',{name:f.name}));
-    remove.innerHTML='<svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8"/></svg>';
-    chip.append(name,size,remove); fragment.append(chip);
-  });
-  /* say it out loud rather than dropping the file in silence at send time */
-  if(dropped){
-    const note=document.createElement('span');
-    note.className='filenote';
-    note.textContent=tr('form.files.notFit',{count:dropped,size:fmt(ATTACH_BUDGET)});
-    fragment.append(note);
-  }
-  fileList.replaceChildren(fragment);
-}
-onLocaleRender(renderFiles);
-
-async function ingest(){
-  const shrunk=await Promise.all([...fileInput.files].map(shrinkImage));
-  const dt=new DataTransfer(); shrunk.forEach(f=>dt.items.add(f));
-  fileInput.files=dt.files;                 /* assignment does not re-fire change */
-  renderFiles();
-}
-fileInput.addEventListener('change',ingest);
-/* a FileList is read-only, so removal means rebuilding one without that entry */
-fileList.addEventListener('click',e=>{
-  const btn=e.target.closest('[data-rm]');
-  if(!btn) return;
-  const drop_=new DataTransfer();
-  [...fileInput.files].forEach((f,i)=>{ if(i!==+btn.dataset.rm) drop_.items.add(f) });
-  fileInput.files=drop_.files;
-  renderFiles();
-});
-['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{
-  e.preventDefault();drop.classList.add('over')}));
-['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{
-  e.preventDefault();drop.classList.remove('over')}));
-drop.addEventListener('drop',e=>{
-  if(e.dataTransfer.files.length){fileInput.files=e.dataTransfer.files;ingest()}
+askForm.addEventListener('input',event=>{
+  if(event.target.matches('.quick-field input,.quick-field textarea') && event.target.getAttribute('aria-invalid')==='true') fieldHint(event.target,'');
 });
 
 /* ── submit ── */
@@ -3009,25 +2990,6 @@ drop.addEventListener('drop',e=>{
    Files ride along as base64 in the JSON, so rung 1 has no multipart to parse. */
 const FORM_ENDPOINT = '/api/lead';
 const FORM_FALLBACK = 'https://formsubmit.co/ajax/moona.ai.studio@gmail.com';
-const ATTACH_BUDGET = 3.2 * 1024 * 1024;   /* below the 4.5MB request cap */
-
-const readB64 = f => new Promise((res,rej)=>{
-  const r=new FileReader();
-  r.onload=()=>res(String(r.result).split(',')[1]||'');
-  r.onerror=rej;
-  r.readAsDataURL(f);
-});
-
-async function packFiles(list){
-  const out=[]; let total=0;
-  for(const f of [...list].slice(0,6)){
-    if(total+f.size>ATTACH_BUDGET) break;      /* the rest are named, not sent */
-    total+=f.size;
-    out.push({name:f.name,type:f.type,data:await readB64(f)});
-  }
-  return out;
-}
-
 /* rung 2 — used only while our own endpoint has no credentials yet */
 async function viaFallback(p){
   const fd=new FormData();
@@ -3047,35 +3009,24 @@ async function viaFallback(p){
   if(!r.ok || j.success==='false') throw new Error(j.message||r.status);
 }
 
-/* nobody should have to type their company name when they just gave us the site */
-function brandFromSite(v){
-  const raw=(v||'').trim();
-  if(!raw) return '';
-  let host=raw;
-  try{ host=new URL(/^https?:\/\//i.test(raw)?raw:'https://'+raw).hostname }catch(_){}
-  host=host.replace(/^www\./i,'');
-  const label=host.split('.')[0]||host;
-  return label ? label.charAt(0).toUpperCase()+label.slice(1) : host;
-}
-
 function openMailFallback(url){ location.href=url }
 
 async function submitAsk(){
-  for(let i=0;i<=LAST;i++) if(!valid(i)){showStep(i);return}
   const btn=document.getElementById('askSubmit');
+  if(btn.disabled || step===DONE || !validateInquiry()) return;
   btn.style.opacity='.45'; btn.disabled=true;
-  const q=qs[LAST];
-  hint(q,'form.status.sending',false);
+  askForm.setAttribute('aria-busy','true');
+  sendStatus('form.status.sending');
 
   try{
     const payload={
       name:    askForm.elements.name.value.trim(),
-      company: brandFromSite(askForm.elements.website.value),
-      website: askForm.elements.website.value.trim(),
+      company: askForm.elements.name.value.trim(),
+      website: '',
       email:   askForm.elements.email.value.trim(),
       brief:   askForm.elements.brief.value.trim(),
       'bot-field': (askForm.elements['bot-field']||{}).value||'',
-      files:   await packFiles(document.getElementById('f-files').files)
+      files:   []
     };
     const r=await fetch(FORM_ENDPOINT,{
       method:'POST',
@@ -3084,18 +3035,16 @@ async function submitAsk(){
     });
     const j=await r.json().catch(()=>({}));
     if(!r.ok || j.ok!==true) await viaFallback(payload);   /* throws if that fails too */
-    hint(q,null,false);
+    sendStatus('');
     window.MoonaAnalytics?.capture('lead_form_submitted');
     showStep(DONE);
   }catch(err){
     window.MoonaAnalytics?.capture('lead_form_submission_failed');
     /* never lose a lead: hand the details to their mail client instead */
-    hint(q,'form.status.mailFallback',true);
+    sendStatus('form.status.mailFallback',true);
     const value=n=>(askForm.elements[n]||{}).value||'';
-    const brand=brandFromSite(askForm.elements.website.value);
+    const brand=value('name').trim();
     const body=[`${tr('form.mailto.name')}: ${value('name')}`,
-                `${tr('form.mailto.company')}: ${brand}`,
-                `${tr('form.mailto.website')}: ${value('website')}`,
                 `${tr('form.mailto.email')}: ${value('email')}`,
                 '',
                 `${tr('form.mailto.brief')}:`,
@@ -3105,6 +3054,7 @@ async function submitAsk(){
       +'&body='+encodeURIComponent(body));
   }finally{
     btn.style.opacity=''; btn.disabled=false;
+    askForm.removeAttribute('aria-busy');
   }
 }
 askForm.addEventListener('submit',e=>{e.preventDefault();submitAsk()});

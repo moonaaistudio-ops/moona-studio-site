@@ -119,6 +119,12 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Vercel injects this script in production; local tests must not send analytics.
+  if (url.pathname === '/_vercel/insights/script.js') {
+    send(res, 200, '/* Analytics disabled in local tests. */', 'application/javascript; charset=utf-8');
+    return;
+  }
+
   if (url.pathname === '/api/analytics-config.js') {
     const enabled = cookies.e2e_analytics === 'enabled';
     const config = enabled ? { gaMeasurementId: 'G-E2ETEST' } : {};
