@@ -173,8 +173,9 @@ section:first-of-type{border-top:0}
 .inc .list{display:grid;border-top:1px solid var(--line)}
 .inc .it{display:grid;grid-template-columns:64px 1fr;gap:18px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--line)}
 .inc .it .n{font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:var(--gold);direction:ltr;unicode-bidi:isolate}
-.inc .it h3{font-family:var(--he);font-weight:700;font-size:20px;line-height:1.25;display:inline}
-.inc .it .role{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ice-dim);direction:ltr;unicode-bidi:isolate;display:inline-block;margin-inline-start:12px;vertical-align:middle}
+.inc .it .ttl{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.inc .it h3{font-family:var(--he);font-weight:700;font-size:20px;line-height:1.25}
+.inc .it .role{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ice-dim);direction:ltr;unicode-bidi:isolate;white-space:nowrap}
 .inc .it p{margin-top:4px;font-size:16px;line-height:1.55;color:var(--ice-mute);font-weight:300;max-width:60ch}
 .inc .after{margin-top:26px;color:var(--ice-dim);font-size:16px}
 /* price: two ledger rows, the number is the statement */
@@ -185,24 +186,29 @@ section:first-of-type{border-top:0}
 .price .tier h3{font-family:var(--he);font-weight:700;font-size:clamp(22px,2.4vw,28px);line-height:1.2;margin-top:8px}
 .price .tier p{margin-top:8px;font-size:16px;line-height:1.55;color:var(--ice-mute);font-weight:300;max-width:52ch}
 .price .amt{font-family:var(--latin);font-size:clamp(48px,7vw,84px);font-weight:500;letter-spacing:-.03em;line-height:1;color:var(--ice);direction:ltr;unicode-bidi:isolate;white-space:nowrap;text-align:left}
-.price .amt small{display:block;font-family:var(--he);font-size:14px;font-weight:300;letter-spacing:0;color:var(--ice-dim);margin-top:8px;text-align:right}
+.price .amt small{display:block;direction:rtl;unicode-bidi:isolate;font-family:var(--he);font-size:14px;font-weight:300;letter-spacing:0;color:var(--ice-dim);margin-top:8px;text-align:right}
 .price .tier.now .amt{color:var(--gold)}
 .price .note{margin-top:22px;font-size:16px;color:var(--ice-dim)}
 /* process: one under the other */
 .process .list{display:grid;border-top:1px solid var(--line)}
 .process .st{display:grid;grid-template-columns:64px 1fr;gap:18px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--line);background:none;border-radius:0}
 .process .st .n{font-size:12px}
-.process .st h3{font-size:20px;display:inline}
+.process .st h3{font-size:20px}
 .process .st p{margin-top:4px;font-size:16px;max-width:60ch}
 .process .st.now{outline:none}
 .process .st.now h3{color:var(--gold)}
 .terms .txt{max-width:62ch;display:grid;gap:18px;font-size:17px;line-height:1.7;color:var(--ice-mute);font-weight:300}
 .terms .txt b{color:var(--ice);font-weight:700}
 @media (max-width:640px){
-  .inc .it,.process .st{grid-template-columns:44px 1fr;gap:12px}
-  .price .tier{grid-template-columns:1fr}
-  .price .amt{text-align:right}
+  .inc .it,.process .st{grid-template-columns:40px 1fr;gap:12px;padding:16px 0}
+  .inc .it h3,.process .st h3{font-size:18px}
+  .inc .it .ttl{flex-direction:column;align-items:flex-start;gap:4px}
+  .inc .it p,.process .st p{font-size:15px}
+  .price .tier{grid-template-columns:1fr;gap:16px}
+  .price .amt{text-align:right;font-size:clamp(44px,14vw,60px)}
   .price .amt small{text-align:right}
+  .terms .txt{font-size:16px}
+  .hero .hero-fmt{font-size:15px;gap:8px 14px}
 }
 </style>
 </head>
@@ -230,18 +236,18 @@ section:first-of-type{border-top:0}
   <div class="wrap">
     <div class="sec-h"><span class="eyebrow">What goes into an episode</span><h2>מה נכנס לכל פרק</h2><p>פרק של 30-40 שניות הוא הפקה שלמה לכל פרק.<br>אצלנו הכל תחת קורת גג אחת, וכל שלב מגיע אליכם לאישור לפני הבא.</p></div>
     <div class="list">
-      <div class="it"><span class="n">01</span><div><h3>קונספט ותסריט</h3><span class="role">Script</span><p>הרעיון של הפרק, הדיאלוג, והמסר שהכיתה חוזרת עליו בסוף.</p></div></div>
-      <div class="it"><span class="n">02</span><div><h3>עיצוב דמויות ונעילת זהות</h3><span class="role">Character design</span><p>גיליון זהות לכל דמות: פנים, גוף, הבעות. אותה דמות בכל פריים ובכל פרק.</p></div></div>
-      <div class="it"><span class="n">03</span><div><h3>לוקיישנים ותמונות רפרנס</h3><span class="role">Art direction</span><p>תמונות רפרנס לכל לוקיישן, שנועלות תאורה, צבע ומרחב.</p></div></div>
-      <div class="it"><span class="n">04</span><div><h3>סטוריבורד</h3><span class="role">Storyboard</span><p>כל שוט כפריים, עם הדיאלוג מתחתיו. רואים את הפרק כולו לפני ההפקה.</p></div></div>
-      <div class="it"><span class="n">05</span><div><h3>בימוי</h3><span class="role">Direction</span><p>זוויות, תנועת מצלמה, קאטים בין שוטים. המצלמה תמיד בתנועה.</p></div></div>
-      <div class="it"><span class="n">06</span><div><h3>אנימציה ומשחק הדמויות</h3><span class="role">Animation</span><p>הפקת השוטים: הבעות, תגובות, טיימינג קומי.</p></div></div>
-      <div class="it"><span class="n">07</span><div><h3>הקול של מרינה</h3><span class="role">Voice</span><p>שחזור הקול מהחומרים הקיימים שלכם, קריינות ודיאלוג, וסנכרון שפתיים.</p></div></div>
-      <div class="it"><span class="n">08</span><div><h3>סאונד</h3><span class="role">Sound design</span><p>אפקטים, אווירה, ומיקס סופי שמאוזן לצפייה בטלפון.</p></div></div>
-      <div class="it"><span class="n">09</span><div><h3>מוזיקה</h3><span class="role">Music</span><p>פסקול לסדרה, עם וריאציה לכל פרק.</p></div></div>
-      <div class="it"><span class="n">10</span><div><h3>עריכה וצבע</h3><span class="role">Edit &amp; color</span><p>קצב, קאט, מעברים, ודירוג צבע אחיד לכל השוטים.</p></div></div>
-      <div class="it"><span class="n">11</span><div><h3>כתוביות וגרפיקה</h3><span class="role">Graphics</span><p>כתוביות בעברית, טקסט על המסך, המוצר והלוגו במקומות הנכונים.</p></div></div>
-      <div class="it"><span class="n">12</span><div><h3>תיקונים ומסירה</h3><span class="role">Revisions &amp; delivery</span><p>שני סבבי תיקונים, וקובץ 9:16 סופי מוכן להעלאה.</p></div></div>
+      <div class="it"><span class="n">01</span><div><div class="ttl"><h3>קונספט ותסריט</h3><span class="role">Script</span></div><p>הרעיון של הפרק, הדיאלוג, והמסר שהכיתה חוזרת עליו בסוף.</p></div></div>
+      <div class="it"><span class="n">02</span><div><div class="ttl"><h3>עיצוב דמויות ונעילת זהות</h3><span class="role">Character design</span></div><p>גיליון זהות לכל דמות: פנים, גוף, הבעות. אותה דמות בכל פריים ובכל פרק.</p></div></div>
+      <div class="it"><span class="n">03</span><div><div class="ttl"><h3>לוקיישנים ותמונות רפרנס</h3><span class="role">Art direction</span></div><p>תמונות רפרנס לכל לוקיישן, שנועלות תאורה, צבע ומרחב.</p></div></div>
+      <div class="it"><span class="n">04</span><div><div class="ttl"><h3>סטוריבורד</h3><span class="role">Storyboard</span></div><p>כל שוט כפריים, עם הדיאלוג מתחתיו. רואים את הפרק כולו לפני ההפקה.</p></div></div>
+      <div class="it"><span class="n">05</span><div><div class="ttl"><h3>בימוי</h3><span class="role">Direction</span></div><p>זוויות, תנועת מצלמה, קאטים בין שוטים. המצלמה תמיד בתנועה.</p></div></div>
+      <div class="it"><span class="n">06</span><div><div class="ttl"><h3>אנימציה ומשחק הדמויות</h3><span class="role">Animation</span></div><p>הפקת השוטים: הבעות, תגובות, טיימינג קומי.</p></div></div>
+      <div class="it"><span class="n">07</span><div><div class="ttl"><h3>הקול של מרינה</h3><span class="role">Voice</span></div><p>שחזור הקול מהחומרים הקיימים שלכם, קריינות ודיאלוג, וסנכרון שפתיים.</p></div></div>
+      <div class="it"><span class="n">08</span><div><div class="ttl"><h3>סאונד</h3><span class="role">Sound design</span></div><p>אפקטים, אווירה, ומיקס סופי שמאוזן לצפייה בטלפון.</p></div></div>
+      <div class="it"><span class="n">09</span><div><div class="ttl"><h3>מוזיקה</h3><span class="role">Music</span></div><p>פסקול לסדרה, עם וריאציה לכל פרק.</p></div></div>
+      <div class="it"><span class="n">10</span><div><div class="ttl"><h3>עריכה וצבע</h3><span class="role">Edit &amp; color</span></div><p>קצב, קאט, מעברים, ודירוג צבע אחיד לכל השוטים.</p></div></div>
+      <div class="it"><span class="n">11</span><div><div class="ttl"><h3>כתוביות וגרפיקה</h3><span class="role">Graphics</span></div><p>כתוביות בעברית, טקסט על המסך, המוצר והלוגו במקומות הנכונים.</p></div></div>
+      <div class="it"><span class="n">12</span><div><div class="ttl"><h3>תיקונים ומסירה</h3><span class="role">Revisions &amp; delivery</span></div><p>שני סבבי תיקונים, וקובץ 9:16 סופי מוכן להעלאה.</p></div></div>
     </div>
     <p class="after">כל זה נכנס במחיר של פרק.</p>
   </div>
@@ -253,11 +259,11 @@ section:first-of-type{border-top:0}
     <div class="ledger">
       <div class="tier now">
         <div><span class="n">EP 01</span><h3>הפרק הראשון</h3><p>הפרק המלא, כל שנים-עשר הרכיבים. כולל הקמת הקול של מרינה ונעילת הדמויות, שמשרתות את כל הסדרה.</p></div>
-        <div class="amt">9,500 ₪<small>לפני מע"מ</small></div>
+        <div class="amt">9,500 ₪<small>+ מע"מ</small></div>
       </div>
       <div class="tier">
         <div><span class="n">EP 02 – 04</span><h3>מחיר סדרה, לכל פרק</h3><p>אם אחרי הפרק הראשון ממשיכים. אותה כיתה, אותו קול, אותה רמה. חשבונית לכל פרק בחודש שלו.</p></div>
-        <div class="amt">8,900 ₪<small>לפני מע"מ</small></div>
+        <div class="amt">8,900 ₪<small>+ מע"מ</small></div>
       </div>
     </div>
     <p class="note">אופציה לפרק חמישי במחיר סדרה.</p>
@@ -288,7 +294,7 @@ section:first-of-type{border-top:0}
       <p><b>לוחות זמנים.</b> נספרים מרגע קבלת החומרים והאישורים. כל שלב עובר לשלב הבא אחרי אישור בכתב.</p>
       <p><b>חומרים מכם.</b> צילומי אריזות המוצרים באיכות גבוהה, לוגו וקטורי, ודוגמת הקול של מרינה.</p>
       <p><b>לא כלול.</b> קידום ממומן וניהול מדיה. גרסה ביחס נוסף (16:9 / 1:1): 800 ₪ לגרסה.</p>
-      <p><b>תוקף.</b> ההצעה בתוקף עד 22.10.2026. המחירים בש"ח, לפני מע"מ.</p>
+      <p><b>תוקף.</b> ההצעה בתוקף עד 22.10.2026. המחירים בש"ח, בתוספת מע"מ.</p>
     </div>
   </div>
 </section>
