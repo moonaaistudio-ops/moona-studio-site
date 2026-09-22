@@ -197,6 +197,31 @@ section:first-of-type{border-top:0}
 .process .st p{margin-top:4px;font-size:16px;max-width:60ch}
 .process .st.now{outline:none}
 .process .st.now h3{color:var(--gold)}
+
+/* approval */
+.approve .box{border:1px solid var(--gold);border-radius:16px;padding:clamp(22px,3vw,36px);background:var(--panel);max-width:720px}
+.approve .box p.lead{color:var(--ice-mute);font-weight:300;margin-bottom:22px;max-width:52ch}
+.approve .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.approve label{display:grid;gap:6px;font-size:14px;color:var(--ice-dim)}
+.approve input[type=text],.approve input[type=email]{width:100%;min-height:46px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--void);color:var(--ice);font:inherit;font-size:16px}
+.approve input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold)}
+.approve .agree{display:flex;gap:12px;align-items:flex-start;margin-top:18px;font-size:16px;color:var(--ice);cursor:pointer}
+.approve .agree input{width:22px;height:22px;margin-top:2px;accent-color:var(--gold);flex:none}
+.approve .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:22px}
+.approve button{min-height:48px;padding:0 26px;border:0;border-radius:999px;background:var(--gold);color:var(--void);font:inherit;font-weight:700;font-size:16px;cursor:pointer}
+.approve button:disabled{opacity:.55;cursor:default}
+.approve button:focus-visible{outline:2px solid var(--ice);outline-offset:3px}
+.approve .pdf{color:var(--ice-dim);font-size:15px;text-decoration:underline;text-underline-offset:4px}
+.approve .msg{margin-top:14px;font-size:15px;color:var(--ice-dim);min-height:1.4em}
+.approve .msg.err{color:#f0a3a3}
+.approve .done{display:none}
+.approve.ok form{display:none}
+.approve.ok .done{display:block}
+.approve .done h3{font-family:var(--he);font-weight:700;font-size:24px;color:var(--gold)}
+.approve .done p{margin-top:10px;color:var(--ice-mute);font-weight:300}
+.approve .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.close .legal{margin-top:18px;font-size:13px;color:var(--ice-dim);font-weight:300}
+@media (max-width:640px){.approve .grid{grid-template-columns:1fr}.approve button{width:100%}}
 .terms .txt{max-width:62ch;display:grid;gap:18px;font-size:17px;line-height:1.7;color:var(--ice-mute);font-weight:300}
 .terms .txt b{color:var(--ice);font-weight:700}
 @media (max-width:640px){
@@ -289,6 +314,7 @@ section:first-of-type{border-top:0}
     <div class="sec-h"><span class="eyebrow">Terms</span><h2>תנאים</h2></div>
     <div class="txt">
       <p><b>תשלום.</b> כמו שביקשתם, לכל פרק בנפרד: 50% מקדמה עם אישור התסריט של הפרק, 50% לפני מסירת הקובץ הסופי.</p>
+      <p><b>הזמנת רכש.</b> אם אצלכם נדרשת הזמנת רכש, נשמח לקבל אותה לפני חשבונית המקדמה. פרטי העסק בתחתית העמוד.</p>
       <p><b>תיקונים.</b> שני סבבי תיקונים כלולים בכל פרק. סבב הוא מסמך הערות אחד, מרוכז מכל הגורמים אצלכם. סבב שלישי: 1,200 ₪. שינוי במה שכבר אושר (סצנה חדשה, דמות חדשה, פתיחה מחדש של תסריט מאושר) נסגר בהצעה נפרדת לפני שממשיכים.</p>
       <p><b>שימוש וזכויות.</b> עם התשלום המלא, הסרטון שלכם: כל הערוצים של מרינה, אורגני וממומן, ללא הגבלת זמן. MOONA רשאית להציג את העבודה בתיק העבודות שלה.</p>
       <p><b>לוחות זמנים.</b> נספרים מרגע קבלת החומרים והאישורים. כל שלב עובר לשלב הבא אחרי אישור בכתב.</p>
@@ -299,17 +325,69 @@ section:first-of-type{border-top:0}
   </div>
 </section>
 
+<section class="approve" id="approve">
+  <div class="wrap">
+    <div class="sec-h"><span class="eyebrow">Approval</span><h2>אישור ההצעה</h2></div>
+    <div class="box">
+      <form id="approveForm" novalidate>
+        <p class="lead">מאשרים כאן, ושנינו מקבלים במייל עותק עם חותמת זמן. אין צורך בחתימה ידנית.</p>
+        <div class="grid">
+          <label>שם מלא<input type="text" id="apName" name="name" autocomplete="name" required></label>
+          <label>תפקיד<input type="text" id="apRole" name="role" autocomplete="organization-title"></label>
+          <label>אימייל לעותק<input type="email" id="apEmail" name="email" autocomplete="email" required dir="ltr"></label>
+          <label>מספר הזמנת רכש (אם יש)<input type="text" id="apPo" name="po" dir="ltr"></label>
+        </div>
+        <label class="hp" aria-hidden="true">Website<input type="text" name="bot-field" tabindex="-1" autocomplete="off"></label>
+        <label class="agree"><input type="checkbox" id="apAgree" required><span>קראתי את ההצעה MS-2026-001 ומאשר את תנאיה.</span></label>
+        <div class="row">
+          <button type="submit" id="apBtn">מאשר את ההצעה</button>
+          <a class="pdf" href="MOONA-Marina-quote-MS-2026-001.pdf" download>ההצעה כ-PDF להנהלת חשבונות</a>
+        </div>
+        <div class="msg" id="apMsg" role="status" aria-live="polite"></div>
+      </form>
+      <div class="done" id="apDone">
+        <h3>ההצעה אושרה.</h3>
+        <p id="apDoneText">עותק נשלח למייל שלך. השלב הבא: התסריט של הפרק הראשון מגיע לאישור, ועם האישור חשבונית מקדמה.</p>
+        <p><a class="pdf" href="MOONA-Marina-quote-MS-2026-001.pdf" download>ההצעה כ-PDF</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="close">
   <div class="wrap">
     <div class="logos"><img src="img/logo.png" alt="מרינה"><span class="x">×</span><img src="img/moona_lockup.png" alt="MOONA STUDIO"></div>
     <h2>סדרה - הכיתה של מרינה</h2>
     <p>אישור במייל חוזר מספיק. עם האישור, התסריט של פרק 1 אצלך תוך יומיים.</p>
     <div class="sig"><b>MOONA STUDIO</b> · TAL TZUR · 054-6513133</div>
+    <p class="legal">טל צור, עוסק מורשה · moona.ai.studio@gmail.com · דרך מנחם בגין 121, תל אביב</p>
   </div>
 </section>
 
 <script>
 try{fetch('/api/view',{method:'POST',headers:{'Content-Type':'application/json'},keepalive:true,body:JSON.stringify({page:location.pathname,ref:document.referrer,code:new URLSearchParams(location.search).get('c')||''})})}catch(e){}
+</script>
+<script>
+(function(){
+  var f=document.getElementById('approveForm'); if(!f) return;
+  var sec=document.getElementById('approve'), msg=document.getElementById('apMsg'), btn=document.getElementById('apBtn');
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=document.getElementById('apName').value.trim(), email=document.getElementById('apEmail').value.trim();
+    if(!name){msg.textContent='חסר שם מלא.';msg.className='msg err';document.getElementById('apName').focus();return}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){msg.textContent='כתובת האימייל לא תקינה.';msg.className='msg err';document.getElementById('apEmail').focus();return}
+    if(!document.getElementById('apAgree').checked){msg.textContent='צריך לסמן שקראת ואישרת את התנאים.';msg.className='msg err';return}
+    btn.disabled=true; msg.className='msg'; msg.textContent='שולח…';
+    fetch('/api/approve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      quote:'MS-2026-001',name:name,role:document.getElementById('apRole').value.trim(),email:email,
+      po:document.getElementById('apPo').value.trim(),agree:true,page:location.pathname,
+      code:new URLSearchParams(location.search).get('c')||'','bot-field':f.elements['bot-field'].value
+    })}).then(function(r){return r.json().catch(function(){return {ok:false}})}).then(function(d){
+      if(d&&d.ok){sec.classList.add('ok');document.getElementById('apDoneText').textContent='עותק נשלח ל-'+email+(d.when?' ב-'+d.when:'')+'. השלב הבא: התסריט של הפרק הראשון מגיע לאישור, ועם האישור חשבונית מקדמה.';sec.scrollIntoView({behavior:'smooth',block:'start'});}
+      else{btn.disabled=false;msg.className='msg err';msg.textContent='משהו לא עבד. אפשר פשוט לענות למייל "מאשר", וזה אותו דבר.';}
+    }).catch(function(){btn.disabled=false;msg.className='msg err';msg.textContent='משהו לא עבד. אפשר פשוט לענות למייל "מאשר", וזה אותו דבר.';});
+  });
+})();
 </script>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
 <script defer src="/_vercel/insights/script.js"></script>
