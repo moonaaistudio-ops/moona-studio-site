@@ -201,14 +201,20 @@ section:first-of-type{border-top:0}
 .caps .c p{font-size:15.5px;line-height:1.5;color:var(--ice-mute);font-weight:300}
 @media (max-width:900px){.caps{grid-template-columns:1fr 1fr}}
 @media (max-width:520px){.caps{grid-template-columns:1fr}}
+.hero .top .duo{display:flex;align-items:center;gap:18px}
+.hero .top .duo img{height:26px;width:auto}
+.hero .top .duo img.eco{height:58px}
+.hero .top .duo .x{font-family:var(--mono);color:var(--gold);font-size:14px}
+.about .intro{margin-top:18px;color:var(--ice-mute);font-weight:300;max-width:60ch;font-size:19px;line-height:1.6}
+.caps.eight .c{padding:24px 22px}
+.caps.eight .c h3{font-size:20px}
 </style>
 </head>
 <body>
 <section class="hero textonly">
   <div class="wrap">
     <div class="top">
-      <span class="eyebrow">MOONA STUDIO <b>×</b> ECOLOVE</span>
-      <img src="img/moona_lockup.png" alt="MOONA STUDIO">
+      <div class="duo"><img class="eco" src="img/logo_ecolove.png" alt="ecoLove"><span class="x">×</span><img src="img/moona_lockup.png" alt="MOONA STUDIO"></div>
     </div>
     <div class="copy">
       <span class="eyebrow">A concept</span>
@@ -260,15 +266,20 @@ section:first-of-type{border-top:0}
   </div>
 </section>
 
-<section class="why">
+<section class="why about">
   <div class="wrap">
     <span class="eyebrow">About MOONA</span>
-    <p class="lede" style="margin-top:14px"><bdi>MOONA</bdi> הוא סטודיו לוידאו ב&#8209;<bdi>AI</bdi>. <span>אנחנו מפיקים סרטונים ברמה של צילום מקצועי, בלי יום צילום.</span></p>
-    <div class="caps">
-      <div class="c"><span class="n">01</span><h3>דמות קבועה</h3><p>אותה אישה, אותם פנים ואותו שיער בכל שוט ובכל פרק.</p></div>
-      <div class="c"><span class="n">02</span><h3>כל לוקיישן</h3><p>בריכה, רחוב, חוף, מקלחת. כל מקום שהסרטון צריך, בכל שעה ובכל אור.</p></div>
-      <div class="c"><span class="n">03</span><h3>המוצר האמיתי</h3><p>הבקבוקים והתוויות שלכם נכנסים לפריים כמו שהם, מהצילומים שלכם.</p></div>
-      <div class="c"><span class="n">04</span><h3>גרסאות לכל פלטפורמה</h3><p>טיקטוק, ריל, שורט ופיד מטא. אורכים שונים מאותו חומר.</p></div>
+    <p class="lede" style="margin-top:14px"><bdi>MOONA</bdi> הוא סטודיו לסרטוני פרסום ב&#8209;<bdi>AI</bdi>. <span>מהרעיון ועד הקובץ הסופי, תחת קורת גג אחת.</span></p>
+    <p class="intro">קריאייטיב, דמויות, הפקה, סאונד ועריכה נעשים אצלנו, עם כלים וסוכני <bdi>AI</bdi> שפיתחנו בסטודיו לכל שלב. כל שלב מגיע אליכם לאישור לפני הבא.</p>
+    <div class="caps eight">
+      <div class="c"><span class="n">01</span><h3>קריאייטיב וקונספט</h3><p>הרעיון, השפה הוויזואלית והתסריט של כל פרק, בנויים סביב המותג שלכם והמסר שלו.</p></div>
+      <div class="c"><span class="n">02</span><h3>דמות קבועה</h3><p>גיליון זהות לכל דמות: פנים, גוף ושיער. אותה אישה בכל שוט ובכל פרק.</p></div>
+      <div class="c"><span class="n">03</span><h3>לוקיישנים</h3><p>בריכה, רחוב, מקלחת. תמונות רפרנס שנועלות אור, צבע ומרחב לפני ההפקה.</p></div>
+      <div class="c"><span class="n">04</span><h3>סטוריבורד</h3><p>כל שוט כפריים. רואים את הסרטון כולו לפני שמתחילים.</p></div>
+      <div class="c"><span class="n">05</span><h3>בימוי והפקה</h3><p>זוויות, תנועת מצלמה ומעברים. כל פריים מבוים.</p></div>
+      <div class="c"><span class="n">06</span><h3>המוצר האמיתי</h3><p>הבקבוקים והתוויות שלכם נכנסים לפריים כמו שהם, מהצילומים שלכם.</p></div>
+      <div class="c"><span class="n">07</span><h3>סאונד ומוזיקה</h3><p>אפקטים, אווירה ופסקול, במיקס שמאוזן לצפייה בטלפון.</p></div>
+      <div class="c"><span class="n">08</span><h3>עריכה, צבע וכתוביות</h3><p>קצב, צבע אחיד לכל השוטים, כתוביות בעברית, וגרסה לכל פלטפורמה.</p></div>
     </div>
   </div>
 </section>
@@ -280,8 +291,8 @@ section:first-of-type{border-top:0}
       <div>
         <span class="eyebrow">A reference</span>
         <h2 style="font-size:clamp(28px,3.6vw,42px);margin-top:10px">ככה זה נראה</h2>
-        <p>רפרנס שעשינו למותג תכשיטים ישראלי. הדוגמנית והרחוב <b>נוצרו ב&#8209;<bdi>AI</bdi></b>. התכשיטים הם התכשיטים האמיתיים שלהם, מתוך תמונות המוצר.</p>
-        <p>באותה שיטה נעבוד גם אצלכם: הדמות והעולם נוצרים, והמוצר נשאר אמיתי.</p>
+        <p>רפרנס שעשינו למותג תכשיטים ישראלי. לקחנו תמונות סטילס שלהם, של הדוגמנית עם התכשיטים, <b>והפכנו אותן לוידאו ב&#8209;<bdi>AI</bdi></b>. התנועה, המצלמה והאור נוצרו, והתכשיטים נשארו בדיוק כמו שהם.</p>
+        <p>אצלכם נבנה את הדמות ואת הלוקיישנים, והבקבוקים שלכם יישארו אמיתיים בפריים.</p>
       </div>
     </div>
   </div>
