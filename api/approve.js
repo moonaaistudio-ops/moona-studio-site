@@ -7,7 +7,7 @@
    Same SMTP_USER / SMTP_PASS as the lead form. LEAD_TO optional. */
 const nodemailer = require('nodemailer');
 
-const QUOTES = new Set(['MS-2026-001']);
+const QUOTES = new Set(['MS-2026-031']);
 const PH_KEY = 'phc_tR7sebAcZCkQvnc475AGEXGYhpmXxFa4JZTD4fQXrhuW';
 const PH_HOST = 'https://us.i.posthog.com';
 
