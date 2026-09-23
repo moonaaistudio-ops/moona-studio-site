@@ -223,6 +223,8 @@ section:first-of-type{border-top:0}
 .prop .ph img{width:100%;height:100%;object-fit:cover}
 .prop .cols{grid-template-columns:1fr}
 @media (max-width:900px){.prop .pair{grid-template-columns:1fr}.hero .art.r45{height:auto;width:100%}}
+.refs .tt{width:100%;max-width:325px;aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:var(--panel)}
+.refs .tt iframe{width:100%;height:100%;border:0;display:block}
 </style>
 </head>
 <body>
@@ -254,11 +256,11 @@ section:first-of-type{border-top:0}
     </div>
     <div class="row">
       <div>
-        <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@lexiehulll/video/7481811986318118187" data-video-id="7481811986318118187"><section><a target="_blank" rel="noopener" href="https://www.tiktok.com/@lexiehulll/video/7481811986318118187">eos × Lexie Hull</a></section></blockquote>
+        <div class="tt"><iframe src="https://www.tiktok.com/player/v1/7481811986318118187?rel=0&amp;music_info=0&amp;description=0&amp;native_context_menu=0&amp;closed_caption=0&amp;loop=1" title="eos × Lexie Hull" allow="fullscreen; autoplay"></iframe></div>
         <p class="who"><bdi>eos × Lexie Hull</bdi> · כדורסל</p>
       </div>
       <div>
-        <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@itsgabbythomas/video/7619455830361951518" data-video-id="7619455830361951518"><section><a target="_blank" rel="noopener" href="https://www.tiktok.com/@itsgabbythomas/video/7619455830361951518">eos × Gabby Thomas</a></section></blockquote>
+        <div class="tt"><iframe src="https://www.tiktok.com/player/v1/7619455830361951518?rel=0&amp;music_info=0&amp;description=0&amp;native_context_menu=0&amp;closed_caption=0&amp;loop=1" title="eos × Gabby Thomas" allow="fullscreen; autoplay"></iframe></div>
         <p class="who"><bdi>eos × Gabby Thomas</bdi> · אתלטיקה</p>
       </div>
     </div>
@@ -349,7 +351,6 @@ section:first-of-type{border-top:0}
   </div>
 </section>
 
-<script async src="https://www.tiktok.com/embed.js"></script>
 <script>
 try{fetch('/api/view',{method:'POST',headers:{'Content-Type':'application/json'},keepalive:true,body:JSON.stringify({page:location.pathname,ref:document.referrer,code:new URLSearchParams(location.search).get('c')||''})})}catch(e){}
 </script>
