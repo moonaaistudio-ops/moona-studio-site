@@ -214,6 +214,15 @@ section:first-of-type{border-top:0}
 .eps .row.four{grid-template-columns:1fr 1fr}
 .eps .ep .n{font-size:12px}
 @media (max-width:900px){.refs .row{grid-template-columns:1fr}}
+.hero .art.r45{aspect-ratio:4/5;height:min(74vh,760px)}
+.hero .grid .copy h1.brand{font-size:clamp(34px,4.3vw,60px);white-space:nowrap}
+.prop .wrap{display:block}
+.prop .pair{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:36px;max-width:880px}
+.prop .pair figcaption{margin-top:10px;font-size:15px;color:var(--ice-dim)}
+.prop .ph{aspect-ratio:4/5;border-radius:18px;overflow:hidden;background:var(--panel)}
+.prop .ph img{width:100%;height:100%;object-fit:cover}
+.prop .cols{grid-template-columns:1fr}
+@media (max-width:900px){.prop .pair{grid-template-columns:1fr}.hero .art.r45{height:auto;width:100%}}
 </style>
 </head>
 <body>
@@ -222,12 +231,15 @@ section:first-of-type{border-top:0}
     <div class="top">
       <div class="duo"><img class="eco" src="img/logo_ecolove.png" alt="ecoLove"><span class="x">×</span><img src="img/moona_lockup.png" alt="MOONA STUDIO"></div>
     </div>
+    <div class="grid">
+      <div class="art r45"><img src="img/hero_hand.jpg" alt="השמפו, המרכך וסבון הגוף של ecoLove בנישה של מקלחת, מים זורמים ויד מניחה את הבקבוק"></div>
     <div class="copy">
       <span class="eyebrow">A series proposal</span>
       <h1 class="brand" dir="ltr" style="text-align:right">ecoLove <span class="x">×</span> MOONA</h1>
       <p class="sub"><b>הצעה לסדרה: אחרי האימון</b><br>ארבעה אימונים. בסוף כל אחד, המקלחת עם השמפו וסבון הגוף שלכם.</p>
       <div class="fmt hero-fmt" style="margin-top:18px"><span>טיקטוק</span><span>ריל</span><span>שורט</span><span>9:16</span></div>
       <p class="note">סדרה שבנינו עבורכם אחרי ניתוח ומחקר מעמיקים, כדי לשדר את החוויה של המותג: "התנועה לא נגמרת כשהאימון מסתיים."</p>
+    </div>
     </div>
   </div>
 </section>
@@ -253,8 +265,9 @@ section:first-of-type{border-top:0}
   </div>
 </section>
 
-<section class="why">
+<section class="why prop">
   <div class="wrap">
+    <div>
     <span class="eyebrow">The proposal</span>
     <p class="lede" style="margin-top:14px">הסדרה שלכם</p>
     <div class="cols">
@@ -266,6 +279,11 @@ section:first-of-type{border-top:0}
         <p><b>אישה אחרת בכל פרק.</b> כל פרק הוא ענף ספורט אחר ואישה אחרת, והמבנה והמוצרים חוזרים. ככה הסרטונים מזוהים עם ecoLove גם כשהפנים מתחלפות.</p>
         <p style="margin-top:14px"><b>המוצרים האמיתיים.</b> הבקבוקים, התוויות ומארז ה&#8209;<bdi>ecoTravel</bdi> שלכם, כמו שהם.</p>
       </div>
+    </div>
+  </div>
+    <div class="pair">
+      <figure><div class="ph"><img src="img/pour.jpg" alt="השמפו של ecoLove נמזג לכף יד רטובה במקלחת"></div><figcaption>השמפו נמזג לכף היד</figcaption></figure>
+      <figure><div class="ph"><img src="img/lather.jpg" alt="קצף שמפו בשיער רטוב, והבקבוקים של ecoLove בנישה"></div><figcaption>הקצף בשיער</figcaption></figure>
     </div>
   </div>
 </section>

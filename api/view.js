@@ -10,7 +10,7 @@
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
-const PAGES = new Set(['/marina/', '/marina', '/marina/ep1/', '/marina/ep1', '/marina/quote/', '/marina/quote', '/goom/v1/', '/goom/v1', '/sj/v1/', '/sj/v1', '/ecolove/v1/', '/ecolove/v1']);
+const PAGES = new Set(['/marina/', '/marina', '/marina/ep1/', '/marina/ep1', '/marina/quote/', '/marina/quote', '/goom/v1/', '/goom/v1', '/sj/v1/', '/sj/v1', '/ecolove/v1/', '/ecolove/v1', '/danon/v1/', '/danon/v1', '/shlomit/v1/', '/shlomit/v1', '/magnolia/v1/', '/magnolia/v1']);
 /* server-side copy of every view to PostHog: survives ad blockers and a broken SMTP */
 const PH_KEY = 'phc_tR7sebAcZCkQvnc475AGEXGYhpmXxFa4JZTD4fQXrhuW';
 const PH_HOST = 'https://us.i.posthog.com';
