@@ -8,7 +8,8 @@ AI-native studio for film and motion ads. The site is static HTML, CSS and JavaS
 - `i18n.js` — shared English/Hebrew locale runtime and semantic copy
 - `privacy.html` — consent and privacy notice in both languages
 - `accessibility.html` — bilingual accessibility statement, tested features and known limitations
-- `analytics.js` — consent-gated analytics client
+- `ph.js` — PostHog on every page: cookieless, session replay with typed values masked, and the `?c=` code of a client link registered on the session. Every HTML page must load it; `npm run vercel-build` (run by Vercel on each deploy) injects it into any page that forgot, and `npm run check:posthog` reports
+- `analytics.js` — consent-gated Google Analytics and Clarity; forwards site events to the PostHog instance from `ph.js`
 - `api/lead.js` — serverless email handler
 - `v/` and `p/` — films and poster/still assets
 - `tests/` — focused Playwright and axe coverage for locale, RTL, accessibility, state and form behavior

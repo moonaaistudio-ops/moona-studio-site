@@ -1,6 +1,6 @@
 /* Moona analytics gateway.
-   Google Analytics, Microsoft Clarity and PostHog start only after an explicit
-   visitor choice. Events intentionally contain no form values or other PII. */
+   Google Analytics and Microsoft Clarity start only after an explicit visitor
+   choice. PostHog runs on every page from /ph.js, cookieless. Events intentionally contain no form values or other PII. */
 (() => {
   const config = window.MOONA_ANALYTICS_CONFIG || {};
   const consentKey = 'moona-analytics-consent';
@@ -15,19 +15,29 @@
     ...properties
   });
 
-  function capture(name, properties) {
-    const safeProperties = eventProperties(properties);
-    if (!started) {
-      queuedEvents.push([name, safeProperties]);
-      return;
-    }
+  /* PostHog is loaded on every page by /ph.js, cookieless and without waiting for
+     consent, so events reach it straight away. Only GA4 and Clarity wait. */
+  const sitePostHog = () => window.__moonaPostHog && window.posthog && typeof window.posthog.capture === 'function';
+
+  function sendConsented(name, safeProperties) {
     if (typeof window.gtag === 'function') window.gtag('event', name, safeProperties);
     if (typeof window.clarity === 'function') window.clarity('event', name);
+    if (sitePostHog()) return;
     if (posthogReady && window.posthog && typeof window.posthog.capture === 'function') {
       window.posthog.capture(name, safeProperties);
     } else if (config.posthogKey) {
       queuedEvents.push([name, safeProperties]);
     }
+  }
+
+  function capture(name, properties) {
+    const safeProperties = eventProperties(properties);
+    if (sitePostHog()) window.posthog.capture(name, safeProperties);
+    if (!started) {
+      queuedEvents.push([name, safeProperties]);
+      return;
+    }
+    sendConsented(name, safeProperties);
   }
 
   function loadScript(src, onload) {
@@ -58,7 +68,7 @@
 
   function startPostHog() {
     const key = config.posthogKey;
-    if (!key) return;
+    if (!key || window.__moonaPostHog) return;
     const host = /^https:\/\/[a-z0-9.-]+$/i.test(config.posthogHost || '') ? config.posthogHost : 'https://us.i.posthog.com';
     const assetHost = host.replace('.i.posthog.com', '-assets.i.posthog.com');
     loadScript(`${assetHost}/static/array.js`, () => {
@@ -84,7 +94,7 @@
     startClarity();
     startPostHog();
     const pending = queuedEvents.splice(0);
-    pending.forEach(([name, properties]) => capture(name, properties));
+    pending.forEach(([name, properties]) => sendConsented(name, properties));
   }
 
   function saveConsent(value) {

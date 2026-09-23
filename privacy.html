@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>Privacy notice | Moona</title>
-  <meta name="description" content="How Moona uses optional, consent-based analytics and protects inquiry form data.">
+  <meta name="description" content="How Moona measures site use and protects inquiry form data.">
   <script>
   /* Privacy has no loader, so hide only the Hebrew first paint until its copy
      is applied. The timeout is deliberately fail-open. */
@@ -24,8 +24,8 @@
       locale=requested; source='country';
     }
     const metadata={
-      en:{title:'Privacy notice | Moona',description:'How Moona uses optional, consent-based analytics and protects inquiry form data.'},
-      he:{title:'הודעת פרטיות | Moona',description:'שימוש אופציונלי ומבוסס־הסכמה באנליטיקה ב־Moona, והאופן שבו נשמר המידע בטופס הפנייה.'}
+      en:{title:'Privacy notice | Moona',description:'How Moona measures site use and protects inquiry form data.'},
+      he:{title:'הודעת פרטיות | Moona',description:'איך Moona מודדת את השימוש באתר ושומרת על המידע בטופס הפנייה.'}
     };
     const root=document.documentElement;
     root.lang=locale; root.dir=locale==='he'?'rtl':'ltr';
@@ -72,6 +72,7 @@
     html[lang="he"] .back{font-family:var(--sans);font-size:14px;letter-spacing:0;text-transform:none}
     @media(max-width:520px){.wrap{padding:28px 20px 64px}.topline{margin-bottom:34px}}
   </style>
+<script src="/ph.js"></script>
 </head>
 <body data-page="privacy">
   <a class="skip" href="#privacyNotice" data-i18n="privacy.skip">Skip to the privacy notice</a>
@@ -81,20 +82,20 @@
       <button class="language-toggle" type="button" data-language-toggle aria-label="Switch to Hebrew">HE</button>
     </div>
     <h1 data-i18n="privacy.heading">Privacy notice</h1>
-    <p data-i18n="privacy.intro">Moona Studio uses optional analytics to understand website use and improve our work. Analytics do not load until you choose “Accept analytics” in the notice on the site. You can choose “Decline” instead.</p>
+    <p data-i18n="privacy.intro">Moona Studio measures how the site is used to improve our work. PostHog runs on every page without cookies. Google Analytics and Microsoft Clarity load only after you choose “Accept analytics” in the notice on the site. You can choose “Decline” instead.</p>
 
     <h2 data-i18n="privacy.services.heading">Analytics services</h2>
     <ul>
       <li data-i18n="privacy.services.ga" dir="auto">Google Analytics 4, for aggregated traffic and engagement measurement.</li>
       <li data-i18n="privacy.services.clarity" dir="auto">Microsoft Clarity, for privacy-protected usability insights. The project inquiry form is explicitly masked.</li>
-      <li data-i18n="privacy.services.posthog" dir="auto">PostHog, for product-analytics events such as page views and safe interaction events. Session recording and automatic click capture are disabled for this site.</li>
+      <li data-i18n="privacy.services.posthog" dir="auto">PostHog, on every page and without cookies, for page views, clicks and session recordings that show how a page was used. Anything typed into a field is masked and never recorded.</li>
     </ul>
 
     <h2 data-i18n="privacy.collection.heading">What we collect</h2>
-    <p data-i18n="privacy.collection.body">After consent, these services may receive technical and usage data such as page paths, browser and device information, approximate location derived from IP address, and the interaction events needed to understand the site. We do not send values entered in the inquiry form to these analytics services.</p>
+    <p data-i18n="privacy.collection.body">PostHog, and after consent Google Analytics and Clarity, may receive technical and usage data such as page paths, browser and device information, approximate location derived from IP address, and the interactions needed to understand the site. Values entered in the inquiry form are never sent to these services.</p>
 
     <h2 data-i18n="privacy.choices.heading">Your choices</h2>
-    <p data-i18n="privacy.choices.body">You can decline analytics in the site notice. If you previously accepted, clear this website’s stored data in your browser and reload the site to choose again. Browser privacy controls such as Do Not Track and Global Privacy Control are respected where available.</p>
+    <p data-i18n="privacy.choices.body">You can decline Google Analytics and Clarity in the site notice. If you previously accepted, clear this website’s stored data in your browser and reload the site to choose again. PostHog stores nothing on your device, and it does not load at all when your browser sends Do Not Track or Global Privacy Control.</p>
 
     <h2 data-i18n="privacy.contact.heading">Contact</h2>
     <p><span data-i18n="privacy.contact.lead">For privacy questions, email </span><a href="mailto:moona.ai.studio@gmail.com" dir="ltr">moona.ai.studio@gmail.com</a><span data-i18n="privacy.contact.tail">.</span></p>
