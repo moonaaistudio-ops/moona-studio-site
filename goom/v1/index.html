@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex, nofollow">
 <meta property="og:title" content="הטניסאי · GOOM × MOONA">
 <meta property="og:description" content="סרטון קצר ל-Flow. בחור צעיר לבד במגרש, קול של טריילר מספר עליו, והוא שומע. רעיון לסרטון ולסדרה. MOONA × GOOM.">
-<meta property="og:image" content="https://moona-studio-two.vercel.app/goom/v1/media/sample_jewelry_poster.jpg">
+<meta property="og:image" content="https://moona-studio-two.vercel.app/goom/v1/img/f19_break.jpg">
 <title>הטניסאי · GOOM × MOONA</title>
 <!-- pitch page: pageview only, no form data, no identifiers beyond what the analytics vendors set -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-WYHJWDEYDK"></script>
@@ -38,6 +38,10 @@ section:first-of-type{border-top:0}
 .hero{padding-block:clamp(28px,4vw,48px) clamp(40px,6vw,88px)}
 .hero .top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:clamp(32px,5vw,64px)}
 .hero .top img{height:22px;width:auto}
+.hero .top .duo{display:flex;align-items:center;gap:18px}
+.hero .top .duo img{height:26px;width:auto}
+.hero .top .duo img.goom{height:34px}
+.hero .top .duo .x{font-family:var(--mono);color:var(--gold);font-size:14px}
 .hero .grid{display:grid;grid-template-columns:auto 1fr;gap:clamp(28px,5vw,72px);align-items:center}
 .hero .art{aspect-ratio:9/16;height:min(78vh,880px);width:auto;max-width:100%;border-radius:20px;overflow:hidden;background:var(--panel);border:1px solid var(--line);display:grid;align-content:space-between;padding:28px 26px}
 .hero .art .cap{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--ice-dim);direction:ltr;text-transform:uppercase}
@@ -124,6 +128,13 @@ section:first-of-type{border-top:0}
 .sample p{color:var(--ice-mute);font-weight:300;margin-top:16px;max-width:36ch;font-size:clamp(18px,1.9vw,22px);line-height:1.5}
 .sample p b{color:var(--ice);font-weight:600}
 @media (max-width:900px){.sample .grid{grid-template-columns:1fr}.sample .vid{height:auto;width:100%}}
+.frame .grid{display:grid;grid-template-columns:auto 1fr;gap:clamp(28px,5vw,72px);align-items:center}
+.frame .ph{aspect-ratio:9/16;height:min(78vh,820px);width:auto;max-width:100%;border-radius:20px;overflow:hidden;background:var(--panel);border:1px solid var(--line)}
+.frame .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.frame h2{font-size:clamp(30px,4.2vw,48px);margin-top:12px}
+.frame p{color:var(--ice-mute);font-weight:300;margin-top:16px;max-width:36ch;font-size:clamp(18px,1.9vw,22px);line-height:1.5}
+.frame p b{color:var(--ice);font-weight:600}
+@media (max-width:900px){.frame .grid{grid-template-columns:1fr}.frame .ph{height:auto;width:100%}}
 .close{text-align:center}
 .close .logos{display:flex;justify-content:center;align-items:center;gap:36px;margin-bottom:28px;flex-wrap:wrap}
 .close .logos img{height:48px;width:auto}
@@ -160,8 +171,7 @@ section:first-of-type{border-top:0}
 <section class="hero">
   <div class="wrap">
     <div class="top">
-      <span class="eyebrow">MOONA STUDIO <b>×</b> GOOM</span>
-      <img src="img/moona_lockup.png" alt="MOONA STUDIO">
+      <div class="duo"><img class="goom" src="img/logo.png" alt="GOOM"><span class="x">×</span><img src="img/moona_lockup.png" alt="MOONA STUDIO"></div>
     </div>
     <div class="grid">
       <div class="art">
@@ -197,6 +207,17 @@ section:first-of-type{border-top:0}
   </div>
 </section>
 
+<section class="frame">
+  <div class="wrap grid">
+    <div class="ph"><img src="img/f19_break.jpg" alt="הטניסאי מחפש מאיפה הגיע הקול, צנצנת Flow על הספסל לידו"></div>
+    <div>
+      <span class="eyebrow">A frame from the film</span>
+      <h2>"מה? מי אמר את זה?"</h2>
+      <p>רגע השבירה. הוא מחפש מאיפה הגיע הקול, <b>והצנצנת כבר נחתה על הספסל לידו.</b></p>
+    </div>
+  </div>
+</section>
+
 <section class="sample">
   <div class="wrap grid">
     <div class="vid"><video src="media/sample_jewelry.mp4" poster="media/sample_jewelry_poster.jpg" controls playsinline muted loop preload="metadata"></video></div>
@@ -209,7 +230,7 @@ section:first-of-type{border-top:0}
 
 <section class="series">
   <div class="wrap">
-    <div class="sec-h"><span class="eyebrow">Options</span><h2>אפשר גם אחרת.</h2><p>אם הכיוון הזה לא מדויק, שני כיוונים נוספים לאותו רעיון.</p></div>
+    <div class="sec-h"><span class="eyebrow">Options</span><h2>רעיונות נוספים.</h2><p>אם הכיוון הזה לא מדויק, שני כיוונים נוספים לאותו רעיון.</p></div>
     <div class="row" style="grid-template-columns:repeat(2,1fr)">
       <div class="ep"><span class="n">OPTION</span><h3>רץ במקום טניסאי</h3><p>אותו רעיון, אותו קול, על מישהו שרץ. טיילת בבוקר במקום מגרש.</p></div>
       <div class="ep"><span class="n">NEXT</span><h3>פרק שני, בפעם אחרת</h3><p>גרסה קצרה וישירה, ברוח הסרטון של הבחור עם הכובע. לא הפעם.</p></div>
