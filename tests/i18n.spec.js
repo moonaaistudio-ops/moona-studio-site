@@ -2067,9 +2067,10 @@ test.describe('lead submission mocks', () => {
     await page.locator('#f-mail').fill('dana@example.com');
     await page.locator('#f-product').fill('brand.com/serum');
     await page.locator('#askSubmit').click();
+    await expect(page.locator('[data-step="1"]')).toHaveClass(/active/);
     await expect(page.locator('#doneMsg')).toHaveText('נעבור על המוצר ונחזור אליכם עם כיוון בתוך שני ימי עסקים.');
     expect(payload.website).toBe('brand.com/serum');
-    expect(await page.evaluate(() => window.__events)).toEqual([
+    await expect.poll(() => page.evaluate(() => window.__events)).toEqual([
       ['lead_form_opened', { cta_location: 'hero', intent: 'product' }],
       ['lead_form_submitted', { intent: 'product' }]
     ]);
