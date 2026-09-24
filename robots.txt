@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://moona-studio-two.vercel.app/sitemap.xml
+Sitemap: https://moonastudio.ai/sitemap.xml

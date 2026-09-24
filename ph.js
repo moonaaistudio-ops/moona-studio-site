@@ -1,4 +1,4 @@
-/* PostHog on every Moona page (moona-studio-two.vercel.app and anything added later).
+/* PostHog on every Moona page (moonastudio.ai and anything added later).
    Cookieless: persistence is memory, so nothing is stored on the visitor's device.
    Records page views, clicks and session replays; every typed value is masked.
    The ?c= code from a client link is attached to the whole session, so a client's

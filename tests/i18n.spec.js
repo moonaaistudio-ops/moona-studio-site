@@ -115,7 +115,7 @@ test.describe('locale bootstrap, URL contract, and metadata', () => {
       ogTitle: HOME_EN_TITLE,
       ogDescription: HOME_EN_DESCRIPTION,
       twitterTitle: HOME_EN_TITLE,
-      canonical: 'https://moona-studio-two.vercel.app/'
+      canonical: 'https://moonastudio.ai/'
     });
     const url = new URL(page.url());
     expect(url.searchParams.get('campaign')).toBe('moon');
@@ -138,7 +138,7 @@ test.describe('locale bootstrap, URL contract, and metadata', () => {
       ogTitle: HOME_EN_TITLE,
       ogDescription: HOME_EN_DESCRIPTION,
       twitterTitle: HOME_EN_TITLE,
-      canonical: 'https://moona-studio-two.vercel.app/'
+      canonical: 'https://moonastudio.ai/'
     });
     const url = new URL(page.url());
     expect(url.searchParams.get('campaign')).toBe('moon');
@@ -173,7 +173,7 @@ test.describe('locale bootstrap, URL contract, and metadata', () => {
       ogTitle: HOME_EN_TITLE,
       ogDescription: HOME_EN_DESCRIPTION,
       twitterTitle: HOME_EN_TITLE,
-      canonical: 'https://moona-studio-two.vercel.app/'
+      canonical: 'https://moonastudio.ai/'
     });
     expect(await page.evaluate(() => localStorage.getItem('moona.locale.user'))).toBe('en');
     const url = new URL(page.url());
