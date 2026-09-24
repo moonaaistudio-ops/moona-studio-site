@@ -498,18 +498,23 @@ body.cur-off .cur{opacity:0}
   box-shadow:0 14px 44px rgba(0,0,0,.38)}
 .analytics-consent p{min-width:0;font-size:12px;line-height:1.4;color:var(--ice-dim);white-space:nowrap}
 .analytics-consent p a{color:var(--ice-hot);cursor:pointer}
-.analytics-consent__actions{display:flex;gap:6px;flex:none}
+.analytics-consent__actions{display:flex;direction:ltr;gap:6px;flex:none}
 /* 32px was too small a target for a site with a lagging custom cursor */
 .analytics-consent button{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
-  white-space:nowrap;min-height:44px;padding:8px 12px;border-radius:var(--r-pill);cursor:pointer}
-.analytics-consent__accept{background:#d9c69c;color:#0d0b07}
-.analytics-consent__reject{border:1px solid var(--ice-faint);color:var(--ice-dim)}
+  box-sizing:border-box;width:90px;min-height:44px;padding:8px 6px;border:1px solid transparent;
+  border-radius:var(--r-pill);line-height:1.15;text-align:center;white-space:nowrap;cursor:pointer}
+.analytics-consent__accept{border-color:#d9c69c;background:#d9c69c;color:#0d0b07}
+.analytics-consent__reject{border-color:rgba(190,212,238,.4);background:rgba(190,212,238,.08);color:var(--ice-hot)}
 .analytics-consent button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 /* Keep the choices beside the short question on phones. */
 @media(max-width:700px){
   .analytics-consent{inset-inline:10px;bottom:10px;max-width:none;gap:10px;
     padding:8px 10px;border-radius:14px}
   .analytics-consent p{white-space:normal}
+}
+@media(max-width:360px){
+  .analytics-consent{flex-direction:column;align-items:stretch;gap:6px}
+  .analytics-consent__actions{margin-right:auto}
 }
 
 /* ————————————————————— cursor ————————————————————— */
