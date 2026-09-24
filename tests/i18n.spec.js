@@ -353,8 +353,8 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('#askTitle')).toHaveText('לדבר עם הסטודיו');
     await expect(page.locator('#ask')).toHaveAttribute('aria-labelledby', 'askTitle');
     await expect(page.locator('#askSubmit [data-i18n="form.quick.send"]')).toHaveText('שליחת פנייה');
-    await expect(page.locator('#analyticsAccept')).toHaveText('אישור עוגיות');
-    await expect(page.locator('#analyticsReject')).toHaveText('דחיית עוגיות');
+    await expect(page.locator('#analyticsAccept')).toHaveText('כן');
+    await expect(page.locator('#analyticsReject')).toHaveText('לא, תודה');
 
     expect(await page.evaluate(() => ({
       primary: window.MoonaI18n.t('common.primaryCta', {}, 'en'),
@@ -2174,7 +2174,7 @@ test.describe('analytics consent mocks', () => {
     await expect(page.locator('#analyticsConsent')).toBeVisible();
 
     await page.locator('[data-language-toggle]').click();
-    await expect(page.locator('#analyticsConsent')).toHaveAttribute('aria-label', 'העדפות עוגיות אנליטיקה');
+    await expect(page.locator('#analyticsConsent')).toHaveAttribute('aria-label', 'בחירה לגבי מדידה באתר');
     await page.locator('#analyticsAccept').click();
     await expect(page.locator('#analyticsConsent')).toBeHidden();
     await expect.poll(() => providerRequests.length).toBe(1);
