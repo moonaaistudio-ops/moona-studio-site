@@ -1,5 +1,6 @@
 tests
 playwright.config.js
 test-server.js
+.claude/
 design-system
 .media/
