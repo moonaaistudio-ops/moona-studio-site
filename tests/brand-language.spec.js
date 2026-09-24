@@ -13,6 +13,16 @@ test('i18n dictionary carries no banned phrase or dash', () => {
   expect(hitsIn(source, dashes)).toEqual([]);
 });
 
+test('index.html static fallback markup carries no banned phrase or dash', () => {
+  const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+  const stripped = html
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<!--[\s\S]*?-->/g, '');
+  expect(hitsIn(stripped, phrases)).toEqual([]);
+  expect(hitsIn(stripped, dashes)).toEqual([]);
+});
+
 for (const locale of ['en', 'he']) {
   test(`rendered home page in ${locale} carries no banned phrase or dash`, async ({ page }) => {
     await page.goto(`/?lang=${locale}`);
