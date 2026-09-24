@@ -2994,7 +2994,7 @@ askForm.addEventListener('input',event=>{
      3. the visitor's own mail client.
    Files ride along as base64 in the JSON, so rung 1 has no multipart to parse. */
 const FORM_ENDPOINT = '/api/lead';
-const FORM_FALLBACK = 'https://formsubmit.co/ajax/moona.ai.studio@gmail.com';
+const FORM_FALLBACK = 'https://formsubmit.co/ajax/tal@moonastudio.ai';
 /* rung 2 — used only while our own endpoint has no credentials yet */
 async function viaFallback(p){
   const fd=new FormData();
@@ -3054,7 +3054,7 @@ async function submitAsk(){
                 '',
                 `${tr('form.mailto.brief')}:`,
                 value('brief')].join('\n');
-    openMailFallback('mailto:moona.ai.studio@gmail.com'
+    openMailFallback('mailto:tal@moonastudio.ai'
       +'?subject='+encodeURIComponent(tr('form.mailto.subject',{brand}))
       +'&body='+encodeURIComponent(body));
   }finally{

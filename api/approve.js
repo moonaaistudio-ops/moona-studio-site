@@ -76,7 +76,7 @@ module.exports = async (req, res) => {
       html: `<div dir="rtl" style="font-family:-apple-system,Segoe UI,sans-serif"><p style="font-size:16px">ההצעה אושרה בעמוד.</p>${table}</div>`
     });
     await transport.sendMail({
-      from: `"MOONA STUDIO" <${user}>`, to: email, replyTo: user,
+      from: `"MOONA STUDIO" <${user}>`, to: email, replyTo: process.env.LEAD_TO || user,
       subject: `אישור הצעה ${quote} · MOONA STUDIO`,
       html: `<div dir="rtl" style="font-family:-apple-system,Segoe UI,sans-serif;color:#111"><p style="font-size:16px">היי ${esc(name)},</p><p>תודה. ההצעה ${esc(quote)} אושרה ב-${esc(when)}. זה העותק שלך.</p>${table}<p>השלב הבא: התסריט של הפרק הראשון מגיע לאישור, ועם האישור חשבונית מקדמה.</p><p>טל צור · MOONA STUDIO · 054-6513133</p></div>`
     });

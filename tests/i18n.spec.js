@@ -2032,7 +2032,7 @@ test.describe('lead submission mocks', () => {
     const mailto = await page.evaluate(() => window.__e2eMailto);
     const url = new URL(mailto);
     expect(url.protocol).toBe('mailto:');
-    expect(url.pathname).toBe('moona.ai.studio@gmail.com');
+    expect(url.pathname).toBe('tal@moonastudio.ai');
     expect(url.searchParams.get('subject')).toBe('פנייה לפרויקט: ⁦Dana Cohen⁩');
     expect(url.searchParams.get('body')).toContain('שם: Dana Cohen');
     expect(url.searchParams.get('body')).toContain('מייל: dana@example.com');
