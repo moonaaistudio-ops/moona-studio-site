@@ -3,10 +3,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const BASE_URL = `http://127.0.0.1:${Number(process.env.PLAYWRIGHT_PORT || 4317)}`;
-const HOME_EN_TITLE = 'Moona | Founder-led creative technology studio';
-const HOME_EN_DESCRIPTION = 'Cinematic campaigns built through creative direction, custom software and specialist AI agents.';
-const HOME_HE_TITLE = 'Moona | סטודיו קריאייטיב טכנולוגי בהובלת המייסד';
-const HOME_HE_DESCRIPTION = 'קמפיינים קולנועיים שנבנים באמצעות קריאייטיב, פיתוח תוכנה וסוכני AI מומחים.';
+const HOME_EN_TITLE = 'Moona Studio | Cinematic Brand Films & AI Production';
+const HOME_EN_DESCRIPTION = 'Cinematic brand and product films, from concept and creative direction through AI production, editing and delivery. Founded by Tal Tzur.';
+const HOME_HE_TITLE = 'Moona Studio | סרטי מותג ופרסומות קולנועיות ב־AI';
+const HOME_HE_DESCRIPTION = 'סטודיו מונה יוצר סרטי מותג ומוצר: רעיון, בימוי, הפקת AI ועריכה עד הסרט הסופי. בהובלת טל צור.';
 const LEAD_BRIEF = 'We need a cinematic launch film for a new energy-bar brand.';
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 const crewRevision = name => name === 'sona' ? 'r10' : 'r13';
@@ -72,7 +72,7 @@ test('critical assets and legal links remain compatible with a direct-file previ
   for (const document of [home, privacy, accessibility]) {
     expect(document).not.toMatch(/(?:href|src)="\/(?:i18n\.js|privacy\.html|accessibility\.html|analytics\.js)"/);
   }
-  for (const asset of ['moona-logo-lockup.svg', 'moona-logo-mark.svg']) {
+  for (const asset of ['moona-logo-lockup.svg', 'moona-logo-mark.svg', 'moona-logo-mark-512.png']) {
     expect(fs.existsSync(path.join(PROJECT_ROOT, 'p', 'brand', asset))).toBe(true);
   }
   for (const name of ['alma', 'nara', 'luc', 'vero', 'sona', 'iva']) {

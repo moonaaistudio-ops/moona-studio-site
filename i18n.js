@@ -37,8 +37,8 @@
       "solutions.method.finishing": "Edit & sound",
       "solutions.method.note": "One creative direction connects every stage.",
 
-      'meta.home.title': 'Moona | Founder-led creative technology studio',
-      'meta.home.description': 'Cinematic campaigns built through creative direction, custom software and specialist AI agents.',
+      'meta.home.title': 'Moona Studio | Cinematic Brand Films & AI Production',
+      'meta.home.description': 'Cinematic brand and product films, from concept and creative direction through AI production, editing and delivery. Founded by Tal Tzur.',
       'meta.privacy.title': 'Privacy notice | Moona',
       'meta.privacy.description': 'How Moona uses optional, consent-based analytics and protects inquiry form data.',
       'meta.accessibility.title': 'Accessibility statement | Moona',
@@ -319,8 +319,8 @@
       "solutions.method.finishing": "עריכה וסאונד",
       "solutions.method.note": "כיוון קריאייטיבי אחד מחבר את כל השלבים.",
 
-      'meta.home.title': 'Moona | סטודיו קריאייטיב טכנולוגי בהובלת המייסד',
-      'meta.home.description': 'קמפיינים קולנועיים שנבנים באמצעות קריאייטיב, פיתוח תוכנה וסוכני AI מומחים.',
+      'meta.home.title': 'Moona Studio | סרטי מותג ופרסומות קולנועיות ב־AI',
+      'meta.home.description': 'סטודיו מונה יוצר סרטי מותג ומוצר: רעיון, בימוי, הפקת AI ועריכה עד הסרט הסופי. בהובלת טל צור.',
       'meta.privacy.title': 'הודעת פרטיות | Moona',
       'meta.privacy.description': 'שימוש אופציונלי ומבוסס־הסכמה באנליטיקה ב־Moona, והאופן שבו נשמר המידע בטופס הפנייה.',
       'meta.accessibility.title': 'הצהרת נגישות | Moona',
