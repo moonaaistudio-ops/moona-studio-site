@@ -2928,9 +2928,10 @@ function setIntent(intent){
   window.MoonaI18n?.applyDocument(ask);
 }
 function isOpenableLink(value){
+  if(/\s/.test(value)) return false;
   try{
     const url=new URL(/^https?:\/\//i.test(value)?value:'https://'+value);
-    return /^https?:$/.test(url.protocol)&&url.hostname.includes('.');
+    return /^https?:$/.test(url.protocol)&&url.hostname.includes('.')&&!url.username&&!url.password;
   }catch(_){return false}
 }
 function openAsk(event){
@@ -3013,15 +3014,17 @@ onLocaleRender(()=>{
     h.textContent=h.dataset.i18nCurrent?tr(h.dataset.i18nCurrent):'';
   });
 });
+const PRODUCT_TAG='Request: one product';
 function validateInquiry(){
   let firstInvalid=null;
+  const briefMax=askForm.dataset.intent==='product'?1200-PRODUCT_TAG.length-2:1200;
   for(const input of askForm.querySelectorAll('.quick-field input,.quick-field textarea')){
     if(input.closest('[hidden]')){fieldHint(input,'');continue}
     const value=input.value.trim();
     let error='';
     if(!value && input.required) error='form.validation.required';
     else if(input.type==='email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) error='form.validation.email';
-    else if(input.name==='brief' && value.length>1200) error='form.validation.brief';
+    else if(input.name==='brief' && value.length>briefMax) error='form.validation.brief';
     else if(input.name==='product' && value && !isOpenableLink(value)) error='form.validation.url';
     fieldHint(input,error);
     if(error && !firstInvalid) firstInvalid=input;
@@ -3071,13 +3074,18 @@ async function submitAsk(){
   askForm.setAttribute('aria-busy','true');
   sendStatus('form.status.sending');
 
+  const isProduct=askForm.dataset.intent==='product';
+  const link=isProduct?askForm.elements.product.value.trim():'';
+  const briefText=askForm.elements.brief.value.trim();
+  const brief=isProduct?PRODUCT_TAG+(briefText?'\n\n'+briefText:''):briefText;
+
   try{
     const payload={
       name:    askForm.elements.name.value.trim(),
       company: askForm.elements.name.value.trim(),
-      website: askForm.dataset.intent==='product'?askForm.elements.product.value.trim():'',
+      website: link,
       email:   askForm.elements.email.value.trim(),
-      brief:   askForm.elements.brief.value.trim(),
+      brief:   brief,
       'bot-field': (askForm.elements['bot-field']||{}).value||'',
       files:   []
     };
@@ -3092,19 +3100,18 @@ async function submitAsk(){
     window.MoonaAnalytics?.capture('lead_form_submitted',{intent:askForm.dataset.intent||'general'});
     showStep(DONE);
   }catch(err){
-    window.MoonaAnalytics?.capture('lead_form_submission_failed');
+    window.MoonaAnalytics?.capture('lead_form_submission_failed',{intent:askForm.dataset.intent||'general'});
     /* never lose a lead: hand the details to their mail client instead */
     sendStatus('form.status.mailFallback',true);
     const value=n=>(askForm.elements[n]||{}).value||'';
     const brand=value('name').trim();
-    const body=[`${tr('form.mailto.name')}: ${value('name')}`,
-                `${tr('form.mailto.email')}: ${value('email')}`,
-                '',
-                `${tr('form.mailto.brief')}:`,
-                value('brief')].join('\n');
+    const bodyLines=[`${tr('form.mailto.name')}: ${value('name')}`,
+                `${tr('form.mailto.email')}: ${value('email')}`];
+    if(link) bodyLines.push(`${tr('form.mailto.website')}: ${link}`);
+    bodyLines.push('', `${tr('form.mailto.brief')}:`, brief);
     openMailFallback('mailto:tal@moonastudio.ai'
       +'?subject='+encodeURIComponent(tr('form.mailto.subject',{brand}))
-      +'&body='+encodeURIComponent(body));
+      +'&body='+encodeURIComponent(bodyLines.join('\n')));
   }finally{
     btn.style.opacity=''; btn.disabled=false;
     askForm.removeAttribute('aria-busy');

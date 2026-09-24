@@ -2046,6 +2046,40 @@ test.describe('lead submission mocks', () => {
     expect(page.url()).toContain('?lang=he');
   });
 
+  test('product mode mailto fallback includes the product link and the lead tag', async ({ page }) => {
+    await page.route('**/api/lead', route => route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ ok: false, error: 'send' })
+    }));
+    await page.route('https://formsubmit.co/ajax/**', route => route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ success: 'false' })
+    }));
+    await openHome(page, '/?lang=he');
+    await page.evaluate(() => {
+      window.__e2eMailto = '';
+      window.openMailFallback = url => { window.__e2eMailto = url; };
+    });
+    await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
+    await page.locator('#f-name').fill('Dana Cohen');
+    await page.locator('#f-mail').fill('dana@example.com');
+    await page.locator('#f-product').fill('brand.com/serum');
+    await page.locator('#f-brief').fill(LEAD_BRIEF);
+    await page.locator('#askSubmit').click();
+    await page.waitForFunction(() => Boolean(window.__e2eMailto));
+
+    const mailto = await page.evaluate(() => window.__e2eMailto);
+    const url = new URL(mailto);
+    expect(url.protocol).toBe('mailto:');
+    expect(url.pathname).toBe('tal@moonastudio.ai');
+    const body = url.searchParams.get('body');
+    expect(body).toContain('אתר: brand.com/serum');
+    expect(body).toContain('Request: one product');
+    expect(body).toContain(LEAD_BRIEF);
+  });
+
   test('product CTA opens product mode and sends the product link as website', async ({ page }) => {
     let payload;
     await page.route('**/api/lead', route => {
@@ -2070,6 +2104,7 @@ test.describe('lead submission mocks', () => {
     await expect(page.locator('[data-step="1"]')).toHaveClass(/active/);
     await expect(page.locator('#doneMsg')).toHaveText('נעבור על המוצר ונחזור אליכם עם כיוון בתוך שני ימי עסקים.');
     expect(payload.website).toBe('brand.com/serum');
+    expect(payload.brief).toBe('Request: one product');
     await expect.poll(() => page.evaluate(() => window.__events)).toEqual([
       ['lead_form_opened', { cta_location: 'hero', intent: 'product' }],
       ['lead_form_submitted', { intent: 'product' }]
@@ -2083,10 +2118,12 @@ test.describe('lead submission mocks', () => {
     await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
     await page.locator('#f-name').fill('Dana Cohen');
     await page.locator('#f-mail').fill('dana@example.com');
-    await page.locator('#f-product').fill('not a link');
-    await page.locator('#askSubmit').click();
-    await expect(page.locator('#f-product')).toHaveAttribute('aria-invalid', 'true');
-    await expect(page.locator('#product-hint')).toHaveText('A link we can open, please.');
+    for (const value of ['not a link', 'brand .com', 'mailto:a@b.co']) {
+      await page.locator('#f-product').fill(value);
+      await page.locator('#askSubmit').click();
+      await expect(page.locator('#f-product')).toHaveAttribute('aria-invalid', 'true');
+      await expect(page.locator('#product-hint')).toHaveText('A link we can open, please.');
+    }
     expect(requests).toBe(0);
   });
 
@@ -2108,6 +2145,20 @@ test.describe('lead submission mocks', () => {
     await expect(page.locator('[data-step="0"] .qtitle')).toHaveText('Start with one product.');
     await expect(page.locator('#f-product')).toBeVisible();
     await expect(page.locator('#f-product')).toHaveAttribute('placeholder', 'yourbrand.com/product');
+  });
+
+  test('footer CTA opens product mode', async ({ page }) => {
+    await openHome(page, '/?lang=en');
+    await page.evaluate(() => {
+      window.__events = [];
+      window.MoonaAnalytics = window.MoonaAnalytics || {};
+      window.MoonaAnalytics.capture = (name, props) => window.__events.push([name, props]);
+    });
+    await page.evaluate(() => document.querySelector('.contact [data-intent="product"]').click());
+    await expect(page.locator('#askTitle')).toHaveText('One product');
+    await expect.poll(() => page.evaluate(() => window.__events)).toEqual([
+      ['lead_form_opened', { cta_location: 'contact', intent: 'product' }]
+    ]);
   });
 });
 
