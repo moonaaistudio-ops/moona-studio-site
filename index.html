@@ -1276,6 +1276,16 @@ html[lang="he"] .solutions :is(h2,h3){font-weight:700;letter-spacing:-.025em}
 .work-grid .piece:is(:hover,:focus-within) .concept{opacity:1;transform:none}
 .work-grid .piece .meta .work-summary{grid-column:2;margin:6px 0 0;max-width:54ch;font-size:clamp(14px,1.15vw,17px);line-height:1.6;color:var(--ice-dim)}
 .work-grid .breakdown{display:none!important}
+.impact-replay{grid-column:2;justify-self:start;margin:7px 0 0;padding:8px 0;border:0;border-bottom:1px solid rgba(217,198,156,.55);background:none;color:#d9c69c;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
+.impact-replay:hover{color:var(--ice-hot);border-bottom-color:var(--ice-hot)}
+.impact-replay:focus-visible{outline:2px solid #d9c69c;outline-offset:4px}
+html[lang="he"] .impact-replay{font-family:var(--sans);letter-spacing:0;text-transform:none}
+.bull-impact-overlay{position:fixed;top:0;left:0;z-index:90;display:none;pointer-events:none;transform-origin:0 0;max-width:none!important;max-height:none!important;will-change:transform,opacity}
+.bull-impact-flash{position:fixed;inset:0;z-index:89;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 50% 50%,rgba(240,250,255,.35),rgba(240,250,255,.08) 35%,transparent 72%)}
+.bull-impact-flash.hit{animation:bull-impact-flash .24s ease-out both}
+@keyframes bull-impact-flash{0%{opacity:0}12%{opacity:1}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.impact-replay,.bull-impact-overlay,.bull-impact-flash{display:none!important}}
+html.motion-paused .impact-replay,html.motion-paused .bull-impact-overlay,html.motion-paused .bull-impact-flash{display:none!important}
 
 .contact{min-height:86svh!important;padding:var(--moona-section-space-end) 6vw 60px!important}
 .contact .contact-line{font-size:clamp(48px,8vw,126px)!important;line-height:.92!important;letter-spacing:-.045em;max-width:12ch;margin-inline:auto}
@@ -1658,22 +1668,23 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
       <div class="breakdown"></div>
     </article>
 
-    <article class="piece rv" data-piece>
-      <div class="frame"><video src="v/strava.mp4" poster="p/strava.jpg" muted loop playsinline preload="none" aria-label="Strava self-initiated spec film by Moona" data-i18n-aria-label="work.strava.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the Strava concept film larger" data-i18n-aria-label="work.strava.open"></button><span class="vbadge">00:14</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
+    <article class="piece rv" data-piece data-bull-impact>
+      <div class="frame"><video src="v/bull-padel.mp4" poster="p/bull-padel.jpg" muted loop playsinline preload="none" aria-label="Bull Padel self-initiated spec film by Moona" data-i18n-aria-label="work.bullPadel.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the Bull Padel concept film larger" data-i18n-aria-label="work.bullPadel.open"></button><span class="vbadge">00:15</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
       <div class="meta">
-        <span class="num">02</span><h3 class="brand" dir="ltr">Strava</h3>
-        <p class="concept" data-i18n="work.strava.concept">Every run already has a soundtrack. We cut to it.</p>
+        <span class="num">02</span><h3 class="brand" dir="ltr">Bull Padel</h3>
+        <p class="concept" data-i18n="work.bullPadel.concept">The court hits back.</p>
+        <button class="impact-replay" type="button" data-impact-replay data-i18n="work.bullPadel.replay">Replay impact ↗</button>
       </div>
-      <div class="breakdown"><!-- breakdown slot — content later --></div>
+      <div class="breakdown"></div>
     </article>
 
     <article class="piece rv" data-piece>
-      <div class="frame"><video src="v/bull-padel.mp4" poster="p/bull-padel.jpg" muted loop playsinline preload="none" aria-label="Bull Padel self-initiated spec film by Moona" data-i18n-aria-label="work.bullPadel.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the Bull Padel concept film larger" data-i18n-aria-label="work.bullPadel.open"></button><span class="vbadge">00:15</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
+      <div class="frame"><video src="v/strava.mp4" poster="p/strava.jpg" muted loop playsinline preload="none" aria-label="Strava self-initiated spec film by Moona" data-i18n-aria-label="work.strava.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the Strava concept film larger" data-i18n-aria-label="work.strava.open"></button><span class="vbadge">00:14</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
       <div class="meta">
-        <span class="num">03</span><h3 class="brand" dir="ltr">Bull Padel</h3>
-        <p class="concept" data-i18n="work.bullPadel.concept">The court hits back.</p>
+        <span class="num">03</span><h3 class="brand" dir="ltr">Strava</h3>
+        <p class="concept" data-i18n="work.strava.concept">Every run already has a soundtrack. We cut to it.</p>
       </div>
-      <div class="breakdown"></div>
+      <div class="breakdown"><!-- breakdown slot — content later --></div>
     </article>
 
     <article class="piece vert rv" data-piece>
@@ -2698,6 +2709,158 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
   paint();
 });
 
+/* Bull Padel: the film keeps playing; only this transparent Dreamina plate
+   crosses the frame boundary. The impact is tied to the racket hit at 2.2s. */
+(()=>{
+  const piece=document.querySelector('[data-bull-impact]');
+  if(!piece) return;
+  const film=piece.querySelector('.frame video');
+  const frame=piece.querySelector('.frame');
+  const replay=piece.querySelector('[data-impact-replay]');
+  const fx=document.createElement('video');
+  fx.className='bull-impact-overlay';
+  fx.dataset.state='idle';
+  fx.muted=true;
+  fx.playsInline=true;
+  fx.preload='none';
+  fx.setAttribute('aria-hidden','true');
+  fx.setAttribute('tabindex','-1');
+  /* Safari uses HEVC alpha; Chromium and Firefox use VP9 alpha. */
+  for(const [src,type] of [
+    ['v/bull-impact-alpha.mov','video/quicktime; codecs="hvc1"'],
+    ['v/bull-impact-alpha.webm','video/webm; codecs="vp9"']
+  ]){
+    const source=document.createElement('source');source.src=src;source.type=type;fx.appendChild(source);
+  }
+  const flash=document.createElement('div');
+  flash.className='bull-impact-flash';
+  flash.setAttribute('aria-hidden','true');
+  document.body.append(flash,fx);
+  const sound=new Audio('v/bull-impact-sfx.m4a');
+  sound.preload='none';
+
+  let played=false,active=false,suspended=false,hit=false,elapsed=0,lastStamp=0;
+  let watchId=0,effectId=0,geometry;
+  const visible=()=>{const r=frame.getBoundingClientRect();return r.bottom>0&&r.top<innerHeight};
+  const canRun=()=>!motionReduced()&&!document.hidden&&!film.paused&&visible()&&!document.getElementById('lb')?.classList.contains('open');
+  function measure(){
+    const r=frame.getBoundingClientRect();
+    const startW=r.width*.68,startH=startW*9/16;
+    const endW=Math.max(innerWidth*1.2,innerHeight*16/9*1.05),endH=endW*9/16;
+    return {
+      startW,startH,scale:endW/startW,
+      startX:r.left+r.width*.53-startW*.235,
+      startY:r.top+r.height*.49-startH*.365,
+      endX:(innerWidth-endW)/2,
+      endY:(innerHeight-endH)/2
+    };
+  }
+  function paint(){
+    if(!geometry)return;
+    const t=Math.min(fx.currentTime||elapsed,1.15);
+    const progress=Math.pow(t/1.15,1.9);
+    const x=geometry.startX+(geometry.endX-geometry.startX)*progress;
+    const y=geometry.startY+(geometry.endY-geometry.startY)*progress;
+    fx.style.transform=`translate3d(${x}px,${y}px,0) scale(${1+(geometry.scale-1)*progress})`;
+    fx.style.opacity=elapsed>3.8?Math.max(0,(4.6-elapsed)/.8):1;
+    if(!hit && t>=1.15){
+      hit=true;
+      flash.classList.remove('hit');
+      void flash.offsetWidth;
+      flash.classList.add('hit');
+    }
+  }
+  function stop(){
+    active=false;suspended=false;
+    cancelAnimationFrame(effectId);
+    fx.pause();sound.pause();
+    delete fx.dataset.motionWasPlaying;
+    fx.style.display='none';fx.dataset.state='idle';
+    flash.classList.remove('hit');
+  }
+  function tick(stamp){
+    if(!active||suspended)return;
+    if(!canRun()){pauseEffect();return}
+    if(lastStamp)elapsed+=Math.min((stamp-lastStamp)/1000,.1);
+    lastStamp=stamp;
+    paint();
+    if(elapsed>=4.6){stop();return}
+    effectId=requestAnimationFrame(tick);
+  }
+  function pauseEffect(){
+    if(!active||suspended)return;
+    suspended=true;lastStamp=0;
+    cancelAnimationFrame(effectId);
+    fx.pause();sound.pause();
+    fx.style.display='none';fx.dataset.state='paused';
+    flash.classList.remove('hit');
+  }
+  function resumeEffect(){
+    if(!active||!suspended||!canRun())return;
+    suspended=false;lastStamp=0;
+    fx.style.display='block';fx.dataset.state='playing';
+    if(!fx.ended)fx.play().catch(stop);
+    if(sound.currentTime>0&&!sound.ended)sound.play().catch(()=>{});
+    effectId=requestAnimationFrame(tick);
+  }
+  function start(){
+    if(played||!canRun())return;
+    played=true;active=true;suspended=false;hit=false;elapsed=0;lastStamp=0;
+    geometry=measure();
+    fx.style.width=geometry.startW+'px';
+    fx.style.height=geometry.startH+'px';
+    fx.style.display='block';
+    fx.dataset.state='playing';
+    fx.currentTime=0;
+    sound.currentTime=0;
+    paint();
+    fx.play().then(()=>{
+      if(!active||suspended)return;
+      sound.play().catch(()=>{}); /* muted autoplay may not unlock sound */
+      effectId=requestAnimationFrame(tick);
+    }).catch(stop);
+  }
+  function watch(){
+    watchId=0;
+    if(film.paused)return;
+    if(!played&&film.currentTime>=2.2&&film.currentTime<2.8)start();
+    watchId=requestAnimationFrame(watch);
+  }
+  film.addEventListener('play',()=>{
+    if(active&&suspended)resumeEffect();
+    if(!watchId)watchId=requestAnimationFrame(watch);
+  });
+  film.addEventListener('pause',pauseEffect);
+  film.addEventListener('ended',pauseEffect);
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden){
+      if(!film.paused){film.dataset.impactTabWasPlaying='1';film.pause()}
+      pauseEffect();
+    }else{
+      if(film.dataset.impactTabWasPlaying){
+        delete film.dataset.impactTabWasPlaying;
+        if(visible()&&!piece.dataset.userPaused&&!motionReduced())film.play().catch(()=>{});
+      }
+      resumeEffect();
+    }
+  });
+  addEventListener('moona:motionchange',event=>{if(event.detail.paused)stop();else resumeEffect()});
+  addEventListener('moona:lightbox-open',stop);
+  addEventListener('resize',()=>{if(active){geometry=measure();fx.style.width=geometry.startW+'px';fx.style.height=geometry.startH+'px';paint()}});
+  replay.addEventListener('click',()=>{
+    if(motionReduced())return;
+    stop();played=false;
+    delete piece.dataset.userPaused;
+    film.currentTime=0;
+    film.play().catch(()=>{});
+  });
+  const preload=new IntersectionObserver(entries=>{
+    if(!entries[0].isIntersecting)return;
+    fx.preload='auto';fx.load();sound.preload='auto';sound.load();preload.disconnect();
+  },{rootMargin:'100% 0px'});
+  preload.observe(piece);
+})();
+
 /* ═══════════════════ the flagship film ═══════════════════
    Sound on, as far as the browser will allow. Every browser blocks
    autoplay-with-sound for a visitor with no history on the origin, so:
@@ -3168,6 +3331,7 @@ askForm.addEventListener('submit',e=>{e.preventDefault();submitAsk()});
   function open(item,focusTarget=item){
     const src=item.querySelector('img,video');
     if(!src) return;
+    dispatchEvent(new Event('moona:lightbox-open'));
     window.MoonaAnalytics?.capture('work_item_opened',{asset_type:src.tagName.toLowerCase()});
     opener=focusTarget;
     stage.innerHTML='';
@@ -3181,7 +3345,7 @@ askForm.addEventListener('submit',e=>{e.preventDefault();submitAsk()});
       v.muted=wantsSound?chose:true; v.loop=true;   /* every film loops */
       v.playsInline=true; v.autoplay=!motionReduced(); v.controls=true;
       v.setAttribute('aria-label',src.getAttribute('aria-label')||assetName(src));
-      v.currentTime=src.currentTime||0;          /* pick it up where the strip was */
+      v.currentTime=item.closest('[data-bull-impact]')?0:(src.currentTime||0);
       if(wantsSound){const h=item.closest('#film'); if(h) h.dispatchEvent(new Event('film:suspend'));}
       stage.appendChild(v); if(!motionReduced())v.play().catch(()=>{});
     }else{
