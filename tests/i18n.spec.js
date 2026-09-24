@@ -3,10 +3,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const BASE_URL = `http://127.0.0.1:${Number(process.env.PLAYWRIGHT_PORT || 4317)}`;
-const HOME_EN_TITLE = 'Moona Studio | Cinematic Brand Films & AI Production';
-const HOME_EN_DESCRIPTION = 'Cinematic brand and product films, from concept and creative direction through AI production, editing and delivery. Founded by Tal Tzur.';
-const HOME_HE_TITLE = 'Moona Studio | סרטי מותג ופרסומות קולנועיות ב־AI';
-const HOME_HE_DESCRIPTION = 'סטודיו מונה יוצר סרטי מותג ומוצר: רעיון, בימוי, הפקת AI ועריכה עד הסרט הסופי. בהובלת טל צור.';
+const HOME_EN_TITLE = 'Moona Studio | Cinematic Brand Films, No Shoot Day';
+const HOME_EN_DESCRIPTION = 'Cinematic brand and product films, made without a shoot day. From concept to final cut, with your product protected in every shot. Founded by Tal Tzur.';
+const HOME_HE_TITLE = 'Moona Studio | סרטי מותג ופרסומות קולנועיות, בלי יום צילום';
+const HOME_HE_DESCRIPTION = 'סטודיו מונה יוצר סרטי מותג ומוצר בלי יום צילום, מהרעיון ועד הגרסה הסופית, והמוצר נשאר מדויק בכל שוט. בהובלת טל צור.';
 const LEAD_BRIEF = 'We need a cinematic launch film for a new energy-bar brand.';
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 const crewRevision = name => name === 'sona' ? 'r10' : 'r13';
@@ -317,7 +317,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.film-head .film-eyebrow')).toHaveText('סרט הדגל');
     await expect(page.locator('.film-title')).toHaveText('יצרנו מותג. וצילמנו לו פרסומת.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE הוא חטיף אנרגיה שאנחנו יצרנו מאפס.');
-    await expect(page.locator('.film-credit')).toHaveText('נוצר ב־AI. בוים עד הפריים האחרון.');
+    await expect(page.locator('.film-credit')).toHaveText('בלי מצלמה. בימוי עד הפריים האחרון.');
     await expect(page.locator('.film-strip-head .film-eyebrow')).toHaveText('מאחורי הסרט');
     await expect(page.locator('.film-strip-head .film-note')).toHaveText('DUSTLINE הוא סרט עצמאי למותג חטיף אנרגיה בדיוני. יצרנו את העולם והדמויות והובלנו את הבימוי והעריכה. תהליך כזה יכול להתאים לסרט מותג או להשקת מוצר.');
     await expect(page.locator('.film-story .film-beat')).toHaveCount(3);
@@ -339,7 +339,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('#crew-transition-title')).toHaveText('צוות של סוכני AI מומחים. כולם נבנו בסטודיו.');
     await expect(page.locator('.crew-transition-body')).toHaveText('כל אחד מאומן במקצוע אחד. לכולם יש במאי אחד.');
     await expect(page.locator('#crew-title')).toHaveText('המומחים שמאחורי העבודה.');
-    await expect(page.locator('.crew-head > p')).toHaveText('קריאייטיב, עריכה, תמונה, וידאו, אודיו ופרודקט.');
+    await expect(page.locator('.crew-head > p')).toHaveText('קריאייטיב, עריכה, תמונה, תנועה, אודיו ופרודקט.');
     await expect(page.locator('.work-note')).toHaveText('סרטי הקונספט האלה נוצרו ביוזמתנו כדי להראות מה נוכל ליצור עבור המותג הבא. המותגים המוצגים אינם לקוחות של Moona.');
     await expect(page.locator('[data-i18n="work.bullPadel.concept"]')).toHaveText('המחבט מחזיר חבטה.');
     await expect(page.locator('[data-i18n="work.koda.concept"]')).toHaveText('נבנה לפיד שבו הוא חי.');
@@ -401,14 +401,14 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
     await expect(page.locator('.film-title')).toHaveText('We created a brand. Then we shot its ad.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE is an energy bar you cannot buy.');
-    await expect(page.locator('.film-credit')).toHaveText('Made with AI. Directed to the final frame.');
+    await expect(page.locator('.film-credit')).toHaveText('No camera. Directed to the final frame.');
     await expect(page.locator('.film-strip-head .film-note')).toHaveText('DUSTLINE is a self-initiated film for a fictional energy bar. We created the world and characters, then directed and edited the film. This approach can shape a brand film or product launch.');
     await expect(page.locator('#about h2')).toHaveText('Tal Tzur');
     await expect(page.locator('.about-role')).toHaveText('Founder · Creative Director · Developer');
     await expect(page.locator('#crew-transition-title')).toHaveText('A crew of specialist AI agents. All built in the studio.');
     await expect(page.locator('.crew-transition-body')).toHaveText('Each one is trained for a single craft and answers to a single director.');
     await expect(page.locator('#crew-title')).toHaveText('Specialists behind the work.');
-    await expect(page.locator('.crew-head > p')).toHaveText('Creative, editing, image, video, audio and product.');
+    await expect(page.locator('.crew-head > p')).toHaveText('Creative, editing, image, motion, audio and product.');
 
     const dictionarySource = fs.readFileSync(path.join(__dirname, '..', 'i18n.js'), 'utf8');
     const hebrewStart = dictionarySource.indexOf('\n    he: {');
