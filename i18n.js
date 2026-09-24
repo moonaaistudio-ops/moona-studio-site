@@ -86,6 +86,7 @@
       'hero.scroll': 'Scroll',
 
       'film.eyebrow': 'The flagship',
+      'film.stance': "Not another clip that looks like everyone else's.",
       'film.title.lead': 'We created a brand. ',
       'film.title.emphasis': 'Then we shot its ad.',
       'film.note.tail': 'is an energy bar you cannot buy.',
@@ -373,6 +374,7 @@
       'hero.scroll': 'לגלול',
 
       'film.eyebrow': 'סרט הדגל',
+      'film.stance': 'לא עוד סרטון שנראה כמו כולם.',
       'film.title.lead': 'יצרנו מותג. ',
       'film.title.emphasis': 'וצילמנו לו פרסומת.',
       'film.note.tail': 'הוא חטיף אנרגיה שאנחנו יצרנו מאפס.',

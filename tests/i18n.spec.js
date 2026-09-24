@@ -315,6 +315,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     ]);
     await expect(page.locator('.hero-cta [data-i18n="common.primaryCta"]')).toHaveText('בואו נדבר');
     await expect(page.locator('.film-head .film-eyebrow')).toHaveText('סרט הדגל');
+    await expect(page.locator('.film-head .film-stance')).toHaveText('לא עוד סרטון שנראה כמו כולם.');
     await expect(page.locator('.film-title')).toHaveText('יצרנו מותג. וצילמנו לו פרסומת.');
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE הוא חטיף אנרגיה שאנחנו יצרנו מאפס.');
     await expect(page.locator('.film-credit')).toHaveText('בלי מצלמה. בימוי עד הפריים האחרון.');
@@ -400,6 +401,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('[data-i18n="common.primaryCta"]')).toHaveText(['LET’S TALK', 'LET’S TALK']);
     await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
     await expect(page.locator('.film-title')).toHaveText('We created a brand. Then we shot its ad.');
+    await expect(page.locator('.film-head .film-stance')).toHaveText("Not another clip that looks like everyone else's.");
     await expect(page.locator('.film-head .film-note')).toHaveText('DUSTLINE is an energy bar you cannot buy.');
     await expect(page.locator('.film-credit')).toHaveText('No camera. Directed to the final frame.');
     await expect(page.locator('.film-strip-head .film-note')).toHaveText('DUSTLINE is a self-initiated film for a fictional energy bar. We created the world and characters, then directed and edited the film. This approach can shape a brand film or product launch.');
