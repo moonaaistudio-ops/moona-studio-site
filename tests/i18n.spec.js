@@ -308,10 +308,10 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.hero-wordmark, .hero-chroma, .hero-aperture, #markSvg, #heroIris, .lockup-iris, [data-scramble]')).toHaveCount(0);
     await expect(page.locator('#sky')).toBeVisible();
     await expect(page.locator('#moon')).toBeVisible();
-    await expect(page.locator('.statement')).toHaveText('סטודיו AI-native לסרטי מותג ופרסומות');
+    await expect(page.locator('.statement')).toHaveText('פרסומות קולנועיות, שנולדו בלי מצלמה');
     await expect(page.locator('.statement-sub span')).toHaveText([
-      'מקריאטיב ובימוי ועד הפקה ופוסט,',
-      'בשליטה מלאה על כל פריים.'
+      'סטודיו לסרטי מותג. בלי יום צילום.',
+      'המוצר שלכם, בדיוק כמו שהוא, בכל שוט.'
     ]);
     await expect(page.locator('.hero-cta [data-i18n="common.primaryCta"]')).toHaveText('בואו נדבר');
     await expect(page.locator('.film-head .film-eyebrow')).toHaveText('סרט הדגל');
@@ -393,8 +393,8 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await page.evaluate(() => window.MoonaI18n.setLocale('en', { source: 'programmatic' }));
     await expect(page.locator('.statement')).toHaveText('Cinematic ads, born without a camera');
     await expect(page.locator('.statement-sub span')).toHaveText([
-      'An AI-native studio for film and motion ads.',
-      'Story, craft and taste first.'
+      'A brand-film studio. No shoot day.',
+      'Your product, protected in every shot.'
     ]);
     await expect(page.locator('.hero-cta [data-i18n="common.primaryCta"]')).toHaveText('LET’S TALK');
     await expect(page.locator('[data-i18n="common.primaryCta"]')).toHaveText(['LET’S TALK', 'LET’S TALK']);
@@ -691,7 +691,7 @@ test.describe('locale transitions and state preservation', () => {
     expect(result.moonMarker).toBe('hero-moon');
     expect(result.headerAsset).toBe('p/brand/moona-logo-lockup.svg');
     expect(result.hebrewFontsHref).toContain('family=Assistant:wght@400;500;600;700');
-    expect(result.statement).toBe('סטודיו AI-native לסרטי מותג ופרסומות');
+    expect(result.statement).toBe('פרסומות קולנועיות, שנולדו בלי מצלמה');
     expect(result.canvasSizes.every(size => size.width > 0 && size.height > 0)).toBe(true);
     expect(result.retiredHeroLayers).toBe(0);
     expect(result.scrambleTargets).toBe(0);
@@ -1743,10 +1743,10 @@ test.describe('responsive header and dynamic UI', () => {
 
     await expect(page.locator('#sky')).toBeVisible();
     await expect(page.locator('#moon')).toBeVisible();
-    await expect(page.locator('.statement')).toHaveText('סטודיו AI-native לסרטי מותג ופרסומות');
+    await expect(page.locator('.statement')).toHaveText('פרסומות קולנועיות, שנולדו בלי מצלמה');
     await expect(page.locator('.statement-sub span')).toHaveText([
-      'מקריאטיב ובימוי ועד הפקה ופוסט,',
-      'בשליטה מלאה על כל פריים.'
+      'סטודיו לסרטי מותג. בלי יום צילום.',
+      'המוצר שלכם, בדיוק כמו שהוא, בכל שוט.'
     ]);
     await expect(page.locator('.hero-cta')).toHaveText('בואו נדבר');
     await expect(page.locator('#hud-chapter')).toHaveText('CH·01');
