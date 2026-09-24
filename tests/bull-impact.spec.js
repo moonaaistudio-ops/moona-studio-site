@@ -43,8 +43,11 @@ test('the glass lingers, replay works, and the Hebrew full film starts at zero',
   await page.goto('/?lang=he#work');
   const bull = page.locator('[data-bull-impact]');
   const effect = page.locator('.bull-impact-overlay');
+  const film = bull.locator('.frame video');
   await bull.scrollIntoViewIfNeeded();
+  await expect(bull.locator('[data-impact-replay]')).toHaveText('לצפות שוב ↗');
   await bull.locator('[data-impact-replay]').click();
+  expect(await film.evaluate(video => video.currentTime)).toBeLessThan(0.75);
   await expect.poll(() => effect.getAttribute('data-state'), { timeout: 10_000 }).toBe('playing');
   await expect.poll(() => effect.evaluate(video => video.ended), { timeout: 7_000 }).toBe(true);
   await expect(effect).toBeVisible();
