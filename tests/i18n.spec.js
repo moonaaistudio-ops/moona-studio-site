@@ -354,7 +354,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('#ask')).toHaveAttribute('aria-labelledby', 'askTitle');
     await expect(page.locator('#askSubmit [data-i18n="form.quick.send"]')).toHaveText('שליחת פנייה');
     await expect(page.locator('#analyticsAccept')).toHaveText('כן');
-    await expect(page.locator('#analyticsReject')).toHaveText('לא, תודה');
+    await expect(page.locator('#analyticsReject')).toHaveText('לא');
 
     expect(await page.evaluate(() => ({
       primary: window.MoonaI18n.t('common.primaryCta', {}, 'en'),
@@ -1405,6 +1405,30 @@ test.describe('responsive header and dynamic UI', () => {
     }
   });
 
+  test('DUSTLINE plays unobstructed and sound starts only from its control', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('moona-analytics-consent', 'denied'));
+    for (const { width, height, lang } of [
+      { width: 390, height: 844, lang: 'he' },
+      { width: 1440, height: 900, lang: 'en' }
+    ]) {
+      await page.setViewportSize({ width, height });
+      await openHome(page, `/?lang=${lang}#film`);
+      const film = page.locator('#film');
+      const video = film.locator('video');
+      await film.locator('.film-frame').scrollIntoViewIfNeeded();
+      await expect.poll(() => video.evaluate(element => element.paused), { timeout: 10_000 }).toBe(false);
+      await expect(video).toHaveJSProperty('muted', true);
+      await expect(film.locator('.film-soundcta')).toHaveCount(0);
+      const sound = film.locator('[data-media-sound]');
+      await expect(sound).toBeVisible();
+      await sound.click();
+      await expect(video).toHaveJSProperty('muted', false);
+      await expect.poll(() => video.evaluate(element => element.paused)).toBe(false);
+      await film.locator('.film-frame').click({ position: { x: 48, y: 48 } });
+      await expect(page.locator('#lb')).toHaveClass(/open/);
+    }
+  });
+
   test('a preloaded concept film starts automatically after scrolling settles', async ({ page }) => {
     await page.addInitScript(() => localStorage.setItem('moona-analytics-consent', 'denied'));
     await page.setViewportSize({ width: 390, height: 844 });
@@ -1802,15 +1826,12 @@ test.describe('responsive header and dynamic UI', () => {
 
     const mobileFilmCorners = await page.locator('#film .film-stage').evaluate(stage => {
       const frame = getComputedStyle(stage.querySelector('.film-frame'));
-      const soundOverlay = getComputedStyle(stage.querySelector('.film-soundcta'));
       return {
         frameRadii: [frame.borderTopLeftRadius, frame.borderTopRightRadius, frame.borderBottomRightRadius, frame.borderBottomLeftRadius],
-        soundRadii: [soundOverlay.borderTopLeftRadius, soundOverlay.borderTopRightRadius, soundOverlay.borderBottomRightRadius, soundOverlay.borderBottomLeftRadius],
         clipPath: frame.clipPath
       };
     });
     expect(new Set(mobileFilmCorners.frameRadii)).toEqual(new Set(['20px']));
-    expect(mobileFilmCorners.soundRadii).toEqual(mobileFilmCorners.frameRadii);
     expect(mobileFilmCorners.clipPath).toBe('none');
 
     const menuToggle = page.locator('[data-mobile-menu-toggle]');
@@ -2163,6 +2184,37 @@ test.describe('lead submission mocks', () => {
 });
 
 test.describe('analytics consent mocks', () => {
+  test('consent stays compact and usable on narrow Hebrew and English screens', async ({ context, page }) => {
+    await context.addCookies([{ name: 'e2e_analytics', value: 'enabled', url: BASE_URL }]);
+    await page.setViewportSize({ width: 320, height: 700 });
+    await openHome(page, '/?lang=he');
+    await expect(page.locator('#analyticsConsent')).toBeVisible();
+
+    for (const locale of ['he', 'en']) {
+      await page.evaluate(value => window.MoonaI18n.setLocale(value, { source: 'programmatic' }), locale);
+      const layout = await page.locator('#analyticsConsent').evaluate(banner => {
+        const box = element => element.getBoundingClientRect();
+        const outer = box(banner);
+        const buttons = [...banner.querySelectorAll('button')].map(box);
+        return {
+          height: outer.height,
+          withinViewport: outer.left >= 0 && outer.right <= innerWidth,
+          buttons: buttons.map(rect => ({ width: rect.width, height: rect.height, top: rect.top,
+            withinBanner: rect.left >= outer.left && rect.right <= outer.right }))
+        };
+      });
+      expect(layout.height).toBeLessThanOrEqual(72);
+      expect(layout.withinViewport).toBe(true);
+      expect(layout.buttons).toHaveLength(2);
+      expect(layout.buttons[0].top).toBe(layout.buttons[1].top);
+      layout.buttons.forEach(button => {
+        expect(button.width).toBeGreaterThanOrEqual(44);
+        expect(button.height).toBeGreaterThanOrEqual(44);
+        expect(button.withinBanner).toBe(true);
+      });
+    }
+  });
+
   test('a language switch queues exactly one safe event and flushes after consent', async ({ context, page }) => {
     await context.addCookies([{ name: 'e2e_analytics', value: 'enabled', url: BASE_URL }]);
     const providerRequests = [];

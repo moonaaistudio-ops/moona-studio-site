@@ -492,29 +492,22 @@ body.cur-off .cur{opacity:0}
 /* author display beats the UA's [hidden]{display:none}, so the attribute has
    to be honoured explicitly - without this the banner never goes away */
 .analytics-consent[hidden]{display:none}
-.analytics-consent{position:fixed;inset-inline-end:12px;bottom:12px;z-index:110;cursor:auto;
+.analytics-consent{position:fixed;inset-inline-end:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:110;cursor:auto;
   display:flex;align-items:center;gap:12px;max-width:calc(100vw - 24px);
-  padding:8px 10px;background:rgba(8,11,19,.96);border:1px solid rgba(217,198,156,.34);border-radius:16px;
+  padding:8px 10px;background:rgba(8,11,19,.96);border:1px solid rgba(217,198,156,.34);border-radius:14px;
   box-shadow:0 14px 44px rgba(0,0,0,.38)}
-.analytics-consent p{min-width:0;font-size:12px;line-height:1.4;color:var(--ice-dim);white-space:nowrap}
+.analytics-consent p{min-width:0;flex:1;font-size:13px;line-height:1.35;color:var(--ice-dim)}
 .analytics-consent p a{color:var(--ice-hot);cursor:pointer}
-.analytics-consent__actions{display:flex;direction:ltr;gap:6px;flex:none}
-/* 32px was too small a target for a site with a lagging custom cursor */
-.analytics-consent button{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
-  box-sizing:border-box;width:90px;min-height:44px;padding:8px 6px;border:1px solid transparent;
+.analytics-consent__actions{display:flex;direction:ltr;gap:8px;flex:none}
+.analytics-consent button{font-family:var(--mono);font-size:12px;letter-spacing:0;text-transform:none;
+  box-sizing:border-box;width:48px;min-height:44px;padding:0;border:1px solid transparent;
   border-radius:var(--r-pill);line-height:1.15;text-align:center;white-space:nowrap;cursor:pointer}
 .analytics-consent__accept{border-color:#d9c69c;background:#d9c69c;color:#0d0b07}
 .analytics-consent__reject{border-color:rgba(190,212,238,.4);background:rgba(190,212,238,.08);color:var(--ice-hot)}
 .analytics-consent button:focus-visible{outline:2px solid #fff;outline-offset:3px}
-/* Keep the choices beside the short question on phones. */
 @media(max-width:700px){
-  .analytics-consent{inset-inline:10px;bottom:10px;max-width:none;gap:10px;
-    padding:8px 10px;border-radius:14px}
-  .analytics-consent p{white-space:normal}
-}
-@media(max-width:360px){
-  .analytics-consent{flex-direction:column;align-items:stretch;gap:6px}
-  .analytics-consent__actions{margin-right:auto}
+  .analytics-consent{inset-inline:10px;bottom:calc(10px + env(safe-area-inset-bottom));max-width:none;gap:8px;
+    padding:7px 9px;border-radius:12px}
 }
 
 /* ————————————————————— cursor ————————————————————— */
@@ -771,20 +764,10 @@ main{position:relative;z-index:2;background:var(--void)}
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23dcecff' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4'/%3E%3C/svg%3E");
   opacity:0;transition:opacity .5s var(--ease)}
 .film.seen .film-frame::after{opacity:.75}
-/* the overlay sits above the frame and takes the click itself; once sound is
-   on it is hidden and clicks fall through to the frame */
-.film-soundcta{position:absolute;inset:0;z-index:5;display:grid;place-content:center;
-  border:0;border-radius:var(--r-lg);cursor:none;background:rgba(5,7,12,.72);
-  font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;
-  color:var(--ice-hot);opacity:0;transition:opacity .6s var(--ease)}
-.film.seen .film-soundcta:not([hidden]){opacity:1}
-.film-soundcta[hidden]{display:none}
-.film-soundcta:focus-visible{outline:none;box-shadow:inset 0 0 0 2px #d9c69c}
-@media(pointer:coarse){.film-soundcta{cursor:auto}}
 /* controls: bottom-right, clear of the badges bottom-left */
 .film-ctl{position:absolute;right:14px;bottom:14px;z-index:4;
-  display:flex;flex-direction:column;align-items:flex-end;gap:8px;
-  opacity:0;pointer-events:none;transition:opacity .7s var(--ease) .5s}
+  display:flex;align-items:center;gap:8px;
+  opacity:0;pointer-events:none;transition:opacity .25s var(--ease)}
 .film.seen .film-ctl{opacity:1;pointer-events:auto}
 .film-ctl button{display:inline-flex;align-items:center;justify-content:center;
   width:44px;height:44px;padding:0;border-radius:var(--r-pill);
@@ -922,7 +905,7 @@ html[dir="rtl"] .beat-line{transform-origin:right}
 @media(prefers-reduced-motion:reduce){
   .film-frame{clip-path:none;transition:none}
   .film-frame video{opacity:1 !important;transform:none !important;transition:none}
-  .film-soundcta,.film-ctl{transition:none}
+  .film-ctl{transition:none}
 }
 .piece.vert{display:grid;grid-template-columns:minmax(0,420px) 1fr;gap:clamp(24px,4vw,64px);align-items:end}
 .piece.vert .frame{aspect-ratio:9/16}
@@ -1088,12 +1071,12 @@ html[lang="he"] :is(.cta-btn,.q .qlab,.q .qhint,.qnext,.qback,.qskip,.ask-title,
   .drop-s,.drop-cta,.filenote,.ctagal-label,.ctagal-note,.contact .or,.contact .mail,
   .contact .cta-sub,.contact .copy,.contact .disc,.analytics-consent button,
   #hdr nav button[data-goto],#lb .lb-close,.scrollcue span,.work-head .idx,.beat-label,
-  .meta .tag,.film-eyebrow,.film-soundcta,.film-credit,.specbadge,.filechip .nm,.skip,
+  .meta .tag,.film-eyebrow,.film-credit,.specbadge,.filechip .nm,.skip,
   .legal-nav :is(a,button)){
   font-family:var(--sans);letter-spacing:0;text-transform:none}
 html[lang="he"] :is(.q .qlab,.q .qhint,.qnext,.qback,.qskip,.drop-s,.drop-cta,
-  .filenote,.ctagal-label,.ctagal-note,.analytics-consent button,#hdr nav button[data-goto],
-  #lb .lb-close,.scrollcue span,.work-head .idx,.beat-label,.film-eyebrow,.film-soundcta,
+  .filenote,.ctagal-label,.ctagal-note,#hdr nav button[data-goto],
+  #lb .lb-close,.scrollcue span,.work-head .idx,.beat-label,.film-eyebrow,
   .specbadge,.skip,.cta-btn--compact,.ask-title,.ask-close,.contact .or,.contact .copy,.contact .mail,
   .legal-nav :is(a,button)){font-size:11px}
 html[lang="he"] .scrollcue span{padding-inline-start:0}
@@ -1432,10 +1415,10 @@ html[lang="he"] :is(.film-title,.film-beat h3,.sentence p,.about-copy h2,.crew-t
 <div class="grain"></div>
 <div class="cur ring"></div>
 <aside class="analytics-consent" id="analyticsConsent" aria-label="Analytics preferences" data-i18n-aria-label="consent.label" hidden>
-  <p><span id="consentQuestion" data-i18n="consent.text">Can we use analytics to improve this site?</span> <a href="privacy.html" data-locale-link data-i18n="consent.privacy">Privacy policy</a></p>
+  <p><span id="consentQuestion" data-i18n="consent.text">Allow site analytics?</span> <a href="privacy.html" data-locale-link data-i18n="consent.privacy">Privacy</a></p>
   <div class="analytics-consent__actions">
     <button class="analytics-consent__accept" type="button" id="analyticsAccept" aria-describedby="consentQuestion" data-i18n="consent.accept">Yes</button>
-    <button class="analytics-consent__reject" type="button" id="analyticsReject" aria-describedby="consentQuestion" data-i18n="consent.decline">No, thanks</button>
+    <button class="analytics-consent__reject" type="button" id="analyticsReject" aria-describedby="consentQuestion" data-i18n="consent.decline">No</button>
   </div>
 </aside>
 <div id="lb" role="dialog" aria-modal="true" aria-label="Enlarged work" data-i18n-aria-label="lightbox.label" hidden>
@@ -1555,11 +1538,6 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
           <span class="vbadge">00:31</span>
           <i class="vprog"></i>
         </div>
-
-        <!-- shown only when the browser refused the unmute; takes the click itself
-             so it never steals one meant for the lightbox. While visible the frame
-             is tabindex=-1 so focus cannot land behind it. -->
-        <button class="film-soundcta" type="button" hidden data-hover data-i18n="film.playWithSound">Play with sound</button>
 
         <!-- siblings, not children: .film-frame is role=button and clip-path'd -->
         <div class="film-ctl">
@@ -2866,17 +2844,12 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
 })();
 
 /* ═══════════════════ the flagship film ═══════════════════
-   Sound on, as far as the browser will allow. Every browser blocks
-   autoplay-with-sound for a visitor with no history on the origin, so:
-   start muted, ask to unmute when the film owns the screen, and if refused
-   offer one overlay on the frame itself. An explicit mute is a decision
-   and is never overridden. */
+   The film starts muted and remains unobstructed. Sound is a separate,
+   explicit choice through its visible control. */
 (()=>{
   const film=document.getElementById('film');
   if(!film) return;
-  const frame=film.querySelector('.film-frame');
   const v=film.querySelector('video');
-  const cta=film.querySelector('.film-soundcta');
   const playBtn=film.querySelector('.film-play');
   const sndBtn=film.querySelector('.film-sound');
   const bar=film.querySelector('.vprog');
@@ -2885,9 +2858,7 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
   const KEY='moona.film.muted';
   /* Safari private mode throws on write; refusing to remember is not a crash */
   const remember=x=>{try{sessionStorage.setItem(KEY,x)}catch(e){}};
-  const chosenMute=()=>{try{return sessionStorage.getItem(KEY)==='1'}catch(e){return false}};
-
-  let ratio=0, fetched=false, userPaused=false, watch=null;
+  let ratio=0, fetched=false, userPaused=false;
 
   function fetchIt(){
     if(fetched) return; fetched=true;
@@ -2913,55 +2884,20 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
 
 
   function play(){ if(motionReduced()&&v.paused&&!v.dataset.userStarted) return; v.play().catch(()=>{}); }
-  function clearWatch(){ if(watch){v.removeEventListener('pause',watch); watch=null} }
-  function suspend(){ clearWatch(); if(!v.paused) v.pause(); }
-  function showCta(on){
-    if(!cta) return;
-    cta.hidden=!on;
-    /* focus must not land behind the overlay (WCAG 2.2 focus not obscured) */
-    if(on){ frame.setAttribute('tabindex','-1'); frame.style.pointerEvents='none'; }
-    else  { frame.setAttribute('tabindex','0');  frame.style.pointerEvents=''; }
-  }
-
-  /* Chrome rejects the play() promise; Safari sometimes just pauses the
-     element instead. Watch both shapes, restore the mute either way. */
-  function tryUnmute(){
-    if(chosenMute()||!v.muted) return;
-    clearWatch();
-    watch=()=>{ clearWatch(); v.muted=true; paintSound(); play(); showCta(true); };
-    v.addEventListener('pause',watch);
-    v.muted=false; v.volume=1;
-    const pr=v.play();
-    if(pr&&pr.then) pr.then(()=>setTimeout(()=>{clearWatch();paintSound();showCta(false)},300))
-                      .catch(()=>{ if(watch) watch(); });
-    else setTimeout(()=>{clearWatch();paintSound()},300);
-    paintSound();
-  }
-
-  if(cta) cta.addEventListener('click',()=>{
-    /* a real gesture: unmuted playback is always allowed here */
-    showCta(false);
-    v.muted=false; v.volume=1; remember('0');
-    userPaused=false; v.dataset.userStarted='1';
-    v.play().catch(()=>{});
-    paintSound();
-  });
+  function suspend(){ if(!v.paused) v.pause(); }
 
   if(sndBtn) sndBtn.addEventListener('click',()=>{
-    clearWatch();
-    if(v.muted){ remember('0'); v.muted=false; v.volume=1; showCta(false);
+    if(v.muted){ remember('0'); v.muted=false; v.volume=1;
       if(!userPaused&&ratio>=0.55) play(); }
     else       { remember('1'); v.muted=true; }
     paintSound();
   });
 
   if(playBtn) playBtn.addEventListener('click',()=>{
-    clearWatch();
     if(!v.paused){ userPaused=true; v.pause(); }
     else{
       userPaused=false; v.dataset.userStarted='1';
       v.play().catch(()=>{});
-      tryUnmute();                      /* a real gesture buys sound too */
     }
   });
 
@@ -2981,11 +2917,11 @@ document.querySelectorAll('[data-piece]').forEach(piece=>{
     if(ratio>=0.5){
       film.classList.add('seen');
       if(!motionReduced()&&!userPaused&&v.paused){
-        if(v.readyState>=2){ play(); tryUnmute(); }
-        else v.addEventListener('canplay',()=>{ if(ratio>=0.5&&!userPaused){play();tryUnmute()} },{once:true});
+        if(v.readyState>=2) play();
+        else v.addEventListener('canplay',()=>{ if(ratio>=0.5&&!userPaused) play() },{once:true});
       }
     }else if(ratio<0.3){
-      suspend(); showCta(false);
+      suspend();
     }
   }
   addEventListener('scroll',update,{passive:true});
