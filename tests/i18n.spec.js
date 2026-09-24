@@ -998,7 +998,7 @@ test.describe('responsive header and dynamic UI', () => {
         expect(portrait.renderedRatio).toBeCloseTo(3 / 4, 2);
         expect(portrait.renderedHeight).toBeLessThanOrEqual(width <= 760 ? 193 : 410);
       }
-      expect(layout.workCards).toBe(4);
+      expect(layout.workCards).toBe(5);
       expect(layout.workColumns).toBe(width > 760 ? 2 : 1);
       expect(layout.retiredWorkDetails).toBe(0);
       expect(layout.legacy).toEqual({

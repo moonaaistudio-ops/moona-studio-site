@@ -193,7 +193,7 @@ test('every reachable media opener has a localized, non-empty, unique accessible
       '#work [data-media-open]'
     ].join(',')).evaluateAll(elements => elements.map(element => element.getAttribute('aria-label')?.trim() || ''));
 
-    expect(labels).toHaveLength(5);
+    expect(labels).toHaveLength(6);
     expect(labels.every(Boolean)).toBe(true);
     expect(new Set(labels).size, `duplicate ${locale} media labels: ${labels.join(' | ')}`).toBe(labels.length);
     if (locale === 'he') {
