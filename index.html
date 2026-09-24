@@ -1380,6 +1380,8 @@ html[lang="he"] :is(.film-title,.film-beat h3,.sentence p,.about-copy h2,.crew-t
 .quick-field{min-width:0}
 .quick-field label{display:block;margin-bottom:8px;font-size:14px;font-weight:500;color:var(--ice-hot)}
 .quick-brief{grid-column:1/-1}
+.quick-field.quick-product{grid-column:1/-1}
+#ask .quick-field[hidden]{display:none}
 #ask .quick-field :is(input,textarea){display:block;width:100%;max-width:none;min-height:46px;margin:0;padding:10px 0;background:transparent;border:0;border-bottom:1px solid var(--moona-ice-faint);border-radius:0;color:var(--ice-hot);font:400 18px/1.5 var(--sans);outline:none}
 #ask .quick-field textarea{min-height:82px;resize:vertical}
 #ask .quick-field :is(input,textarea):focus{border-color:var(--gold)}
@@ -1854,6 +1856,11 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
           <label for="f-mail" data-i18n="form.quick.email">Email</label>
           <input type="email" name="email" id="f-mail" aria-describedby="email-hint" aria-required="true" aria-invalid="false" required maxlength="400" autocomplete="email" inputmode="email" dir="ltr" data-hover>
           <p class="qhint" id="email-hint" aria-live="polite" aria-atomic="true"></p>
+        </div>
+        <div class="quick-field quick-product" id="f-product-field" hidden>
+          <label for="f-product" data-i18n="form.product.link">Product link (optional)</label>
+          <input type="text" name="product" id="f-product" aria-describedby="product-hint" aria-required="false" aria-invalid="false" maxlength="400" inputmode="url" autocomplete="url" dir="ltr" placeholder="yourbrand.com/product" data-i18n-placeholder="form.product.linkPlaceholder" data-hover>
+          <p class="qhint" id="product-hint" aria-live="polite" aria-atomic="true"></p>
         </div>
         <div class="quick-field quick-brief">
           <label for="f-brief" data-i18n="form.quick.brief">What would you like to create? (optional)</label>
@@ -2902,12 +2909,38 @@ function showStep(n){
   if(inp) focusStepTarget(inp,n);
   else if(n===DONE) focusStepTarget(document.getElementById('doneTitle'),n);
 }
+const INTENT_COPY=[
+  ['#askTitle','form.dialog','form.product.dialog'],
+  ['[data-step="0"] .qtitle','form.quick.title','form.product.title'],
+  ['.quick-intro','form.quick.intro','form.product.intro'],
+  ['label[for="f-brief"]','form.quick.brief','form.product.brief'],
+  ['#doneMsg','form.done.body','form.product.done']
+];
+function setIntent(intent){
+  const product=intent==='product';
+  askForm.dataset.intent=product?'product':'general';
+  document.getElementById('f-product-field').hidden=!product;
+  INTENT_COPY.forEach(([selector,general,productKey])=>{
+    const el=ask.querySelector(selector);
+    if(el) el.dataset.i18n=product?productKey:general;
+  });
+  document.getElementById('f-brief').dataset.i18nPlaceholder=product?'form.product.placeholder':'form.quick.placeholder';
+  window.MoonaI18n?.applyDocument(ask);
+}
+function isOpenableLink(value){
+  try{
+    const url=new URL(/^https?:\/\//i.test(value)?value:'https://'+value);
+    return /^https?:$/.test(url.protocol)&&url.hostname.includes('.');
+  }catch(_){return false}
+}
 function openAsk(event){
   const trigger=event&&event.currentTarget;
   const location=trigger&&trigger.closest('#hdr')?'header':
     trigger&&trigger.closest('#hero-track')?'hero':
     trigger&&trigger.closest('.ctagal')?'studio':'contact';
-  window.MoonaAnalytics?.capture('lead_form_opened',{cta_location:location});
+  const intent=trigger?.dataset.intent==='product'?'product':'general';
+  if(step!==DONE) setIntent(intent);
+  window.MoonaAnalytics?.capture('lead_form_opened',{cta_location:location,intent});
   lastFocus=document.activeElement;
   ask.classList.add('open');
   document.body.classList.add('asking');
@@ -2983,11 +3016,13 @@ onLocaleRender(()=>{
 function validateInquiry(){
   let firstInvalid=null;
   for(const input of askForm.querySelectorAll('.quick-field input,.quick-field textarea')){
+    if(input.closest('[hidden]')){fieldHint(input,'');continue}
     const value=input.value.trim();
     let error='';
     if(!value && input.required) error='form.validation.required';
     else if(input.type==='email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) error='form.validation.email';
     else if(input.name==='brief' && value.length>1200) error='form.validation.brief';
+    else if(input.name==='product' && value && !isOpenableLink(value)) error='form.validation.url';
     fieldHint(input,error);
     if(error && !firstInvalid) firstInvalid=input;
   }
@@ -3040,7 +3075,7 @@ async function submitAsk(){
     const payload={
       name:    askForm.elements.name.value.trim(),
       company: askForm.elements.name.value.trim(),
-      website: '',
+      website: askForm.dataset.intent==='product'?askForm.elements.product.value.trim():'',
       email:   askForm.elements.email.value.trim(),
       brief:   askForm.elements.brief.value.trim(),
       'bot-field': (askForm.elements['bot-field']||{}).value||'',
@@ -3054,7 +3089,7 @@ async function submitAsk(){
     const j=await r.json().catch(()=>({}));
     if(!r.ok || j.ok!==true) await viaFallback(payload);   /* throws if that fails too */
     sendStatus('');
-    window.MoonaAnalytics?.capture('lead_form_submitted');
+    window.MoonaAnalytics?.capture('lead_form_submitted',{intent:askForm.dataset.intent||'general'});
     showStep(DONE);
   }catch(err){
     window.MoonaAnalytics?.capture('lead_form_submission_failed');
