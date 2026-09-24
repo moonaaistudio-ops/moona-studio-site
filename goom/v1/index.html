@@ -43,14 +43,13 @@ section:first-of-type{border-top:0}
 .hero .top .duo img.goom{height:34px}
 .hero .top .duo .x{font-family:var(--mono);color:var(--gold);font-size:14px}
 .hero .grid{display:grid;grid-template-columns:auto 1fr;gap:clamp(28px,5vw,72px);align-items:center}
-.hero .art{aspect-ratio:9/16;height:min(78vh,880px);width:auto;max-width:100%;border-radius:20px;overflow:hidden;background:var(--panel);border:1px solid var(--line);display:grid;align-content:space-between;padding:28px 26px}
-.hero .art .cap{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--ice-dim);direction:ltr;text-transform:uppercase}
-.hero .art .cap:last-child{margin-top:22px}
-.hero .art .vo{display:grid;gap:22px}
-.hero .art .vo p{font-family:var(--latin);direction:ltr;text-align:left;font-size:clamp(15px,1.4vw,19px);color:var(--ice-mute);line-height:1.35}
-.hero .art .vo p b{display:block;font-family:var(--he);direction:rtl;text-align:right;font-weight:700;font-size:clamp(20px,1.9vw,26px);color:var(--ice);margin-top:6px}
-.hero .art .vo p.q{color:var(--gold)}
-.hero .art .vo p.q b{color:var(--gold)}
+.hero .art{aspect-ratio:9/16;height:min(78vh,880px);width:auto;max-width:100%;border-radius:20px;overflow:hidden;background:var(--panel);border:1px solid var(--line);position:relative}
+.hero .art img{width:100%;height:100%;object-fit:cover;display:block}
+.hero .art::after{content:"";position:absolute;inset:50% 0 0;background:linear-gradient(transparent,rgba(5,7,12,.58));pointer-events:none}
+.hero .art .cap{position:absolute;z-index:1;inset-block-start:22px;inset-inline-start:22px;font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:#fff;direction:ltr;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.6)}
+.hero .art .moment{position:absolute;z-index:1;inset-inline:22px;bottom:22px;display:grid;gap:2px;text-align:right;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+.hero .art .moment span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--gold);direction:ltr;text-align:right;text-transform:uppercase}
+.hero .art .moment b{font-size:clamp(23px,2.4vw,31px);line-height:1.1;font-weight:700;color:#fff}
 .hero .copy{padding-block:16px}
 .hero h1{font-size:clamp(38px,5.2vw,72px);max-width:16ch;margin-top:12px}
 .hero .sub{margin-top:22px;font-size:clamp(19px,2.1vw,24px);color:var(--ice-mute);max-width:32ch;line-height:1.5;font-weight:300}
@@ -148,7 +147,7 @@ section:first-of-type{border-top:0}
 
 @media (max-width:900px){
   .hero .grid{grid-template-columns:1fr}
-  .hero .art{height:auto;width:100%;aspect-ratio:auto;min-height:0;padding:22px 20px}
+  .hero .art{height:auto;width:100%;aspect-ratio:9/16}
   .hero .copy{order:-1;padding-block:0 8px}
   .why .grid{grid-template-columns:1fr}.why .ref{max-width:100%;justify-self:stretch}
   .what .row{grid-template-columns:1fr}
@@ -176,13 +175,9 @@ section:first-of-type{border-top:0}
     </div>
     <div class="grid">
       <div class="art">
-        <span class="cap">The narrator</span>
-        <div class="vo">
-          <p>He's just not feeling it today.<b>הוא פשוט לא מפוקס היום.</b></p>
-          <p class="q">"What? Who said that?"<b>"מה? מי אמר את זה?"</b></p>
-          <p>Beat the heaviness. GOOM Flow.<b>תנצח את הכבדות. GOOM Flow.</b></p>
-        </div>
-        <span class="cap">Flow · Episode 01</span>
+        <img src="img/hero_narrator.webp" width="1280" height="2272" fetchpriority="high" alt="הטניסאי ליד הספסל עם המחבט, צנצנת GOOM Flow מונחת לידו והוא מרים מבט אל הקריין שאינו נראה">
+        <span class="cap">The narrator · Frame 01</span>
+        <div class="moment"><span>He hears it</span><b>״מה? מי אמר את זה?״</b></div>
       </div>
       <div class="copy">
         <span class="eyebrow">A short film for <b>Flow</b></span>
