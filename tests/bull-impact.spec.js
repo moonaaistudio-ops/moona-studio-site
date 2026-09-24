@@ -1,10 +1,10 @@
 const { test, expect } = require('@playwright/test');
 
-test('Bull Padel sits beside McDonald’s and its impact leaves the film running', async ({ page }) => {
+test('Bull Padel leads Selected Work and its impact leaves the film running', async ({ page }) => {
   await page.goto('/?lang=en#work');
   const cards = page.locator('#work .work-grid > [data-piece]');
   await expect(cards.locator('.brand')).toHaveText([
-    "McDonald's", 'Bull Padel', 'Strava', 'Koda', 'Jewelry'
+    'Bull Padel', "McDonald's", 'Strava', 'Koda', 'Jewelry'
   ]);
 
   const bull = page.locator('[data-bull-impact]');
@@ -27,6 +27,16 @@ test('Bull Padel sits beside McDonald’s and its impact leaves the film running
   await expect(page.locator('#lb')).toHaveClass(/open/);
   expect(await page.locator('#lb video').evaluate(video => video.currentTime)).toBeLessThan(0.75);
   await expect(effect).toHaveAttribute('data-state', 'idle');
+});
+
+test('Bull Padel appears above McDonald’s on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?lang=he#work');
+  const cards = page.locator('#work .work-grid > [data-piece]');
+  await expect(cards.locator('.brand').first()).toHaveText('Bull Padel');
+  const bull = await cards.nth(0).boundingBox();
+  const mcdonalds = await cards.nth(1).boundingBox();
+  expect(bull.y + bull.height).toBeLessThanOrEqual(mcdonalds.y);
 });
 
 test('reduced motion leaves the Bull Padel effect off', async ({ page }) => {
