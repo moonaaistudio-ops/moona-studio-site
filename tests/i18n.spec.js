@@ -50,8 +50,8 @@ async function seedLocaleOnce(page, locale) {
   }, locale);
 }
 
-async function fillLeadForm(page, { brief = LEAD_BRIEF } = {}) {
-  await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
+async function fillLeadForm(page, { brief = LEAD_BRIEF, via = '[data-header-contact-cta]' } = {}) {
+  await page.evaluate(selector => document.querySelector(selector).click(), via);
   await expect(page.locator('#ask')).toHaveClass(/open/);
   await page.locator('#f-name').fill('Dana Cohen');
   await page.locator('#f-mail').fill('dana@example.com');
@@ -313,7 +313,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
       'סטודיו לסרטי מותג. בלי יום צילום.',
       'המוצר שלכם, בדיוק כמו שהוא, בכל שוט.'
     ]);
-    await expect(page.locator('.hero-cta [data-i18n="common.primaryCta"]')).toHaveText('בואו נדבר');
+    await expect(page.locator('.hero-cta [data-i18n="hero.productCta"]')).toHaveText('שלחו מוצר אחד');
     await expect(page.locator('.film-head .film-eyebrow')).toHaveText('סרט הדגל');
     await expect(page.locator('.film-head .film-stance')).toHaveText('לא עוד סרטון שנראה כמו כולם.');
     await expect(page.locator('.film-title')).toHaveText('יצרנו מותג. וצילמנו לו פרסומת.');
@@ -345,11 +345,11 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('[data-i18n="work.bullPadel.concept"]')).toHaveText('המחבט מחזיר חבטה.');
     await expect(page.locator('[data-i18n="work.koda.concept"]')).toHaveText('נבנה לפיד שבו הוא חי.');
     await expect(page.locator('.contact-line')).toHaveText('בואו נעשה את זה גם למותג שלכם.');
-    await expect(page.locator('.contact-body')).toHaveText('שלחו את המותג וכמה מילים על מה שאתם רוצים שנעשה. נחזור אליכם בתוך שני ימי עסקים.');
+    await expect(page.locator('.contact-body')).toHaveText('שלחו מוצר אחד ושורה על המותג. נחזור אליכם עם כיוון בתוך שני ימי עסקים.');
     await expect(page.locator('[data-header-contact-cta] [data-i18n="common.primaryCta"]')).toHaveText('בואו נדבר');
-    await expect(page.locator('[data-i18n="common.primaryCta"]')).toHaveText(['בואו נדבר', 'בואו נדבר']);
+    await expect(page.locator('[data-i18n="common.primaryCta"]')).toHaveText(['בואו נדבר']);
     await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
-    await expect(page.locator('.contact [data-i18n="hero.cta"]')).toHaveText('לדבר עם הסטודיו');
+    await expect(page.locator('.contact [data-i18n="contact.productCta"]')).toHaveText('שלחו מוצר אחד');
     await expect(page.locator('#askTitle')).toHaveText('לדבר עם הסטודיו');
     await expect(page.locator('#ask')).toHaveAttribute('aria-labelledby', 'askTitle');
     await expect(page.locator('#askSubmit [data-i18n="form.quick.send"]')).toHaveText('שליחת פנייה');
@@ -362,14 +362,18 @@ test.describe('dictionary and first-paint privacy contract', () => {
       contact: window.MoonaI18n.t('hero.projectCta', {}, 'en'),
       dialog: window.MoonaI18n.t('form.dialog', {}, 'en'),
       send: window.MoonaI18n.t('form.quick.send', {}, 'en'),
-      note: window.MoonaI18n.t('studio.note', {}, 'en')
+      note: window.MoonaI18n.t('studio.note', {}, 'en'),
+      productHero: window.MoonaI18n.t('hero.productCta', {}, 'en'),
+      productContact: window.MoonaI18n.t('contact.productCta', {}, 'en')
     }))).toEqual({
       primary: 'LET’S TALK',
       hero: 'Talk to the studio',
       contact: 'Talk to the studio',
       dialog: 'Talk to the studio',
       send: 'Send inquiry',
-      note: 'Reply within two business days'
+      note: 'Reply within two business days',
+      productHero: 'SEND ONE PRODUCT',
+      productContact: 'Send one product'
     });
 
     const bidiContract = await page.evaluate(() => {
@@ -397,8 +401,8 @@ test.describe('dictionary and first-paint privacy contract', () => {
       'A brand-film studio. No shoot day.',
       'Your product, protected in every shot.'
     ]);
-    await expect(page.locator('.hero-cta [data-i18n="common.primaryCta"]')).toHaveText('LET’S TALK');
-    await expect(page.locator('[data-i18n="common.primaryCta"]')).toHaveText(['LET’S TALK', 'LET’S TALK']);
+    await expect(page.locator('.hero-cta [data-i18n="hero.productCta"]')).toHaveText('SEND ONE PRODUCT');
+    await expect(page.locator('[data-i18n="common.primaryCta"]')).toHaveText(['LET’S TALK']);
     await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
     await expect(page.locator('.film-title')).toHaveText('We created a brand. Then we shot its ad.');
     await expect(page.locator('.film-head .film-stance')).toHaveText("Not another clip that looks like everyone else's.");
@@ -1750,7 +1754,7 @@ test.describe('responsive header and dynamic UI', () => {
       'סטודיו לסרטי מותג. בלי יום צילום.',
       'המוצר שלכם, בדיוק כמו שהוא, בכל שוט.'
     ]);
-    await expect(page.locator('.hero-cta')).toHaveText('בואו נדבר');
+    await expect(page.locator('.hero-cta')).toHaveText('שלחו מוצר אחד');
     await expect(page.locator('#hud-chapter')).toHaveText('CH·01');
     await expect(page.locator('#hud-progress')).toHaveText(/\d{3}/);
     await expect(page.locator('.hero-media, .hero-media-video, .hero-media-fallback, .hero-brand-stage')).toHaveCount(0);
