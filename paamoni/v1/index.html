@@ -233,6 +233,10 @@ section:first-of-type{border-top:0}
 .hero .art.r916{aspect-ratio:9/16;height:min(76vh,820px)}
 .art{position:relative}
 .art .tag{position:absolute;top:14px;inset-inline-start:14px;background:rgba(5,7,12,.72);color:var(--ice);font-size:14px;font-weight:600;padding:5px 12px;border-radius:999px;border:1px solid var(--line);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.site-link{display:inline-flex;align-items:center;gap:10px;margin-top:22px;padding:11px 20px;border:1px solid var(--gold);border-radius:999px;color:var(--ice);text-decoration:none;font-weight:600;font-size:16px}
+.site-link:hover{background:rgba(217,198,156,.12)}
+.site-link bdi{font-family:var(--latin);font-weight:500}
+.close .site-link{margin-top:26px}
 .ph-wait{display:grid;place-items:center;text-align:center;padding:18px;border:1px dashed var(--line);color:var(--ice-dim);font-size:14px;line-height:1.5;width:100%;height:100%}
 .opp .cols{grid-template-columns:repeat(3,1fr)}
 .epx{display:grid;grid-template-columns:300px 1fr;gap:clamp(28px,5vw,64px);align-items:start;border-top:1px solid var(--line);padding-top:clamp(36px,5vw,56px);margin-top:clamp(36px,5vw,56px)}
@@ -346,6 +350,7 @@ section:first-of-type{border-top:0}
     <span class="eyebrow">About MOONA</span>
     <p class="lede" style="margin-top:14px"><bdi>MOONA</bdi> הוא סטודיו לסרטוני פרסום ב&#8209;<bdi>AI</bdi>. <span>מהרעיון ועד הקובץ הסופי, תחת קורת גג אחת.</span></p>
     <p class="intro">קריאייטיב, דמויות, הפקה, סאונד ועריכה נעשים אצלנו, עם כלים וסוכני <bdi>AI</bdi> שפיתחנו בסטודיו לכל שלב. כל שלב מגיע אליכם לאישור לפני הבא.</p>
+    <a class="site-link" href="https://moonastudio.ai/" target="_blank" rel="noopener">לאתר שלנו <bdi>moonastudio.ai</bdi> ←</a>
     <div class="caps eight">
       <div class="c"><span class="n">01</span><h3>קריאייטיב וקונספט</h3><p>הרעיון, השפה הוויזואלית והתסריט של כל פרק, בנויים סביב המותג שלכם והמסר שלו.</p></div>
       <div class="c"><span class="n">02</span><h3>דמויות קבועות</h3><p>הבחור עם הצנצנת, החבורה מהמנגל, סבתא מהשוק. כל דמות נשארת אותה דמות בכל שוט, ואפשר להחזיר אותה בפרק הבא.</p></div>
@@ -379,10 +384,14 @@ section:first-of-type{border-top:0}
     <div class="logos"><img src="img/logo_paamoni.png" alt="פעמוני" style="filter:brightness(0) invert(1)"><span class="x">×</span><img src="img/moona_lockup.png" alt="MOONA STUDIO"></div>
     <h2>זו נקודת התחלה</h2>
     <p>אפשר להתחיל מפרק אחד ולראות איך זה יושב. מכאן ממשיכים לסטוריבורד.</p>
+    <a class="site-link" href="https://moonastudio.ai/" target="_blank" rel="noopener"><bdi>moonastudio.ai</bdi> ←</a>
     <div class="sig"><b>MOONA STUDIO</b> · TAL TZUR</div>
   </div>
 </section>
 
+<script>
+(function(){var c=new URLSearchParams(location.search).get('c');if(!c)return;document.querySelectorAll('a.site-link').forEach(function(a){a.href='https://moonastudio.ai/?c='+encodeURIComponent(c)})})();
+</script>
 <script>
 try{fetch('/api/view',{method:'POST',headers:{'Content-Type':'application/json'},keepalive:true,body:JSON.stringify({page:location.pathname,ref:document.referrer,code:new URLSearchParams(location.search).get('c')||''})})}catch(e){}
 </script>
