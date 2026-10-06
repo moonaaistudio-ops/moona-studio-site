@@ -177,7 +177,7 @@
       'work.startup.open': 'Open the app ad larger',
       'work.startup.title': 'Software / App',
       'work.startup.concept': 'Nobody on this sofa was ever filmed.',
-      'work.startup.summary': 'A UGC-style social ad for an app. The couple, the living room and the reaction were built in the studio, and it plays like something a friend posted.',
+      'work.startup.summary': 'A short excerpt from a UGC-style social ad for an app. The couple, the living room and the reaction were built in the studio, with no actors and no shoot day.',
 
       'studio.eyebrow': 'Founder-led',
       'studio.title.lead': 'Creative direction and code, ',
@@ -480,7 +480,7 @@
       'work.startup.open': 'פתיחת פרסומת האפליקציה בתצוגה מוגדלת',
       'work.startup.title': 'תוכנה / אפליקציה',
       'work.startup.concept': 'אף אחד על הספה הזאת לא צולם.',
-      'work.startup.summary': 'פרסומת לרשתות בסגנון UGC לאפליקציה. את הזוג, הסלון והתגובה בנינו בסטודיו, והיא נראית כמו משהו שחבר העלה.',
+      'work.startup.summary': 'חלק קטן מפרסומת לרשתות בסגנון UGC לאפליקציה. את הזוג, הסלון והתגובה בנינו בסטודיו, ללא שחקנים וללא יום צילום.',
 
       'studio.eyebrow': 'בהובלת המייסד',
       'studio.title.lead': 'קריאייטיב וקוד, ',
