@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:title" content="פעמוני × MOONA">
+<meta property="og:description" content="הצעה לסדרת סרטונים קצרים: שלושה פורמטים שכבר עובדים בעולם החמוצים, בגרסה ישראלית ועם הצנצנות של פעמוני. טיקטוק, ריל ושורט.">
+<meta property="og:image" content="https://moonastudio.ai/paamoni/v1/img/og.jpg">
+<title>פעמוני × MOONA</title>
+<!-- pitch page: pageview only, no form data, no identifiers beyond what the analytics vendors set -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WYHJWDEYDK"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-WYHJWDEYDK',{page_title:'paamoni-v1'});</script>
+<script src="/ph.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Space+Grotesk:wght@400;500&family=Space+Mono:wght@400&display=swap">
+<style>
+:root{
+  --void:#05070c; --panel:#080b13; --line:rgba(168,198,232,.16);
+  --ice:#dcecff; --ice-dim:#a8c6e8; --ice-mute:rgba(220,236,255,.62);
+  --gold:#d9c69c;
+  --he:"Assistant","Arial Hebrew",Arial,sans-serif;
+  --latin:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
+  --mono:"SF Mono","Space Mono",Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--void)}
+body{color:var(--ice);font-family:var(--he);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased;padding-inline:clamp(16px,4vw,56px)}
+img{max-width:100%;display:block}
+.wrap{max-width:1180px;margin-inline:auto}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ice-dim);direction:ltr;unicode-bidi:isolate;display:inline-block}
+.eyebrow b{font-weight:400;color:var(--gold)}
+h1,h2{font-family:var(--he);font-weight:600;line-height:1.08;text-wrap:balance;letter-spacing:-.01em}
+section{padding-block:clamp(56px,8vw,112px);border-top:1px solid var(--line)}
+section:first-of-type{border-top:0}
+
+.hero{padding-block:clamp(28px,4vw,48px) clamp(40px,6vw,88px)}
+.hero .top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:clamp(32px,5vw,64px)}
+.hero .top img{height:22px;width:auto}
+.hero .grid{display:grid;grid-template-columns:auto 1fr;gap:clamp(28px,5vw,72px);align-items:center}
+.hero .art{aspect-ratio:9/16;height:min(78vh,880px);width:auto;max-width:100%;border-radius:20px;overflow:hidden;background:var(--panel)}
+.hero .art img{width:100%;height:100%;object-fit:cover}
+.hero .copy{padding-block:16px}
+.hero h1{font-size:clamp(38px,5.2vw,72px);max-width:16ch;margin-top:12px}
+.hero .sub{margin-top:18px;font-size:clamp(19px,2.1vw,24px);color:var(--ice-mute);max-width:32ch;line-height:1.5;font-weight:300}
+
+.idea .grid{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(28px,5vw,72px);align-items:center}
+.idea .ph{aspect-ratio:2/3;border-radius:20px;overflow:hidden;background:var(--panel);max-width:440px;justify-self:start}
+.idea .ph img{width:100%;height:100%;object-fit:cover}
+.idea blockquote{font-size:clamp(28px,3.6vw,46px);font-weight:600;line-height:1.18;max-width:20ch;text-wrap:balance}
+.idea blockquote span{color:var(--gold)}
+.idea .txt{margin-top:24px;display:grid;gap:14px}
+.idea .txt p{max-width:46ch;color:var(--ice-mute);font-weight:300}
+.idea .rules{margin-top:28px;display:grid;grid-template-columns:repeat(3,auto);gap:10px 28px;justify-content:start;font-family:var(--he);font-weight:600;font-size:17px}
+.idea .rules span::before{content:attr(data-n);font-family:var(--mono);font-size:11px;color:var(--gold);margin-inline-end:8px;letter-spacing:.1em}
+
+.frames h2{font-size:clamp(30px,4.2vw,48px);margin-top:12px}
+.frames .row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:0}
+.frames .row.six{grid-template-columns:repeat(3,1fr);gap:22px 18px;margin-top:0}
+.frames figure{display:grid;gap:14px;align-content:start}
+.frames .ph{aspect-ratio:2/3;overflow:hidden;border-radius:14px;background:var(--panel)}
+.frames .ph img{width:100%;height:100%;object-fit:cover}
+.frames figcaption{font-size:16px;line-height:1.45;padding-inline:2px}
+.frames figcaption .who{font-family:var(--he);font-weight:700;font-size:15px;color:var(--ice-dim);display:block;margin-bottom:4px}
+.frames figcaption em{font-style:normal;display:block;color:var(--ice-mute);font-weight:300;margin-top:4px}
+.frames figure.win figcaption .who{color:var(--gold)}
+.frames figure.win .ph{outline:1px solid var(--gold);outline-offset:-1px}
+
+.close{text-align:center}
+.close .logos{display:flex;justify-content:center;align-items:center;gap:36px;margin-bottom:28px;flex-wrap:wrap}
+.close .logos img{height:48px;width:auto}
+.close .logos img:first-child{height:88px}
+.close .logos .x{font-family:var(--mono);color:var(--ice-dim);font-size:14px}
+.close h2{font-size:clamp(26px,3.6vw,42px)}
+.close p{color:var(--ice-mute);margin-top:12px;max-width:42ch;margin-inline:auto;font-weight:300}
+.close .sig{margin-top:44px;font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--ice-dim);direction:ltr}
+.close .sig b{color:var(--ice);font-weight:400}
+
+
+.idea .beats{margin-top:28px;display:grid;gap:10px;font-family:var(--he);font-weight:600;font-size:17px}
+.idea .beats span::before{content:attr(data-n);font-family:var(--mono);font-size:11px;color:var(--gold);margin-inline-end:8px;letter-spacing:.1em}
+.idea .beats em{font-style:normal;font-weight:300;color:var(--ice-mute)}
+.series h2{font-size:clamp(30px,4.2vw,48px);margin-top:12px}
+.series .lead{color:var(--ice-mute);font-weight:300;margin-top:14px;max-width:52ch}
+.series .row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:36px}
+.series .ep{border:1px solid var(--line);border-radius:14px;padding:22px 20px;display:grid;gap:10px;align-content:start;background:var(--panel)}
+.series .ep .n{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--gold);direction:ltr;unicode-bidi:isolate;display:inline-block}
+.series .ep h3{font-family:var(--he);font-weight:700;font-size:20px;line-height:1.2}
+.series .ep p{font-size:15.5px;line-height:1.5;color:var(--ice-mute);font-weight:300}
+.series .ep q{font-style:normal;color:var(--ice);font-weight:600;quotes:"\201C" "\201D"}
+.series .ep.now{outline:1px solid var(--gold);outline-offset:-1px}
+.series .ep.now .n{color:var(--gold)}
+.series .fmt{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px 22px;font-family:var(--he);font-size:15px;color:var(--ice-dim)}
+.series .fmt span::before{content:"·";margin-inline-end:10px;color:var(--gold)}
+.series .fmt span:first-child::before{content:none}
+
+.hero .sub b{font-weight:600;color:var(--ice)}
+.hero .sub{margin-top:22px}
+.hero .hero-fmt{margin-top:10px;font-size:17px}
+.sec-h{display:grid;gap:10px;margin-bottom:34px}
+.sec-h h2{font-size:clamp(30px,4.2vw,48px)}
+.sec-h p{color:var(--ice-mute);font-weight:300;max-width:56ch;font-size:18px}
+.what .row{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.what .card{border:1px solid var(--line);border-radius:14px;padding:24px 22px;background:var(--panel);display:grid;gap:10px;align-content:start}
+.what .card .n{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--gold);direction:ltr;unicode-bidi:isolate;display:inline-block}
+.what .card h3{font-family:var(--he);font-weight:700;font-size:21px;line-height:1.2}
+.what .card p{font-size:16px;line-height:1.55;color:var(--ice-mute);font-weight:300}
+.what .card.msg{outline:1px solid var(--gold);outline-offset:-1px}
+.what .card.msg blockquote{font-size:22px;font-weight:700;line-height:1.25;color:var(--ice)}
+.why .grid{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(28px,5vw,72px);align-items:center}
+.why .ph{aspect-ratio:2/3;border-radius:20px;overflow:hidden;background:var(--panel);max-width:440px;justify-self:start}
+.why .ph img{width:100%;height:100%;object-fit:cover}
+.why blockquote{font-size:clamp(26px,3.2vw,40px);font-weight:600;line-height:1.2;max-width:22ch;text-wrap:balance}
+.why blockquote span{color:var(--gold)}
+.why .txt{margin-top:22px;display:grid;gap:14px}
+.why .txt p{max-width:48ch;color:var(--ice-mute);font-weight:300}
+.why .txt p b{color:var(--gold);font-weight:700}
+.idea2 .ph{max-width:480px}
+.chars .row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.chars figure{display:grid;gap:12px;align-content:start}
+.chars .ph{aspect-ratio:2/3;overflow:hidden;border-radius:14px;background:var(--panel)}
+.chars .ph img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.chars .ph.m{background:var(--panel)}
+.chars figcaption{font-size:16px;line-height:1.45}
+.chars figcaption .who{font-weight:700;display:block;margin-bottom:3px;color:var(--ice)}
+.chars figcaption em{font-style:normal;color:var(--ice-mute);font-weight:300}
+.steps .list{display:grid;gap:22px}
+.steps .step{display:grid;grid-template-columns:150px 1fr;gap:26px;align-items:start;border-top:1px solid var(--line);padding-top:22px}
+.steps .step:first-child{border-top:0;padding-top:0}
+.steps .ph{aspect-ratio:9/16;border-radius:12px;overflow:hidden;background:var(--panel)}
+.steps .ph img{width:100%;height:100%;object-fit:cover}
+.steps .meta{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap}
+.steps .meta .n{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--gold);direction:ltr;unicode-bidi:isolate;display:inline-block}
+.steps .meta .t{font-family:var(--mono);font-size:12px;color:var(--ice-dim);direction:ltr;unicode-bidi:isolate;display:inline-block}
+.steps h3{font-family:var(--he);font-weight:700;font-size:22px;margin-top:8px}
+.steps .do{margin-top:8px;color:var(--ice-mute);font-weight:300;max-width:60ch}
+.steps .say{margin-top:12px;display:grid;gap:5px;max-width:60ch}
+.steps .say span{font-size:17px}
+.steps .say span b{font-weight:700;color:var(--gold);margin-inline-end:6px}
+.fmt{display:flex;flex-wrap:wrap;gap:10px 22px;font-family:var(--he);font-size:15px;color:var(--ice-dim)}
+.fmt span::before{content:"·";margin-inline-end:10px;color:var(--gold)}
+.fmt span:first-child::before{content:none}
+.process .row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.process .st{border:1px solid var(--line);border-radius:14px;padding:20px 18px;background:var(--panel);display:grid;gap:8px;align-content:start}
+.process .st .n{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--gold);direction:ltr;unicode-bidi:isolate;display:inline-block}
+.process .st h3{font-family:var(--he);font-weight:700;font-size:18px;line-height:1.2}
+.process .st p{font-size:15px;line-height:1.5;color:var(--ice-mute);font-weight:300}
+.process .st.now{outline:1px solid var(--gold);outline-offset:-1px}
+.process .after{margin-top:22px;color:var(--ice-dim);font-size:15px}
+@media (max-width:900px){.frames .row.six{grid-template-columns:1fr 1fr}.what .row{grid-template-columns:1fr}.why .grid{grid-template-columns:1fr}.why .ph{max-width:100%;justify-self:stretch}.chars .row{grid-template-columns:1fr 1fr}.process .row{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.steps .step{grid-template-columns:1fr}.steps .ph{max-width:200px}.chars .row{grid-template-columns:1fr 1fr}.process .row{grid-template-columns:1fr}}
+@media (max-width:900px){.series .row{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.series .row{grid-template-columns:1fr}}
+@media (max-width:900px){
+  .idea .grid{grid-template-columns:1fr}
+  .idea .ph{max-width:100%;justify-self:stretch}
+  .frames .row{grid-template-columns:1fr 1fr}
+  .idea .rules{grid-template-columns:1fr}
+  .hero .grid{grid-template-columns:1fr}
+  .hero .art{height:auto;width:100%}
+  .hero .copy{order:-1;padding-block:0 8px}
+}
+@media (max-width:520px){.frames .row{grid-template-columns:1fr}.close .logos{gap:18px}.close .logos img{height:40px}.close .logos img:first-child{height:72px}.close .logos .x{display:none}}
+@media print{
+  @page{size:1440px 6200px;margin:0}
+  html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  section{break-inside:auto}
+}
+
+/* text-first pitch, no keyframes */
+.hero.textonly .copy{padding-block:0}
+.hero.textonly h1{font-size:clamp(46px,7.4vw,104px);max-width:11ch;margin-top:18px}
+.hero.textonly .sub{max-width:34ch;font-size:clamp(20px,2.3vw,27px);margin-top:26px}
+.lede{font-size:clamp(22px,2.6vw,32px);font-weight:600;line-height:1.3;max-width:26ch;text-wrap:balance}
+.lede span{color:var(--gold)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,64px);margin-top:34px}
+.cols p{color:var(--ice-mute);font-weight:300;max-width:46ch}
+.cols p b{color:var(--ice);font-weight:600}
+.eps .row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.eps .ep{border:1px solid var(--line);border-radius:16px;padding:30px 28px;background:var(--panel);display:grid;gap:14px;align-content:start}
+.eps .ep .n{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--gold);direction:ltr;unicode-bidi:isolate;display:inline-block}
+.eps .ep h3{font-family:var(--he);font-weight:700;font-size:clamp(24px,2.6vw,32px);line-height:1.15}
+.eps .ep p{font-size:17px;line-height:1.55;color:var(--ice-mute);font-weight:300}
+.eps .ep p b{color:var(--ice);font-weight:600}
+.eps .ep .beat{border-top:1px solid var(--line);padding-top:14px;margin-top:4px;font-size:16px;color:var(--ice-dim)}
+.eps .ep .beat b{color:var(--gold);font-weight:600}
+.ref .grid{display:grid;grid-template-columns:360px 1fr;gap:clamp(28px,5vw,64px);align-items:center}
+.ref .vid{border-radius:18px;overflow:hidden;background:var(--panel);aspect-ratio:9/16}
+.ref .vid video{width:100%;height:100%;object-fit:cover;display:block}
+.ref p{color:var(--ice-mute);font-weight:300;max-width:44ch;margin-top:14px}
+.ref p b{color:var(--ice);font-weight:600}
+@media (max-width:900px){.cols{grid-template-columns:1fr}.eps .row{grid-template-columns:1fr}.ref .grid{grid-template-columns:1fr}.ref .vid{max-width:320px}}
+.hero.textonly h1.brand{font-family:var(--latin);font-weight:500;font-size:clamp(40px,6vw,84px);max-width:none;letter-spacing:-.02em;margin-top:14px}
+.hero h1 .x{font-family:var(--mono);font-weight:400;color:var(--gold);font-size:.55em;vertical-align:middle;margin-inline:.25em}
+.hero .note{margin-top:28px;font-size:16px;color:var(--ice-dim);max-width:44ch;line-height:1.6;border-inline-start:2px solid var(--gold);padding-inline-start:14px}
+.caps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:34px}
+.caps .c{border:1px solid var(--line);border-radius:14px;padding:22px 20px;background:var(--panel);display:grid;gap:8px;align-content:start}
+.caps .c .n{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--gold);direction:ltr;unicode-bidi:isolate;display:inline-block}
+.caps .c h3{font-family:var(--he);font-weight:700;font-size:19px;line-height:1.25}
+.caps .c p{font-size:15.5px;line-height:1.5;color:var(--ice-mute);font-weight:300}
+@media (max-width:900px){.caps{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.caps{grid-template-columns:1fr}}
+.hero .top .duo{display:flex;align-items:center;gap:18px}
+.hero .top .duo img{height:26px;width:auto}
+.hero .top .duo img.eco{height:58px}
+.hero .top .duo .x{font-family:var(--mono);color:var(--gold);font-size:14px}
+.about .intro{margin-top:18px;color:var(--ice-mute);font-weight:300;max-width:60ch;font-size:19px;line-height:1.6}
+.caps.eight .c{padding:24px 22px}
+.caps.eight .c h3{font-size:20px}
+.refs .row{display:grid;grid-template-columns:1fr 1fr;gap:22px;justify-items:center;margin-top:34px}
+.refs blockquote.tiktok-embed{margin:0!important;max-width:325px;min-width:280px;width:100%;background:var(--panel);border-radius:14px;overflow:hidden}
+.refs .who{margin-top:10px;font-size:15px;color:var(--ice-dim);text-align:center}
+.eps .row.four{grid-template-columns:1fr 1fr}
+.eps .ep .n{font-size:12px}
+@media (max-width:900px){.refs .row{grid-template-columns:1fr}}
+.hero .art.r45{aspect-ratio:4/5;height:min(74vh,760px)}
+.hero .grid .copy h1.brand{font-size:clamp(34px,4.3vw,60px);white-space:nowrap}
+.prop .wrap{display:block}
+.prop .pair{display:grid;grid-template-columns:1fr;gap:18px;margin-top:36px;max-width:430px}
+.prop .pair figcaption{margin-top:10px;font-size:15px;color:var(--ice-dim)}
+.prop .ph{aspect-ratio:4/5;border-radius:18px;overflow:hidden;background:var(--panel)}
+.prop .ph img{width:100%;height:100%;object-fit:cover}
+.prop .cols{grid-template-columns:1fr}
+@media (max-width:900px){.prop .pair{grid-template-columns:1fr}.hero .art.r45{height:auto;width:100%}}
+.refs .tt{width:100%;max-width:325px;aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:var(--panel)}
+.refs .tt iframe{width:100%;height:100%;border:0;display:block}
+.hero .artfig{margin:0}
+.hero .artfig .made{width:0;min-width:100%;margin-top:12px;font-size:15px;line-height:1.45;color:var(--ice-dim)}
+
+/* paamoni v1: reference beside our version, per episode */
+.hero .top .duo img.brandlogo{height:84px;filter:brightness(0) invert(1)}
+.hero .art.r916{aspect-ratio:9/16;height:min(76vh,820px)}
+.art{position:relative}
+.art .tag{position:absolute;top:14px;inset-inline-start:14px;background:rgba(5,7,12,.72);color:var(--ice);font-size:14px;font-weight:600;padding:5px 12px;border-radius:999px;border:1px solid var(--line);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.ph-wait{display:grid;place-items:center;text-align:center;padding:18px;border:1px dashed var(--line);color:var(--ice-dim);font-size:14px;line-height:1.5;width:100%;height:100%}
+.opp .cols{grid-template-columns:repeat(3,1fr)}
+.epx{display:grid;grid-template-columns:300px 1fr;gap:clamp(28px,5vw,64px);align-items:start;border-top:1px solid var(--line);padding-top:clamp(36px,5vw,56px);margin-top:clamp(36px,5vw,56px)}
+.epx:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.epx .media{display:grid;grid-template-columns:1fr;gap:14px;max-width:300px}
+.epx .media figure{display:grid;gap:8px;align-content:start}
+.epx .media .v{aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:var(--panel)}
+.epx .media .v iframe,.epx .media .v video,.epx .media .v img{width:100%;height:100%;border:0;display:block;object-fit:cover}
+.epx .media figcaption{font-size:14px;line-height:1.4;color:var(--ice-dim)}
+.epx .media figcaption b{display:block;color:var(--gold);font-weight:700;font-size:13px;letter-spacing:.02em}
+.epx .n{font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:var(--gold);direction:ltr;unicode-bidi:isolate;display:inline-block}
+.epx h3{font-family:var(--he);font-weight:700;font-size:clamp(26px,3vw,38px);line-height:1.15;margin-top:8px;text-wrap:balance}
+.epx .txt{margin-top:18px;display:grid;gap:12px}
+.epx .txt p{color:var(--ice-mute);font-weight:300;max-width:50ch;font-size:17.5px}
+.epx .txt p b{color:var(--ice);font-weight:600}
+.epx .txt p.beat{border-top:1px solid var(--line);padding-top:12px;color:var(--ice-dim);font-size:16px}
+.epx .txt p.beat b{color:var(--gold)}
+@media (max-width:900px){.opp .cols{grid-template-columns:1fr}.epx{grid-template-columns:1fr}.epx .media{max-width:520px}.hero .art.r916{height:auto;width:100%;max-width:420px}}
+</style>
+</head>
+<body>
+<section class="hero textonly">
+  <div class="wrap">
+    <div class="top">
+      <div class="duo"><img class="brandlogo" src="img/logo_paamoni.png" alt="פעמוני"><span class="x">×</span><img src="img/moona_lockup.png" alt="MOONA STUDIO"></div>
+    </div>
+    <div class="grid">
+      <figure class="artfig"><div class="art r916"><span class="tag">תמונה להמחשה</span><img src="img/h1_mangal.jpg" alt="חבורה במנגל בפארק, צנצנת חמוצים פתוחה באמצע השולחן ויד לוקחת חמוץ"></div></figure>
+    <div class="copy">
+      <span class="eyebrow">A series proposal</span>
+      <h1 class="brand" dir="ltr" style="text-align:right">Paamoni <span class="x">×</span> MOONA</h1>
+      <p class="sub"><b>הצעה לסדרה: שלושה סרטונים קצרים</b><br>שלושה פורמטים שכבר עובדים בעולם החמוצים, בגרסה ישראלית ועם הצנצנות שלכם.</p>
+      <div class="fmt hero-fmt" style="margin-top:18px"><span>טיקטוק</span><span>ריל</span><span>שורט</span><span>9:16</span></div>
+      <p class="note">בנינו את ההצעה אחרי ניתוח של המודעות שלכם ושל מותגי החמוצים והמותססים המובילים בעולם.</p>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="why opp">
+  <div class="wrap">
+    <span class="eyebrow">The opportunity</span>
+    <p class="lede" style="margin-top:14px">לא ממציאים נוסחה. <span>לוקחים את מה שכבר עובד.</span></p>
+    <div class="cols">
+      <div><p><b>מה ראינו אצלכם.</b> הפרסום שלכם כבר מראה את הדבר הנכון: תהליך אמיתי ומוצר אמיתי. המלפפונים נכנסים לצנצנת, התמלחת, הידיים שעובדות.</p></div>
+      <div><p><b>מה ראינו בעולם.</b> מותגי חמוצים בחו"ל מגיעים לעשרות מיליוני צפיות עם רעיון פשוט אחד: מצב מצחיק, אנשים, והצנצנת בפריים לאורך כל הסרטון.</p></div>
+      <div><p><b>ההזדמנות.</b> לחבר בין השניים. לקחת פורמטים שהוכיחו את עצמם, לתרגם אותם לישראל ולמוצרים שלכם, ולהגיע לחשיפה רחבה הרבה יותר, עם תוכן שאנשים משתפים.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="eps3">
+  <div class="wrap">
+    <div class="sec-h"><span class="eyebrow">Three episodes</span><h2>שלושה פרקים</h2><p>כל פרק מתחיל מסרטון שעובד בעולם. הסדר לבחירתכם, ואפשר להתחיל מפרק אחד.</p></div>
+
+    <article class="epx">
+      <div class="media">
+        <figure><div class="v"><iframe src="https://www.youtube.com/embed/ynY5ORGNogI?rel=0&amp;playsinline=1&amp;modestbranding=1" title="Grillo's Pickles, Showing a Pickle the Statue of Liberty" allow="fullscreen; autoplay; encrypted-media" loading="lazy"></iframe></div>
+          <figcaption><b>ההשראה</b><bdi>Grillo's Pickles</bdi> · יוטיוב · כ&#8209;60 מיליון צפיות</figcaption></figure>
+      </div>
+      <div>
+        <span class="n">EP 01</span>
+        <h3>באתי למנגל. הבאתי רק חמוצים.</h3>
+        <div class="txt">
+          <p><b>בעולם.</b> מישהו מנסה להראות למלפפון את פסל החירות, וזרים ברחוב מצטרפים.</p>
+          <p><b>אצלכם.</b> שבת בפארק. בחור מגיע עם צנצנת פעמוני בלבד ומנסה להצטרף למנגל של חבורה שהוא לא מכיר. "יש מקום לעוד אחד? הבאתי חמוצים." מישהו עוקץ, מישהו קורא לחבר לטעום, מישהו עושה לו מקום.</p>
+          <p><b>הסוף.</b> הוא כבר יושב איתם, פיתה ביד. הצנצנת פתוחה באמצע השולחן, ועוד יד לוקחת חמוץ.</p>
+          <p class="beat"><b>המוצר.</b> מלפפון מותסס.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="epx">
+      <div class="media">
+        <figure><div class="v"><video src="media/ref_wildbrine.mp4" poster="img/ref_wildbrine.jpg" controls playsinline muted loop preload="metadata"></video></div>
+          <figcaption><b>ההשראה</b><bdi>Wildbrine</bdi> · מודעה פעילה ב&#8209;<bdi>Meta</bdi></figcaption></figure>
+      </div>
+      <div>
+        <span class="n">EP 02</span>
+        <h3>פותחים ואוכלים</h3>
+        <div class="txt">
+          <p><b>בעולם.</b> רגע של בוקר, הצנצנת נפתחת מול המצלמה, ביס בתקריב ועיניים עצומות.</p>
+          <p><b>אצלכם.</b> בוקר של שישי, שולחן בבית ולחם טרי. המכסה נפתח, המזלג מרים כרוב מותסס, ושומעים את הקראנץ' בביס.</p>
+          <p><b>הסוף.</b> שלוש צנצנות של פעמוני על השיש, באור של בוקר. "חמוצים עם חזון."</p>
+          <p class="beat"><b>המוצר.</b> כרוב לבן מותסס קלאסי, וגזר מותסס עם שום.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="epx">
+      <div class="media">
+        <figure><div class="v"><iframe src="https://www.tiktok.com/player/v1/7544070163323309342?rel=0&amp;music_info=0&amp;description=0&amp;native_context_menu=0&amp;closed_caption=0&amp;loop=1" title="Grillo's Pickles, TikTok" allow="fullscreen; autoplay" loading="lazy"></iframe></div>
+          <figcaption><b>ההשראה</b><bdi>Grillo's Pickles</bdi> · טיקטוק · כ&#8209;55 מיליון צפיות</figcaption></figure>
+      </div>
+      <div>
+        <span class="n">EP 03</span>
+        <h3>סבתא שלי עושה יותר טוב</h3>
+        <div class="txt">
+          <p><b>בעולם.</b> מציעים טעימה לחבורה ביריד, וכל אחד מגיב אחרת.</p>
+          <p><b>אצלכם.</b> שוק הכרמל. "רוצה לטעום?" בחור צעיר לועס ואומר: "טעים. אבל סבתא שלי עושה יותר טוב." קוראים לסבתא מהדוכן ליד. היא טועמת, שותקת, ולוקחת את הצנצנת כולה.</p>
+          <p><b>ההפתעה.</b> המלפפון המותסס והפיקנטי של סבתא. שלכם.</p>
+          <p class="beat"><b>אפשר גם.</b> בלונה פארק, עם חבורה של נערים, או ברחוב בתל אביב בהפסקת הצהריים.</p>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="why about">
+  <div class="wrap">
+    <span class="eyebrow">About MOONA</span>
+    <p class="lede" style="margin-top:14px"><bdi>MOONA</bdi> הוא סטודיו לסרטוני פרסום ב&#8209;<bdi>AI</bdi>. <span>מהרעיון ועד הקובץ הסופי, תחת קורת גג אחת.</span></p>
+    <p class="intro">קריאייטיב, דמויות, הפקה, סאונד ועריכה נעשים אצלנו, עם כלים וסוכני <bdi>AI</bdi> שפיתחנו בסטודיו לכל שלב. כל שלב מגיע אליכם לאישור לפני הבא.</p>
+    <div class="caps eight">
+      <div class="c"><span class="n">01</span><h3>קריאייטיב וקונספט</h3><p>הרעיון, השפה הוויזואלית והתסריט של כל פרק, בנויים סביב המותג שלכם והמסר שלו.</p></div>
+      <div class="c"><span class="n">02</span><h3>דמויות קבועות</h3><p>הבחור עם הצנצנת, החבורה מהמנגל, סבתא מהשוק. כל דמות נשארת אותה דמות בכל שוט, ואפשר להחזיר אותה בפרק הבא.</p></div>
+      <div class="c"><span class="n">03</span><h3>לוקיישנים</h3><p>פארק, שוק, מטבח בבית. תמונות רפרנס שנועלות אור, צבע ומרחב לפני ההפקה.</p></div>
+      <div class="c"><span class="n">04</span><h3>סטוריבורד</h3><p>כל שוט כפריים. רואים את הסרטון כולו לפני שמתחילים.</p></div>
+      <div class="c"><span class="n">05</span><h3>בימוי והפקה</h3><p>זוויות, תנועת מצלמה ומעברים. כל פריים מתוכנן מראש.</p></div>
+      <div class="c"><span class="n">06</span><h3>המוצר האמיתי</h3><p>הצנצנות והתוויות שלכם נכנסות לפריים כמו שהן, מהצילומים שלכם.</p></div>
+      <div class="c"><span class="n">07</span><h3>סאונד ומוזיקה</h3><p>הקראנץ', הרחוב, הצחוק ופסקול, במיקס שמאוזן לצפייה בטלפון.</p></div>
+      <div class="c"><span class="n">08</span><h3>עריכה, צבע וכתוביות</h3><p>קצב, צבע אחיד לכל השוטים, כתוביות בעברית, וגרסה לכל פלטפורמה.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="ref">
+  <div class="wrap">
+    <div class="grid">
+      <div class="vid"><video src="media/ref_jewelry.mp4" poster="img/ref_jewelry.jpg" controls playsinline autoplay muted loop preload="metadata"></video></div>
+      <div>
+        <span class="eyebrow">A reference</span>
+        <h2 style="font-size:clamp(28px,3.6vw,42px);margin-top:10px">ככה זה נראה</h2>
+        <p><b>עבודה נוספת מתיק העבודות, שלא עלתה לאתר.</b> פרסומת שביצענו למותג תכשיטים ישראלי, מתוך תמונות המוצר שלו.</p>
+        <p>התנועה, המצלמה והאור נבנו אצלנו, והתכשיטים נשארו בדיוק כמו שהם.</p>
+        <p>אצלכם נבנה את הדמויות ואת הלוקיישנים, והצנצנות שלכם יישארו אמיתיות בפריים.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="close">
+  <div class="wrap">
+    <div class="logos"><img src="img/logo_paamoni.png" alt="פעמוני" style="filter:brightness(0) invert(1)"><span class="x">×</span><img src="img/moona_lockup.png" alt="MOONA STUDIO"></div>
+    <h2>זו נקודת התחלה</h2>
+    <p>אפשר להתחיל מפרק אחד ולראות איך זה יושב. מכאן ממשיכים לסטוריבורד.</p>
+    <div class="sig"><b>MOONA STUDIO</b> · TAL TZUR</div>
+  </div>
+</section>
+
+<script>
+try{fetch('/api/view',{method:'POST',headers:{'Content-Type':'application/json'},keepalive:true,body:JSON.stringify({page:location.pathname,ref:document.referrer,code:new URLSearchParams(location.search).get('c')||''})})}catch(e){}
+</script>
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
