@@ -1263,6 +1263,12 @@ html[lang="he"] .solutions :is(h2,h3){font-weight:700;letter-spacing:-.025em}
 .work-grid .piece:is(:hover,:focus-within) .concept{opacity:1;transform:none}
 .work-grid .piece .meta .work-summary{grid-column:2;margin:6px 0 0;max-width:54ch;font-size:clamp(14px,1.15vw,17px);line-height:1.6;color:var(--ice-dim)}
 .work-grid .breakdown{display:none!important}
+/* a reel card shows the whole vertical film, never a 16:10 crop of it */
+.work-grid .piece.reel{display:grid!important;grid-column:1/-1;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:end}
+.work-grid .piece.reel .frame{aspect-ratio:9/16!important}
+.work-grid .piece.reel .frame video{width:100%;height:100%;object-fit:cover}
+.work-grid .piece.reel .meta{margin:0 0 8px!important}
+@media(max-width:760px){.work-grid .piece.reel{grid-template-columns:1fr}.work-grid .piece.reel .frame{width:min(100%,360px)!important;margin-inline:auto!important}.work-grid .piece.reel .meta{margin:18px 0 0!important}}
 .impact-replay{grid-column:2;justify-self:start;margin:7px 0 0;padding:8px 0;border:0;border-bottom:1px solid rgba(217,198,156,.55);background:none;color:#d9c69c;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
 .impact-replay:hover{color:var(--ice-hot);border-bottom-color:var(--ice-hot)}
 .impact-replay:focus-visible{outline:2px solid #d9c69c;outline-offset:4px}
@@ -1678,12 +1684,12 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
       </div>
       <div class="breakdown"></div>
     </article>
-    <article class="piece vert rv" data-piece>
-      <div class="frame"><video src="v/family-8s.mp4" poster="p/family.jpg" muted loop playsinline preload="none" aria-label="Social ad film by Moona" data-i18n-aria-label="work.family.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the family film larger" data-i18n-aria-label="work.family.open"></button><span class="vbadge">00:08</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
+    <article class="piece vert reel rv" data-piece>
+      <div class="frame"><video src="v/startup-reel.mp4" poster="p/startup-reel.jpg" muted loop playsinline preload="none" aria-label="Social ad for a startup by Moona" data-i18n-aria-label="work.startup.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the startup ad larger" data-i18n-aria-label="work.startup.open"></button><span class="vbadge">00:08</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
       <div class="meta">
-        <span class="num">05</span><h3 class="brand" data-i18n="work.family.title">Family Film</h3>
-        <p class="concept" data-i18n="work.family.concept">This is literally us.</p>
-        <p class="work-summary" data-i18n="work.family.summary">A social ad made without a camera, a location or a shoot day. The family, the living room and the film on the phone were built in the studio, frame by frame.</p>
+        <span class="num">05</span><h3 class="brand" data-i18n="work.startup.title">Startup</h3>
+        <p class="concept" data-i18n="work.startup.concept">This is literally us.</p>
+        <p class="work-summary" data-i18n="work.startup.summary">A social ad for a startup’s app, made without a camera, a location or a shoot day. The couple, the living room and every reaction were built in the studio, frame by frame.</p>
       </div>
       <div class="breakdown"></div>
     </article>

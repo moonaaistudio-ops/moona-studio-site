@@ -4,7 +4,7 @@ test('Bull Padel leads Selected Work and its impact leaves the film running', as
   await page.goto('/?lang=en#work');
   const cards = page.locator('#work .work-grid > [data-piece]');
   await expect(cards.locator('.brand')).toHaveText([
-    'Bull Padel', "McDonald's", 'Strava', 'Koda', 'Family Film'
+    'Bull Padel', "McDonald's", 'Strava', 'Koda', 'Startup'
   ]);
 
   const bull = page.locator('[data-bull-impact]');
