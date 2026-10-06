@@ -341,7 +341,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.crew-transition-body')).toHaveText('כל אחד מאומן במקצוע אחד. לכולם יש במאי אחד.');
     await expect(page.locator('#crew-title')).toHaveText('המומחים שמאחורי העבודה.');
     await expect(page.locator('.crew-head > p')).toHaveText('קריאייטיב, עריכה, תמונה, תנועה, אודיו ופרודקט.');
-    await expect(page.locator('.work-note')).toHaveText('סרטי הקונספט האלה נוצרו ביוזמתנו כדי להראות מה נוכל ליצור עבור המותג הבא. המותגים המוצגים אינם לקוחות של Moona.');
+    await expect(page.locator('.work-note')).toHaveText('ארבעה סרטי קונספט שיצרנו ביוזמתנו כדי להראות מה נוכל ליצור עבור המותג הבא, ומודעה אחת שרצה ברשתות. המותגים בסרטי הקונספט אינם לקוחות של Moona.');
     await expect(page.locator('[data-i18n="work.bullPadel.concept"]')).toHaveText('המחבט מחזיר חבטה.');
     await expect(page.locator('[data-i18n="work.koda.concept"]')).toHaveText('נבנה לפיד שבו הוא חי.');
     await expect(page.locator('.contact-line')).toHaveText('בואו נעשה את זה גם למותג שלכם.');
@@ -1004,7 +1004,7 @@ test.describe('responsive header and dynamic UI', () => {
         expect(portrait.renderedRatio).toBeCloseTo(3 / 4, 2);
         expect(portrait.renderedHeight).toBeLessThanOrEqual(width <= 760 ? 193 : 410);
       }
-      expect(layout.workCards).toBe(4);
+      expect(layout.workCards).toBe(5);
       expect(layout.workColumns).toBe(width > 760 ? 2 : 1);
       expect(layout.retiredWorkDetails).toBe(0);
       expect(layout.legacy).toEqual({
