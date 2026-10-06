@@ -7,7 +7,8 @@
    Same SMTP_USER / SMTP_PASS as the lead form. LEAD_TO optional. */
 const nodemailer = require('nodemailer');
 
-const QUOTES = new Set(['MS-2026-031']);
+/* quote id (internal, never shown) -> the name the client sees */
+const QUOTES = new Map([['marina-quote', 'הכיתה של מרינה'], ['MS-2026-031', 'הכיתה של מרינה']]);
 const PH_KEY = 'phc_tR7sebAcZCkQvnc475AGEXGYhpmXxFa4JZTD4fQXrhuW';
 const PH_HOST = 'https://us.i.posthog.com';
 
@@ -41,6 +42,7 @@ module.exports = async (req, res) => {
   const page = clean(body.page);
   const code = clean(body.code).replace(/[^\w-]/g, '');
   if (!QUOTES.has(quote)) return res.status(422).json({ ok: false, error: 'quote' });
+  const title = QUOTES.get(quote);
   if (!name || !email || body.agree !== true) return res.status(422).json({ ok: false, error: 'missing' });
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return res.status(422).json({ ok: false, error: 'email' });
 
@@ -66,19 +68,19 @@ module.exports = async (req, res) => {
 
   const row = (k, v) => `<tr><td style="padding:6px 0 6px 18px;color:#8a8a8a;font:12px ui-monospace,monospace;letter-spacing:.08em;vertical-align:top">${k}</td><td style="padding:6px 0;font:15px -apple-system,Segoe UI,sans-serif;color:#111">${esc(v)}</td></tr>`;
   const link = `https://${req.headers.host}${page || '/marina/quote/'}`;
-  const table = `<table dir="rtl" style="border-collapse:collapse">${row('הצעה', quote)}${row('שם', name)}${row('תפקיד', role || '-')}${row('אימייל', email)}${row('הזמנת רכש', po || '-')}${row('מועד', when)}${row('מקום', `${country} / ${city} · ${device(ua)}`)}${row('עמוד', link)}</table>`;
+  const table = `<table dir="rtl" style="border-collapse:collapse">${row('הצעה', title)}${row('שם', name)}${row('תפקיד', role || '-')}${row('אימייל', email)}${row('הזמנת רכש', po || '-')}${row('מועד', when)}${row('מקום', `${country} / ${city} · ${device(ua)}`)}${row('עמוד', link)}</table>`;
 
   try {
     const transport = nodemailer.createTransport({ host: 'smtp.gmail.com', port: 465, secure: true, auth: { user, pass } });
     await transport.sendMail({
       from: `"Moona site" <${user}>`, to: process.env.LEAD_TO || user, replyTo: email,
-      subject: `הצעה ${quote} אושרה · ${name}`,
+      subject: `ההצעה "${title}" אושרה · ${name}`,
       html: `<div dir="rtl" style="font-family:-apple-system,Segoe UI,sans-serif"><p style="font-size:16px">ההצעה אושרה בעמוד.</p>${table}</div>`
     });
     await transport.sendMail({
       from: `"MOONA STUDIO" <${user}>`, to: email, replyTo: process.env.LEAD_TO || user,
-      subject: `אישור הצעה ${quote} · MOONA STUDIO`,
-      html: `<div dir="rtl" style="font-family:-apple-system,Segoe UI,sans-serif;color:#111"><p style="font-size:16px">היי ${esc(name)},</p><p>תודה. ההצעה ${esc(quote)} אושרה ב-${esc(when)}. זה העותק שלך.</p>${table}<p>השלב הבא: חשבונית מקדמה לפרק הראשון, ומתחילים לעבוד.</p><p>טל צור · MOONA STUDIO · 054-6513133</p></div>`
+      subject: `אישור ההצעה · ${title} · MOONA STUDIO`,
+      html: `<div dir="rtl" style="font-family:-apple-system,Segoe UI,sans-serif;color:#111"><p style="font-size:16px">היי ${esc(name)},</p><p>תודה. ההצעה "${esc(title)}" אושרה ב-${esc(when)}. זה העותק שלך.</p>${table}<p>השלב הבא: חשבונית מקדמה לפרק הראשון, ומתחילים לעבוד.</p><p>טל צור · MOONA STUDIO · 054-6513133</p></div>`
     });
   } catch (err) {
     console.error('approve mail:', err && err.message || err);

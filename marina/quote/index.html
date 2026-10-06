@@ -250,7 +250,7 @@ section:first-of-type{border-top:0}
     <div class="grid">
       <div class="art"><img src="/marina/quote/img/h1_hook.jpg" alt="מרינה מול הכיתה"></div>
       <div class="copy">
-        <span class="eyebrow">Quote <b>/</b> MS-2026-031</span>
+        <span class="eyebrow">Quote</span>
         <h1>הכיתה של מרינה. הצעת מחיר.</h1>
         <p class="sub">ארבעה פרקים, פרק אחד בחודש.<br><b>חשבונית נפרדת לכל פרק.</b></p>
         <div class="fmt hero-fmt"><span>9:16</span><span>הקול של מרינה</span><span>כתוביות</span><span>30 עד 40 שניות</span></div>
@@ -341,17 +341,17 @@ section:first-of-type{border-top:0}
           <label>מספר הזמנת רכש (אם יש)<input type="text" id="apPo" name="po" dir="ltr"></label>
         </div>
         <label class="hp" aria-hidden="true">Website<input type="text" name="bot-field" tabindex="-1" autocomplete="off"></label>
-        <label class="agree"><input type="checkbox" id="apAgree" required><span>קראתי את ההצעה MS-2026-031 ומאשר את תנאיה.</span></label>
+        <label class="agree"><input type="checkbox" id="apAgree" required><span>קראתי את ההצעה ומאשר את תנאיה.</span></label>
         <div class="row">
           <button type="submit" id="apBtn">מאשר את ההצעה</button>
-          <a class="pdf" href="/marina/quote/MOONA-Marina-quote-MS-2026-031.pdf" download>ההצעה כ-PDF להנהלת חשבונות</a>
+          <a class="pdf" href="/marina/quote/MOONA-Marina-quote.pdf" download>ההצעה כ-PDF להנהלת חשבונות</a>
         </div>
         <div class="msg" id="apMsg" role="status" aria-live="polite"></div>
       </form>
       <div class="done" id="apDone">
         <h3>ההצעה אושרה.</h3>
         <p id="apDoneText">עותק נשלח למייל שלך. השלב הבא: חשבונית מקדמה לפרק הראשון, ומתחילים לעבוד.</p>
-        <p><a class="pdf" href="/marina/quote/MOONA-Marina-quote-MS-2026-031.pdf" download>ההצעה כ-PDF</a></p>
+        <p><a class="pdf" href="/marina/quote/MOONA-Marina-quote.pdf" download>ההצעה כ-PDF</a></p>
       </div>
     </div>
   </div>
@@ -382,7 +382,7 @@ try{fetch('/api/view',{method:'POST',headers:{'Content-Type':'application/json'}
     if(!document.getElementById('apAgree').checked){msg.textContent='צריך לסמן שקראת ואישרת את התנאים.';msg.className='msg err';return}
     btn.disabled=true; msg.className='msg'; msg.textContent='שולח…';
     fetch('/api/approve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-      quote:'MS-2026-031',name:name,role:document.getElementById('apRole').value.trim(),email:email,
+      quote:'marina-quote',name:name,role:document.getElementById('apRole').value.trim(),email:email,
       po:document.getElementById('apPo').value.trim(),agree:true,page:location.pathname,
       code:new URLSearchParams(location.search).get('c')||'','bot-field':f.elements['bot-field'].value
     })}).then(function(r){return r.json().catch(function(){return {ok:false}})}).then(function(d){
