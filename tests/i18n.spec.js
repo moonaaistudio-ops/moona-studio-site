@@ -313,7 +313,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
       'סטודיו לסרטי מותג. בלי יום צילום.',
       'המוצר שלכם, בדיוק כמו שהוא, בכל שוט.'
     ]);
-    await expect(page.locator('.hero-cta [data-i18n="hero.productCta"]')).toHaveText('שלחו מוצר אחד');
+    await expect(page.locator('.hero-cta [data-i18n="hero.productCta"]')).toHaveText('דברו איתנו');
     await expect(page.locator('.film-head .film-eyebrow')).toHaveText('סרט הדגל');
     await expect(page.locator('.film-head .film-stance')).toHaveText('לא עוד סרטון שנראה כמו כולם.');
     await expect(page.locator('.film-title')).toHaveText('יצרנו מותג. וצילמנו לו פרסומת.');
@@ -1778,7 +1778,7 @@ test.describe('responsive header and dynamic UI', () => {
       'סטודיו לסרטי מותג. בלי יום צילום.',
       'המוצר שלכם, בדיוק כמו שהוא, בכל שוט.'
     ]);
-    await expect(page.locator('.hero-cta')).toHaveText('שלחו מוצר אחד');
+    await expect(page.locator('.hero-cta')).toHaveText('דברו איתנו');
     await expect(page.locator('#hud-chapter')).toHaveText('CH·01');
     await expect(page.locator('#hud-progress')).toHaveText(/\d{3}/);
     await expect(page.locator('.hero-media, .hero-media-video, .hero-media-fallback, .hero-brand-stage')).toHaveCount(0);
