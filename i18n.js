@@ -148,7 +148,7 @@
       'crew.iva.line': 'Turns ideas into websites, interactive experiences and digital tools.',
       'work.eyebrow': 'Selected work',
       'work.heading': 'Selected concept films',
-      'work.note': 'Five self-initiated concept films.',
+      'work.note': 'Four self-initiated concept films.',
       'work.specBadge': 'Moona original · Spec',
       'work.mcdonalds.video': "McDonald's self-initiated spec film by Moona",
       'work.mcdonalds.open': "Open the McDonald's concept film larger",
