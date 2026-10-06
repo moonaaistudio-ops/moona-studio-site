@@ -392,7 +392,7 @@
       'hero.beat3.lead': 'המותג שלכם,',
       'hero.beat3.emphasis': 'נועץ דגל.',
       'hero.cta': 'לדבר עם הסטודיו',
-      'hero.productCta': 'שלחו מוצר אחד',
+      'hero.productCta': 'דברו איתנו',
       'hero.projectCta': 'לדבר עם הסטודיו',
       'hero.projectCtaLabel': 'לדבר עם הסטודיו של Moona',
       'hero.scroll': 'לגלול',
