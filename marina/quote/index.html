@@ -301,8 +301,8 @@ section:first-of-type{border-top:0}
   <div class="wrap">
     <div class="sec-h"><span class="eyebrow">How we work</span><h2>מהאישור לפרק מוכן</h2></div>
     <div class="list">
-      <div class="st now"><span class="n">01</span><div><h3>אישור ההצעה</h3><p>מייל חוזר מספיק. מתחילים בתסריט של פרק 1.</p></div></div>
-      <div class="st"><span class="n">02</span><div><h3>תסריט</h3><p>לאישור בכתב. עם האישור, חשבונית מקדמה לפרק.</p></div></div>
+      <div class="st now"><span class="n">01</span><div><h3>אישור ההצעה</h3><p>מייל חוזר מספיק. עם האישור, חשבונית מקדמה לפרק 1, ומתחילים.</p></div></div>
+      <div class="st"><span class="n">02</span><div><h3>תסריט</h3><p>לאישור בכתב.</p></div></div>
       <div class="st"><span class="n">03</span><div><h3>דמויות וסטוריבורד</h3><p>גיליונות הדמויות, הלוקיישנים וכל שוט כפריים. לאישור.</p></div></div>
       <div class="st"><span class="n">04</span><div><h3>הפקה ותיקונים</h3><p>אנימציה, קול, סאונד, מוזיקה, עריכה. אתם רואים, מעירים, מתקנים. שני סבבי תיקונים כלולים.</p></div></div>
       <div class="st"><span class="n">05</span><div><h3>מסירה</h3><p>9:16 עם כתוביות, מוכן להעלאה. ואז לפרק הבא.</p></div></div>
@@ -315,7 +315,7 @@ section:first-of-type{border-top:0}
   <div class="wrap">
     <div class="sec-h"><span class="eyebrow">Terms</span><h2>תנאים</h2></div>
     <div class="txt">
-      <p><b>תשלום.</b> כמו שביקשתם, לכל פרק בנפרד: 50% מקדמה עם אישור התסריט של הפרק, 50% לפני מסירת הקובץ הסופי.</p>
+      <p><b>תשלום.</b> כמו שביקשתם, לכל פרק בנפרד: 50% מקדמה לתחילת העבודה, 50% לפני מסירת הקובץ הסופי.</p>
       <p><b>הזמנת רכש.</b> אם אצלכם נדרשת הזמנת רכש, נשמח לקבל אותה לפני חשבונית המקדמה. פרטי העסק בתחתית העמוד.</p>
       <p><b>תיקונים.</b> שני סבבי תיקונים כלולים בכל פרק. סבב הוא מסמך הערות אחד, מרוכז מכל הגורמים אצלכם. סבב שלישי: 1,200 ₪ + מע"מ. שינוי במה שכבר אושר (סצנה חדשה, דמות חדשה, פתיחה מחדש של תסריט מאושר) נסגר בהצעה נפרדת לפני שממשיכים.</p>
       <p><b>שימוש וזכויות.</b> עם התשלום המלא על כל פרק, הסרטון בשימוש בלעדי שלכם בכל הערוצים הדיגיטליים שלכם, אורגני וממומן, ללא הגבלת זמן. לא כולל שידור בטלוויזיה. MOONA רשאית להציג את העבודה בתיק העבודות ולציין את מרינה כלקוח.</p>
@@ -350,7 +350,7 @@ section:first-of-type{border-top:0}
       </form>
       <div class="done" id="apDone">
         <h3>ההצעה אושרה.</h3>
-        <p id="apDoneText">עותק נשלח למייל שלך. השלב הבא: התסריט של הפרק הראשון מגיע לאישור, ועם האישור חשבונית מקדמה.</p>
+        <p id="apDoneText">עותק נשלח למייל שלך. השלב הבא: חשבונית מקדמה לפרק הראשון, ומתחילים לעבוד.</p>
         <p><a class="pdf" href="/marina/quote/MOONA-Marina-quote-MS-2026-031.pdf" download>ההצעה כ-PDF</a></p>
       </div>
     </div>
@@ -386,7 +386,7 @@ try{fetch('/api/view',{method:'POST',headers:{'Content-Type':'application/json'}
       po:document.getElementById('apPo').value.trim(),agree:true,page:location.pathname,
       code:new URLSearchParams(location.search).get('c')||'','bot-field':f.elements['bot-field'].value
     })}).then(function(r){return r.json().catch(function(){return {ok:false}})}).then(function(d){
-      if(d&&d.ok){sec.classList.add('ok');document.getElementById('apDoneText').textContent='עותק נשלח ל-'+email+(d.when?' ב-'+d.when:'')+'. השלב הבא: התסריט של הפרק הראשון מגיע לאישור, ועם האישור חשבונית מקדמה.';sec.scrollIntoView({behavior:'smooth',block:'start'});}
+      if(d&&d.ok){sec.classList.add('ok');document.getElementById('apDoneText').textContent='עותק נשלח ל-'+email+(d.when?' ב-'+d.when:'')+'. השלב הבא: חשבונית מקדמה לפרק הראשון, ומתחילים לעבוד.';sec.scrollIntoView({behavior:'smooth',block:'start'});}
       else{btn.disabled=false;msg.className='msg err';msg.textContent='משהו לא עבד. אפשר פשוט לענות למייל "מאשר", וזה אותו דבר.';}
     }).catch(function(){btn.disabled=false;msg.className='msg err';msg.textContent='משהו לא עבד. אפשר פשוט לענות למייל "מאשר", וזה אותו דבר.';});
   });
