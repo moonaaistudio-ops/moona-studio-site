@@ -8,7 +8,7 @@
 const nodemailer = require('nodemailer');
 
 /* quote id (internal, never shown) -> the name the client sees */
-const QUOTES = new Map([['marina-quote', 'הכיתה של מרינה'], ['MS-2026-031', 'הכיתה של מרינה']]);
+const QUOTES = new Map([['marina-quote', 'הכיתה של מרינה'], ['MS-2026-031', 'הכיתה של מרינה'], ['marina-quote-v2', 'הכיתה של מרינה (מעודכנת)']]);
 const PH_KEY = 'phc_tR7sebAcZCkQvnc475AGEXGYhpmXxFa4JZTD4fQXrhuW';
 const PH_HOST = 'https://us.i.posthog.com';
 
