@@ -353,8 +353,8 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('#askTitle')).toHaveText('לדבר עם הסטודיו');
     await expect(page.locator('#ask')).toHaveAttribute('aria-labelledby', 'askTitle');
     await expect(page.locator('#askSubmit [data-i18n="form.quick.send"]')).toHaveText('שליחת פנייה');
-    await expect(page.locator('#analyticsAccept')).toHaveText('כן');
-    await expect(page.locator('#analyticsReject')).toHaveText('לא');
+    await expect(page.locator('#analyticsAccept')).toHaveText('אישור');
+    await expect(page.locator('#analyticsReject')).toHaveText('דחייה');
 
     expect(await page.evaluate(() => ({
       primary: window.MoonaI18n.t('common.primaryCta', {}, 'en'),

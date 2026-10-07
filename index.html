@@ -492,22 +492,29 @@ body.cur-off .cur{opacity:0}
 /* author display beats the UA's [hidden]{display:none}, so the attribute has
    to be honoured explicitly - without this the banner never goes away */
 .analytics-consent[hidden]{display:none}
-.analytics-consent{position:fixed;inset-inline-end:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:110;cursor:auto;
-  display:flex;align-items:center;gap:12px;max-width:calc(100vw - 24px);
-  padding:8px 10px;background:rgba(8,11,19,.96);border:1px solid rgba(217,198,156,.34);border-radius:14px;
-  box-shadow:0 14px 44px rgba(0,0,0,.38)}
-.analytics-consent p{min-width:0;flex:1;font-size:13px;line-height:1.35;color:var(--ice-dim)}
-.analytics-consent p a{color:var(--ice-hot);cursor:pointer}
-.analytics-consent__actions{display:flex;direction:ltr;gap:8px;flex:none}
-.analytics-consent button{font-family:var(--mono);font-size:12px;letter-spacing:0;text-transform:none;
-  box-sizing:border-box;width:48px;min-height:44px;padding:0;border:1px solid transparent;
-  border-radius:var(--r-pill);line-height:1.15;text-align:center;white-space:nowrap;cursor:pointer}
-.analytics-consent__accept{border-color:#d9c69c;background:#d9c69c;color:#0d0b07}
-.analytics-consent__reject{border-color:rgba(190,212,238,.4);background:rgba(190,212,238,.08);color:var(--ice-hot)}
+.analytics-consent{position:fixed;inset-inline-end:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:110;cursor:auto;
+  display:flex;align-items:center;gap:10px;max-width:calc(100vw - 28px);
+  padding-block:5px;padding-inline:14px 5px;background:rgba(8,11,19,.8);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border:1px solid rgba(190,212,238,.14);border-radius:var(--r-pill);box-shadow:0 10px 30px rgba(0,0,0,.28)}
+.analytics-consent p{min-width:0;flex:1;font-size:12px;line-height:1.3;color:var(--ice-dim)}
+.analytics-consent p a{color:inherit;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.analytics-consent p a:hover{color:var(--ice-hot)}
+.analytics-consent__actions{display:flex;direction:ltr;gap:6px;flex:none}
+.analytics-consent button{font-family:var(--mono);font-size:11px;letter-spacing:0;text-transform:none;
+  box-sizing:border-box;min-width:44px;min-height:30px;padding:0 14px;border:1px solid transparent;background:transparent;
+  border-radius:var(--r-pill);line-height:1.15;text-align:center;white-space:nowrap;cursor:pointer;transition:background .2s,border-color .2s}
+/* accept is the clear gold action; decline stays a real, reachable button, just quiet */
+.analytics-consent button.analytics-consent__accept{border-color:#d9c69c;background:#d9c69c;color:#0d0b07}
+.analytics-consent button.analytics-consent__accept:hover{background:#e6d6b0}
+.analytics-consent button.analytics-consent__reject{border-color:rgba(190,212,238,.22);color:var(--ice-dim)}
+.analytics-consent button.analytics-consent__reject:hover{background:rgba(190,212,238,.08);color:var(--ice-hot)}
 .analytics-consent button:focus-visible{outline:2px solid #fff;outline-offset:3px}
+/* fingers still get a full 44px target */
+@media(max-width:700px),(pointer:coarse){.analytics-consent button{min-height:44px}}
 @media(max-width:700px){
-  .analytics-consent{inset-inline:10px;bottom:calc(10px + env(safe-area-inset-bottom));max-width:none;gap:8px;
-    padding:7px 9px;border-radius:12px}
+  .analytics-consent{inset-inline-end:10px;bottom:calc(10px + env(safe-area-inset-bottom));max-width:calc(100vw - 20px);gap:8px;
+    padding-block:4px;padding-inline:12px 4px}
 }
 
 /* ————————————————————— cursor ————————————————————— */
@@ -1426,10 +1433,10 @@ html[lang="he"] :is(.film-title,.film-beat h3,.sentence p,.about-copy h2,.crew-t
 <div class="grain"></div>
 <div class="cur ring"></div>
 <aside class="analytics-consent" id="analyticsConsent" aria-label="Analytics preferences" data-i18n-aria-label="consent.label" hidden>
-  <p><span id="consentQuestion" data-i18n="consent.text">Allow site analytics?</span> <a href="privacy.html" data-locale-link data-i18n="consent.privacy">Privacy</a></p>
+  <p><span id="consentQuestion" data-i18n="consent.text">We use cookies to improve your experience.</span> <a href="privacy.html" data-locale-link data-i18n="consent.privacy">Privacy</a></p>
   <div class="analytics-consent__actions">
-    <button class="analytics-consent__accept" type="button" id="analyticsAccept" aria-describedby="consentQuestion" data-i18n="consent.accept">Yes</button>
-    <button class="analytics-consent__reject" type="button" id="analyticsReject" aria-describedby="consentQuestion" data-i18n="consent.decline">No</button>
+    <button class="analytics-consent__accept" type="button" id="analyticsAccept" aria-describedby="consentQuestion" data-i18n="consent.accept">Accept</button>
+    <button class="analytics-consent__reject" type="button" id="analyticsReject" aria-describedby="consentQuestion" data-i18n="consent.decline">Decline</button>
   </div>
 </aside>
 <div id="lb" role="dialog" aria-modal="true" aria-label="Enlarged work" data-i18n-aria-label="lightbox.label" hidden>
