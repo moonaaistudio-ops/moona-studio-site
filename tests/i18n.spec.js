@@ -344,13 +344,13 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('.work-note')).toHaveText('חמישה סרטי קונספט שיצרנו ביוזמתנו כדי להראות מה נוכל ליצור עבור המותג הבא, ומודעה אחת שרצה ברשתות. המותגים בסרטי הקונספט אינם לקוחות של Moona.');
     await expect(page.locator('[data-i18n="work.bullPadel.concept"]')).toHaveText('המחבט מחזיר חבטה.');
     await expect(page.locator('[data-i18n="work.koda.concept"]')).toHaveText('נבנה לפיד שבו הוא חי.');
-    await expect(page.locator('.contact-line')).toHaveText('בואו נעשה את זה גם למותג שלכם.');
-    await expect(page.locator('.contact-body')).toHaveText('שלחו מוצר אחד ושורה על המותג. נחזור אליכם עם כיוון בתוך שני ימי עסקים.');
-    await expect(page.locator('[data-header-contact-cta] [data-i18n="common.primaryCta"]')).toHaveText('בואו נדבר');
-    await expect(page.locator('[data-i18n="common.primaryCta"]')).toHaveText(['בואו נדבר']);
+    await expect(page.locator('.contact-line')).toHaveText('יש לכם משהו בראש?');
+    await expect(page.locator('.contact-body')).toHaveText('סרט למותג, קמפיין חדש או רעיון שעוד מתגבש. בואו נדבר על מה שאפשר ליצור יחד.');
+    await expect(page.locator('[data-header-contact-cta] [data-i18n="common.primaryCta"]')).toHaveText('דברו איתנו');
+    await expect(page.locator('[data-i18n="common.primaryCta"]')).toHaveText(['דברו איתנו']);
     await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
-    await expect(page.locator('.contact [data-i18n="contact.productCta"]')).toHaveText('שלחו מוצר אחד');
-    await expect(page.locator('#askTitle')).toHaveText('לדבר עם הסטודיו');
+    await expect(page.locator('.contact [data-i18n="contact.productCta"]')).toHaveText('דברו איתנו');
+    await expect(page.locator('#askTitle')).toHaveText('דברו איתנו');
     await expect(page.locator('#ask')).toHaveAttribute('aria-labelledby', 'askTitle');
     await expect(page.locator('#askSubmit [data-i18n="form.quick.send"]')).toHaveText('שליחת פנייה');
     await expect(page.locator('#analyticsAccept')).toHaveText('אישור');
@@ -372,8 +372,8 @@ test.describe('dictionary and first-paint privacy contract', () => {
       dialog: 'Talk to the studio',
       send: 'Send inquiry',
       note: 'Reply within two business days',
-      productHero: 'SEND ONE PRODUCT',
-      productContact: 'Send one product'
+      productHero: 'LET’S TALK',
+      productContact: 'Let’s talk'
     });
 
     const bidiContract = await page.evaluate(() => {
@@ -401,7 +401,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
       'A brand-film studio. No shoot day.',
       'Your product, protected in every shot.'
     ]);
-    await expect(page.locator('.hero-cta [data-i18n="hero.productCta"]')).toHaveText('SEND ONE PRODUCT');
+    await expect(page.locator('.hero-cta [data-i18n="hero.productCta"]')).toHaveText('LET’S TALK');
     await expect(page.locator('[data-i18n="common.primaryCta"]')).toHaveText(['LET’S TALK']);
     await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
     await expect(page.locator('.film-title')).toHaveText('We created a brand. Then we shot its ad.');
@@ -1720,7 +1720,7 @@ test.describe('responsive header and dynamic UI', () => {
           window.scrollTo(0, hero.offsetTop + hero.offsetHeight + 2);
         });
         await expect(headerCta).toBeVisible();
-        await expect(headerCta).toHaveText(locale === 'he' ? 'בואו נדבר' : 'LET’S TALK');
+        await expect(headerCta).toHaveText(locale === 'he' ? 'דברו איתנו' : 'LET’S TALK');
 
         const belowHero = await readLayout();
         assertContained(belowHero, `${locale} ${width}px below hero`);
@@ -2067,7 +2067,7 @@ test.describe('lead submission mocks', () => {
     expect(page.url()).toContain('?lang=he');
   });
 
-  test('product mode mailto fallback includes the product link and the lead tag', async ({ page }) => {
+  test('contact mailto fallback includes the optional website and original message', async ({ page }) => {
     await page.route('**/api/lead', route => route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -2097,7 +2097,7 @@ test.describe('lead submission mocks', () => {
     expect(url.pathname).toBe('tal@moonastudio.ai');
     const body = url.searchParams.get('body');
     expect(body).toContain('אתר: brand.com/serum');
-    expect(body).toContain('Request: one product');
+    expect(body).not.toContain('Request: one product');
     expect(body).toContain(LEAD_BRIEF);
   });
 
@@ -2115,21 +2115,57 @@ test.describe('lead submission mocks', () => {
     });
     await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
     await expect(page.locator('#ask')).toHaveClass(/open/);
-    await expect(page.locator('#askTitle')).toHaveText('מוצר אחד');
-    await expect(page.locator('[data-step="0"] .qtitle')).toHaveText('מתחילים ממוצר אחד.');
+    await expect(page.locator('#askTitle')).toHaveText('דברו איתנו');
+    await expect(page.locator('[data-step="0"] .qtitle')).toHaveText('מתחילים בשיחה.');
     await expect(page.locator('#f-product')).toBeVisible();
     await page.locator('#f-name').fill('Dana Cohen');
     await page.locator('#f-mail').fill('dana@example.com');
     await page.locator('#f-product').fill('brand.com/serum');
     await page.locator('#askSubmit').click();
     await expect(page.locator('[data-step="1"]')).toHaveClass(/active/);
-    await expect(page.locator('#doneMsg')).toHaveText('נעבור על המוצר ונחזור אליכם עם כיוון בתוך שני ימי עסקים.');
+    await expect(page.locator('#doneMsg')).toHaveText('תודה שפניתם. נחזור אליכם בתוך שני ימי עסקים.');
     expect(payload.website).toBe('brand.com/serum');
-    expect(payload.brief).toBe('Request: one product');
+    expect(payload.brief).toBe('');
     await expect.poll(() => page.evaluate(() => window.__events)).toEqual([
       ['lead_form_opened', { cta_location: 'hero', intent: 'product' }],
       ['lead_form_submitted', { intent: 'product' }]
     ]);
+  });
+
+  for (const [locale, trigger] of [['he', '[data-hero-contact-cta]'], ['en', '.contact [data-ask]']]) {
+    test(`contact inquiry accepts name and email only (${locale})`, async ({ page }) => {
+      let payload;
+      await page.route('**/api/lead', route => {
+        payload = route.request().postDataJSON();
+        return route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' });
+      });
+      await openHome(page, '/?lang=' + locale);
+      await page.evaluate(selector => document.querySelector(selector).click(), trigger);
+      await expect(page.locator('#f-product')).toHaveAttribute('aria-required', 'false');
+      await page.locator('#f-name').fill('Dana Cohen');
+      await page.locator('#f-mail').fill('dana@example.com');
+      await page.locator('#askSubmit').click();
+      await expect(page.locator('[data-step="1"]')).toHaveClass(/active/);
+      expect(payload.website).toBe('');
+      expect(payload.brief).toBe('');
+      expect(payload.name).toBe('Dana Cohen');
+    });
+  }
+
+  test('contact inquiry accepts the full 1200-character message without a product tag', async ({ page }) => {
+    let payload;
+    await page.route('**/api/lead', route => {
+      payload = route.request().postDataJSON();
+      return route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' });
+    });
+    await openHome(page, '/?lang=en');
+    await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
+    await page.locator('#f-name').fill('Dana Cohen');
+    await page.locator('#f-mail').fill('dana@example.com');
+    await page.locator('#f-brief').fill('x'.repeat(1200));
+    await page.locator('#askSubmit').click();
+    await expect(page.locator('[data-step="1"]')).toHaveClass(/active/);
+    expect(payload.brief).toBe('x'.repeat(1200));
   });
 
   test('an unopenable product link is caught before any request', async ({ page }) => {
@@ -2160,12 +2196,12 @@ test.describe('lead submission mocks', () => {
   test('product mode survives a language switch', async ({ page }) => {
     await openHome(page, '/?lang=he');
     await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
-    await expect(page.locator('#askTitle')).toHaveText('מוצר אחד');
+    await expect(page.locator('#askTitle')).toHaveText('דברו איתנו');
     await page.evaluate(() => window.MoonaI18n.setLocale('en', { source: 'programmatic' }));
-    await expect(page.locator('#askTitle')).toHaveText('One product');
-    await expect(page.locator('[data-step="0"] .qtitle')).toHaveText('Start with one product.');
+    await expect(page.locator('#askTitle')).toHaveText('Let’s talk');
+    await expect(page.locator('[data-step="0"] .qtitle')).toHaveText('It starts with a conversation.');
     await expect(page.locator('#f-product')).toBeVisible();
-    await expect(page.locator('#f-product')).toHaveAttribute('placeholder', 'yourbrand.com/product');
+    await expect(page.locator('#f-product')).toHaveAttribute('placeholder', 'yourbrand.com');
   });
 
   test('footer CTA opens product mode', async ({ page }) => {
@@ -2176,7 +2212,7 @@ test.describe('lead submission mocks', () => {
       window.MoonaAnalytics.capture = (name, props) => window.__events.push([name, props]);
     });
     await page.evaluate(() => document.querySelector('.contact [data-intent="product"]').click());
-    await expect(page.locator('#askTitle')).toHaveText('One product');
+    await expect(page.locator('#askTitle')).toHaveText('Let’s talk');
     await expect.poll(() => page.evaluate(() => window.__events)).toEqual([
       ['lead_form_opened', { cta_location: 'contact', intent: 'product' }]
     ]);

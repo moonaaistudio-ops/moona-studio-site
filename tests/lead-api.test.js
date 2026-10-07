@@ -127,3 +127,15 @@ test('keeps the honeypot silent-success behavior without processing a brief', as
   assert.equal(res.statusCode, 200);
   assert.deepEqual(res.payload, { ok: true });
 });
+
+
+test('accepts a name and email without a website or brief', async () => {
+  let message;
+  nodemailer.createTransport = () => ({ sendMail: async value => { message = value; } });
+  const res = response();
+  await lead(request({ name: 'Dana Cohen', email: 'dana@example.com' }), res);
+  assert.equal(res.statusCode, 200);
+  assert.deepEqual(res.payload, { ok: true });
+  assert.match(message.text, /Website: not given/);
+  assert.equal(message.subject, 'New ad request: Dana Cohen');
+});
