@@ -1264,12 +1264,16 @@ html[lang="he"] .solutions :is(h2,h3){font-weight:700;letter-spacing:-.025em}
 .work-grid .piece .meta .work-summary{grid-column:2;margin:6px 0 0;max-width:54ch;font-size:clamp(14px,1.15vw,17px);line-height:1.6;color:var(--ice-dim)}
 .work-grid .breakdown{display:none!important}
 /* a reel card shows the whole vertical film, never a 16:10 crop of it */
-.work-grid .piece.reel{display:grid!important;grid-column:1/-1;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:center}
+.work-grid .piece.reel{display:grid!important;grid-column:1/-1;grid-template-columns:minmax(0,360px) minmax(0,480px);justify-content:center;gap:clamp(24px,4vw,64px);align-items:center}
 .work-grid .piece.reel .frame{aspect-ratio:9/16!important}
 .work-grid .piece.reel .frame video{width:100%;height:100%;object-fit:cover}
 .work-grid .piece.reel .meta{margin:0!important}
 .work-grid .piece.reel .work-summary{white-space:pre-line}
-@media(max-width:760px){.work-grid .piece.reel{grid-template-columns:1fr}.work-grid .piece.reel .frame{width:min(100%,360px)!important;margin-inline:auto!important}.work-grid .piece.reel .meta{margin:18px 0 0!important}}
+/* the next reel mirrors the one before it: film on the other side, text on this one */
+.work-grid .piece.reel.reel-flip{grid-template-columns:minmax(0,480px) minmax(0,360px)}
+.work-grid .piece.reel.reel-flip .frame{order:2}
+.work-grid .piece.reel.reel-flip .meta{justify-self:end}
+@media(max-width:760px){.work-grid .piece.reel,.work-grid .piece.reel.reel-flip{grid-template-columns:1fr}.work-grid .piece.reel.reel-flip .frame{order:0}.work-grid .piece.reel.reel-flip .meta{justify-self:stretch}.work-grid .piece.reel .frame{width:min(100%,360px)!important;margin-inline:auto!important}.work-grid .piece.reel .meta{margin:18px 0 0!important}}
 .impact-replay{grid-column:2;justify-self:start;margin:7px 0 0;padding:8px 0;border:0;border-bottom:1px solid rgba(217,198,156,.55);background:none;color:#d9c69c;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
 .impact-replay:hover{color:var(--ice-hot);border-bottom-color:var(--ice-hot)}
 .impact-replay:focus-visible{outline:2px solid #d9c69c;outline-offset:4px}
@@ -1644,7 +1648,7 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
     <h2 class="sr-only" id="work-title" data-i18n="work.heading">Selected concept films</h2>
     <div class="work-head rv">
       <span class="idx" data-i18n="work.eyebrow">Selected work</span>
-      <p class="work-note" data-i18n="work.note">Four self-initiated concept films and one live social ad.</p>
+      <p class="work-note" data-i18n="work.note">Five self-initiated concept films and one live social ad.</p>
     </div>
 
     <div class="work-grid">
@@ -1686,9 +1690,19 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
       <div class="breakdown"></div>
     </article>
     <article class="piece vert reel rv" data-piece>
+      <div class="frame"><video src="v/jewelry.mp4" poster="p/jewelry.jpg" muted loop playsinline preload="none" aria-label="Self-initiated jewelry concept film by Moona" data-i18n-aria-label="work.jewelry.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the jewelry concept film larger" data-i18n-aria-label="work.jewelry.open"></button><span class="vbadge">00:10</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
+      <div class="meta">
+        <span class="num">05</span><h3 class="brand" data-i18n="work.jewelry.title">Jewelry brands</h3>
+        <p class="concept" data-i18n="work.jewelry.concept">Nobody stood on this street.</p>
+        <p class="work-summary" data-i18n="work.jewelry.summary">A UGC ad for jewelry.
+The street, the noon light and every move, frame by frame.</p>
+      </div>
+      <div class="breakdown"></div>
+    </article>
+    <article class="piece vert reel reel-flip rv" data-piece>
       <div class="frame"><video src="v/startup-reel.mp4" poster="p/startup-reel.jpg" muted loop playsinline preload="none" aria-label="Social ad for an app by Moona" data-i18n-aria-label="work.startup.video"></video><button class="frame-open" type="button" data-media-open aria-label="Open the app ad larger" data-i18n-aria-label="work.startup.open"></button><span class="vbadge">00:08</span><i class="vprog"></i><div class="piece-ctl"><button class="film-play" type="button" data-state="playing" aria-label="Pause the film" data-media-play data-hover><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ico-pause"><path d="M5.5 3.5v9M10.5 3.5v9"/></g><g class="ico-play"><path d="M5 3.2l8 4.8-8 4.8z"/></g><g class="ico-replay"><path d="M13 8a5 5 0 1 1-1.7-3.8M13 2.6v2.2h-2.2"/></g></svg></button></div></div>
       <div class="meta">
-        <span class="num">05</span><h3 class="brand" data-i18n="work.startup.title">Software / App</h3>
+        <span class="num">06</span><h3 class="brand" data-i18n="work.startup.title">Startups &amp; apps</h3>
         <p class="concept" data-i18n="work.startup.concept">Nobody on this sofa was ever filmed.</p>
         <p class="work-summary" data-i18n="work.startup.summary">A short excerpt from a UGC ad we made for a startup.
 The couple, the living room and the reaction were built in the studio, with no actors and no shoot day.</p>
