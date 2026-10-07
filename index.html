@@ -1514,7 +1514,7 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
       <h1 class="statement"><span data-i18n="hero.headline.lead">Cinematic ads,</span> <bdi lang="en" dir="ltr" data-i18n="hero.headline.aiTerm"></bdi> <em data-i18n="hero.headline.emphasis">born without a camera</em></h1>
       <p class="statement-sub"><span data-i18n="hero.subline.one">A brand-film studio. No shoot day.</span><span data-i18n="hero.subline.two">Your product, protected in every shot.</span></p>
       </div>
-      <button class="cta-btn hero-cta" type="button" data-ask data-intent="product" data-hero-contact-cta data-hover><span data-i18n="hero.productCta">SEND ONE PRODUCT</span><i></i></button>
+      <button class="cta-btn hero-cta" type="button" data-ask data-intent="product" data-hero-contact-cta data-hover><span data-i18n="hero.productCta">LET’S TALK</span><i></i></button>
     </div>
 
     <!-- beats 2 and 3 ride the film: boots on the surface, then the flag -->
@@ -1845,9 +1845,9 @@ The couple, the living room and the reaction were built in the studio, with no a
 </main>
 
   <footer class="contact" id="contact" tabindex="-1" aria-labelledby="contact-title">
-    <h2 class="contact-line rv" id="contact-title" data-i18n="contact.line">Let’s make one for your brand.</h2>
-    <p class="contact-body rv" data-i18n="contact.body">Send one product and a line about the brand. We reply with a direction within two business days.</p>
-    <button class="cta-btn lg rv" data-ask data-intent="product" data-hover><span data-i18n="contact.productCta">Send one product</span><i></i></button>
+    <h2 class="contact-line rv" id="contact-title" data-i18n="contact.line">What do you have in mind?</h2>
+    <p class="contact-body rv" data-i18n="contact.body">A brand film, a new campaign or an idea taking shape. Let’s talk about what we can create together.</p>
+    <button class="cta-btn lg rv" data-ask data-intent="product" data-hover><span data-i18n="contact.productCta">Let’s talk</span><i></i></button>
     <p class="disc rv" data-i18n="contact.disclaimer">All work self-initiated. Brands are shown for demonstration only and are not clients. No client relationship implied.</p>
     <nav class="legal-nav" aria-label="Legal and accessibility" data-i18n-aria-label="footer.nav">
       <a href="privacy.html" data-locale-link data-i18n="footer.privacy">Privacy notice</a>
@@ -1866,8 +1866,8 @@ The couple, the living room and the reaction were built in the studio, with no a
 
   <form class="qwrap" id="askForm" autocomplete="on" data-clarity-mask="true" novalidate>
     <div class="q qcompact" data-step="0">
-      <h2 class="qtitle" data-i18n="form.quick.title">Let’s make something.</h2>
-      <p class="quick-intro" data-i18n="form.quick.intro">A few words are enough to start.</p>
+      <h2 class="qtitle" data-i18n="form.quick.title">It starts with a conversation.</h2>
+      <p class="quick-intro" data-i18n="form.quick.intro">Leave your name and email. Add a few words about your idea if you like.</p>
       <div class="quick-fields">
         <div class="quick-field">
           <label for="f-name" data-i18n="form.quick.name">Name</label>
@@ -1880,8 +1880,8 @@ The couple, the living room and the reaction were built in the studio, with no a
           <p class="qhint" id="email-hint" aria-live="polite" aria-atomic="true"></p>
         </div>
         <div class="quick-field quick-product" id="f-product-field" hidden>
-          <label for="f-product" data-i18n="form.product.link">Product link (optional)</label>
-          <input type="text" name="product" id="f-product" aria-describedby="product-hint" aria-required="false" aria-invalid="false" maxlength="400" inputmode="url" autocomplete="url" dir="ltr" placeholder="yourbrand.com/product" data-i18n-placeholder="form.product.linkPlaceholder" data-hover>
+          <label for="f-product" data-i18n="form.product.link">Website (optional)</label>
+          <input type="text" name="product" id="f-product" aria-describedby="product-hint" aria-required="false" aria-invalid="false" maxlength="400" inputmode="url" autocomplete="url" dir="ltr" placeholder="yourbrand.com" data-i18n-placeholder="form.product.linkPlaceholder" data-hover>
           <p class="qhint" id="product-hint" aria-live="polite" aria-atomic="true"></p>
         </div>
         <div class="quick-field quick-brief">
@@ -3146,10 +3146,9 @@ onLocaleRender(()=>{
     h.textContent=h.dataset.i18nCurrent?tr(h.dataset.i18nCurrent):'';
   });
 });
-const PRODUCT_TAG='Request: one product';
 function validateInquiry(){
   let firstInvalid=null;
-  const briefMax=askForm.dataset.intent==='product'?1200-PRODUCT_TAG.length-2:1200;
+  const briefMax=1200;
   for(const input of askForm.querySelectorAll('.quick-field input,.quick-field textarea')){
     if(input.closest('[hidden]')){fieldHint(input,'');continue}
     const value=input.value.trim();
@@ -3208,8 +3207,7 @@ async function submitAsk(){
 
   const isProduct=askForm.dataset.intent==='product';
   const link=isProduct?askForm.elements.product.value.trim():'';
-  const briefText=askForm.elements.brief.value.trim();
-  const brief=isProduct?PRODUCT_TAG+(briefText?'\n\n'+briefText:''):briefText;
+  const brief=askForm.elements.brief.value.trim();
 
   try{
     const payload={
