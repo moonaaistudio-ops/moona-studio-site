@@ -49,7 +49,7 @@
 <meta name="theme-color" content="#05070c">
 <link rel="canonical" href="https://moonastudio.ai/">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"Moona Studio","alternateName":"Moona","url":"https://moonastudio.ai/"},{"@type":"Organization","name":"Moona Studio","url":"https://moonastudio.ai/","logo":"https://moonastudio.ai/p/brand/moona-logo-mark-512.png"}]}
+{"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"Moona Studio","alternateName":"Moona","url":"https://moonastudio.ai/"},{"@type":"Organization","name":"Moona Studio","url":"https://moonastudio.ai/","logo":"https://moonastudio.ai/p/brand/moona-logo-mark-512.png","sameAs":["https://www.instagram.com/moonastudio.ai/"]}]}
 </script>
 
 <!-- how the link looks when someone shares it -->
@@ -1060,6 +1060,13 @@ html[dir="rtl"] .beat-line{transform-origin:right}
   text-transform:uppercase;color:rgba(168,198,232,.66)}
 .contact .disc{margin-top:7vh;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;
   color:var(--ice-dim);max-width:52ch;margin-inline:auto;line-height:1.9}
+.contact .social{display:flex;width:fit-content;margin-inline:auto;align-items:center;gap:10px;min-height:44px;margin-top:30px;padding:10px 6px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ice-dim);text-decoration:none;cursor:none;
+  transition:color .25s}
+.contact .social svg{flex:none}
+.contact .social:hover{color:var(--ice-hot)}
+.contact .social:focus-visible{outline:2px solid #fff;outline-offset:3px}
+@media(pointer:coarse){.contact .social{cursor:auto}}
 .legal-nav{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px 18px;margin-top:34px}
 .legal-nav :is(a,button){display:inline-flex;align-items:center;justify-content:center;min-height:44px;
   padding:10px 4px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
@@ -1848,6 +1855,7 @@ The couple, the living room and the reaction were built in the studio, with no a
     <h2 class="contact-line rv" id="contact-title" data-i18n="contact.line">What do you have in mind?</h2>
     <p class="contact-body rv" data-i18n="contact.body">A brand film, a new campaign or an idea taking shape. Let’s talk about what we can create together.</p>
     <button class="cta-btn lg rv" data-ask data-intent="product" data-hover><span data-i18n="contact.productCta">Let’s talk</span><i></i></button>
+    <a class="social rv" href="https://www.instagram.com/moonastudio.ai/" target="_blank" rel="noopener" aria-label="Moona on Instagram, @moonastudio.ai (opens in a new tab)" data-i18n-aria-label="contact.instagram"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/></svg><bdi dir="ltr">@moonastudio.ai</bdi></a>
     <p class="disc rv" data-i18n="contact.disclaimer">All work self-initiated. Brands are shown for demonstration only and are not clients. No client relationship implied.</p>
     <nav class="legal-nav" aria-label="Legal and accessibility" data-i18n-aria-label="footer.nav">
       <a href="privacy.html" data-locale-link data-i18n="footer.privacy">Privacy notice</a>
