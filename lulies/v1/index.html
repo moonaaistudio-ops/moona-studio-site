@@ -254,16 +254,41 @@ section:first-of-type{border-top:0}
 .snd[aria-pressed="true"]{background:rgba(217,198,156,.94);color:#05070c;border-color:transparent}
 .snd:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .vbox .snd{top:12px;bottom:auto}
+/* one-tap cover: the browser needs one tap before any film may play sound */
+.gate{position:fixed;inset:0;z-index:60;display:grid;place-items:center;width:100%;margin:0;border:0;padding:24px;background:rgba(5,7,12,.8);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:var(--ice);cursor:pointer;font-family:var(--he);transition:opacity .45s ease}
+.gate.gone{opacity:0;pointer-events:none}
+.gate[hidden]{display:none}
+.gate .in{display:grid;justify-items:center;gap:22px;text-align:center}
+.gate .duo{display:flex;align-items:center;gap:20px}
+.gate .duo img{height:24px;width:auto}
+.gate .duo img.lu{height:50px}
+.gate .duo .x{font-family:var(--mono);color:var(--gold);font-size:14px}
+.gate .play{width:92px;height:92px;border-radius:50%;border:1px solid var(--gold);display:grid;place-items:center;color:var(--gold);margin-top:8px;animation:gpulse 2.4s ease-in-out infinite}
+.gate .play svg{width:32px;height:32px;transform:translateX(2px)}
+.gate .t{font-size:20px;font-weight:600}
+.gate .s{font-size:14px;color:var(--ice-dim);font-weight:300}
+.gate:focus-visible{outline:2px solid var(--gold);outline-offset:-8px}
+@keyframes gpulse{0%,100%{box-shadow:0 0 0 0 rgba(217,198,156,.35)}50%{box-shadow:0 0 0 14px rgba(217,198,156,0)}}
+@media (prefers-reduced-motion:reduce){.gate{transition:none}.gate .play{animation:none}}
 </style>
 </head>
 <body>
+<button class="gate" id="gate" type="button" aria-label="צפייה בסרטון עם סאונד">
+  <span class="in">
+    <span class="duo"><img class="lu" src="img/logo_lulies_w.png" alt=""><span class="x">×</span><img src="img/moona_lockup.png" alt=""></span>
+    <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+    <span class="t">צפייה עם סאונד</span>
+    <span class="s">דוגמה על האוברול שלכם, להמחשה בלבד</span>
+  </span>
+</button>
+<noscript><style>.gate{display:none}</style></noscript>
 <section class="hero textonly">
   <div class="wrap">
     <div class="top">
       <div class="duo"><img class="gf" src="img/logo_lulies.png" alt="LULIE'S"><span class="x">×</span><img src="img/moona_lockup.png" alt="MOONA STUDIO"></div>
     </div>
     <div class="grid">
-      <figure class="artfig"><div class="art r916"><video id="v-sample" src="media/sample.mp4" poster="img/sample_poster.jpg" playsinline autoplay muted loop preload="metadata" aria-label="האוברול הפיסטוק של LULIE'S: הבד, הרקמה וכפות רגליים של תינוק בתוך הכפות המקופלות"></video><button class="snd" type="button" aria-pressed="false" data-for="v-sample"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>הפעלת סאונד</span></button></div><figcaption class="made">האוברול הפיסטוק שלכם: הבד, הרקמה, וכפות רגליים בתוך הכפות המקופלות. עם מוזיקה: כפתור הסאונד על הסרטון.</figcaption><p class="made" style="margin-top:10px">בנינו אותה מתמונות המוצר באתר בלבד, בלי יום צילום. את התינוק עצמו השארנו לסבב הבא, בכוונה: שם נעבוד איתך על הגזרה והמידה, כי את מכירה את זה יותר טוב מכל מודל.</p><p class="made" style="margin-top:8px;font-size:13px">הסרטון נוצר אצלנו כדוגמה, ומיועד לצפייה בלבד. אין לפרסם אותו ולא להשתמש בו.</p></figure>
+      <figure class="artfig"><div class="art r916"><video id="v-sample" src="media/sample.mp4" poster="img/sample_poster.jpg" playsinline muted loop preload="auto" aria-label="האוברול הפיסטוק של LULIE'S: הבד, הרקמה וכפות רגליים של תינוק בתוך הכפות המקופלות"></video><button class="snd" type="button" aria-pressed="false" data-for="v-sample"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>הפעלת סאונד</span></button></div><figcaption class="made">האוברול הפיסטוק שלכם: הבד, הרקמה, וכפות רגליים בתוך הכפות המקופלות. להמחשה בלבד.</figcaption><p class="made" style="margin-top:10px">בנינו אותה מתמונות המוצר באתר בלבד, בלי יום צילום. את התינוק עצמו השארנו לסבב הבא, בכוונה: שם נעבוד איתך על הגזרה והמידה, כי את מכירה את זה יותר טוב מכל מודל.</p><p class="made" style="margin-top:8px;font-size:13px">הסרטון נוצר אצלנו כדוגמה, ומיועד לצפייה בלבד. אין לפרסם אותו ולא להשתמש בו.</p></figure>
     <div class="copy">
       <span class="eyebrow">Product demo</span>
       <h1 class="brand" dir="ltr" style="text-align:right">LULIE'S <span class="x">×</span> MOONA</h1>
@@ -279,7 +304,7 @@ section:first-of-type{border-top:0}
   <div class="wrap">
     <div class="sec-h"><span class="eyebrow">The idea</span><h2>הרגע לפני השינה</h2><p>אמהות לא קונות אוברול, הן קונות שקט בלילה. הפרטים הקטנים שלכם הם ההוכחה: רוכסן שנפתח מלמטה, רגליים שנשארות מכוסות, בד שלא מגרד. כל סרטון בסדרה מתחיל מהבד ונגמר באותו רגע: האוברול נוחת על המיטה, האור יורד, ותינוק נרדם. אחרי כמה פרקים מזהים אתכם עוד לפני שהלוגו עולה.</p></div>
     <div class="row">
-      <div class="ep feature"><figure class="epfig"><div class="vbox"><video id="v-sig" src="media/signature.mp4" poster="img/signature_poster.jpg" playsinline autoplay muted loop preload="metadata" aria-label="האוברול הפיסטוק צונח לאט לתוך מיטת תינוק, האור יורד ומנורת לילה נדלקת"></video><button class="snd" type="button" aria-pressed="false" data-for="v-sig"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>הפעלת סאונד</span></button></div><figcaption>הרגע שבו כל פרק נגמר: האוברול נוחת במיטה, האור יורד. הכנו אותו להמחשה, מתמונות המוצר שלכם.</figcaption></figure>
+      <div class="ep feature"><figure class="epfig"><div class="vbox"><video id="v-sig" src="media/signature.mp4" poster="img/signature_poster.jpg" playsinline muted loop preload="metadata" aria-label="האוברול הפיסטוק צונח לאט לתוך מיטת תינוק, האור יורד ומנורת לילה נדלקת"></video><button class="snd" type="button" aria-pressed="false" data-for="v-sig"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>הפעלת סאונד</span></button></div><figcaption>הרגע שבו כל פרק נגמר: האוברול נוחת במיטה, האור יורד. להמחשה בלבד, מתמונות המוצר שלכם.</figcaption></figure>
         <div class="eptext"><span class="n">01</span><h3>האוברול</h3>
         <p>בגד מונח על המיטה באור בוקר, המצלמה נכנסת לרקמה. ידיים סוגרות את הרוכסן הדו-כיווני מלמטה למעלה. כפות רגליים בועטות בתוך הכפות המקופלות. האור יורד.</p>
         <p class="beat"><b>המסר שלכם.</b> "החלפת חיתול בלי להפשיט", ו"שומר על הרגליים מכוסות גם כשהשמיכה זזה".</p></div></div>
@@ -326,13 +351,37 @@ section:first-of-type{border-top:0}
 </section>
 
 <script>
-(function(){var bs=document.querySelectorAll('.snd');
-function set(b,on){b.setAttribute('aria-pressed',on?'true':'false');b.querySelector('span').textContent=on?'השתקה':'הפעלת סאונד';}
-bs.forEach(function(b){var v=document.getElementById(b.dataset.for);if(!v)return;
-b.addEventListener('click',function(){var turnOn=v.muted;
-bs.forEach(function(o){var ov=document.getElementById(o.dataset.for);if(ov&&ov!==v){ov.muted=true;set(o,false);}});
-v.muted=!turnOn;if(turnOn){try{v.currentTime=0;}catch(e){}var pr=v.play();if(pr&&pr.catch)pr.catch(function(){});}
-set(b,turnOn);});});})();
+(function(){
+var gate=document.getElementById('gate');
+var vids=['v-sample','v-sig'].map(function(id){return document.getElementById(id);}).filter(Boolean);
+if(!vids.length){if(gate)gate.hidden=true;return;}
+var hero=vids[0],unlocked=false,userMuted={},vis={};
+var btns={};document.querySelectorAll('.snd').forEach(function(b){btns[b.dataset.for]=b;});
+function setBtn(v,on){var b=btns[v.id];if(!b)return;b.setAttribute('aria-pressed',on?'true':'false');b.querySelector('span').textContent=on?'השתקה':'הפעלת סאונד';}
+function play(v){var p=v.play();if(p&&p.catch)p.catch(function(){if(!v.muted){v.muted=true;setBtn(v,false);v.play().catch(function(){});}});}
+// the film on screen plays, with sound once the viewer has tapped; every other film stops
+function update(){
+  var best=null;
+  vids.forEach(function(v){var s=vis[v.id]||0;if(s>=0.25&&(!best||s>(vis[best.id]||0)))best=v;});
+  vids.forEach(function(v){if(v===best)return;if(!v.paused)v.pause();v.muted=true;setBtn(v,false);});
+  if(best){var snd=unlocked&&!userMuted[best.id];best.muted=!snd;setBtn(best,snd);if(best.paused)play(best);}
+}
+// iPhone lets a film play sound later only if it was started inside a tap, so the first tap touches every film
+function unlock(){if(unlocked)return;unlocked=true;vids.forEach(function(v){if(v===hero)return;var m=v.muted,wasPaused=v.paused;v.muted=false;var p=v.play();v.muted=m;
+  if(wasPaused&&p&&p.then)p.then(function(){if((vis[v.id]||0)<0.25){v.pause();try{v.currentTime=0;}catch(e){}}}).catch(function(){});});}
+if('IntersectionObserver' in window){
+  var th=[0,0.1,0.2,0.25,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1];
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){vis[e.target.id]=Math.max(e.intersectionRatio,e.intersectionRect.height/Math.max(1,window.innerHeight));});update();},{threshold:th});
+  vids.forEach(function(v){io.observe(v);});
+}else{vis[hero.id]=1;update();}
+Object.keys(btns).forEach(function(id){var v=document.getElementById(id);if(!v)return;btns[id].addEventListener('click',function(){unlock();userMuted[id]=!v.muted;
+  if(v.muted){vids.forEach(function(o){if(o!==v){o.muted=true;setBtn(o,false);}});v.muted=false;setBtn(v,true);if(v.paused)play(v);}else{v.muted=true;setBtn(v,false);}});});
+function closeGate(){if(!gate||gate.hidden)return;gate.classList.add('gone');setTimeout(function(){gate.hidden=true;},450);}
+if(gate)gate.addEventListener('click',function(){unlock();try{hero.currentTime=0;}catch(e){}hero.muted=false;setBtn(hero,true);play(hero);closeGate();hero.scrollIntoView({block:'center',behavior:'smooth'});});
+// a browser that already allows sound without a tap skips the cover
+hero.muted=false;var p0=hero.play();
+if(p0&&p0.then){p0.then(function(){unlocked=true;if(gate)gate.hidden=true;update();}).catch(function(){hero.muted=true;update();});}else{hero.muted=true;}
+})();
 </script>
 <script>
 try{fetch('/api/view',{method:'POST',headers:{'Content-Type':'application/json'},keepalive:true,body:JSON.stringify({page:location.pathname,ref:document.referrer,code:new URLSearchParams(location.search).get('c')||''})})}catch(e){}
