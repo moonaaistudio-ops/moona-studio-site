@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex, nofollow">
 <meta property="og:title" content="LULIE'S × MOONA">
 <meta property="og:description" content="דוגמה על האוברול הפיסטוק של LULIE'S, והסדרה שאנחנו מציעים לחורף.">
-<meta property="og:image" content="https://moonastudio.ai/lulies/v1/img/og.jpg">
+<meta property="og:image" content="https://moonastudio.ai/lulies/v1/img/og.jpg?v=2">
 <title>LULIE'S × MOONA</title>
 <!-- pitch page: pageview only, no form data, no identifiers beyond what the analytics vendors set -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-WYHJWDEYDK"></script>
@@ -245,6 +245,14 @@ section:first-of-type{border-top:0}
 .eps.offer .epfig img{width:100%;aspect-ratio:1080/1912;object-fit:cover;border-radius:12px;display:block;background:var(--panel)}
 .eps.offer .epfig figcaption{margin-top:10px;font-size:13px;line-height:1.45;color:var(--ice-dim)}
 @media (max-width:900px){.eps.offer .row{grid-template-columns:1fr}.eps.offer .ep.feature{grid-template-columns:1fr}.eps.offer .epfig{max-width:320px;width:100%;justify-self:center}}
+/* LULIE'S v1b: the series film sized like an image, sound buttons on the films */
+.eps.offer .epfig video{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:12px;display:block;background:var(--panel)}
+.vbox{position:relative}
+.hero .art{position:relative}
+.snd{position:absolute;bottom:12px;inset-inline-end:12px;z-index:2;display:inline-flex;align-items:center;gap:8px;padding:9px 14px 9px 12px;border-radius:999px;border:1px solid rgba(220,236,255,.35);background:rgba(5,7,12,.62);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--ice);font:600 14px/1 var(--he);cursor:pointer}
+.snd svg{width:16px;height:16px;flex:none}
+.snd[aria-pressed="true"]{background:rgba(217,198,156,.94);color:#05070c;border-color:transparent}
+.snd:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -254,7 +262,7 @@ section:first-of-type{border-top:0}
       <div class="duo"><img class="gf" src="img/logo_lulies.png" alt="LULIE'S"><span class="x">×</span><img src="img/moona_lockup.png" alt="MOONA STUDIO"></div>
     </div>
     <div class="grid">
-      <figure class="artfig"><div class="art r916"><video src="media/sample.mp4" poster="img/sample_poster.jpg" playsinline autoplay muted loop preload="metadata" aria-label="האוברול הפיסטוק של LULIE'S: הבד, הרקמה וכפות רגליים של תינוק בתוך הכפות המקופלות"></video></div><figcaption class="made">האוברול הפיסטוק שלכם: הבד, הרקמה, וכפות רגליים בתוך הכפות המקופלות. יש סאונד.</figcaption><p class="made" style="margin-top:10px">בנינו אותה מתמונות המוצר באתר בלבד, בלי יום צילום. את התינוק עצמו השארנו לסבב הבא, בכוונה: שם נעבוד איתך על הגזרה והמידה, כי את מכירה את זה יותר טוב מכל מודל.</p><p class="made" style="margin-top:8px;font-size:13px">הסרטון נוצר אצלנו כדוגמה, ומיועד לצפייה בלבד. אין לפרסם אותו ולא להשתמש בו.</p></figure>
+      <figure class="artfig"><div class="art r916"><video id="v-sample" src="media/sample.mp4" poster="img/sample_poster.jpg" playsinline autoplay muted loop preload="metadata" aria-label="האוברול הפיסטוק של LULIE'S: הבד, הרקמה וכפות רגליים של תינוק בתוך הכפות המקופלות"></video><button class="snd" type="button" aria-pressed="false" data-for="v-sample"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>הפעלת סאונד</span></button></div><figcaption class="made">האוברול הפיסטוק שלכם: הבד, הרקמה, וכפות רגליים בתוך הכפות המקופלות. עם מוזיקה: כפתור הסאונד על הסרטון.</figcaption><p class="made" style="margin-top:10px">בנינו אותה מתמונות המוצר באתר בלבד, בלי יום צילום. את התינוק עצמו השארנו לסבב הבא, בכוונה: שם נעבוד איתך על הגזרה והמידה, כי את מכירה את זה יותר טוב מכל מודל.</p><p class="made" style="margin-top:8px;font-size:13px">הסרטון נוצר אצלנו כדוגמה, ומיועד לצפייה בלבד. אין לפרסם אותו ולא להשתמש בו.</p></figure>
     <div class="copy">
       <span class="eyebrow">Product demo</span>
       <h1 class="brand" dir="ltr" style="text-align:right">LULIE'S <span class="x">×</span> MOONA</h1>
@@ -270,7 +278,7 @@ section:first-of-type{border-top:0}
   <div class="wrap">
     <div class="sec-h"><span class="eyebrow">The idea</span><h2>הרגע לפני השינה</h2><p>אמהות לא קונות אוברול, הן קונות שקט בלילה. הפרטים הקטנים שלכם הם ההוכחה: רוכסן שנפתח מלמטה, רגליים שנשארות מכוסות, בד שלא מגרד. כל סרטון בסדרה מתחיל מהבד ונגמר באותו רגע: האוברול נוחת על המיטה, האור יורד, ותינוק נרדם. אחרי כמה פרקים מזהים אתכם עוד לפני שהלוגו עולה.</p></div>
     <div class="row">
-      <div class="ep feature"><figure class="epfig"><video src="media/signature.mp4" poster="img/signature_poster.jpg" playsinline autoplay muted loop preload="metadata" aria-label="האוברול הפיסטוק צונח לאט לתוך מיטת תינוק, האור יורד ומנורת לילה נדלקת"></video><figcaption>הרגע שבו כל פרק נגמר: האוברול נוחת, האור יורד. הכנו אותו להמחשה, מתמונות המוצר שלכם.</figcaption></figure>
+      <div class="ep feature"><figure class="epfig"><div class="vbox"><video id="v-sig" src="media/signature.mp4" poster="img/signature_poster.jpg" playsinline autoplay muted loop preload="metadata" aria-label="האוברול הפיסטוק צונח לאט לתוך מיטת תינוק, האור יורד ומנורת לילה נדלקת"></video><button class="snd" type="button" aria-pressed="false" data-for="v-sig"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>הפעלת סאונד</span></button></div><figcaption>הרגע שבו כל פרק נגמר: האוברול נוחת במיטה, האור יורד. הכנו אותו להמחשה, מתמונות המוצר שלכם.</figcaption></figure>
         <div class="eptext"><span class="n">01</span><h3>האוברול</h3>
         <p>בגד מונח על המיטה באור בוקר, המצלמה נכנסת לרקמה. ידיים סוגרות את הרוכסן הדו-כיווני מלמטה למעלה. כפות רגליים בועטות בתוך הכפות המקופלות. האור יורד.</p>
         <p class="beat"><b>המסר שלכם.</b> "החלפת חיתול בלי להפשיט", ו"שומר על הרגליים מכוסות גם כשהשמיכה זזה".</p></div></div>
@@ -316,6 +324,15 @@ section:first-of-type{border-top:0}
   </div>
 </section>
 
+<script>
+(function(){var bs=document.querySelectorAll('.snd');
+function set(b,on){b.setAttribute('aria-pressed',on?'true':'false');b.querySelector('span').textContent=on?'השתקה':'הפעלת סאונד';}
+bs.forEach(function(b){var v=document.getElementById(b.dataset.for);if(!v)return;
+b.addEventListener('click',function(){var turnOn=v.muted;
+bs.forEach(function(o){var ov=document.getElementById(o.dataset.for);if(ov&&ov!==v){ov.muted=true;set(o,false);}});
+v.muted=!turnOn;if(turnOn){try{v.currentTime=0;}catch(e){}var pr=v.play();if(pr&&pr.catch)pr.catch(function(){});}
+set(b,turnOn);});});})();
+</script>
 <script>
 try{fetch('/api/view',{method:'POST',headers:{'Content-Type':'application/json'},keepalive:true,body:JSON.stringify({page:location.pathname,ref:document.referrer,code:new URLSearchParams(location.search).get('c')||''})})}catch(e){}
 </script>
