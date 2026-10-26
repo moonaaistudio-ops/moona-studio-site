@@ -534,6 +534,11 @@ body.cur-link .cur.ring{width:52px;height:52px;border-color:var(--ice-hot)}
   transition:opacity .9s var(--ease),visibility .9s}
 #loader.done{opacity:0;visibility:hidden;pointer-events:none}
 #loader{transition:opacity .45s var(--ease),visibility .45s}
+/* the words leave the instant the curtain lifts. A busy phone or a tab that is not
+   painting can stretch the fade for seconds, and the loader's MOONA / 100 then sat
+   on top of the headline. After the fade the curtain is removed outright. */
+#loader.done>*{visibility:hidden;transition:none}
+#loader.gone{display:none}
 #loader .morse{font-family:var(--mono);font-size:11px;letter-spacing:.5em;color:var(--ice-dim);
   min-height:14px;text-align:center}
 #loader .word{font-size:12px;letter-spacing:.62em;text-transform:uppercase;color:var(--ice-hot);
@@ -1077,6 +1082,19 @@ html[dir="rtl"] .beat-line{transform-origin:right}
 .contact .social:hover{color:var(--ice-hot)}
 .contact .social:focus-visible{outline:2px solid #fff;outline-offset:3px}
 @media(pointer:coarse){.contact .social{cursor:auto}}
+/* the direct lines under the CTA, readable and tappable without opening the form.
+   Addresses (and numbers, when they join) stay LTR inside Hebrew. */
+.contact-direct{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 22px;margin:18px auto 0;
+  max-width:640px;list-style:none}
+.contact-direct a{display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:10px 6px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--ice-hot);text-decoration:none;
+  cursor:none;transition:color .25s}
+.contact-direct a svg{flex:none;color:var(--gold)}
+.contact-direct a:hover{color:#fff}
+.contact-direct a:hover span,.contact-direct a:hover bdi{text-decoration:underline;text-underline-offset:4px}
+.contact-direct a:focus-visible{outline:2px solid #fff;outline-offset:3px}
+html[lang="he"] .contact-direct [data-i18n]{font-family:var(--sans);font-size:14px;letter-spacing:0}
+@media(pointer:coarse){.contact-direct a{cursor:auto}}
 .legal-nav{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px 18px;margin-top:34px}
 .legal-nav :is(a,button){display:inline-flex;align-items:center;justify-content:center;min-height:44px;
   padding:10px 4px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
@@ -1480,8 +1498,14 @@ html[lang="he"] :is(.film-title,.film-beat h3,.sentence p,.about-copy h2,.crew-t
 </div>
 <script>
 /* The curtain must never become a dead end if a local asset or browser API fails. */
+window.__MOONA_LIFT_CURTAIN__=()=>{
+  const loader=document.getElementById('loader');
+  if(!loader||loader.classList.contains('done')) return;
+  loader.classList.add('done');
+  setTimeout(()=>loader.classList.add('gone'),600);
+};
 window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
-  document.getElementById('loader')?.classList.add('done');
+  window.__MOONA_LIFT_CURTAIN__();
   const hero=document.getElementById('t1');
   if(hero&&!hero.style.opacity){hero.style.opacity='1';hero.style.transform='none'}
 },3500);
@@ -1876,6 +1900,10 @@ The couple, the living room and the reaction were built in the studio, with no a
     <h2 class="contact-line rv" id="contact-title" data-i18n="contact.line">What do you have in mind?</h2>
     <p class="contact-body rv" data-i18n="contact.body">A brand film, a new campaign or an idea taking shape. Let’s talk about what we can create together.</p>
     <button class="cta-btn lg rv" data-ask data-intent="product" data-hover><span data-i18n="contact.productCta">Let’s talk</span><i></i></button>
+    <p class="or rv" data-i18n="contact.or">or</p>
+    <ul class="contact-direct rv" aria-label="Talk to the studio directly" data-i18n-aria-label="contact.direct.label">
+      <li><a href="mailto:tal@moonastudio.ai" data-contact-channel="email" data-hover><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg><bdi dir="ltr">tal@moonastudio.ai</bdi></a></li>
+    </ul>
     <a class="social rv" href="https://www.instagram.com/moonastudio.ai/" target="_blank" rel="noopener" aria-label="Moona on Instagram, @moonastudio.ai (opens in a new tab)" data-i18n-aria-label="contact.instagram"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/></svg><bdi dir="ltr">@moonastudio.ai</bdi></a>
     <p class="disc rv" data-i18n="contact.disclaimer">All work self-initiated. Brands are shown for demonstration only and are not clients. No client relationship implied.</p>
     <nav class="legal-nav" aria-label="Legal and accessibility" data-i18n-aria-label="footer.nav">
@@ -2003,6 +2031,13 @@ function setMotionPaused(paused,{persist=true,initial=false}={}){
 }
 motionControl?.addEventListener('click',()=>setMotionPaused(!document.documentElement.classList.contains('motion-paused')));
 onLocaleRender(paintMotionControl);
+
+/* direct lines are counted with the place they were tapped; the ?c= code from an
+   outreach link rides along as a PostHog session property. */
+document.querySelectorAll('[data-contact-channel]').forEach(link=>link.addEventListener('click',()=>{
+  window.MoonaAnalytics?.capture('contact_channel_clicked',
+    {channel:link.dataset.contactChannel,cta_location:link.dataset.ctaLocation||'contact'});
+}));
 setMotionPaused(document.documentElement.classList.contains('motion-paused'),{persist:false,initial:true});
 
 /* ═══════════════════ cursor ═══════════════════ */
@@ -2579,7 +2614,7 @@ preload(p=>{
   clearInterval(morseIv);
   clearTimeout(window.__MOONA_BOOT_FAILSAFE__);
   /* lift the curtain immediately — rAF never fires in a background tab */
-  loader.classList.add('done');
+  window.__MOONA_LIFT_CURTAIN__();
   scramble(document.querySelector('[data-scramble]'));
 });
 requestAnimationFrame(loop);
