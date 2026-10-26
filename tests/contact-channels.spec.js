@@ -14,11 +14,13 @@ test.beforeEach(async ({ page }) => {
   }));
 });
 
-async function openHome(page, locale, viewport) {
+/* the WhatsApp lines ship switched off; most tests flip the switch to check them */
+async function openHome(page, locale, viewport, { whatsapp = 'on' } = {}) {
   await page.setViewportSize(viewport);
   await page.goto(`/?lang=${locale}`);
   await page.waitForFunction(() => window.MoonaI18n && !document.documentElement.classList.contains('i18n-pending'));
   await expect(page.locator('#loader')).toHaveClass(/gone/);
+  if (whatsapp) await page.evaluate(value => { document.documentElement.dataset.whatsappSwitch = value; }, whatsapp);
 }
 
 const box = (page, selector) => page.locator(selector).first().evaluate(el => {
@@ -26,6 +28,24 @@ const box = (page, selector) => page.locator(selector).first().evaluate(el => {
   return { left: r.left, top: r.top, right: r.right, bottom: r.bottom, width: r.width, height: r.height };
 });
 const overlaps = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+
+for (const locale of ['en', 'he']) {
+  test(`WhatsApp and phone ship switched off until the inbox works, the email stays (${locale.toUpperCase()})`, async ({ page }) => {
+    for (const viewport of [PHONE, DESKTOP]) {
+      await openHome(page, locale, viewport, { whatsapp: null });
+      await expect(page.locator('html')).toHaveAttribute('data-whatsapp-switch', 'off');
+      await page.evaluate(() => window.scrollTo(0, innerHeight * 2));
+      await expect(page.locator('.wa-float')).toBeHidden();
+      await page.locator('#contact').scrollIntoViewIfNeeded();
+      await expect(page.locator('#contact [data-contact-channel="whatsapp"]')).toBeHidden();
+      await expect(page.locator('#contact [data-contact-channel="phone"]')).toBeHidden();
+      await expect(page.locator('#contact [data-contact-channel="email"]')).toBeVisible();
+      const focusable = await page.evaluate(() => [...document.querySelectorAll('[data-whatsapp-line] a, a[data-whatsapp-line]')]
+        .filter(link => link.offsetParent !== null || getComputedStyle(link).position === 'fixed' && getComputedStyle(link).display !== 'none').length);
+      expect(focusable).toBe(0);
+    }
+  });
+}
 
 for (const locale of ['en', 'he']) {
   test(`floating WhatsApp opens a ${locale.toUpperCase()} first line and clears the hero HUD on a phone`, async ({ page }) => {
