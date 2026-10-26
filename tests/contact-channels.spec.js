@@ -74,7 +74,7 @@ for (const locale of ['en', 'he']) {
   test(`contact block shows WhatsApp, phone and email in ${locale.toUpperCase()}`, async ({ page }) => {
     await openHome(page, locale, PHONE);
     await page.locator('#contact').scrollIntoViewIfNeeded();
-    const row = page.locator('.contact-direct');
+    const row = page.locator('#contact .contact-direct');
     await expect(row.locator('a')).toHaveCount(3);
 
     const whatsapp = row.locator('[data-contact-channel="whatsapp"]');
@@ -147,7 +147,7 @@ test('every direct line reports which channel and where it was tapped', async ({
   await page.locator('.wa-float').click();
   await page.locator('#contact').scrollIntoViewIfNeeded();
   for (const channel of ['whatsapp', 'phone', 'email']) {
-    await page.locator(`.contact-direct [data-contact-channel="${channel}"]`).evaluate(el => el.click());
+    await page.locator(`#contact .contact-direct [data-contact-channel="${channel}"]`).evaluate(el => el.click());
   }
   const captured = await page.evaluate(() => window.__captured);
   expect(captured).toEqual([
@@ -185,4 +185,37 @@ test('the loader words vanish the moment the curtain lifts, and the curtain is t
   expect(atLift.words, 'MOONA / 100 never print over the headline').toEqual(['hidden', 'hidden', 'hidden', 'hidden']);
   await expect(page.locator('#loader')).toHaveClass(/gone/, { timeout: 2000 });
   await expect(page.locator('#loader')).toBeHidden();
+});
+
+test('option: a second door that closes the concept films', async ({ page }) => {
+  await openHome(page, 'he', PHONE);
+  const band = page.locator('.midcta');
+  await expect(band.locator('.midcta-line')).toHaveText('רוצים סרט כזה למוצר שלכם?');
+  /* it closes the concept films, before the solutions, far above the footer */
+  const order = await page.evaluate(() => {
+    const top = el => el.getBoundingClientRect().top + scrollY;
+    return [top(document.getElementById('work')), top(document.querySelector('.midcta')),
+      top(document.getElementById('solutions')), top(document.getElementById('contact'))];
+  });
+  expect(order).toEqual([...order].sort((a, b) => a - b));
+  await page.evaluate(() => {
+    window.__captured = [];
+    window.MoonaAnalytics = { ...window.MoonaAnalytics, capture: (name, props) => window.__captured.push([name, props]) };
+    document.querySelectorAll('.midcta [data-contact-channel]').forEach(link => link.addEventListener('click', e => e.preventDefault()));
+  });
+  await band.locator('[data-ask]').evaluate(el => el.click());
+  await expect(page.locator('#ask')).toHaveClass(/open/);
+  await page.keyboard.press('Escape');
+  await band.locator('[data-contact-channel="whatsapp"]').evaluate(el => el.click());
+  expect(await page.evaluate(() => window.__captured)).toEqual([
+    ['lead_form_opened', { cta_location: 'work', intent: 'product' }],
+    ['contact_channel_clicked', { channel: 'whatsapp', cta_location: 'work' }]
+  ]);
+});
+
+test('option: with the switch off the band keeps only its line and the CTA', async ({ page }) => {
+  await openHome(page, 'en', PHONE, { whatsapp: null });
+  await expect(page.locator('.midcta [data-ask]')).toBeAttached();
+  await expect(page.locator('.midcta [data-whatsapp-line]')).toHaveCount(2);
+  for (const line of await page.locator('.midcta [data-whatsapp-line]').all()) await expect(line).toBeHidden();
 });
