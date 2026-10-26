@@ -1,6 +1,12 @@
 const { test, expect } = require('@playwright/test');
 
+const WHATSAPP = 'https://wa.me/972544443653';
+const MESSAGES = {
+  en: 'Hi, I came from the Moona website and would like to talk about a film.',
+  he: 'היי, הגעתי מהאתר של Moona ואשמח לדבר על סרטון.'
+};
 const PHONE = { width: 375, height: 812 };
+const DESKTOP = { width: 1440, height: 900 };
 
 test.beforeEach(async ({ page }) => {
   await page.route('https://fonts.googleapis.com/**', route => route.fulfill({
@@ -15,30 +21,119 @@ async function openHome(page, locale, viewport) {
   await expect(page.locator('#loader')).toHaveClass(/gone/);
 }
 
+const box = (page, selector) => page.locator(selector).first().evaluate(el => {
+  const r = el.getBoundingClientRect();
+  return { left: r.left, top: r.top, right: r.right, bottom: r.bottom, width: r.width, height: r.height };
+});
+const overlaps = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+
 for (const locale of ['en', 'he']) {
-  test(`contact block shows the studio email without opening the form (${locale.toUpperCase()})`, async ({ page }) => {
+  test(`floating WhatsApp opens a ${locale.toUpperCase()} first line and clears the hero HUD on a phone`, async ({ page }) => {
+    await openHome(page, locale, PHONE);
+    const float = page.locator('.wa-float');
+    await expect(float).toBeVisible();
+    await expect(float).toHaveAttribute('target', '_blank');
+    await expect(float).toHaveAttribute('rel', /noopener/);
+    await expect(float).toHaveAttribute('aria-label', locale === 'he'
+      ? 'וואטסאפ לסטודיו, 054-4443653 (נפתח בוואטסאפ)'
+      : 'WhatsApp the studio at 054-4443653 (opens WhatsApp)');
+
+    const href = new URL(await float.getAttribute('href'));
+    expect(`${href.origin}${href.pathname}`).toBe(WHATSAPP);
+    expect(href.searchParams.get('text')).toBe(MESSAGES[locale]);
+
+    const rect = await box(page, '.wa-float');
+    expect(rect.width).toBeGreaterThanOrEqual(44);
+    expect(rect.height).toBeGreaterThanOrEqual(44);
+    expect(PHONE.width - rect.right).toBeLessThanOrEqual(20);
+    for (const hud of ['#hud-chapter', '#hud-name', '#hud-progress']) {
+      expect(overlaps(rect, await box(page, hud)), `${hud} stays clear of the button`).toBe(false);
+    }
+  });
+
+  test(`contact block shows WhatsApp, phone and email in ${locale.toUpperCase()}`, async ({ page }) => {
     await openHome(page, locale, PHONE);
     await page.locator('#contact').scrollIntoViewIfNeeded();
-    await expect(page.locator('#contact .or')).toHaveText(locale === 'he' ? 'או' : 'or');
-    const email = page.locator('#contact .contact-direct [data-contact-channel="email"]');
+    const row = page.locator('.contact-direct');
+    await expect(row.locator('a')).toHaveCount(3);
+
+    const whatsapp = row.locator('[data-contact-channel="whatsapp"]');
+    await expect(whatsapp).toHaveText(locale === 'he' ? 'וואטסאפ' : 'WhatsApp');
+    expect(new URL(await whatsapp.getAttribute('href')).searchParams.get('text')).toBe(MESSAGES[locale]);
+
+    const phone = row.locator('[data-contact-channel="phone"]');
+    await expect(phone).toHaveAttribute('href', 'tel:+972544443653');
+    await expect(phone.locator('bdi')).toHaveText('054-4443653');
+    await expect(phone.locator('bdi')).toHaveAttribute('dir', 'ltr');
+
+    const email = row.locator('[data-contact-channel="email"]');
     await expect(email).toHaveAttribute('href', 'mailto:tal@moonastudio.ai');
     await expect(email.locator('bdi')).toHaveText('tal@moonastudio.ai');
     await expect(email.locator('bdi')).toHaveAttribute('dir', 'ltr');
-    const { height } = await email.boundingBox();
-    expect(Math.round(height)).toBeGreaterThanOrEqual(44);
+
+    for (const link of await row.locator('a').all()) {
+      const { height } = await link.boundingBox();
+      expect(Math.round(height)).toBeGreaterThanOrEqual(44);
+    }
+  });
+
+  test(`the button never sits on the consent notice or the last footer line (${locale.toUpperCase()})`, async ({ page }) => {
+    for (const viewport of [{ width: 320, height: 568 }, { width: 360, height: 800 }, PHONE, { width: 390, height: 844 }, DESKTOP]) {
+      await openHome(page, locale, viewport);
+      await page.evaluate(() => { document.getElementById('analyticsConsent').hidden = false; });
+      await page.evaluate(() => window.scrollTo(0, innerHeight * 2));
+      await expect(page.locator('.wa-float')).toBeVisible();
+      await page.waitForTimeout(450);
+      expect(overlaps(await box(page, '.wa-float'), await box(page, '#analyticsConsent'))).toBe(false);
+
+      await page.evaluate(() => { document.getElementById('analyticsConsent').hidden = true; });
+      await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+      await page.waitForTimeout(450);
+      const float = await box(page, '.wa-float');
+      for (const target of await page.locator('.legal-nav :is(a,button), .contact .copy').all()) {
+        const rect = await target.evaluate(el => el.getBoundingClientRect().toJSON());
+        expect(overlaps(float, rect), 'footer controls stay clear of the button').toBe(false);
+      }
+    }
   });
 }
 
-test('a direct line reports which channel and where it was tapped', async ({ page }) => {
+test('on desktop the button waits until the hero has scrolled away', async ({ page }) => {
+  await openHome(page, 'en', DESKTOP);
+  await expect(page.locator('.wa-float')).toBeHidden();
+  await page.evaluate(() => window.scrollTo(0, innerHeight * 1.5));
+  await expect(page.locator('.wa-float')).toBeVisible();
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(page.locator('.wa-float')).toBeHidden();
+});
+
+test('a language switch rewrites the WhatsApp first line', async ({ page }) => {
+  await openHome(page, 'en', PHONE);
+  await page.evaluate(() => window.MoonaI18n.setLocale('he', { source: 'user' }));
+  await expect(page.locator('html')).toHaveAttribute('lang', 'he');
+  for (const link of await page.locator('[data-whatsapp]').all()) {
+    expect(new URL(await link.getAttribute('href')).searchParams.get('text')).toBe(MESSAGES.he);
+  }
+});
+
+test('every direct line reports which channel and where it was tapped', async ({ page }) => {
   await openHome(page, 'en', PHONE);
   await page.evaluate(() => {
     window.__captured = [];
     window.MoonaAnalytics = { ...window.MoonaAnalytics, capture: (name, props) => window.__captured.push([name, props]) };
-    /* keep the test on the page: no mail client */
+    /* keep the test on the page: no WhatsApp tab, no dialer, no mail client */
     document.querySelectorAll('[data-contact-channel]').forEach(link => link.addEventListener('click', e => e.preventDefault()));
   });
-  await page.locator('#contact .contact-direct [data-contact-channel="email"]').evaluate(el => el.click());
-  expect(await page.evaluate(() => window.__captured)).toEqual([
+  await page.locator('.wa-float').click();
+  await page.locator('#contact').scrollIntoViewIfNeeded();
+  for (const channel of ['whatsapp', 'phone', 'email']) {
+    await page.locator(`.contact-direct [data-contact-channel="${channel}"]`).evaluate(el => el.click());
+  }
+  const captured = await page.evaluate(() => window.__captured);
+  expect(captured).toEqual([
+    ['contact_channel_clicked', { channel: 'whatsapp', cta_location: 'float' }],
+    ['contact_channel_clicked', { channel: 'whatsapp', cta_location: 'contact' }],
+    ['contact_channel_clicked', { channel: 'phone', cta_location: 'contact' }],
     ['contact_channel_clicked', { channel: 'email', cta_location: 'contact' }]
   ]);
 });

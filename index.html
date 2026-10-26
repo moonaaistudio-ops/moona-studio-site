@@ -1082,8 +1082,8 @@ html[dir="rtl"] .beat-line{transform-origin:right}
 .contact .social:hover{color:var(--ice-hot)}
 .contact .social:focus-visible{outline:2px solid #fff;outline-offset:3px}
 @media(pointer:coarse){.contact .social{cursor:auto}}
-/* the direct lines under the CTA, readable and tappable without opening the form.
-   Addresses (and numbers, when they join) stay LTR inside Hebrew. */
+/* the direct lines under the CTA: WhatsApp, phone and email, readable and tappable
+   without opening the form. Numbers and addresses stay LTR inside Hebrew. */
 .contact-direct{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 22px;margin:18px auto 0;
   max-width:640px;list-style:none}
 .contact-direct a{display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:10px 6px;
@@ -1095,6 +1095,37 @@ html[dir="rtl"] .beat-line{transform-origin:right}
 .contact-direct a:focus-visible{outline:2px solid #fff;outline-offset:3px}
 html[lang="he"] .contact-direct [data-i18n]{font-family:var(--sans);font-size:14px;letter-spacing:0}
 @media(pointer:coarse){.contact-direct a{cursor:auto}}
+/* the floating WhatsApp door. Bottom right in both languages: the film HUD is
+   physical LTR chrome and holds the bottom-left corner (CH·01 GROUND), so this is
+   the one corner that never covers it. On desktop the HUD's 000 counter sits here
+   too, so the button waits until the hero has scrolled away; on a phone the corner
+   is clear from the first paint. It steps up over the consent notice. */
+.wa-float{position:fixed;z-index:70;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));
+  display:grid;place-items:center;width:52px;height:52px;border-radius:var(--r-pill);
+  color:#25d366;background:rgba(8,11,19,.82);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border:1px solid rgba(190,212,238,.2);box-shadow:0 10px 30px rgba(0,0,0,.35);text-decoration:none;cursor:none;
+  transition:opacity .35s var(--ease),visibility .35s,transform .35s var(--ease),bottom .35s var(--ease),
+    border-color .3s var(--ease),box-shadow .3s var(--ease)}
+.wa-float svg{width:25px;height:25px}
+.wa-float:hover{border-color:var(--gold);box-shadow:var(--moona-glow-gold)}
+.wa-float:focus-visible{outline:2px solid #fff;outline-offset:3px}
+@media(pointer:coarse){.wa-float{cursor:auto}}
+body:has(#analyticsConsent:not([hidden])) .wa-float{bottom:calc(68px + env(safe-area-inset-bottom))}
+@media(min-width:701px){
+  body:not(.past-hero) .wa-float{opacity:0;visibility:hidden;transform:translateY(10px)}
+  /* in Hebrew the consent notice sits bottom left, clear of the button */
+  html[dir="rtl"] body:has(#analyticsConsent:not([hidden])) .wa-float{bottom:calc(18px + env(safe-area-inset-bottom))}
+}
+@media(max-width:700px){
+  .wa-float{right:14px;bottom:calc(14px + env(safe-area-inset-bottom))}
+  body:has(#analyticsConsent:not([hidden])) .wa-float{bottom:calc(76px + env(safe-area-inset-bottom))}
+}
+/* the copyright is the page's last line and the widest mono caps on a phone: it
+   keeps out of the button's corner instead of the footer growing taller */
+@media(max-width:700px){.contact .copy{max-width:calc(100% - 112px);margin-inline:auto;text-wrap:balance}}
+/* keyboard focus scrolled into view lands clear of the button */
+html{scroll-padding-bottom:84px}
+@media print{.wa-float{display:none}}
 .legal-nav{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px 18px;margin-top:34px}
 .legal-nav :is(a,button){display:inline-flex;align-items:center;justify-content:center;min-height:44px;
   padding:10px 4px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
@@ -1545,6 +1576,9 @@ window.__MOONA_BOOT_FAILSAFE__=setTimeout(()=>{
   </nav>
 </header>
 
+<!-- the fast human channel: WhatsApp from any screen -->
+<a class="wa-float" href="https://wa.me/972544443653?text=Hi%2C%20I%20came%20from%20the%20Moona%20website%20and%20would%20like%20to%20talk%20about%20a%20film." target="_blank" rel="noopener" data-whatsapp data-contact-channel="whatsapp" data-cta-location="float" data-hover aria-label="WhatsApp the studio at 054-4443653 (opens WhatsApp)" data-i18n-aria-label="contact.whatsapp.label" title="WhatsApp" data-i18n-title="contact.whatsapp.name"><svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true" focusable="false"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+
 <!-- ═══════════ HERO ═══════════ -->
 <main id="main-content">
 <div id="hero-track">
@@ -1902,6 +1936,8 @@ The couple, the living room and the reaction were built in the studio, with no a
     <button class="cta-btn lg rv" data-ask data-intent="product" data-hover><span data-i18n="contact.productCta">Let’s talk</span><i></i></button>
     <p class="or rv" data-i18n="contact.or">or</p>
     <ul class="contact-direct rv" aria-label="Talk to the studio directly" data-i18n-aria-label="contact.direct.label">
+      <li><a href="https://wa.me/972544443653?text=Hi%2C%20I%20came%20from%20the%20Moona%20website%20and%20would%20like%20to%20talk%20about%20a%20film." target="_blank" rel="noopener" data-whatsapp data-contact-channel="whatsapp" data-hover aria-label="WhatsApp the studio at 054-4443653 (opens WhatsApp)" data-i18n-aria-label="contact.whatsapp.label"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span data-i18n="contact.whatsapp.name">WhatsApp</span></a></li>
+      <li><a href="tel:+972544443653" data-contact-channel="phone" data-hover aria-label="Call the studio, 054-4443653" data-i18n-aria-label="contact.phone.label"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5.5 3.5h3l1.6 4.2-2.1 1.3a11.5 11.5 0 0 0 7 7l1.3-2.1 4.2 1.6v3a2 2 0 0 1-2.2 2A17 17 0 0 1 3.5 5.7a2 2 0 0 1 2-2.2z"/></svg><bdi dir="ltr">054-4443653</bdi></a></li>
       <li><a href="mailto:tal@moonastudio.ai" data-contact-channel="email" data-hover><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg><bdi dir="ltr">tal@moonastudio.ai</bdi></a></li>
     </ul>
     <a class="social rv" href="https://www.instagram.com/moonastudio.ai/" target="_blank" rel="noopener" aria-label="Moona on Instagram, @moonastudio.ai (opens in a new tab)" data-i18n-aria-label="contact.instagram"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/></svg><bdi dir="ltr">@moonastudio.ai</bdi></a>
@@ -2032,8 +2068,14 @@ function setMotionPaused(paused,{persist=true,initial=false}={}){
 motionControl?.addEventListener('click',()=>setMotionPaused(!document.documentElement.classList.contains('motion-paused')));
 onLocaleRender(paintMotionControl);
 
-/* direct lines are counted with the place they were tapped; the ?c= code from an
-   outreach link rides along as a PostHog session property. */
+/* WhatsApp opens on a first line in the visitor's language, so the studio knows
+   the chat came from the site. Clicks on every direct line are counted; the
+   ?c= code from an outreach link rides along as a PostHog session property. */
+const WHATSAPP_NUMBER='972544443653';
+onLocaleRender(()=>{
+  const href=`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(tr('contact.whatsapp.message'))}`;
+  document.querySelectorAll('[data-whatsapp]').forEach(link=>{link.href=href});
+});
 document.querySelectorAll('[data-contact-channel]').forEach(link=>link.addEventListener('click',()=>{
   window.MoonaAnalytics?.capture('contact_channel_clicked',
     {channel:link.dataset.contactChannel,cta_location:link.dataset.ctaLocation||'contact'});
@@ -2491,6 +2533,8 @@ const hdr=document.getElementById('hdr');
 const headerContactCta=document.querySelector('[data-header-contact-cta]');
 function setHeaderContactCta(show){
   if(!headerContactCta||!hdr) return;
+  /* the floating WhatsApp button keys off the same moment on desktop */
+  document.body.classList.toggle('past-hero',show);
   if(show){
     hdr.classList.add('has-header-cta');
     headerContactCta.hidden=false;
