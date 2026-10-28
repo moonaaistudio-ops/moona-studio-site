@@ -17,7 +17,7 @@
 <style>
 :root{
   --void:#05070c; --panel:#080b13; --line:rgba(168,198,232,.16);
-  --ice:#dcecff; --ice-dim:#a8c6e8; --ice-mute:rgba(220,236,255,.62);
+  --ice:#dcecff; --ice-dim:#a8c6e8; --ice-mute:rgba(220,236,255,.8);
   --gold:#d9c69c; --amber:#e8a53a;
   --he:"Assistant","Arial Hebrew",Arial,sans-serif;
   --latin:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
@@ -74,13 +74,14 @@ section:first-of-type{border-top:0}
 .why .ph img{width:100%;height:100%;object-fit:cover}
 
 /* moments */
-.moments .row{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.moments .row{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
 .moments figure{margin:0;display:grid;gap:12px;align-content:start}
 .moments .ph{aspect-ratio:9/16;border-radius:16px;overflow:hidden;background:var(--panel)}
 .moments .ph img,.moments .ph video{width:100%;height:100%;object-fit:cover}
+.moments .ovl{font-size:15px;inset:auto 8px 9% 8px}
 .moments .n{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--gold);direction:ltr;unicode-bidi:isolate;display:inline-block}
 .moments h3{font-weight:700;font-size:21px;line-height:1.2;margin-top:2px}
-.moments figcaption p{color:var(--ice-mute);font-weight:300;font-size:16.5px;margin-top:4px}
+.moments figcaption p{color:var(--ice-mute);font-weight:400;font-size:16.5px;margin-top:4px}
 .moments figcaption q{display:block;margin-top:8px;font-size:16px;color:var(--ice);quotes:none}
 .moments figcaption q b{color:var(--gold);font-weight:600;margin-inline-end:6px;font-size:13px}
 
@@ -91,14 +92,14 @@ section:first-of-type{border-top:0}
 .work .ph video{width:100%;height:100%;object-fit:cover}
 .work .n{font-family:var(--latin);font-size:13px;letter-spacing:.16em;color:var(--gold);direction:ltr;unicode-bidi:isolate;display:inline-block}
 .work h3{font-weight:700;font-size:21px;line-height:1.2;margin-top:2px}
-.work figcaption p{color:var(--ice-mute);font-weight:300;font-size:16.5px;margin-top:4px}
+.work figcaption p{color:var(--ice-mute);font-weight:400;font-size:16.5px;margin-top:4px}
 
 /* offer */
 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .card{border:1px solid var(--line);border-radius:14px;padding:24px 22px;background:var(--panel);display:grid;gap:10px;align-content:start}
 .card .n{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--gold);direction:ltr;unicode-bidi:isolate;display:inline-block}
 .card h3{font-weight:700;font-size:20px;line-height:1.25}
-.card p{font-size:15.5px;line-height:1.55;color:var(--ice-mute);font-weight:300}
+.card p{font-size:15.5px;line-height:1.55;color:var(--ice-mute);font-weight:400}
 .offer .cards{grid-template-columns:repeat(2,1fr)}
 .note{margin-top:28px;font-size:16px;color:var(--ice-dim);max-width:62ch;line-height:1.6;border-inline-start:2px solid var(--gold);padding-inline-start:14px}
 
@@ -113,6 +114,8 @@ section:first-of-type{border-top:0}
 .close .logos .x{font-family:var(--mono);color:var(--ice-dim);font-size:14px}
 .close h2{font-size:clamp(26px,3.6vw,42px)}
 .close p{color:var(--ice-mute);margin-top:12px;max-width:42ch;margin-inline:auto;font-weight:300}
+.close .cta{display:inline-block;margin-top:28px;padding:14px 30px;border-radius:999px;background:var(--gold);color:var(--void);font-weight:700;font-size:18px;text-decoration:none}
+.close .cta:hover{filter:brightness(1.08)}
 .close .sig{margin-top:44px;font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--ice-dim);direction:ltr}
 .close .sig b{color:var(--ice);font-weight:400}
 
@@ -265,6 +268,7 @@ section:first-of-type{border-top:0}
     <div class="logos"><img class="ttf" src="../v1/img/logo_ttf_white.png" alt="Trust The Fungi"><span class="x">×</span><img src="../v1/img/moona_lockup.png" alt="MOONA STUDIO"></div>
     <h2>זו נקודת התחלה</h2>
     <p>אפשר להתחיל מהסרטון הזה, על הקורדיספס, ולראות איך הוא עובד אצלכם.</p>
+    <a class="cta" href="mailto:tal@moonastudio.ai?subject=Trust%20The%20Fungi%20%C3%97%20MOONA">בואו נדבר</a>
     <div class="sig"><b>MOONA STUDIO</b> · TAL TZUR</div>
   </div>
 </section>
