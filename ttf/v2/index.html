@@ -83,14 +83,6 @@ section:first-of-type{border-top:0}
 .moments figcaption p{color:var(--ice-mute);font-weight:300;font-size:16.5px;margin-top:4px}
 .moments figcaption q{display:block;margin-top:8px;font-size:16px;color:var(--ice);quotes:none}
 .moments figcaption q b{color:var(--gold);font-weight:600;margin-inline-end:6px;font-size:13px}
-details.all{margin-top:40px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
-details.all summary{cursor:pointer;padding:18px 22px;font-weight:600;color:var(--ice-dim);list-style:none}
-details.all summary::-webkit-details-marker{display:none}
-details.all summary::after{content:"+";float:left;color:var(--gold);font-family:var(--mono)}
-details.all[open] summary::after{content:"−"}
-details.all .strip{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:0 22px 22px}
-details.all .strip div{aspect-ratio:9/16;border-radius:8px;overflow:hidden;background:#000}
-details.all .strip img,details.all .strip video{width:100%;height:100%;object-fit:cover}
 
 /* work */
 .work .row{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
@@ -132,16 +124,14 @@ details.all .strip img,details.all .strip video{width:100%;height:100%;object-fi
   .moments .row{grid-template-columns:1fr 1fr}
   .cards,.offer .cards{grid-template-columns:1fr 1fr}
   .work .row{grid-template-columns:1fr 1fr}
-  details.all .strip{grid-template-columns:repeat(4,1fr)}
-}
+  }
 @media (max-width:520px){
   .hero .top img.ttf{height:38px}
   .hero h1.brand{font-size:clamp(24px,7.4vw,34px)}
   .moments .row{grid-template-columns:1fr}
   .cards,.offer .cards{grid-template-columns:1fr}
   .work .row{grid-template-columns:1fr}
-  details.all .strip{grid-template-columns:repeat(3,1fr)}
-  .close .logos{gap:18px}.close .logos img{height:40px}.close .logos img.ttf{height:56px}.close .logos .x{display:none}
+    .close .logos{gap:18px}.close .logos img{height:40px}.close .logos img.ttf{height:56px}.close .logos .x{display:none}
 }
 
 /* phone: storyboard frame beside its number and text */
@@ -214,13 +204,6 @@ details.all .strip img,details.all .strip video{width:100%;height:100%;object-fi
       <figure><div class="ph"><img src="img/f10.jpg" alt="16:00 במשרד" loading="lazy" decoding="async"></div><figcaption><span class="n">09</span><h3>16:00</h3><p>אחר הצהריים, והאנרגיה שלה עדיין שם. העמית לידה מפהק, ועדיין קצת אפור.</p></figcaption></figure>
       <figure><div class="ph"><img src="img/f11.jpg" alt="הבקבוק ביד" loading="lazy" decoding="async"></div><figcaption><span class="n">10</span><h3>הסיום</h3><p>הבקבוק שלכם ביד, על הכתום של התווית.</p><q><b>על המסך</b>נבדק לפני שנכנס.</q></figcaption></figure>
     </div>
-    <details class="all">
-      <summary>לכל 12 השוטים של הסרטון</summary>
-      <div class="strip">
-        <div><img src="../v1/img/f01.jpg" alt="" loading="lazy"></div><div><img src="../v1/img/f02.jpg" alt="" loading="lazy"></div><div><img src="../v1/img/f03.jpg" alt="" loading="lazy"></div><div><img src="../v1/img/f04.jpg" alt="" loading="lazy"></div><div><img src="../v1/img/f05.jpg" alt="" loading="lazy"></div><div><img src="../v1/img/inner_chamber_poster.jpg" alt="" loading="lazy"></div>
-        <div><img src="../v1/img/cell_activation_poster.jpg" alt="" loading="lazy"></div><div><img src="../v1/img/f07.jpg" alt="" loading="lazy"></div><div><img src="../v1/img/f08b.jpg" alt="" loading="lazy"></div><div><img src="../v1/img/f09.jpg" alt="" loading="lazy"></div><div><img src="../v1/img/f10.jpg" alt="" loading="lazy"></div><div><img src="../v1/img/f11.jpg" alt="" loading="lazy"></div>
-      </div>
-    </details>
   </div>
 </section>
 
