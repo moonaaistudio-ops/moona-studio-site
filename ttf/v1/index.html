@@ -57,6 +57,9 @@ section:first-of-type{border-top:0}
 .why .grid{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(28px,5vw,72px);align-items:center}
 .why .ph{aspect-ratio:9/16;border-radius:20px;overflow:hidden;background:var(--panel);max-width:400px;justify-self:start}
 .why .ph img{width:100%;height:100%;object-fit:cover}
+.why .ph{position:relative}
+.why .ovl{position:absolute;inset:70% 16px auto 16px;text-align:center;color:#fff;font-weight:700;font-size:clamp(17px,2vw,25px);line-height:1.3;text-shadow:0 1px 8px rgba(0,0,0,.85)}
+.why .ovl .am{color:#e8a53a}
 .why blockquote{font-size:clamp(28px,3.4vw,44px);font-weight:600;line-height:1.18;max-width:20ch;text-wrap:balance}
 .why blockquote span{color:var(--gold)}
 .why .txt{margin-top:22px;display:grid;gap:14px}
@@ -177,7 +180,7 @@ section:first-of-type{border-top:0}
           <span data-n="05">"נבדק לפני שנכנס." <em>· הבקבוק שלכם ביד</em></span>
         </div>
       </div>
-      <div class="ph"><img src="img/f04.jpg" alt="טיפת ענבר קפואה באוויר, וקו סריקה עובר דרכה"></div>
+      <div class="ph"><img src="img/f04.jpg" alt="טיפת ענבר קפואה באוויר, וקו סריקה עובר דרכה"><div class="ovl" aria-hidden="true">בטא־גלוקנים <b class="am">30% ✓</b><br>נבדק במעבדה חיצונית</div></div>
     </div>
   </div>
 </section>
@@ -192,7 +195,7 @@ section:first-of-type{border-top:0}
     <div class="list">
       <div class="step"><div class="ph"><img src="img/f01.jpg" alt="קפה במקרר" loading="lazy"></div><div><div class="meta"><span class="n">01</span><span class="t">0.0–1.8</span></div><h3>הקפה במקרר</h3><p class="do">06:30. היא מכניסה ספל קפה למקרר, ליד החלב. הכל אפור.</p><div class="say"><span><b>על המסך</b>06:30. הקפה במקרר. שוב.</span></div></div></div>
       <div class="step"><div class="ph"><img src="img/f02.jpg" alt="היד חוטפת את הבקבוק" loading="lazy"></div><div><div class="meta"><span class="n">02</span><span class="t">1.8–2.6</span></div><h3>הבקבוק שלכם</h3><p class="do">היד חוטפת את בקבוק הקורדיספס מהשיש. הוא הדבר היחיד בצבע.</p></div></div>
-      <div class="step"><div class="ph"><img src="img/f03.jpg" alt="טיפה בקצה הפיפטה" loading="lazy"></div><div><div class="meta"><span class="n">03</span><span class="t">2.6–3.3</span></div><h3>טיפה אחת</h3><p class="do">מאקרו: טיפת תמצית ענבר מתנפחת בקצה הפיפטה. כל הסאונד נחתך.</p></div></div>
+      <div class="step"><div class="ph"><img src="img/f03.jpg" alt="טיפה בקצה הפיפטה" loading="lazy"></div><div><div class="meta"><span class="n">03</span><span class="t">2.6–3.3</span></div><h3>טיפה אחת</h3><p class="do">פיפטת הזכוכית עולה מתוך הבקבוק, מלאה בתמצית, וטיפה עודפת נופלת בחזרה לתוכו. כל הסאונד נחתך.</p></div></div>
       <div class="step key"><div class="ph"><img src="img/f04.jpg" alt="הטיפה קפואה ונסרקת" loading="lazy"></div><div><div class="meta"><span class="n">04</span><span class="t">3.3–5.5</span></div><h3>הבדיקה</h3><p class="do">הטיפה קופאת באוויר. קו סריקה עובר עליה, והמספר ננעל עם ✓.</p><div class="say"><span><b>על המסך</b>בטא־גלוקנים 30% ✓</span><span><b>על המסך</b>נבדק במעבדה חיצונית</span></div></div></div>
       <div class="step"><div class="ph"><img src="img/f05.jpg" alt="הטיפה נופלת לפה" loading="lazy"></div><div><div class="meta"><span class="n">05</span><span class="t">5.5–6.5</span></div><h3>הטיפה נכנסת</h3><p class="do">היא מטפטפת לפה. עיניים עצומות.</p></div></div>
       <div class="step key"><div class="ph"><video src="media/inner_chamber.mp4" poster="img/inner_chamber_poster.jpg" playsinline autoplay muted loop preload="metadata" aria-label="טיפות נמסות לאור זהוב"></video></div><div><div class="meta"><span class="n">06</span><span class="t">6.5–9.1</span></div><h3>המסע בתוך הגוף</h3><p class="do">הטיפות נוחתות בעולם רך ונמסות לאור זהוב שזורם הלאה.</p></div></div>
