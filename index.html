@@ -304,9 +304,6 @@ body.asking #hdr{opacity:0;pointer-events:none;transition:opacity .3s var(--ease
   justify-content:space-between;padding:26px clamp(24px,4vw,52px)}
 #ask .ask-step{font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--ice-dim)}
 #ask .ask-step b{color:var(--ice-hot);font-weight:400}
-#ask .ask-title{position:absolute;inset-inline-start:50%;transform:translateX(-50%);
-  max-width:calc(100% - 200px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-  font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--ice-dim)}
 #ask .ask-close{position:relative;z-index:4;font-family:var(--mono);font-size:10px;letter-spacing:.28em;
   text-transform:uppercase;color:var(--ice-dim);padding:16px 14px;transition:color .3s}
 #ask .ask-close:hover{color:var(--ice-hot)}
@@ -1092,7 +1089,7 @@ html[lang="he"] body{font-synthesis:none}
 html[lang="he"] .htxt :is(h1.statement,.hero-beat) em{
   font-family:var(--serif);font-style:normal;font-weight:var(--he-emphasis-weight);
   color:var(--he-emphasis-color);font-synthesis:none}
-html[lang="he"] :is(.cta-btn,.q .qlab,.q .qhint,.qnext,.qback,.qskip,.ask-title,.ask-close,
+html[lang="he"] :is(.cta-btn,.q .qlab,.q .qhint,.qnext,.qback,.qskip,.ask-close,
   .drop-s,.drop-cta,.filenote,.ctagal-label,.ctagal-note,.contact .or,.contact .mail,
   .contact .cta-sub,.contact .copy,.contact .disc,.analytics-consent button,
   #hdr nav button[data-goto],#lb .lb-close,.scrollcue span,.work-head .idx,.beat-label,
@@ -1102,7 +1099,7 @@ html[lang="he"] :is(.cta-btn,.q .qlab,.q .qhint,.qnext,.qback,.qskip,.ask-title,
 html[lang="he"] :is(.q .qlab,.q .qhint,.qnext,.qback,.qskip,.drop-s,.drop-cta,
   .filenote,.ctagal-label,.ctagal-note,#hdr nav button[data-goto],
   #lb .lb-close,.scrollcue span,.work-head .idx,.beat-label,.film-eyebrow,
-  .specbadge,.skip,.cta-btn--compact,.ask-title,.ask-close,.contact .or,.contact .copy,.contact .mail,
+  .specbadge,.skip,.cta-btn--compact,.ask-close,.contact .or,.contact .copy,.contact .mail,
   .legal-nav :is(a,button)){font-size:11px}
 html[lang="he"] .scrollcue span{padding-inline-start:0}
 html[lang="he"] :is(.lockup,#loader,.hud,.meta .num,.vbadge,.film-time,.piece-time){font-family:var(--mono)}
@@ -1410,20 +1407,24 @@ html[lang="he"] :is(.film-title,.film-beat h3,.sentence p,.about-copy h2,.crew-t
   .work-grid .piece .meta .concept{transition:none}
 }
 
-/* Single-screen inquiry: three fields, one send action. */
+/* Single-screen inquiry: a name, an email, one send action. A message is
+   optional and waits behind one quiet link, so nothing slows the first two. */
 #ask .ask-top{justify-content:flex-end;background:var(--void)}
-#ask .ask-title{inset-inline-start:clamp(24px,4vw,52px);transform:none;max-width:calc(100% - 140px)}
-#ask .qwrap{display:block;overflow-y:auto;overscroll-behavior:contain;padding:110px 24px 32px;pointer-events:auto;scroll-padding-block:24px}
-#ask .q{position:relative;width:min(620px,100%);margin:0 auto;display:none;padding:0}
+#ask .qwrap{display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto;overscroll-behavior:contain;padding:110px 24px 32px;pointer-events:auto;scroll-padding-block:24px}
+#ask .q{position:relative;width:min(440px,100%);margin:0 auto;display:none;padding:0}
 #ask .q.active{display:block}
-#ask .qcompact .qtitle{font-size:clamp(32px,4vw,48px);line-height:1.08;margin:0 0 12px;text-wrap:balance}
-.quick-intro{margin:0 0 32px;font-size:16px;line-height:1.5;color:var(--moona-body-dim)}
-.quick-fields{display:grid;grid-template-columns:1fr 1fr;gap:22px 28px}
+#ask .qcompact .qtitle{font-size:clamp(32px,4vw,48px);line-height:1.08;margin:0 0 28px;text-wrap:balance}
+.quick-fields{display:grid;gap:22px}
 .quick-field{min-width:0}
 .quick-field label{display:block;margin-bottom:8px;font-size:14px;font-weight:500;color:var(--ice-hot)}
-.quick-brief{grid-column:1/-1}
-.quick-field.quick-product{grid-column:1/-1}
-#ask .quick-field[hidden]{display:none}
+html[dir="rtl"] #f-mail{text-align:right}
+.quick-more{margin-top:10px}
+.quick-more summary{display:inline-block;padding-block:12px;list-style:none;font-size:14px;line-height:1.5;color:var(--moona-body-dim);transition:color .3s}
+.quick-more summary::-webkit-details-marker{display:none}
+.quick-more summary::before{content:"+";content:"+"/"";display:inline-block;margin-inline-end:8px}
+.quick-more[open] summary::before{transform:rotate(45deg)}
+.quick-more summary:hover{color:var(--ice-hot)}
+.quick-more summary:focus-visible{outline:2px solid #fff;outline-offset:3px}
 #ask .quick-field :is(input,textarea){display:block;width:100%;max-width:none;min-height:46px;margin:0;padding:10px 0;background:transparent;border:0;border-bottom:1px solid var(--moona-ice-faint);border-radius:0;color:var(--ice-hot);font:400 18px/1.5 var(--sans);outline:none}
 #ask .quick-field textarea{min-height:82px;resize:vertical}
 #ask .quick-field :is(input,textarea):focus{border-color:var(--gold)}
@@ -1432,18 +1433,20 @@ html[lang="he"] :is(.film-title,.film-beat h3,.sentence p,.about-copy h2,.crew-t
 #ask .quick-field [aria-invalid="true"]{border-color:var(--moona-danger)}
 #ask .qhint{font-family:var(--sans);font-size:13px;letter-spacing:0;text-transform:none;line-height:1.5;min-height:0;margin:8px 0 0}
 #ask .qhint:empty{margin:0}
-.quick-actions{display:flex;align-items:center;gap:24px;margin-top:28px}
-.quick-actions p{margin:0;max-width:25ch;font-size:13px;line-height:1.5;color:var(--moona-body-dim)}
-#ask .quick-actions .cta-btn{flex-shrink:0;font-family:var(--sans);font-size:14px;letter-spacing:0;text-transform:none;padding:16px 28px}
+.quick-actions{display:flex;flex-direction:column;align-items:stretch;gap:14px;margin-top:14px}
+.quick-actions p{margin:0;text-align:center;font-size:13px;line-height:1.5;color:var(--moona-body-dim)}
+#ask .quick-actions .cta-btn{font-family:var(--sans);font-size:14px;letter-spacing:0;text-transform:none;padding:16px 28px}
 #ask .cta-btn:disabled{cursor:wait}
 #ask .qdone{padding-top:40px}
+/* Centred where there is room. On phones it stays at the top, above the keyboard. */
+@media(min-width:541px) and (min-height:620px){
+  #ask .qwrap{padding-block:72px}
+  #ask .q.active{margin-block:auto}
+}
 @media(max-width:540px){
   #ask .ask-top{padding:12px 16px}
-  #ask .qwrap{padding:90px 24px 24px}
-  .quick-intro{margin-bottom:24px}
-  .quick-fields{grid-template-columns:1fr;gap:18px}
-  .quick-actions{display:flex;flex-direction:column;align-items:stretch;gap:14px;margin-top:24px}
-  .quick-actions p{max-width:none;text-align:center}
+  #ask .qwrap{padding:72px 24px 24px}
+  .quick-fields{gap:18px}
 }
 @media(max-height:540px){#ask .qwrap{padding-top:84px}}
 </style>
@@ -1890,38 +1893,33 @@ The couple, the living room and the reaction were built in the studio, with no a
 <!-- ═══════════ REQUEST FLOW ═══════════ -->
 <div id="ask" role="dialog" aria-modal="true" aria-labelledby="askTitle">
   <div class="ask-top">
-    <span class="ask-title" id="askTitle" data-i18n="form.dialog">Talk to the studio</span>
     <button class="ask-close" id="askClose" type="button" data-hover data-i18n="common.close">Close</button>
   </div>
 
   <form class="qwrap" id="askForm" autocomplete="on" data-clarity-mask="true" novalidate>
     <div class="q qcompact" data-step="0">
-      <h2 class="qtitle" data-i18n="form.quick.title">It starts with a conversation.</h2>
-      <p class="quick-intro" data-i18n="form.quick.intro">Leave your name and email. Add a few words about your idea if you like.</p>
+      <h2 class="qtitle" id="askTitle" data-i18n="form.dialog">Let’s talk</h2>
       <div class="quick-fields">
         <div class="quick-field">
           <label for="f-name" data-i18n="form.quick.name">Name</label>
-          <input type="text" name="name" id="f-name" placeholder=" " aria-describedby="name-hint" aria-required="true" aria-invalid="false" required maxlength="400" autocomplete="name" dir="auto" data-hover>
+          <input type="text" name="name" id="f-name" placeholder=" " aria-describedby="name-hint" aria-required="true" aria-invalid="false" required maxlength="400" autocomplete="name" autocapitalize="words" enterkeyhint="next" dir="auto" data-hover>
           <p class="qhint" id="name-hint" aria-live="polite" aria-atomic="true"></p>
         </div>
         <div class="quick-field">
           <label for="f-mail" data-i18n="form.quick.email">Email</label>
-          <input type="email" name="email" id="f-mail" aria-describedby="email-hint" aria-required="true" aria-invalid="false" required maxlength="400" autocomplete="email" inputmode="email" dir="ltr" data-hover>
+          <input type="email" name="email" id="f-mail" aria-describedby="email-hint" aria-required="true" aria-invalid="false" required maxlength="400" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" enterkeyhint="send" dir="ltr" data-hover>
           <p class="qhint" id="email-hint" aria-live="polite" aria-atomic="true"></p>
         </div>
-        <div class="quick-field quick-product" id="f-product-field" hidden>
-          <label for="f-product" data-i18n="form.product.link">Website (optional)</label>
-          <input type="text" name="product" id="f-product" aria-describedby="product-hint" aria-required="false" aria-invalid="false" maxlength="400" inputmode="url" autocomplete="url" dir="ltr" placeholder="yourbrand.com" data-i18n-placeholder="form.product.linkPlaceholder" data-hover>
-          <p class="qhint" id="product-hint" aria-live="polite" aria-atomic="true"></p>
-        </div>
-        <div class="quick-field quick-brief">
-          <label for="f-brief" data-i18n="form.quick.brief">What would you like to create? (optional)</label>
-          <textarea name="brief" id="f-brief" aria-describedby="brief-hint" aria-required="false" aria-invalid="false" maxlength="1200" rows="2" placeholder="For example, a short film for a product launch." data-i18n-placeholder="form.quick.placeholder" dir="auto" data-hover></textarea>
+      </div>
+      <details class="quick-more" id="quickMore">
+        <summary id="f-brief-label" data-i18n="form.quick.more" data-hover>Add a few words?</summary>
+        <div class="quick-field">
+          <textarea name="brief" id="f-brief" aria-labelledby="f-brief-label" aria-describedby="brief-hint" aria-required="false" aria-invalid="false" maxlength="1200" rows="2" placeholder="For example, a short film for a product launch." data-i18n-placeholder="form.quick.placeholder" dir="auto" data-hover></textarea>
           <p class="qhint" id="brief-hint" aria-live="polite" aria-atomic="true"></p>
         </div>
-      </div>
+      </details>
       <div class="quick-actions">
-        <button type="submit" class="cta-btn" id="askSubmit" data-hover><span data-i18n="form.quick.send">Send inquiry</span><i aria-hidden="true"></i></button>
+        <button type="submit" class="cta-btn" id="askSubmit" data-hover><span data-i18n="form.quick.send">Send</span><i aria-hidden="true"></i></button>
         <p data-i18n="form.quick.reply">We reply within two business days.</p>
       </div>
       <p class="qhint" id="send-status" role="status" aria-live="polite" aria-atomic="true"></p>
@@ -1930,7 +1928,7 @@ The couple, the living room and the reaction were built in the studio, with no a
     <div class="q qdone" data-step="1" role="status" aria-live="polite" aria-atomic="true">
       <svg class="iris-done" viewBox="0 0 100 100" id="doneIris" aria-hidden="true"></svg>
       <h2 class="qtitle" id="doneTitle" tabindex="-1" data-i18n="form.done.title">Received.</h2>
-      <p class="qhint" id="doneMsg" data-i18n="form.done.body">We will review the project and reply within two business days.</p>
+      <p class="qhint" id="doneMsg" data-i18n="form.done.body">Thanks for reaching out. We will get back to you within two business days.</p>
       <div class="qnav" style="justify-content:center"><button type="button" class="qback" id="askDone" data-hover data-i18n="common.close">Close</button></div>
     </div>
 
@@ -3071,38 +3069,14 @@ function showStep(n){
   if(inp) focusStepTarget(inp,n);
   else if(n===DONE) focusStepTarget(document.getElementById('doneTitle'),n);
 }
-const INTENT_COPY=[
-  ['#askTitle','form.dialog','form.product.dialog'],
-  ['[data-step="0"] .qtitle','form.quick.title','form.product.title'],
-  ['.quick-intro','form.quick.intro','form.product.intro'],
-  ['label[for="f-brief"]','form.quick.brief','form.product.brief'],
-  ['#doneMsg','form.done.body','form.product.done']
-];
-function setIntent(intent){
-  const product=intent==='product';
-  askForm.dataset.intent=product?'product':'general';
-  document.getElementById('f-product-field').hidden=!product;
-  INTENT_COPY.forEach(([selector,general,productKey])=>{
-    const el=ask.querySelector(selector);
-    if(el) el.dataset.i18n=product?productKey:general;
-  });
-  document.getElementById('f-brief').dataset.i18nPlaceholder=product?'form.product.placeholder':'form.quick.placeholder';
-  window.MoonaI18n?.applyDocument(ask);
-}
-function isOpenableLink(value){
-  if(/\s/.test(value)) return false;
-  try{
-    const url=new URL(/^https?:\/\//i.test(value)?value:'https://'+value);
-    return /^https?:$/.test(url.protocol)&&url.hostname.includes('.')&&!url.username&&!url.password;
-  }catch(_){return false}
-}
 function openAsk(event){
   const trigger=event&&event.currentTarget;
   const location=trigger&&trigger.closest('#hdr')?'header':
     trigger&&trigger.closest('#hero-track')?'hero':
     trigger&&trigger.closest('.ctagal')?'studio':'contact';
   const intent=trigger?.dataset.intent==='product'?'product':'general';
-  if(step!==DONE) setIntent(intent);
+  /* every CTA opens the same form; intent only keeps the analytics comparable */
+  if(step!==DONE) askForm.dataset.intent=intent;
   window.MoonaAnalytics?.capture('lead_form_opened',{cta_location:location,intent});
   lastFocus=document.activeElement;
   ask.classList.add('open');
@@ -3180,13 +3154,11 @@ function validateInquiry(){
   let firstInvalid=null;
   const briefMax=1200;
   for(const input of askForm.querySelectorAll('.quick-field input,.quick-field textarea')){
-    if(input.closest('[hidden]')){fieldHint(input,'');continue}
     const value=input.value.trim();
     let error='';
     if(!value && input.required) error='form.validation.required';
     else if(input.type==='email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) error='form.validation.email';
     else if(input.name==='brief' && value.length>briefMax) error='form.validation.brief';
-    else if(input.name==='product' && value && !isOpenableLink(value)) error='form.validation.url';
     fieldHint(input,error);
     if(error && !firstInvalid) firstInvalid=input;
   }
@@ -3196,6 +3168,8 @@ function validateInquiry(){
 askForm.addEventListener('input',event=>{
   if(event.target.matches('.quick-field input,.quick-field textarea') && event.target.getAttribute('aria-invalid')==='true') fieldHint(event.target,'');
 });
+const quickMore=document.getElementById('quickMore');
+quickMore.addEventListener('toggle',()=>{if(quickMore.open) askForm.elements.brief.focus()});
 
 /* ── submit ── */
 /* Three rungs, tried in order, so a lead is never lost:
@@ -3235,15 +3209,13 @@ async function submitAsk(){
   askForm.setAttribute('aria-busy','true');
   sendStatus('form.status.sending');
 
-  const isProduct=askForm.dataset.intent==='product';
-  const link=isProduct?askForm.elements.product.value.trim():'';
   const brief=askForm.elements.brief.value.trim();
 
   try{
     const payload={
       name:    askForm.elements.name.value.trim(),
       company: askForm.elements.name.value.trim(),
-      website: link,
+      website: '',
       email:   askForm.elements.email.value.trim(),
       brief:   brief,
       'bot-field': (askForm.elements['bot-field']||{}).value||'',
@@ -3266,9 +3238,8 @@ async function submitAsk(){
     const value=n=>(askForm.elements[n]||{}).value||'';
     const brand=value('name').trim();
     const bodyLines=[`${tr('form.mailto.name')}: ${value('name')}`,
-                `${tr('form.mailto.email')}: ${value('email')}`];
-    if(link) bodyLines.push(`${tr('form.mailto.website')}: ${link}`);
-    bodyLines.push('', `${tr('form.mailto.brief')}:`, brief);
+                `${tr('form.mailto.email')}: ${value('email')}`,
+                '', `${tr('form.mailto.brief')}:`, brief];
     openMailFallback('mailto:tal@moonastudio.ai'
       +'?subject='+encodeURIComponent(tr('form.mailto.subject',{brand}))
       +'&body='+encodeURIComponent(bodyLines.join('\n')));
@@ -3277,7 +3248,13 @@ async function submitAsk(){
     askForm.removeAttribute('aria-busy');
   }
 }
-askForm.addEventListener('submit',e=>{e.preventDefault();submitAsk()});
+askForm.addEventListener('submit',e=>{
+  e.preventDefault();
+  /* Enter on a filled name, or the keyboard's "next", moves on to the email. It is not an error. */
+  const {name,email}=askForm.elements;
+  if(document.activeElement===name && name.value.trim() && !email.value.trim()){email.focus();return}
+  submitAsk();
+});
 
 /* ═══════════════════ lightbox ═══════════════════ */
 /* the strip is a glance; this is the look. A film keeps running when it opens. */

@@ -125,6 +125,15 @@ test('required fields have descriptions and expose an announced validation state
   await opener.click();
   await expect(page.locator('#ask')).toHaveClass(/open/);
   await expect(page.locator('#f-name')).toBeFocused();
+  /* contrast only means something once the dialog has finished fading in */
+  await expect(page.locator('#ask')).toHaveCSS('opacity', '1');
+  await expectNoAxeViolations(page, '#ask');
+
+  await expect(page.locator('#f-brief')).toBeHidden();
+  await page.locator('#f-mail').press('Tab');
+  await expect(page.locator('#quickMore summary')).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#f-brief')).toBeFocused();
 
   for (const id of ['f-name', 'f-mail', 'f-brief']) {
     const field = page.locator(`#${id}`);

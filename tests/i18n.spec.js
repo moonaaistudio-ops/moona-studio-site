@@ -56,7 +56,10 @@ async function fillLeadForm(page, { brief = LEAD_BRIEF, via = '[data-header-cont
   await page.locator('#f-name').fill('Dana Cohen');
   await page.locator('#f-mail').fill('dana@example.com');
   await expect(page.locator('[data-step="0"]')).toHaveClass(/active/);
-  if (brief !== null) await page.locator('#f-brief').fill(brief);
+  if (brief !== null) {
+    await page.locator('#quickMore summary').click();
+    await page.locator('#f-brief').fill(brief);
+  }
 }
 
 test('critical assets and legal links remain compatible with a direct-file preview', () => {
@@ -313,7 +316,7 @@ test.describe('dictionary and first-paint privacy contract', () => {
       'סטודיו לסרטי מותג. בלי יום צילום.',
       'המוצר שלכם, בדיוק כמו שהוא, בכל שוט.'
     ]);
-    await expect(page.locator('.hero-cta [data-i18n="hero.productCta"]')).toHaveText('דברו איתנו');
+    await expect(page.locator('.hero-cta [data-i18n="hero.productCta"]')).toHaveText('בואו נדבר');
     await expect(page.locator('.film-head .film-eyebrow')).toHaveText('סרט הדגל');
     await expect(page.locator('.film-head .film-stance')).toHaveText('לא עוד סרטון שנראה כמו כולם.');
     await expect(page.locator('.film-title')).toHaveText('יצרנו מותג. וצילמנו לו פרסומת.');
@@ -346,13 +349,13 @@ test.describe('dictionary and first-paint privacy contract', () => {
     await expect(page.locator('[data-i18n="work.koda.concept"]')).toHaveText('נבנה לפיד שבו הוא חי.');
     await expect(page.locator('.contact-line')).toHaveText('יש לכם משהו בראש?');
     await expect(page.locator('.contact-body')).toHaveText('סרט למותג, קמפיין חדש או רעיון שעוד מתגבש. בואו נדבר על מה שאפשר ליצור יחד.');
-    await expect(page.locator('[data-header-contact-cta] [data-i18n="common.primaryCta"]')).toHaveText('דברו איתנו');
-    await expect(page.locator('[data-i18n="common.primaryCta"]')).toHaveText(['דברו איתנו']);
+    await expect(page.locator('[data-header-contact-cta] [data-i18n="common.primaryCta"]')).toHaveText('בואו נדבר');
+    await expect(page.locator('[data-i18n="common.primaryCta"]')).toHaveText(['בואו נדבר']);
     await expect(page.locator('.hero-actions, .hero-work-link, .hero-project-cta')).toHaveCount(0);
-    await expect(page.locator('.contact [data-i18n="contact.productCta"]')).toHaveText('דברו איתנו');
-    await expect(page.locator('#askTitle')).toHaveText('דברו איתנו');
+    await expect(page.locator('.contact [data-i18n="contact.productCta"]')).toHaveText('בואו נדבר');
+    await expect(page.locator('#askTitle')).toHaveText('בואו נדבר');
     await expect(page.locator('#ask')).toHaveAttribute('aria-labelledby', 'askTitle');
-    await expect(page.locator('#askSubmit [data-i18n="form.quick.send"]')).toHaveText('שליחת פנייה');
+    await expect(page.locator('#askSubmit [data-i18n="form.quick.send"]')).toHaveText('שליחה');
     await expect(page.locator('#analyticsAccept')).toHaveText('אישור');
     await expect(page.locator('#analyticsReject')).toHaveText('דחייה');
 
@@ -369,8 +372,8 @@ test.describe('dictionary and first-paint privacy contract', () => {
       primary: 'LET’S TALK',
       hero: 'Talk to the studio',
       contact: 'Talk to the studio',
-      dialog: 'Talk to the studio',
-      send: 'Send inquiry',
+      dialog: 'Let’s talk',
+      send: 'Send',
       note: 'Reply within two business days',
       productHero: 'LET’S TALK',
       productContact: 'Let’s talk'
@@ -1720,7 +1723,7 @@ test.describe('responsive header and dynamic UI', () => {
           window.scrollTo(0, hero.offsetTop + hero.offsetHeight + 2);
         });
         await expect(headerCta).toBeVisible();
-        await expect(headerCta).toHaveText(locale === 'he' ? 'דברו איתנו' : 'LET’S TALK');
+        await expect(headerCta).toHaveText(locale === 'he' ? 'בואו נדבר' : 'LET’S TALK');
 
         const belowHero = await readLayout();
         assertContained(belowHero, `${locale} ${width}px below hero`);
@@ -1778,7 +1781,7 @@ test.describe('responsive header and dynamic UI', () => {
       'סטודיו לסרטי מותג. בלי יום צילום.',
       'המוצר שלכם, בדיוק כמו שהוא, בכל שוט.'
     ]);
-    await expect(page.locator('.hero-cta')).toHaveText('דברו איתנו');
+    await expect(page.locator('.hero-cta')).toHaveText('בואו נדבר');
     await expect(page.locator('#hud-chapter')).toHaveText('CH·01');
     await expect(page.locator('#hud-progress')).toHaveText(/\d{3}/);
     await expect(page.locator('.hero-media, .hero-media-video, .hero-media-fallback, .hero-brand-stage')).toHaveCount(0);
@@ -1860,12 +1863,14 @@ test.describe('responsive header and dynamic UI', () => {
     await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
     await page.locator('#askSubmit').click();
     await expect(page.locator('#name-hint')).toHaveText('This one we need.');
+    await page.locator('#quickMore summary').click();
     await page.locator('#f-brief').fill('Product film');
     await page.evaluate(() => window.MoonaI18n.setLocale('he', { source: 'programmatic' }));
     await expect(page.locator('#name-hint')).toHaveText('את זה צריך למלא.');
     await expect(page.locator('#f-brief')).toHaveValue('Product film');
-    await expect(page.locator('#askSubmit')).toHaveText('שליחת פנייה');
-    await expect(page.locator('#f-site,#f-files,[data-next],[data-back],.ask-step,.qsteps')).toHaveCount(0);
+    await expect(page.locator('#f-brief')).toBeVisible();
+    await expect(page.locator('#askSubmit')).toHaveText('שליחה');
+    await expect(page.locator('#f-site,#f-product,#f-files,[data-next],[data-back],.ask-step,.qsteps')).toHaveCount(0);
   });
 
   test('media and lightbox labels rerender while media and overlay nodes stay intact', async ({ page }) => {
@@ -2017,11 +2022,10 @@ test.describe('lead submission mocks', () => {
     await fillLeadForm(page, { brief: null });
     await expect(page.locator('#f-brief')).not.toHaveAttribute('required', '');
     await expect(page.locator('#f-brief')).toHaveAttribute('aria-required', 'false');
-    await expect(page.locator('label[for="f-brief"]')).toContainText('לא חובה');
     await page.locator('#askSubmit').click();
     await expect(page.locator('[data-step="1"]')).toHaveClass(/active/);
     await expect(page.locator('[data-step="1"] .qtitle')).toHaveText('קיבלנו.');
-    await expect(page.locator('#doneMsg')).toHaveText('נעבור על הפרויקט ונחזור אליכם בתוך שני ימי עסקים.');
+    await expect(page.locator('#doneMsg')).toHaveText('תודה שפניתם. נחזור אליכם בתוך שני ימי עסקים.');
     await expect(page.locator('#doneTitle')).toBeFocused();
     expect(payload).toEqual({
       name: 'Dana Cohen',
@@ -2067,7 +2071,7 @@ test.describe('lead submission mocks', () => {
     expect(page.url()).toContain('?lang=he');
   });
 
-  test('contact mailto fallback includes the optional website and original message', async ({ page }) => {
+  test('contact mailto fallback includes the original message', async ({ page }) => {
     await page.route('**/api/lead', route => route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -2086,7 +2090,7 @@ test.describe('lead submission mocks', () => {
     await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
     await page.locator('#f-name').fill('Dana Cohen');
     await page.locator('#f-mail').fill('dana@example.com');
-    await page.locator('#f-product').fill('brand.com/serum');
+    await page.locator('#quickMore summary').click();
     await page.locator('#f-brief').fill(LEAD_BRIEF);
     await page.locator('#askSubmit').click();
     await page.waitForFunction(() => Boolean(window.__e2eMailto));
@@ -2096,12 +2100,75 @@ test.describe('lead submission mocks', () => {
     expect(url.protocol).toBe('mailto:');
     expect(url.pathname).toBe('tal@moonastudio.ai');
     const body = url.searchParams.get('body');
-    expect(body).toContain('אתר: brand.com/serum');
     expect(body).not.toContain('Request: one product');
     expect(body).toContain(LEAD_BRIEF);
   });
 
-  test('product CTA opens product mode and sends the product link as website', async ({ page }) => {
+  test('the inquiry opens on a name, an email and one send button', async ({ page }) => {
+    await openHome(page, '/?lang=he');
+    for (const trigger of ['[data-hero-contact-cta]', '.contact [data-ask]', '[data-header-contact-cta]']) {
+      await page.evaluate(selector => document.querySelector(selector).click(), trigger);
+      await expect(page.locator('#ask')).toHaveClass(/open/);
+      await expect(page.locator('#ask .quick-field :is(input,textarea):visible')).toHaveCount(2);
+      await expect(page.locator('#f-name')).toBeFocused();
+      await expect(page.locator('#f-brief')).toBeHidden();
+      await expect(page.locator('#askTitle')).toHaveText('בואו נדבר');
+      await expect(page.locator('[data-step="0"] h2')).toHaveCount(1);
+      await expect(page.locator('#quickMore summary')).toHaveText('רוצים להוסיף כמה מילים?');
+      await page.locator('#askClose').click();
+    }
+  });
+
+  test('the optional message opens from its link, takes focus and reaches the lead', async ({ page }) => {
+    let payload;
+    await page.route('**/api/lead', route => {
+      payload = route.request().postDataJSON();
+      return route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' });
+    });
+    await openHome(page, '/?lang=he');
+    await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
+    await page.locator('#f-name').fill('Dana Cohen');
+    await page.locator('#f-mail').fill('dana@example.com');
+    await page.locator('#quickMore summary').click();
+    await expect(page.locator('#f-brief')).toBeFocused();
+    await page.locator('#f-brief').fill(LEAD_BRIEF);
+    await page.locator('#askSubmit').click();
+    await expect(page.locator('[data-step="1"]')).toHaveClass(/active/);
+    expect(payload.brief).toBe(LEAD_BRIEF);
+  });
+
+  test('Enter moves from the name to the email, then sends', async ({ page }) => {
+    let requests = 0;
+    await page.route('**/api/lead', route => {
+      requests++;
+      return route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' });
+    });
+    await openHome(page, '/?lang=he');
+    await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
+    await expect(page.locator('#f-name')).toBeFocused();
+    await page.locator('#f-name').pressSequentially('Dana');
+    await page.keyboard.press('Enter');
+    await expect(page.locator('#f-mail')).toBeFocused();
+    await expect(page.locator('#f-mail')).toHaveAttribute('aria-invalid', 'false');
+    await expect(page.locator('#email-hint')).toBeEmpty();
+    expect(requests).toBe(0);
+    await page.locator('#f-mail').pressSequentially('dana@example.com');
+    await page.keyboard.press('Enter');
+    await expect(page.locator('[data-step="1"]')).toHaveClass(/active/);
+    expect(requests).toBe(1);
+  });
+
+  test('the send button stays above a phone keyboard', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await openHome(page, '/?lang=he');
+    await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
+    await expect(page.locator('#f-name')).toBeFocused();
+    const box = await page.locator('#askSubmit').boundingBox();
+    /* a large iPhone keyboard with its suggestion bar takes about 336 of the 812 points */
+    expect(box.y + box.height).toBeLessThanOrEqual(812 - 336);
+  });
+
+  test('hero CTA reports its intent and sends no website', async ({ page }) => {
     let payload;
     await page.route('**/api/lead', route => {
       payload = route.request().postDataJSON();
@@ -2115,16 +2182,13 @@ test.describe('lead submission mocks', () => {
     });
     await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
     await expect(page.locator('#ask')).toHaveClass(/open/);
-    await expect(page.locator('#askTitle')).toHaveText('דברו איתנו');
-    await expect(page.locator('[data-step="0"] .qtitle')).toHaveText('מתחילים בשיחה.');
-    await expect(page.locator('#f-product')).toBeVisible();
+    await expect(page.locator('#askTitle')).toHaveText('בואו נדבר');
     await page.locator('#f-name').fill('Dana Cohen');
     await page.locator('#f-mail').fill('dana@example.com');
-    await page.locator('#f-product').fill('brand.com/serum');
     await page.locator('#askSubmit').click();
     await expect(page.locator('[data-step="1"]')).toHaveClass(/active/);
     await expect(page.locator('#doneMsg')).toHaveText('תודה שפניתם. נחזור אליכם בתוך שני ימי עסקים.');
-    expect(payload.website).toBe('brand.com/serum');
+    expect(payload.website).toBe('');
     expect(payload.brief).toBe('');
     await expect.poll(() => page.evaluate(() => window.__events)).toEqual([
       ['lead_form_opened', { cta_location: 'hero', intent: 'product' }],
@@ -2141,7 +2205,6 @@ test.describe('lead submission mocks', () => {
       });
       await openHome(page, '/?lang=' + locale);
       await page.evaluate(selector => document.querySelector(selector).click(), trigger);
-      await expect(page.locator('#f-product')).toHaveAttribute('aria-required', 'false');
       await page.locator('#f-name').fill('Dana Cohen');
       await page.locator('#f-mail').fill('dana@example.com');
       await page.locator('#askSubmit').click();
@@ -2162,49 +2225,24 @@ test.describe('lead submission mocks', () => {
     await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
     await page.locator('#f-name').fill('Dana Cohen');
     await page.locator('#f-mail').fill('dana@example.com');
+    await page.locator('#quickMore summary').click();
     await page.locator('#f-brief').fill('x'.repeat(1200));
     await page.locator('#askSubmit').click();
     await expect(page.locator('[data-step="1"]')).toHaveClass(/active/);
     expect(payload.brief).toBe('x'.repeat(1200));
   });
 
-  test('an unopenable product link is caught before any request', async ({ page }) => {
-    let requests = 0;
-    await page.route('**/api/lead', route => { requests++; return route.fulfill({ status: 200, body: '{"ok":true}' }); });
-    await openHome(page, '/?lang=en');
-    await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
-    await page.locator('#f-name').fill('Dana Cohen');
-    await page.locator('#f-mail').fill('dana@example.com');
-    for (const value of ['not a link', 'brand .com', 'mailto:a@b.co']) {
-      await page.locator('#f-product').fill(value);
-      await page.locator('#askSubmit').click();
-      await expect(page.locator('#f-product')).toHaveAttribute('aria-invalid', 'true');
-      await expect(page.locator('#product-hint')).toHaveText('A link we can open, please.');
-    }
-    expect(requests).toBe(0);
-  });
-
-  test('general CTA after a product visit reopens the general form without the link field', async ({ page }) => {
-    await openHome(page, '/?lang=en');
-    await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
-    await page.locator('#askClose').click();
-    await page.evaluate(() => document.querySelector('[data-header-contact-cta]').click());
-    await expect(page.locator('#askTitle')).toHaveText('Talk to the studio');
-    await expect(page.locator('#f-product')).toBeHidden();
-  });
-
-  test('product mode survives a language switch', async ({ page }) => {
+  test('the inquiry copy follows a language switch', async ({ page }) => {
     await openHome(page, '/?lang=he');
     await page.evaluate(() => document.querySelector('[data-hero-contact-cta]').click());
-    await expect(page.locator('#askTitle')).toHaveText('דברו איתנו');
+    await expect(page.locator('#askTitle')).toHaveText('בואו נדבר');
     await page.evaluate(() => window.MoonaI18n.setLocale('en', { source: 'programmatic' }));
     await expect(page.locator('#askTitle')).toHaveText('Let’s talk');
-    await expect(page.locator('[data-step="0"] .qtitle')).toHaveText('It starts with a conversation.');
-    await expect(page.locator('#f-product')).toBeVisible();
-    await expect(page.locator('#f-product')).toHaveAttribute('placeholder', 'yourbrand.com');
+    await expect(page.locator('#quickMore summary')).toHaveText('Add a few words?');
+    await expect(page.locator('#askSubmit')).toHaveText('Send');
   });
 
-  test('footer CTA opens product mode', async ({ page }) => {
+  test('footer CTA reports its location and intent', async ({ page }) => {
     await openHome(page, '/?lang=en');
     await page.evaluate(() => {
       window.__events = [];
