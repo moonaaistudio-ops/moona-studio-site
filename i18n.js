@@ -196,6 +196,7 @@
       'contact.instagram': 'Moona on Instagram, @moonastudio.ai (opens in a new tab)',
       'contact.disclaimer': 'All work self-initiated. Brands are shown for demonstration only and are not clients. No client relationship implied.',
       'contact.rights': 'All rights reserved.',
+      'contact.credit': 'Site developed by Tal Tzur.',
       'footer.privacy': 'Privacy notice',
       'footer.accessibility': 'Accessibility statement',
 
@@ -500,6 +501,7 @@
       'contact.instagram': 'Moona באינסטגרם, ‎@moonastudio.ai (נפתח בלשונית חדשה)',
       'contact.disclaimer': 'כל העבודות נוצרו ביוזמתנו. המותגים מוצגים לצורכי הדגמה בלבד ואינם לקוחות. אין בכך כדי לרמוז על קשר מסחרי.',
       'contact.rights': 'כל הזכויות שמורות.',
+      'contact.credit': 'האתר פותח על ידי טל צור.',
       'footer.privacy': 'הודעת פרטיות',
       'footer.accessibility': 'הצהרת נגישות',
 
