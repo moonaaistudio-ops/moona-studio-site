@@ -306,6 +306,15 @@ footer {
   line-height: 1.6;
 }
 .brief-note .note-intro { font-weight: 600; }
+.brief-note .copyright {
+  margin-top: clamp(22px, 3vw, 32px);
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--ice-dim);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+}
 @media (max-width: 680px) {
   .top { gap: 14px; padding-block: 20px; }
   .top img.ttf { height: 38px; }
@@ -390,6 +399,7 @@ footer {
   <p class="note-intro">הריל מדגים כיוון אחד לפני גימור סופי.</p>
   <p>אפשר לפתח קריאייטיבים בסגנונות שונים לרשתות ולממומן, כסרטון בודד או כסדרת סרטונים חודשית.</p>
   <p>אפשר לעבוד עם הדוגמניות של המותג או ליצור דמויות <bdi>AI</bdi> במיוחד לקמפיין.</p>
+  <p class="copyright"><bdi>© 2026 MOONA STUDIO</bdi></p>
 </footer>
 <script>
 const player = document.querySelector("video");
