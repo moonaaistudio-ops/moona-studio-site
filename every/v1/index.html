@@ -158,7 +158,7 @@ video::-internal-media-controls-download-button{display:none}
     <div class="top"><img class="every" src="img/logo-every-white.svg" alt="every"><span class="x">×</span><img src="img/moona_lockup.png" alt="MOONA STUDIO"></div>
     <div class="grid">
       <figure>
-        <a class="still" id="heroGo" href="#side" aria-label="לצפייה בהשוואה, המודעה שלכם והגרסה שלי"><img src="img/poster-moona.jpg" alt="פרסומת ה־UGC לויטמין D, בגרסת MOONA" draggable="false"><span class="go">▶ לצפייה בהשוואה</span></a>
+        <a class="still" id="heroGo" href="#side" aria-label="לצפייה בהשוואה, המודעה שלכם והגרסה שלי"><img src="img/hero-window.jpg" alt="פרסומת ה־UGC לויטמין D, בגרסת MOONA: ליד החלון עם קפה" draggable="false"><span class="go">▶ לצפייה בהשוואה</span></a>
         <figcaption><span class="rights">© MOONA STUDIO · מוצג לצפייה בלבד. אין להוריד, להעתיק, להפיץ או להשתמש ללא אישור בכתב.</span></figcaption>
       </figure>
       <div class="copy">
@@ -203,9 +203,9 @@ video::-internal-media-controls-download-button{display:none}
       <div class="pair"><div class="pl"><span class="n">01</span><h3>הפתיחה</h3><q>"בנות, תקשיבו לי"</q></div>
         <figure><div class="fr"><img src="img/theirs1.jpg" alt="המודעה שלכם, הפתיחה" loading="lazy" decoding="async"></div><figcaption>המודעה שלכם</figcaption></figure>
         <figure class="ours"><div class="fr"><img src="img/ours1.jpg" alt="MOONA, הפתיחה" loading="lazy" decoding="async"></div><figcaption>MOONA</figcaption></figure></div>
-      <div class="pair"><div class="pl"><span class="n">02</span><h3>המוצר</h3><q>"ויטמין D של every"</q></div>
-        <figure><div class="fr"><img src="img/theirs2.jpg" alt="המודעה שלכם, המוצר" loading="lazy" decoding="async"></div><figcaption>המודעה שלכם</figcaption></figure>
-        <figure class="ours"><div class="fr"><img src="img/ours2.jpg" alt="MOONA, המוצר" loading="lazy" decoding="async"></div><figcaption>MOONA</figcaption></figure></div>
+      <div class="pair"><div class="pl"><span class="n">02</span><h3>המוצר ביד</h3></div>
+        <figure><div class="fr"><img src="img/theirs2-hand.jpg" alt="המודעה שלכם, המוצר" loading="lazy" decoding="async"></div><figcaption>המודעה שלכם</figcaption></figure>
+        <figure class="ours"><div class="fr"><img src="img/ours2-hand.jpg" alt="MOONA, המוצר" loading="lazy" decoding="async"></div><figcaption>MOONA</figcaption></figure></div>
       <div class="pair"><div class="pl"><span class="n">03</span><h3>ליד החלון</h3><q>"עכשיו זה חלק מהבוקר שלי"</q></div>
         <figure><div class="fr"><img src="img/theirs3.jpg" alt="המודעה שלכם, ליד החלון" loading="lazy" decoding="async"></div><figcaption>המודעה שלכם</figcaption></figure>
         <figure class="ours"><div class="fr"><img src="img/ours3.jpg" alt="MOONA, ליד החלון" loading="lazy" decoding="async"></div><figcaption>MOONA</figcaption></figure></div>
@@ -272,7 +272,7 @@ try{fetch('/api/view',{method:'POST',headers:{'Content-Type':'application/json'}
   });
   swap.addEventListener('click',function(){soundOurs=!soundOurs;sound();});
   [o,m].forEach(function(v){v.addEventListener('ended',function(){if((o.paused||o.ended)&&(m.paused||m.ended))play.textContent='נגנו את שניהם יחד';});});
-  document.getElementById('heroGo').addEventListener('click',function(e){e.preventDefault();document.getElementById('side').scrollIntoView({behavior:'smooth',block:'start'});if(o.paused&&m.paused)play.click();});
+  document.getElementById('heroGo').addEventListener('click',function(e){e.preventDefault();document.getElementById('side').scrollIntoView({behavior:'smooth',block:'start'});});
 })();
 </script>
 <script>
