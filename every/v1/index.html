@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta property="og:title" content="every × MOONA">
-<meta property="og:description" content="כמה רעיונות למודעת ה־UGC שלכם לויטמין D.">
+<meta property="og:description" content="מודעת ה־UGC לויטמין D, בגרסת MOONA.">
 <meta property="og:image" content="https://moonastudio.ai/every/v1/img/poster-moona.jpg">
 <title>every × MOONA</title>
 <!-- pitch page: pageview only, no form data, no identifiers beyond what the analytics vendors set -->
@@ -114,6 +114,20 @@ section:first-of-type{border-top:0}
   .cards,.offer .cards,.better .cards{grid-template-columns:1fr}
   .close .logos{gap:18px}.close .logos img{height:40px}.close .logos img.every{height:50px}.close .logos .x{display:none}
 }
+/* moment pairs */
+.plist{display:grid;gap:18px}
+.pair{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:clamp(12px,2.4vw,28px);align-items:center;border-top:1px solid var(--line);padding-top:18px}
+.pair:first-child{border-top:0;padding-top:0}
+.pl{display:grid;gap:4px;min-width:0}
+.pl .n{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--gold);direction:ltr;unicode-bidi:isolate}
+.pl h3{font-weight:700;font-size:22px;line-height:1.2}
+.pl q{quotes:none;color:var(--ice-mute);font-weight:300}
+.pair figure{margin:0;display:grid;gap:8px;min-width:0}
+.pair .fr{aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:#000;display:flex;align-items:center;max-height:440px}
+.pair .fr img{width:100%;height:100%;object-fit:contain}
+.pair figcaption{font-size:14px;color:var(--ice-dim);text-align:center}
+.pair figure.ours figcaption{color:var(--teal);font-weight:700}
+@media (max-width:520px){.pair{grid-template-columns:1fr 1fr}.pl{grid-column:1/-1}.pl h3{font-size:19px}}
 .ph,.still{background:linear-gradient(110deg,#0b0f19 30%,#141a28 50%,#0b0f19 70%) 0 0/200% 100%;animation:shim 1.4s linear infinite}
 @keyframes shim{to{background-position:-200% 0}}
 @media (prefers-reduced-motion:reduce){.ph,.still{animation:none}}
@@ -130,10 +144,10 @@ section:first-of-type{border-top:0}
         <figcaption>לחצו לצפייה עם סאונד.</figcaption>
       </figure>
       <div class="copy">
-        <span class="eyebrow">UGC · Vitamin D · a few ideas</span>
+        <span class="eyebrow">UGC · Vitamin D</span>
         <h1 class="brand" dir="ltr" style="text-align:right">every <span class="x">×</span> MOONA</h1>
-        <p class="sub"><b>"בנות, תקשיבו לי לפני שהחורף מגיע"</b><br>ראינו את פרסומת ה־UGC שלכם לויטמין D, והיא עובדת. הכנו לכם ביוזמתנו גרסה שלה, כדי להראות כמה רעיונות שיכולים לתת לה עוד חיים.</p>
-        <p class="line">המודעה שלכם, <span>עם עוד כמה כלים ביד.</span></p>
+        <p class="sub"><b>"בנות, תקשיבו לי לפני שהחורף מגיע"</b><br>לקחנו את פרסומת ה־UGC שלכם לויטמין D ועשינו לה גרסה משלנו.</p>
+        <p class="line">אותו תסריט. <span>רמה אחרת.</span></p>
         <div class="fmt" style="margin-top:22px"><span>ריל</span><span>סטוריז</span><span>9:16</span><span>עברית</span></div>
       </div>
     </div>
@@ -145,7 +159,7 @@ section:first-of-type{border-top:0}
     <div class="sec-h">
       <span class="eyebrow">Side by side</span>
       <h2>המודעה שלכם, והגרסה שהכנו</h2>
-      <p>שמרנו על כל מה שעובד אצלכם: אותו טקסט מילה במילה, ואותו סדר של סלפי, רגע ליד החלון, רגע בשולחן, וחזרה לסלפי עם הטיפ.</p>
+      <p>אותו טקסט, אותו סדר.</p>
     </div>
     <div class="duel">
       <figure><div class="ph"><video id="vOrig" src="media/every-ugc-original.mp4" poster="img/poster-original.jpg" playsinline controls preload="none" aria-label="הפרסומת המקורית"></video></div>
@@ -160,22 +174,29 @@ section:first-of-type{border-top:0}
   </div>
 </section>
 
-<section class="better">
+<section class="pairs">
   <div class="wrap">
     <div class="sec-h">
-      <span class="eyebrow">Ideas for you</span>
-      <h2>כמה דברים שראינו ושיכולים לעזור</h2>
-      <p>אלה רעיונות שעלו לנו כשצפינו במודעות שלכם. חלקם קטנים, וכולם נועדו לתת למה שכבר עובד אצלכם עוד מרחב.</p>
+      <span class="eyebrow">Moment by moment</span>
+      <h2>רגע מול רגע</h2>
     </div>
-    <div class="cards">
-      <div class="card"><span class="n">01</span><h3>כל המסך בטלפון</h3><p>גרסה בגובה מלא, 9:16, שממלאת את כל המסך ברילס ובסטוריז, בלי פסים ובלי חיתוך.</p></div>
-      <div class="card"><span class="n">02</span><h3>כתוביות בצבעים שלכם</h3><p>המילה שנאמרת מודגשת בטורקיז של המכסה, והשם every כתוב כמו על הצנצנת. עוזר לכל מי שגולל בלי סאונד.</p></div>
-      <div class="card"><span class="n">03</span><h3>הצנצנת במרכז</h3><p>התווית Wash · Work · Smile · Take ביד שלה לאורך הסרטון, והכתוביות יושבות מתחת לצנצנת, כך שהיא תמיד גלויה.</p></div>
-      <div class="card"><span class="n">04</span><h3>בית חי</h3><p>אור חלון שמשתנה כשעובר ענן ועלים שזזים ברוח. הרגשה של טלפון ביד בסלון אמיתי.</p></div>
-      <div class="card"><span class="n">05</span><h3>אותה מודעה לעוד מוצרים</h3><p>את אותו סגנון אפשר להעביר למגנזיום, לביוטין או למארז הילדים, ולבדוק מה עובד הכי טוב, בלי לתאם עוד יום צילום.</p></div>
-      <div class="card"><span class="n">06</span><h3>קול ברור בעברית</h3><p>אותו טקסט שלכם בקול חם וטבעי, נקי מרעשי רקע, כך שכל מילה נשמעת גם ברמקול של הטלפון.</p></div>
+    <div class="plist">
+      <div class="pair"><div class="pl"><span class="n">01</span><h3>הפתיחה</h3><q>"בנות, תקשיבו לי"</q></div>
+        <figure><div class="fr"><img src="img/theirs1.jpg" alt="המודעה שלכם, הפתיחה" loading="lazy" decoding="async"></div><figcaption>המודעה שלכם</figcaption></figure>
+        <figure class="ours"><div class="fr"><img src="img/ours1.jpg" alt="MOONA, הפתיחה" loading="lazy" decoding="async"></div><figcaption>MOONA</figcaption></figure></div>
+      <div class="pair"><div class="pl"><span class="n">02</span><h3>המוצר</h3><q>"ויטמין D של every"</q></div>
+        <figure><div class="fr"><img src="img/theirs2.jpg" alt="המודעה שלכם, המוצר" loading="lazy" decoding="async"></div><figcaption>המודעה שלכם</figcaption></figure>
+        <figure class="ours"><div class="fr"><img src="img/ours2.jpg" alt="MOONA, המוצר" loading="lazy" decoding="async"></div><figcaption>MOONA</figcaption></figure></div>
+      <div class="pair"><div class="pl"><span class="n">03</span><h3>ליד החלון</h3><q>"עכשיו זה חלק מהבוקר שלי"</q></div>
+        <figure><div class="fr"><img src="img/theirs3.jpg" alt="המודעה שלכם, ליד החלון" loading="lazy" decoding="async"></div><figcaption>המודעה שלכם</figcaption></figure>
+        <figure class="ours"><div class="fr"><img src="img/ours3.jpg" alt="MOONA, ליד החלון" loading="lazy" decoding="async"></div><figcaption>MOONA</figcaption></figure></div>
+      <div class="pair"><div class="pl"><span class="n">04</span><h3>בשולחן</h3><q>"עם האוכל"</q></div>
+        <figure><div class="fr"><img src="img/theirs4.jpg" alt="המודעה שלכם, בשולחן" loading="lazy" decoding="async"></div><figcaption>המודעה שלכם</figcaption></figure>
+        <figure class="ours"><div class="fr"><img src="img/ours4.jpg" alt="MOONA, בשולחן" loading="lazy" decoding="async"></div><figcaption>MOONA</figcaption></figure></div>
+      <div class="pair"><div class="pl"><span class="n">05</span><h3>הסגירה</h3><q>"באתר יש מארז"</q></div>
+        <figure><div class="fr"><img src="img/theirs5.jpg" alt="המודעה שלכם, הסגירה" loading="lazy" decoding="async"></div><figcaption>המודעה שלכם</figcaption></figure>
+        <figure class="ours"><div class="fr"><img src="img/ours5.jpg" alt="MOONA, הסגירה" loading="lazy" decoding="async"></div><figcaption>MOONA</figcaption></figure></div>
     </div>
-    <p class="note">זו טיוטה שהכנו ביוזמתנו, כדי להראות כיוון. אם תרצו להמשיך, נדייק אותה יחד איתכם, כולל סנכרון השפתיים, חדות התווית בתנועה, ואורך שמתאים לכם.</p>
   </div>
 </section>
 
@@ -186,7 +207,7 @@ section:first-of-type{border-top:0}
       <h2>אם זה נראה לכם שימושי</h2>
     </div>
     <div class="cards">
-      <div class="card"><span class="n">01</span><h3>הגרסה הזו, מוכנה לקמפיין</h3><p>9:16, לרשתות ולממומן, עם כתוביות בעברית בצבעים שלכם. אפשר להריץ אותה לצד המודעה הקיימת ולראות את המספרים.</p></div>
+      <div class="card"><span class="n">01</span><h3>הגרסה הזו, מוכנה לקמפיין</h3><p>9:16, לרשתות ולממומן. אפשר להריץ אותה לצד המודעה הקיימת ולראות את המספרים.</p></div>
       <div class="card"><span class="n">02</span><h3>3 פתיחות</h3><p>שלוש גרסאות לשנייה הראשונה של אותו סרטון, כדי לבדוק בקמפיין מה עוצר הכי הרבה אנשים.</p></div>
     </div>
   </div>
