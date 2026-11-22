@@ -98,6 +98,9 @@ section:first-of-type{border-top:0}
 .close .cta:hover{filter:brightness(1.08)}
 .close .sig{margin-top:44px;font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--ice-dim);direction:ltr}
 .close .sig b{color:var(--ice);font-weight:400}
+.close .legal{margin-top:18px;font-size:13px;line-height:1.6;color:var(--ice-dim);max-width:60ch;margin-inline:auto;font-weight:300}
+.rights{display:inline-block;margin-top:6px;font-size:12.5px;color:var(--ice-dim);opacity:.85}
+video::-internal-media-controls-download-button{display:none}
 
 @media (max-width:900px){
   .hero .grid{grid-template-columns:1fr}
@@ -140,13 +143,13 @@ section:first-of-type{border-top:0}
     <div class="top"><img class="every" src="img/logo-every-white.svg" alt="every"><span class="x">×</span><img src="img/moona_lockup.png" alt="MOONA STUDIO"></div>
     <div class="grid">
       <figure>
-        <div class="still"><video id="hero" src="media/every-ugc-moona.mp4" poster="img/poster-moona.jpg" playsinline controls preload="none" aria-label="פרסומת ה־UGC לויטמין D, בגרסת MOONA"></video></div>
-        <figcaption>לחצו לצפייה עם סאונד.</figcaption>
+        <div class="still"><video id="hero" src="media/every-ugc-moona.mp4" poster="img/poster-moona.jpg" playsinline controls controlsList="nodownload noremoteplayback" disablePictureInPicture disableRemotePlayback oncontextmenu="return false" preload="none" aria-label="פרסומת ה־UGC לויטמין D, בגרסת MOONA"></video></div>
+        <figcaption>לחצו לצפייה עם סאונד.<br><span class="rights">© MOONA STUDIO · הסרטון מוצג לצפייה בלבד. אין להוריד, להעתיק, להפיץ או להשתמש בו ללא אישור בכתב.</span></figcaption>
       </figure>
       <div class="copy">
         <span class="eyebrow">UGC · Vitamin D</span>
         <h1 class="brand" dir="ltr" style="text-align:right">every <span class="x">×</span> MOONA</h1>
-        <p class="sub"><b>"בנות, תקשיבו לי לפני שהחורף מגיע"</b><br>לקחנו את פרסומת ה־UGC שלכם לויטמין D ועשינו לה גרסה משלנו.</p>
+        <p class="sub"><b>"בנות, תקשיבו לי לפני שהחורף מגיע"</b><br>לקחתי את פרסומת ה־UGC שלכם לויטמין D ועשיתי לה גרסה משלי.</p>
         <p class="line">אותו תסריט. <span>רמה אחרת.</span></p>
         <div class="fmt" style="margin-top:22px"><span>ריל</span><span>סטוריז</span><span>9:16</span><span>עברית</span></div>
       </div>
@@ -158,18 +161,18 @@ section:first-of-type{border-top:0}
   <div class="wrap">
     <div class="sec-h">
       <span class="eyebrow">Side by side</span>
-      <h2>המודעה שלכם, והגרסה שהכנו</h2>
+      <h2>המודעה שלכם, והגרסה שהכנתי</h2>
       <p>אותו טקסט, אותו סדר.</p>
     </div>
     <div class="duel">
-      <figure><div class="ph"><video id="vOrig" src="media/every-ugc-original.mp4" poster="img/poster-original.jpg" playsinline controls preload="none" aria-label="הפרסומת המקורית"></video></div>
+      <figure><div class="ph"><video id="vOrig" src="media/every-ugc-original.mp4" poster="img/poster-original.jpg" playsinline controls controlsList="nodownload noremoteplayback" disablePictureInPicture disableRemotePlayback oncontextmenu="return false" preload="none" aria-label="הפרסומת המקורית"></video></div>
         <figcaption><span class="who">המודעה שלכם</span></figcaption></figure>
-      <figure><div class="ph"><video id="vOurs" src="media/every-ugc-moona.mp4" poster="img/poster-moona.jpg" playsinline controls preload="none" aria-label="הגרסה שהכנו"></video></div>
-        <figcaption><span class="who ours">הגרסה שהכנו</span></figcaption></figure>
+      <figure><div class="ph"><video id="vOurs" src="media/every-ugc-moona.mp4" poster="img/poster-moona.jpg" playsinline controls controlsList="nodownload noremoteplayback" disablePictureInPicture disableRemotePlayback oncontextmenu="return false" preload="none" aria-label="הגרסה שהכנתי"></video></div>
+        <figcaption><span class="who ours">הגרסה שהכנתי</span></figcaption></figure>
     </div>
     <div class="duel-ctl">
       <button class="btn main" id="playBoth" type="button">נגנו את שניהם יחד</button>
-      <button class="btn" id="soundSwap" type="button">סאונד: הגרסה שהכנו</button>
+      <button class="btn" id="soundSwap" type="button">סאונד: הגרסה שהכנתי</button>
     </div>
   </div>
 </section>
@@ -221,11 +224,11 @@ section:first-of-type{border-top:0}
     </div>
     <div class="cards">
       <div class="card"><span class="n">01</span><h3>צילומי מוצר</h3><p>הצנצנות והמארזים, באיכות גבוהה.</p></div>
-      <div class="card"><span class="n">02</span><h3>מה עובד אצלכם</h3><p>אילו מודעות מביאות הכי הרבה מכירות, כדי שנבנה עליהן.</p></div>
+      <div class="card"><span class="n">02</span><h3>מה עובד אצלכם</h3><p>אילו מודעות מביאות הכי הרבה מכירות, כדי שאבנה עליהן.</p></div>
       <div class="card"><span class="n">03</span><h3>מסרים ואישורים</h3><p>מה חשוב לכם להגיד על כל מוצר, ומה לא.</p></div>
       <div class="card"><span class="n">04</span><h3>הלוגו</h3><p>קבצי לוגו וגופנים, אם יש לכם.</p></div>
     </div>
-    <p class="note">ואם מה שכבר יש באתר ובמודעות שלכם מספיק, נעבוד מזה.</p>
+    <p class="note">ואם מה שכבר יש באתר ובמודעות שלכם מספיק, אעבוד מזה.</p>
   </div>
 </section>
 
@@ -233,17 +236,18 @@ section:first-of-type{border-top:0}
   <div class="wrap">
     <span class="eyebrow">About MOONA</span>
     <p class="lede" style="margin-top:14px"><bdi>MOONA</bdi> הוא סטודיו לסרטוני פרסום ב&#8209;<bdi>AI</bdi>. <span>מהרעיון ועד הקובץ הסופי, תחת קורת גג אחת.</span></p>
-    <p class="intro">מחקר, קריאייטיב, הפקה, סאונד ועריכה נעשים אצלנו, והמוצר שלכם נכנס לפריים כמו שהוא.</p>
+    <p class="intro">מחקר, קריאייטיב, הפקה, סאונד ועריכה, הכול אצלי, והמוצר שלכם נכנס לפריים כמו שהוא.</p>
   </div>
 </section>
 
 <section class="close">
   <div class="wrap">
     <div class="logos"><img class="every" src="img/logo-every-white.svg" alt="every"><span class="x">×</span><img src="img/moona_lockup.png" alt="MOONA STUDIO"></div>
-    <h2>נשמח לשמוע מה אתם חושבים</h2>
-    <p>הגרסה הזו שלכם לצפייה, בלי התחייבות. אם משהו כאן מעניין אתכם, נשמח לדבר.</p>
-    <a class="cta" href="mailto:tal@moonastudio.ai?subject=every%20%C3%97%20MOONA">נשמח לדבר</a>
+    <h2>אשמח לשמוע מה אתם חושבים</h2>
+    <p>הגרסה הזו שלכם לצפייה, בלי התחייבות. אם משהו כאן מעניין אתכם, אשמח לדבר.</p>
+    <a class="cta" href="mailto:tal@moonastudio.ai?subject=every%20%C3%97%20MOONA">אשמח לדבר</a>
     <div class="sig"><b>MOONA STUDIO</b> · TAL TZUR</div>
+    <p class="legal">© 2026 MOONA STUDIO. כל הזכויות שמורות. הסרטונים, התמונות והתוכן בעמוד זה הם קניין רוחני של MOONA STUDIO ומוצגים לצפייה בלבד. אין להוריד, להעתיק, לשכפל, להפיץ, לפרסם או לעשות בהם כל שימוש, מסחרי או אחר, ללא אישור מראש ובכתב.</p>
   </div>
 </section>
 
@@ -256,7 +260,7 @@ try{fetch('/api/view',{method:'POST',headers:{'Content-Type':'application/json'}
 (function(){
   var o=document.getElementById('vOrig'),m=document.getElementById('vOurs'),h=document.getElementById('hero');
   var play=document.getElementById('playBoth'),swap=document.getElementById('soundSwap'),soundOurs=true;
-  function sound(){m.muted=!soundOurs;o.muted=soundOurs;swap.textContent='סאונד: '+(soundOurs?'הגרסה שהכנו':'המודעה שלכם');}
+  function sound(){m.muted=!soundOurs;o.muted=soundOurs;swap.textContent='סאונד: '+(soundOurs?'הגרסה שהכנתי':'המודעה שלכם');}
   play.addEventListener('click',function(){
     if(!o.paused||!m.paused){o.pause();m.pause();play.textContent='נגנו את שניהם יחד';return;}
     h.pause();o.preload='auto';m.preload='auto';o.currentTime=0;m.currentTime=0;sound();
@@ -266,6 +270,10 @@ try{fetch('/api/view',{method:'POST',headers:{'Content-Type':'application/json'}
   [o,m].forEach(function(v){v.addEventListener('ended',function(){if((o.paused||o.ended)&&(m.paused||m.ended))play.textContent='נגנו את שניהם יחד';});});
   h.addEventListener('play',function(){o.pause();m.pause();});
 })();
+</script>
+<script>
+document.addEventListener('contextmenu',function(e){if(e.target.closest('video,.pair img,.still'))e.preventDefault();});
+document.addEventListener('dragstart',function(e){if(e.target.closest('video,img'))e.preventDefault();});
 </script>
 </body>
 </html>
